@@ -6,7 +6,9 @@ import codecs
 import json
 import elasticsearch_connection
 
-from classifications import CLASSIFICATIONS
+from classifications import CLASSIFICATIONS, CONSTITUENTTYPES
+
+SAMPLE_SITES = ('1175', '670', '671', '672', '1509', '677', '2080', '2796', '2028', '2035', '2245', '2043', '3461', '3412')
 
 # First update each Site with the latest data
 # This is the basic information/metadata that comprises a Site
@@ -25,10 +27,10 @@ with open('../data/sites.csv', 'rb') as csvfile:
 	current_id = '-1'
 	for row in objects:
 		site_id = row[site_id_index]
-		if site_id not in ('1','42','1175'):
+		if site_id not in SAMPLE_SITES:
 			continue
 		# could have multiple rows for one site because of multiple SiteDates or other pieces of information
-		# only create a new site if we have a new site id
+		# only create a new site if we have a new site id, but first save old site to elasticsearch
 		if site_id != current_id:
 			if site:
 				elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
@@ -72,6 +74,7 @@ with open('../data/sites.csv', 'rb') as csvfile:
 				site[key] = row_value
 		#print json.dumps(site)
 	if site:
+		# save last site to elasticsearch
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
 
 # Then update all related items from the Objects table
@@ -95,10 +98,12 @@ with open('../data/sites_objects_related.csv', 'rb') as csvfile:
 	objects = csv.reader(csvfile, delimiter=',', quotechar='"')
 	for row in objects:
 		site_id = row[site_id_index]
-		if site_id not in ('1','42','1175'):
+		if site_id not in SAMPLE_SITES:
 			continue
 		if site_id != current_id:
 			if site:
+				# will likely have multiple rows for one site because of many related objects
+				# only get a new site if we have a new site id, but first save old site to elasticsearch
 				elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
 			current_id = site_id
 			site = {}
@@ -123,6 +128,64 @@ with open('../data/sites_objects_related.csv', 'rb') as csvfile:
 
 		if classification not in site['relateditems']:
 			site['relateditems'][classification] = []
-		site['relateditems'][classification].append({'objectid' : object_id, 'title' : object_title})
+		site['relateditems'][classification].append({'objectid' : object_id, 'title' : object_title, 'classificationid' : classification_key})
+	if site:
+		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+
+# Next, update site with all related Constituents
+with open('../data/sites_constituents_related.csv', 'rb') as csvfile:
+	# Get the query headers to use as keys in the JSON
+	headers = next(csvfile)
+	if headers.startswith(codecs.BOM_UTF8):
+		headers = headers[3:]
+	headers = headers.replace('\r\n','')
+	columns = headers.split(',')
+
+	site_id_index = columns.index('SiteID')
+	role_index = columns.index('Role')
+	constituent_id_index = columns.index('ConstituentID')
+	constituent_type_id_index = columns.index('ConstituentTypeID')
+	display_name_index = columns.index('DisplayName')
+	display_date_index = columns.index('DisplayDate')
+
+	current_id = '-1'
+	site = {}
+	objects = csv.reader(csvfile, delimiter=',', quotechar='"')
+	for row in objects:
+		site_id = row[site_id_index]
+		if site_id not in SAMPLE_SITES:
+			continue
+		if site_id != current_id:
+			if site:
+				# will likely have multiple rows for one site because of many related constituents
+				# only get a new site if we have a new site id, but first save old site to elasticsearch
+				elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+			current_id = site_id
+			site = {}
+			if elasticsearch_connection.item_exists(site_id, 'sites'):
+				site = elasticsearch_connection.get_item(site_id, 'sites')
+			else:
+				print "this site could not be found!"
+				continue
+		if 'constituents' not in site:
+			site['constituents'] = []			
+		if 'relateditems' not in site:
+			site['relateditems'] = {}
+
+		constituent_id = row[constituent_id_index]
+		display_name = row[display_name_index]
+
+		constituent_dict = {}
+		constituent_dict['role'] = row[role_index]
+		constituent_dict['constituent_id'] = constituent_id
+		constituent_dict['display_name'] =  display_name
+		constituent_dict['display_date'] = row[display_date_index] if row[display_date_index] != "NULL" else ""
+		site['constituents'].append(constituent_dict)
+
+		constituent_type_key = int(row[constituent_type_id_index])
+		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
+		if constituent_type not in site['relateditems']:
+			site['relateditems'][constituent_type] = []
+		site['relateditems'][constituent_type].append({'constituentid' : constituent_id, 'displayname' : display_name, 'constituenttypeid' : constituent_type_key})
 	if site:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')

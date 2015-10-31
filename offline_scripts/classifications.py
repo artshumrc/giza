@@ -76,5 +76,10 @@ CLASSIFICATIONS = {
 	129 : "finds",
 	132 : "finds",
 	135 : "finds",
-	136 : "unpublished documentation",
+	136 : "unpublished documentation"
+}
+
+CONSTITUENTTYPES = {
+	1 : "modern",
+	3 : "ancient"
 }
