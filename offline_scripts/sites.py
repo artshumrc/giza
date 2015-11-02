@@ -47,6 +47,8 @@ with open('../data/sites.csv', 'rb') as csvfile:
 				row_value = int(row_value)
 			elif row_value == "NULL":
 				row_value = None
+			else:
+				row_value = row_value.replace(',,','')
 
 			if 'sitetype' in key:
 				# group sitetype fields into an object
@@ -62,7 +64,11 @@ with open('../data/sites.csv', 'rb') as csvfile:
 				# row data looks like 'PorterMoss Date_Dynasty 5-6'
 				# split on _ (and ignore first value in key)
 				keys = key.split('_')[1:]
+				if len(keys) > 2:
+					print "too many items after splitting"
 				values = row_value.split('_')
+				if len(values) > 2:
+					print "too many items after splitting"
 				date = {}
 				for i, k in enumerate(keys):
 					if values[i]:
@@ -77,7 +83,47 @@ with open('../data/sites.csv', 'rb') as csvfile:
 		# save last site to elasticsearch
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
 
-# Then update all related items from the Objects table
+# Update relevant sites with alternate numbers
+with open('../data/sites_altnums.csv', 'rb') as csvfile:
+	# Get the query headers to use as keys in the JSON
+	headers = next(csvfile)
+	if headers.startswith(codecs.BOM_UTF8):
+		headers = headers[3:]
+	headers = headers.replace('\r\n','')
+	columns = headers.split(',')
+
+	site_id_index = columns.index('SiteID')
+	altnum_index = columns.index('AltNum')
+	description_index = columns.index('Description')
+
+	current_id = '-1'
+	site = {}
+	objects = csv.reader(csvfile, delimiter=',', quotechar='"')
+	for row in objects:
+		site_id = row[site_id_index]
+		if site_id not in SAMPLE_SITES:
+			continue
+		
+		if site_id != current_id:
+			if site:
+				# will likely have multiple rows for one site because of many related objects
+				# only get a new site if we have a new site id, but first save old site to elasticsearch
+				elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+			current_id = site_id
+			site = {}
+			if elasticsearch_connection.item_exists(site_id, 'sites'):
+				site = elasticsearch_connection.get_item(site_id, 'sites')
+			else:
+				print "this site could not be found!"
+				continue
+
+		if 'altnums' not in site:
+			site['altnums'] = []
+		altnum = row[altnum_index]
+		description = row[description_index] if row[description_index] != "NULL" else ""
+		site['altnums'].append({"altnum" : altnum, "description" : description})
+
+# Update all related items from the Objects table
 # TODO: Get Primary Image URL (need an image server first) 
 with open('../data/sites_objects_related.csv', 'rb') as csvfile:
 	# Get the query headers to use as keys in the JSON
