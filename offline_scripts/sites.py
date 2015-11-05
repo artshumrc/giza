@@ -51,6 +51,8 @@ with open('../data/sites.csv', 'rb') as csvfile:
 				row_value = row_value.replace(',,','')
 
 			if 'sitetype' in key:
+				if not row_value:
+					continue
 				# group sitetype fields into an object
 				if 'sitetype' not in site:
 					site['sitetype'] = {}

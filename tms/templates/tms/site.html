@@ -15,7 +15,7 @@
         <li>{% if altnum.description %}{{ altnum.description }} : {% endif %}{{ altnum.altnum|default:"" }}
         </li>
     {% endfor %}
-    {% if site.sitetype.sitetype %}<li>{{ site.sitetype.sitetype }}</li>{% endif %} <!-- Add search by sitetype id --> 
+    {% if site.sitetype %}<li>{{ site.sitetype.sitetype }}</li>{% endif %} <!-- Add search by sitetype id --> 
     {% if site.shafts %}<li>Shafts : {{ site.shafts }}</li>{% endif %} 
     </ul>
 

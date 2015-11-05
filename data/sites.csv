@@ -1,13 +1,13 @@
 ﻿SiteID,SiteName,SiteNumber,SiteSortNumber,HistoricalNotes,BibReferences,LocationNotes,Remarks,Description,Condition,Shafts,ResearchActivity,ResearcherComments,IsPublic,Active,harvardID,SiteTypeID,SiteType,SiteDates_EventType_DateText
-1,Eastern Cemetery,Avenue G 0,AvenueG         0               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-2,Eastern Cemetery,Avenue G 1,AvenueG         1               ,NULL,NULL,NULL,"This is a short avenue that runs between G I-a and G I-b in Cemetery G 7000.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3,Eastern Cemetery,Avenue G 2,AvenueG         2               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-4,Eastern Cemetery,Avenue G 3,AvenueG         3               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-5,Eastern Cemetery,Avenue G 4,AvenueG         4               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+1,Eastern Cemetery,Avenue G 0,AvenueG         0               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+2,Eastern Cemetery,Avenue G 1,AvenueG         1               ,NULL,NULL,NULL,"This is a short avenue that runs between G I-a and G I-b in Cemetery G 7000.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3,Eastern Cemetery,Avenue G 2,AvenueG         2               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+4,Eastern Cemetery,Avenue G 3,AvenueG         3               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+5,Eastern Cemetery,Avenue G 4,AvenueG         4               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 6,Western Cemetery,Cemetery G 1000,Cemetery    G     1000          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 52-55.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 7,Western Cemetery,Cemetery G 1100,Cemetery    G     1100          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 55-56.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 8,Western Cemetery,Cemetery G 1200,Cemetery    G     1200          ,NULL,"Baud, Michel. ""La tombe de la reine-mère xa-mrr-Nbtj Ire."" Bulletin de l'Institut Français d'Archéologie Orientale 95 (1995), p. 13. 
 
 Jánosi, Peter. ""Der Tote vor dem Opfertisch. Die Opferplatten von Giza. Besprechung des Buches Slab Stelae of the Giza Necropolis von Peter Der Manuelian."" Sokar 10 (1. Halbjahr 2005), p. 19.
@@ -21,19 +21,19 @@ Jánosi, Peter. ""The Tombs of Officials. Houses of Eternity."" In Egyptian Art 
 Manuelian, Peter Der. Slab Stelae of the Giza Necropolis. Publications of the Pennsylvania-Yale Expedition to Egypt 7. New Haven & Philadelphia: Peabody Museum of Natural History of Yale University & University of Pennsylvania Museum of Archaeology and Anthropology, 2003, pp. xxxiv, 36, 38, 44, 47, 52, 55, 61, 65, 85, 113- 115, 117, 129, 146, 147, 150, 162, figs. 3, 171.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 56-61.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 9,Western Cemetery,Cemetery G 1300,Cemetery    G     1300          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 61-62.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 10,Western Cemetery,Cemetery G 1400,Cemetery    G     1400          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 64.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 11,Western Cemetery,Cemetery G 1500,Cemetery    G     1500          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 64-65.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 12,Western Cemetery,Cemetery G 1600,Cemetery    G     1600          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 65.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 13,Western Cemetery,Cemetery G 1900,Cemetery    G     1900          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 65.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 14,Western Cemetery,Cemetery G 2000,Cemetery    G     2000          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 66-70.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 15,Western Cemetery,Cemetery G 2100,Cemetery    G     2100          ,NULL,"Jánosi, Peter. ""Der Tote vor dem Opfertisch. Die Opferplatten von Giza. Besprechung des Buches Slab Stelae of the Giza Necropolis von Peter Der Manuelian."" Sokar 10 (1. Halbjahr 2005), p. 19.
 
 Jánosi, Peter. ""Bemerkungen zur Entstehung, Lage und Datierung der Nekropolenfelder von Giza unter Cheops."" Sokar 4 (1. Halbjahr 2002), p. 5, unnumbered figure. 
@@ -53,9 +53,9 @@ Manuelian, Peter Der. ""Unfinished Business: The Giza Tablet of Tjenti (JE 72135
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 70-83.
 
 Priese, Karl-Heinz.  Die Opferkammer des Merib. Berlin: Ägyptisches Museum, Berlin, 1984, pp. 6-7, illustration on pp. 34-36. 
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 16,Western Cemetery,Cemetery G 2500,Cemetery    G     2500          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 95.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 17,Western Cemetery,Cemetery G 3000,Cemetery    G     3000          ,NULL,"Baud, Michel. ""La tombe de la reine-mère xa-mrr-Nbtj Ire."" Bulletin de l'Institut Français d'Archéologie Orientale 95 (1995), p. 13, note 20. 
 
 Fisher, Clarence S. The Minor Cemetery at Giza (Philadelphia; The University Museum, 1924).
@@ -63,7 +63,7 @@ Fisher, Clarence S. The Minor Cemetery at Giza (Philadelphia; The University Mus
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 95-99.
 
 Reisner, unpublished manuscript, Boxes L8-L9.
-",NULL,"Fisher excavated 57 mastabas in the Cemetery G 3000 in 1915 under the Eckley B. Coxe Jr. Expedition of the University of Pennsylvania.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"Fisher excavated 57 mastabas in the Cemetery G 3000 in 1915 under the Eckley B. Coxe Jr. Expedition of the University of Pennsylvania.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 18,Western Cemetery,Cemetery G 4000,Cemetery    G     4000          ,NULL,"Baud, Michel. ""La tombe de la reine-mère xa-mrr-Nbtj Ire."" Bulletin de l'Institut Français d'Archéologie Orientale 95 (1995), p. 13. 
 
 Jánosi, Peter. ""Der Tote vor dem Opfertisch. Die Opferplatten von Giza. Besprechung des Buches Slab Stelae of the Giza Necropolis von Peter Der Manuelian."" Sokar 10 (1. Halbjahr 2005), p. 19.
@@ -79,9 +79,9 @@ Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orien
 Manuelian, Peter Der. Slab Stelae of the Giza Necropolis. Publications of the Pennsylvania-Yale Expedition to Egypt 7. New Haven & Philadelphia: Peabody Museum of Natural History of Yale University & University of Pennsylvania Museum of Archaeology and Anthropology, 2003, pp. 101, 106, 113, 115, 116, 120- 129, 136,  146, 147, 150, 162, 164, fig. 171.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 122-141.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 19,Western Cemetery,Cemetery G 5000,Cemetery    G     5000          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 145-168.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 20,Eastern Cemetery,Cemetery G 7000,Cemetery    G     7000          ,NULL,"Baud, Michel. ""La tombe de la reine-mère xa-mrr-Nbtj Ire."" Bulletin de l'Institut Français d'Archéologie Orientale 95 (1995), p. 13. 
 
 Bothmer, Bernard V. Egypt 1950: My First Visit. Oxford: Oxbow Books, 2003, pp. 137, 139, 140.
@@ -99,7 +99,7 @@ Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orien
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 179-208.
 
 Reisner, George A. ""Nefertkauw, the Eldest Daughter of Sneferuw."" Zeitschrift für Ägyptische Sprache und Altertumskunde 64 (1929), p. 97, untitled fig., taf. 2 [1].
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 21,Western Cemetery,D 1,D          1                    ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 109, plan 14.
 
 G. Steindorff and U. Hoelscher, Die Mastabas westlich der Cheopspyramide, Muenchener Aegyptologische Untersuchungen 2 (Frankfurt am Main, 1991), edited by A. Grimm, p. 15, pl. 1.
@@ -787,7 +787,7 @@ G. Steindorff and U. Hoelscher, Die Mastabas westlich der Cheopspyramide, Muench
 126,Western Cemetery,D 62,D         62                    ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, plan 14.
 
 Steindorff, Georg, and Uvo Hölscher. Die Mastabas westlich der Cheopspyramide 1-2. Edited by Alfred Grimm. Münchner Ägyptologische Untersuchungen 2.  Frankfurt am Main: Peter Lang, 1991, p. 61, pl. 9.
-",NULL,"Not a mastaba, but rather a ramp leaning against east wall of D40 and north of D27, in field west of G 4000.  ,,",NULL,NULL,NULL,NULL,NULL,1,1,733,0,(not assigned),(not entered)_Dynasty 6
+",NULL,"Not a mastaba, but rather a ramp leaning against east wall of D40 and north of D27, in field west of G 4000.  ,,",NULL,NULL,NULL,NULL,NULL,1,1,733,NULL,NULL,(not entered)_Dynasty 6
 127,Western Cemetery,D 63,D         63                    ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, plan 14.
 
 G. Steindorff and U. Hoelscher, Die Mastabas westlich der Cheopspyramide, Muenchener Aegyptologische Untersuchungen 2 (Frankfurt am Main, 1991), edited by A. Grimm, p. 61.",NULL,"Mastaba is in field west of G 4000, southwest of D 15, south of 16 A, north of D 46, and west of 15 A.  Mastaba is drawn but not labeled on Porter-Moss III plan XIV.,,",NULL,NULL,"D 63,1; D 63,2,,",NULL,NULL,1,1,734,2,Stone-built mastaba,_
@@ -963,7 +963,7 @@ Manuelian, Peter Der. Slab Stelae of the Giza Necropolis. Publications of the Pe
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 179-214.
 
 Unsigned. ""Recent Discoveries at the Giza Pyramids."" Bulletin of the Museum of Fine Arts, Boston 23, No. 136 (April 1925), pp. 12-14.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 168,Western Cemetery,Cemetery En Echelon,Cemetery    En   Echelon        ,NULL,"Haase, Michael. ""Das 'Giza Archiv-Projekt.' Interview mit Peter Der Manuelian."" Sokar 10 (2005), p. 11.
 
 Jánosi, Peter. ""Old Kingdom Tombs and Dating - Problems and Priorities. The Cemetery en Échelon at Giza."" In Miroslav Bárta, ed. The Old Kingdom Art and Archaeology. Proceedings of the Conference held in Prague, May 31-June 4, 2004. Prague: Czech Institute of Egyptology, 2006, pp. 175-183, figs. 1-2.
@@ -977,7 +977,7 @@ Manuelian, Peter Der. ""Penmeru Revisited–Giza Mastaba G 2197 (Giza Archives G
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 83-95, 141-168 (Cemetery en Echelon, south part).
 
 Reisner, George A., and Clarence S. Fisher. ""Preliminary Report on the Work of the Harvard-Boston Expedition in 1911-13."" Annales du Service des Antiquités de l'Egypte 13 (1914), pp. 227-251, pls. 1-3.
-",NULL,"Cemetery en Echelon is in Northeast sector of the Western Cemetery, off the north west corner of Khufu's pyramid and bounded on west by G 2160 and G 2170.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"Cemetery en Echelon is in Northeast sector of the Western Cemetery, off the north west corner of Khufu's pyramid and bounded on west by G 2160 and G 2170.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 169,Western Cemetery,G 1008,G       1008                    ,NULL,"Lehmann, Katja. Der Serdab in den Privatgräbern des Alten Reiches 1-3. Ph.D. Dissertation, Universität Heidelberg, 2000, Kat. G49.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 52, plan 10.
@@ -1674,7 +1674,7 @@ Manuelian, Peter Der. ""Penmeru Revisited–Giza Mastaba G 2197 (Giza Archives G
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 58.
 ",NULL,NULL,NULL,NULL,"G 1214 A; G 1214 B; G 1214 C; G 1214 D; G 1214 E; G 1214 Serdab,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,PorterMoss Date_Dynasty 5
 323,Western Cemetery,G 1215,G       1215                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 1215 A,,",NULL,NULL,1,1,NULL,4,Stone+Brick-built mastaba,_
-324,Western Cemetery,G 1216,G       1216                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 1216 A; G 1216 B,,",NULL,NULL,1,1,NULL,0,(not assigned),_
+324,Western Cemetery,G 1216,G       1216                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 1216 A; G 1216 B,,",NULL,NULL,1,1,NULL,NULL,NULL,_
 325,Western Cemetery,G 1217,G       1217                    ,NULL,"Reisner, unpublished manuscript, Box L6, page 19.",NULL,"Reisner's draft manuscript notes a shaft A on the East and a shaft B west of A.  A side note in pencil by A.F. says no shafts were actually preserved in this annex now called G 1217.,,",NULL,NULL,"G 1217 A; G 1217 B,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 326,Western Cemetery,G 1218,G       1218                    ,NULL,NULL,NULL,"G 1218 A reused by later intrusive burial = G 1218 X (stone and brick floor with offering basin covers mouth of mud brick shaft which descends into G 1218 A).,,",NULL,NULL,"G 1218 A; G 1218 B; G 1218 X,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 327,Western Cemetery,G 1219,G       1219                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 1219 A; G 1219 B; G 1219 C,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
@@ -1966,9 +1966,9 @@ Reisner, George A. ""Report on the Egyptian Expedition during 1934-35."" Bulleti
 Reisner, unpublished manuscript, Box L 8, Appendix J: The Mastabas in Cemeteries G 1400 and G 3000, pp. 38-42.
 ",NULL,"Mastaba built on independent site west of G 1407 and south of G 1454+1455.,,",NULL,NULL,"G 1457 A; G 1457 B; G 1457 Chapel,,",NULL,NULL,1,1,NULL,1,Mud-brick mastaba,Baer Date_Dynasty 5
 394,Western Cemetery,G 1458,G       1458                    ,NULL,"Reisner, unpublished manuscript, Box L 8, Appendix J: The Mastabas in Cemeteries G 1400 and G 3000, p. 42.",NULL,"Mastaba built on independent site south of G 1457 and east of G 1459.  Mastaba is drawn but not labeled on plan EG002029.
- MASTABAS G 1458-1461 MAY BE JUNKER'S ITJU, ANKHMARE (2), SENEB, AND POSSIBLY S 4523 OR ANKH.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-395,Western Cemetery,G 1459,G       1459                    ,NULL,"Reisner, unpublished manuscript, Box L 8, Appendix J: The Mastabas in Cemeteries G 1400 and G 3000, p. 42.",NULL,"Mastabas G 1459, 1460 & 1461 lie east to west in German concession in a row west of G 1458 and southwest of G 1457.  Mastabas drawn but not labeled on plan EG002029.  MASTABAS G 1458-1461 MAY BE JUNKER'S ITHU, ANKHMARE (2), SENEB, AND POSSIBLY S 4523.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-396,Western Cemetery,G 1460,G       1460                    ,NULL,"Reisner, unpublished manuscript, Box L 8, Appendix J: The Mastabas in Cemeteries G 1400 and G 3000, p. 42.",NULL,"Mastabas G 1459, 1460 & 1461 lie east to west in German concession in a row west of G 1458 and southwest of G 1457.  Mastabas drawn but not labeled on plan EG002029.  MASTABAS G 1458-1461 MAY BE JUNKER'S ITJU, ANKHMARE (2), SENEB, AND POSSIBLY S 4523 OR ANKH.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+ MASTABAS G 1458-1461 MAY BE JUNKER'S ITJU, ANKHMARE (2), SENEB, AND POSSIBLY S 4523 OR ANKH.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+395,Western Cemetery,G 1459,G       1459                    ,NULL,"Reisner, unpublished manuscript, Box L 8, Appendix J: The Mastabas in Cemeteries G 1400 and G 3000, p. 42.",NULL,"Mastabas G 1459, 1460 & 1461 lie east to west in German concession in a row west of G 1458 and southwest of G 1457.  Mastabas drawn but not labeled on plan EG002029.  MASTABAS G 1458-1461 MAY BE JUNKER'S ITHU, ANKHMARE (2), SENEB, AND POSSIBLY S 4523.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+396,Western Cemetery,G 1460,G       1460                    ,NULL,"Reisner, unpublished manuscript, Box L 8, Appendix J: The Mastabas in Cemeteries G 1400 and G 3000, p. 42.",NULL,"Mastabas G 1459, 1460 & 1461 lie east to west in German concession in a row west of G 1458 and southwest of G 1457.  Mastabas drawn but not labeled on plan EG002029.  MASTABAS G 1458-1461 MAY BE JUNKER'S ITJU, ANKHMARE (2), SENEB, AND POSSIBLY S 4523 OR ANKH.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 397,Western Cemetery,G 1601,G       1601                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 1601 A,,",NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
 398,Western Cemetery,G 1602,G       1602                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 1602 A,,",NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
 399,Western Cemetery,G 1603,G       1603                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 1603 A,,",NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
@@ -13337,7 +13337,7 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 217, plan 19.
 ",NULL,"Mastaba is off southwest corner of G I-S No. 2,,",NULL,NULL,"S 61; S 62; S 63; S 64; S 65; S 75; S 76; chapel,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,PorterMoss Date_Dynasty 6
-1328,Eastern Cemetery,Mastaba of Overseer,Mastaba     of   Overseer       ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 5-6
+1328,Eastern Cemetery,Mastaba of Overseer,Mastaba     of   Overseer       ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 5-6
 1329,Sphinx Complex,G 9410,G       9410                    ,NULL,"Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, folded plan, U-4.
 
 Mariette, Le Serapeum de Memphis, i, p. 94 [upper].
@@ -15950,7 +15950,7 @@ Lehmann, Katja. Der Serdab in den Privatgräbern des Alten Reiches 1-3. Ph.D. Di
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 214, plan 6.
 ",NULL,"Rock-cut tomb in cliff bordering north side of Sphinx depression, east of G 9130 (Rock Cut tomb No. 3) and west of G 9110 (Rock Cut Tomb No. 5) which is west of G 9090 (Rock Cut Tomb No. 7).  Drawn and labeled 4 on The Great Sphinx plan, Rock Cut Tomb of Akhre on Giza 9 plan, and Ankhre (No. 4 of Hassan) on Porter-Moss plan.  Excavated in 1935-1936 by Hassan.,,",NULL,NULL,"S 1662; S 1663; S 1664; chapel; ante-chamber,,",NULL,NULL,1,1,NULL,10,Rock-cut tomb,PorterMoss Date_Dynasty 5-6
-1771,Khufu Pyramid Complex,Isis Cemetery,Isis  Cemetery                  ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+1771,Khufu Pyramid Complex,Isis Cemetery,Isis  Cemetery                  ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 1772,Khafre Pyramid Complex,Khafre Boat Pits,KhafreBoat  Pits                ,NULL,"Altenmüller, Hartwig. ""Funerary Boats and Boat Pits of the Old Kingdom."" In Filip Coppens, ed. Abusir and Saqqara in the year 2001. Proceedings of the Symposium (Prague, September 25th-27th, 2001). Archiv Orientální 70, No. 3 (August 2002). Prague:Oriental Institute, Academy of Sciences of the Czech Republic, 2002, pp. 270, 273-274, 284.
 
 Cerný, Jaroslav. ""A Note on the Recently Discovered Boat of Cheops."" Journal of Egyptian Archaeology 41 (1955), pp. 75, 78, fig. 2.
@@ -15994,7 +15994,7 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concerning the Gread Pyramids of el-Gîza and Their Royal Constructors."" Bulletin of the John Rylands Library 44, No. 1 (September 1961), p. 116. 
 
 Smith, William Stevenson. ""The Origin of Some Unidentified Old Kingdom Reliefs."" American Journal of Archaeology 46 (1942), p. 524.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 1775,Khafre Pyramid Complex,Khafre Pyramid,KhafrePyramid                   ,NULL,"Becker, Jürgen. ""Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem."" Sokar 8 (1. Halbjahr 2004), pp. 6-17, unnumbered figs. 
 
 Cwiek, Andrzej. Relief Decoration in the Royal Funerary Complexes of the Old Kingdom: Studies in the Development, Scene Content and Iconography. Warsaw: Institute of Archaeology, Faculty of History, Warsaw University, 2003, pp. 98-103, fig. 18.
@@ -16034,11 +16034,11 @@ Quibell, A.A. The Pyramids of Giza. Cairo: C.M.S. Bookshop, undated, pp. 9, 11, 
 Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concerning the Gread Pyramids of el-Gîza and Their Royal Constructors."" Bulletin of the John Rylands Library 44, No. 1 (September 1961), pp. 101, 108, 116-117. 
 
 Sakovich, Anthony P. ""Explaining the Shafts in Khufu's Pyramid at Giza."" Journal of the American Research Center in Egypt 42 (2005-6), pp. 4, 5, 11, fig. 1.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 1776,Khafre Pyramid Complex,Khafre Quarry,KhafreQuarry                    ,NULL,"Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orientforschung 32 (1985), pp. 152, 154. 
 
 Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concerning the Gread Pyramids of el-Gîza and Their Royal Constructors."" Bulletin of the John Rylands Library 44, No. 1 (September 1961), p. 116. 
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 1777,Khafre Pyramid Complex,G II-a,G     II    a                   ,NULL,"Grimm, Alfred. ""Ein Käfig für einen Gefangenen in einem Ritual zur Vernichtung von Feinden."" Journal of Egyptian Archaeology 73 (1987), p. 205. 
 
 Jánosi, Peter. ""Die Grabanlagen der Konigin Hetepheres II."" Zeitschrift für Ägyptische Sprache und Altertumskunde 123 (1996), p. 60.
@@ -16050,7 +16050,7 @@ Münch, Hans-Hubertus, ""Categorizing Archaeological Finds: the Funerary Materia
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 26.
 
 Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concerning the Gread Pyramids of el-Gîza and Their Royal Constructors."" Bulletin of the John Rylands Library 44, No. 1 (September 1961), p. 116. 
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 1778,Khafre Pyramid Complex,Khafre Valley Temple,KhafreValleyTemple              ,NULL,"Arnold, Dieter. ""Old Kingdom Statues in their Architectural Setting."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, pp. 41-43, fig. 19. 
 
 Brovarski, Edward.  ""The Doors of Heaven."" Orientalia 46 (1977), p. 110.
@@ -16086,7 +16086,7 @@ Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concern
 Smith, William Stevenson. ""The Old Kingdom in Egypt,"" The Cambridge Ancient History, rev. ed. of vols. I & II, Cambridge University Press, 1962, pp. 12, 32.
 
 Unsigned. ""The Dawn of Civilization in Egypt: Tracing the Culture of the Egyptians nearly to the Stone Age--Mummies Not of Ancient Origin--The Secret of the Sphinx Revealed."" Science Conspectus 2, No. 3 (February 1912), p. 77.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 1779,Khufu Pyramid Complex,Khufu Boat Pits,Khufu Boat  Pits                ,NULL,"Aldred, Egypt to the End of the Old Kingdom, figs. 81, 83.
 
 Altenmüller, Hartwig. ""Funerary Boats and Boat Pits of the Old Kingdom."" In Filip Coppens, ed. Abusir and Saqqara in the year 2001. Proceedings of the Symposium (Prague, September 25th-27th, 2001). Archiv Orientální 70, No. 3 (August 2002). Prague: Oriental Institute, Academy of Sciences of the Czech Republic, 2002, pp. 269-270, 273-274, 282-285, fig. 1, p. 289, fig. 6.
@@ -16180,7 +16180,7 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concerning the Gread Pyramids of el-Gîza and Their Royal Constructors."" Bulletin of the John Rylands Library 44, No. 1 (September 1961), p. 115. 
 
 Smith, William Stevenson. ""Inscriptional Evidence for the History of the Fourth Dynasty."" Journal of Near Eastern Studies 11 (1952), pp. 119, 126-127, fig. 7.
-",NULL,"The Khufu Causeway extends eastward from the eastern side of Khufu's Mortuary Temple to Khufu's Valley Temple.  Much of the causeway was destroyed by urban structures.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,"The Khufu Causeway extends eastward from the eastern side of Khufu's Mortuary Temple to Khufu's Valley Temple.  Much of the causeway was destroyed by urban structures.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 1782,Khufu Pyramid Complex,Khufu Pyramid,Khufu Pyramid                   ,NULL,"Badawy, Alexander M. ""The Periodic System of Building a Pyramid."" Journal of Egyptian Archaeology 63 (1977), pp. 52-54, 58. 
 
 Bauval, Robert G. ""The Horizon of Khufu."" Discussions in Egyptology 30 (1994), pp. 17-20.
@@ -16260,13 +16260,13 @@ Scharff, Alexander. ""On the Statuary of the Old Kingdom."" Journal of Egyptian 
 Thomas, Elizabeth. ""Air Channels in the Great Pyramid."" Journal of Egyptian Archaeology 39 (1953), p. 113. 
 
 Wainwright, G.A. ""Review of 'Einige zur dritten Bauperiode der grossen Pyramide bei Gise'."" Journal of Egyptian Archaeology 23 (1937), pp. 127-129. 
-",NULL,"Khufu pyramid includes an enclosure wall.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,"Khufu pyramid includes an enclosure wall.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 1783,Khufu Pyramid Complex,Khufu Quarry,Khufu Quarry                    ,NULL,"Hawass, Zahi. ""Khufu's National Project: The Great Pyramid of Giza in the Year 2528 B.C."" In Peter Janosi, ed. Structure and Significance: Thoughts on Ancient Egyptian Architecture, Vienna: Verlag der Österreichischen Akademie der Wissenschaften, 2005, pp. 315, 317.
 
 Hawass, Zahi. ""Pyramid Construction. New Evidence Discovered at Giza."" In Heike Guksch and Daniel Polz, eds. Stationen. Beiträge zur Kulturgeschichte Ägyptens Rainer Stadelmann gewidmet, Mainz: Philipp von Zabern, 1998, pp. 55-56.
 
 Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orientforschung 32 (1985), pp. 148-151, 154. 
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 1790,Khufu Pyramid Complex,Khufu Valley Temple,Khufu ValleyTemple              ,NULL,"Cwiek, Andrzej. Relief Decoration in the Royal Funerary Complexes of the Old Kingdom: Studies in the Development, Scene Content and Iconography. Warsaw: Institute of Archaeology, Faculty of History, Warsaw University, 2003, p. 95.
 
 Flentye, Laurel. ""The Development of Art in the Fourth Dynasty: The Eastern and GIS Cemeteries at Giza."" In Mamdouh Eldmaty and Mai Trad, eds. Egyptian Museum Collections Around the World: Studies for the Centennial of the Egyptian Museum, Cairo. Cairo: Supreme Council of Antiquities, 2002, p. 385.
@@ -16286,7 +16286,7 @@ Lehner, Mark. ""The Development of the Giza Necropolis. The Khufu Project."" Mit
 Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Other Mastaba Fields."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, pp. 151, 152, note 6. 
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 11.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 1791,Khafre Quarry Cemetery,Lepsius 10,Lepsius        10               ,NULL,"Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Text 1: Unteraegypten und Memphis [Giza pages only]. Leipzig: J.C. Hinrichs'sche Buchhandlung, 1897, pp. 29-30.
 
 Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Plates 2, Band 3 [Giza plates only]. Berlin: Nicolaische Buchhandlung, 1849-1859, pl. 78c.
@@ -17460,7 +17460,7 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 1855,Western Cemetery,Bebib,Bebib                           ,NULL,"Curto, Silvio. Gli Scavi Italiani a el-Ghiza (1903). Rome: Centro Per Le Antichitá E La Storia Dell'Arte del Vicino Oriente, 1993, pp. 69-72, fig. 23.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 157, plan 16.
-",NULL,"Exact position unknown, probably north of tomb G 5220 and east of G 5230.  Porter-Moss III plan XVI and plan EG002029 both show this area, but do not indicate the existance of Bebib.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Late Dynasty 5 or Dynasty 6
+",NULL,"Exact position unknown, probably north of tomb G 5220 and east of G 5230.  Porter-Moss III plan XVI and plan EG002029 both show this area, but do not indicate the existance of Bebib.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Late Dynasty 5 or Dynasty 6
 1856,Central Field (Hassan),G 8408,G       8408                    ,NULL,"Callender, Gae. ""Queen Hetepheres I."" Bulletin of the Australian Centre for Egyptology 1 (1990), p. 29 note 11.
 
 Callender, Vivienne G. and Peter Jánosi. ""The Tomb of Queen Khamerernebty II at Giza."" Mitteilungen des Deutschen Archäologischen Instituts, Abteilung Kairo 53 (1997), pp. 6-7, 13, notes 22, 48, fig. 4.
@@ -17517,7 +17517,7 @@ Superstructure.  Two chapels.  Northern one is roughly cut and has an unfinished
 1862,Western Cemetery,Director of Scribes,Director    of   Scribes        ,NULL,"Curto, Silvio. Gli Scavi Italiani a el-Ghiza (1903). Rome: Centro Per Le Antichitá E La Storia Dell'Arte del Vicino Oriente, 1993, 69-70, fig. 30.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 157, plan 16.
-",NULL,"Exact position unknown, probably north of G 5220 and east of G 5230.  This area is shown on Porter-Moss III plan XVI and on plan EG002029, but mastaba for Director of Scribes is not recorded.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Late Dynasty 5 or Dynasty 6
+",NULL,"Exact position unknown, probably north of G 5220 and east of G 5230.  This area is shown on Porter-Moss III plan XVI and on plan EG002029, but mastaba for Director of Scribes is not recorded.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Late Dynasty 5 or Dynasty 6
 1863,Central Field (Hassan),G 8922,G       8922                    ,NULL,"Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, pp. 59-62, fig. 24, pls. 23-24, folded plan W-13.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 287-288, plan 23, E-10.
@@ -17651,7 +17651,7 @@ Smith, William Stevenson. A History of Egyptian Sculpture and Painting in the Ol
 1879,Western Cemetery,Ibir...,Ibir                            ,NULL,"Junker, Hermann. Gîza 9. Das Mittelfeld des Westfriedhofs. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 73, Abhandlung 2. Vienna: Rudolph M. Rohrer, 1950, pp. 102-104, fig. 43.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 110, plan 14.
-",NULL,"False-door was found in street west of G 4000 according to Junker, though not clear if it is assocated with a specific tomb.  Stone-built mastaba (according to Porter-Moss) west of tomb G 4000, not actually shown on Porter-Moss III Plan XIV.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 6
+",NULL,"False-door was found in street west of G 4000 according to Junker, though not clear if it is assocated with a specific tomb.  Stone-built mastaba (according to Porter-Moss) west of tomb G 4000, not actually shown on Porter-Moss III Plan XIV.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 6
 1881,Western Cemetery,Idu [II],Idu   II                        ,NULL,"Junker, Hermann. ""The Austrian Excavations, 1914."" Journal of Egyptian Archaeology 1 (1914), pp. 251-253. 
 
 Junker, Hermann. Gîza 8. Der Ostabschnitt des Westfriedhofs, Zweiter Teil. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 73, Abhandlung 1. Vienna: Rudolph M. Rohrer, 1947, pp. 90-107, figs. 25, 39-46, pls. 16-18, plan after p. 28.
@@ -17782,7 +17782,7 @@ Reisner, George A. Mycerinus: The Temples of the Third Pyramid at Giza. Cambridg
 ,,",NULL,1,1,NULL,2,Stone-built mastaba,Harpur Date_Unis - Dynasty 6
 1892,Western Cemetery,Iri & Sebani,Iri   Sebani                    ,NULL,"Marucchi, Di una stela egizia [etc.] in Atti della Pontificia Accademia romana d'archeologia. II.  dissertazioni, 9 (1907), Tav. 2, pp. 34-38 (text).
 
-Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 117-118.",NULL,"Exact position in Western Cemetery unknown.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Probably Dynasty 5-6
+Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 117-118.",NULL,"Exact position in Western Cemetery unknown.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Probably Dynasty 5-6
 1893,Central Field (Hassan),G 8210,G       8210                    ,NULL,"Hassan, Selim. Excavations at Gîza 7: 1935-1936. The Mastabas of the Seventh Season and their Description. Cairo: Government Press, 1953, pp. 65-71, figs. 54-64, pls. 33-35.
 
 Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, folded plan, J/K-18/19.
@@ -18731,7 +18731,7 @@ Lehmann, Katja. Der Serdab in den Privatgräbern des Alten Reiches 1-3. Ph.D. Di
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 145-146, plan 16.
 ",NULL,"Should a unique mastaba S 411/413 be opened for tomb built against south side of Sneferunefer's masatab?  See Junker Giza 7 p. 45.,,",NULL,NULL,"S 408; S 409; serdab; chapel,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,PorterMoss Date_End of Dynasty 5 or Dynasty 6
 1978,Eastern Cemetery,Sokarihetep,Sokarihetep                     ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 210.
-",NULL,"Tomb located below Lepsius 69,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 5-6
+",NULL,"Tomb located below Lepsius 69,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 5-6
 1979,Western Cemetery,Seneb,Seneb                           ,NULL,"Abu Bakr, Abdel Moneim. Excavations at Giza 1949-1950. Cairo: Government Press, 1953, pp. 137, 139-141, figs. 113, 114.
 
 Altenmüller, Hartwig. ""Funerary Boats and Boat Pits of the Old Kingdom."" In Filip Coppens, ed. Abusir and Saqqara in the year 2001. Proceedings of the Symposium (Prague, September 25th-27th, 2001). Archiv Orientální 70, No. 3 (August 2002). Prague: Oriental Institute, Academy of Sciences of the Czech Republic, 2002, pp. 275, 287, fig. 3.
@@ -18799,7 +18799,7 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 1985,Western Cemetery,Tjentet,Tjentet                         ,NULL,"Curto, Silvio. Gli Scavi Italiani a el-Ghiza (1903). Rome: Centro Per Le Antichitá E La Storia Dell'Arte del Vicino Oriente, 1993, pag.61, fig. 17, pl. 16.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 139, plan 15.
-",NULL,"Exact location unknown, but probably in street east of tomb G 4840.  Possibly same as Junker's S 984.  False-door of deceased in Turin Mus. Sup. 1842.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Late Dynasty 4 or Dynasty 5
+",NULL,"Exact location unknown, but probably in street east of tomb G 4840.  Possibly same as Junker's S 984.  False-door of deceased in Turin Mus. Sup. 1842.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Late Dynasty 4 or Dynasty 5
 1986,Western Cemetery,Tjenti (2),Tjenti     2                    ,NULL,"Junker, Hermann. Gîza 7. Der Ostabschnitt des Westfriedhofs, Erster Teil. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 72, Abhandlung 3. Vienna & Leipzig: Hölder-Pichler-Tempsky, 1944, pp. 90-92, figs. 36-37, pl. 18 [a], plan after pl. 40.
 
 Manuelian, Peter Der. ""Unfinished Business: The Giza Tablet of Tjenti (JE 72135)."" In Mamdouh Eldmaty and Mai Trad, eds. Egyptian Museum Collections Around the World: Studies for the Centennial of the Egyptian Museum, Cairo. Cairo: Supreme Council of Antiquities, 2002, p. 787.
@@ -18962,7 +18962,7 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 
 ,,",NULL,NULL,"S 357,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,PorterMoss Date_Dynasty 6
 1993,Eastern Cemetery,Mastaba of Three Pillars,Mastaba     of   ThreePillars   ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 210, plan 18.
-",NULL,"Probably one of rock-cut tombs at east edge of pyramid plateau, south of Khufu causeway between Lepsius 68 and 69.  Exact position unknown.  Not indicated on Porter-Moss plan XVIII, but this plan does indicate Lepsius 68 and 69.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 5-6
+",NULL,"Probably one of rock-cut tombs at east edge of pyramid plateau, south of Khufu causeway between Lepsius 68 and 69.  Exact position unknown.  Not indicated on Porter-Moss plan XVIII, but this plan does indicate Lepsius 68 and 69.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 5-6
 1994,Central Field (Hassan),G 8872,G       8872                    ,NULL,"Hassan, Selim. Excavations at Gîza 3: 1931-1932. Cairo: Faculty of Arts, Fouad I University & Government Press, 1941, pp. 26-28, figs. 26-28, pl. 11 (incorrectly labeled ""Mastaba of Thererw"").
 
 Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, folded plan, T-12.
@@ -18997,8 +18997,8 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, folded plan, L/N-14/16, not shown.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 243, plan 22, E/F-4/5 (not shown).
-",NULL,"Statue of standing man found east of G 8310 (Lepsius 94) and west of G 8400 (Lepsius 100).  Not clear if there is a mastaba associated with this statue.  Excavated in 1942-1946 by Service des Antiquites.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 5-6
-1998,Eastern Cemetery,Overseer of 2 Treasuries,Overseer    of       2Treasuries,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974.",NULL,"Near tomb G 7948, probably lnorth of it.  Exact position unknown.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 5-6
+",NULL,"Statue of standing man found east of G 8310 (Lepsius 94) and west of G 8400 (Lepsius 100).  Not clear if there is a mastaba associated with this statue.  Excavated in 1942-1946 by Service des Antiquites.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 5-6
+1998,Eastern Cemetery,Overseer of 2 Treasuries,Overseer    of       2Treasuries,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974.",NULL,"Near tomb G 7948, probably lnorth of it.  Exact position unknown.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 5-6
 1999,South Giza Cemetery (Z. Hawass),Covington's Tomb,Covington   s    Tomb           ,NULL,"Brovarski, Edward. ""Inventory Offering Lists and the Nomenclature for Boxes and Chests in the Old Kingdom."" In Emily Teeter and John A. Larson, eds. Gold of Praise. Studies on Ancient Egypt in Honor of Edward F. Wente. Studies in Ancient Oriental Civilization 58. Chicago: The Oriental Institute of the University of Chicago, 1999, p. 28, note 2.
 
 Brovarski, Edward. ""An Inventory List from 'Covington's Tomb' and Nomenclature for Furniture in the Old Kingdom."" In Peter Der Manuelian, ed. Studies in Honor of William Kelly Simpson 1. Boston: Museum of Fine Arts, 1996, pp. 117-155, fig. 1.
@@ -19151,7 +19151,7 @@ Superstructure.  Chapel with an eastern entrance and a western false-door, both 
 Farina, Il Regio Museo (1938), pl. on p. 40 [right].
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 139-140, plan 15.
-",NULL,"Exact location unknown, but probably east of G 4840.  Possibly same as Junker's S 984.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Late Dynasty 4 or Dynasty 5
+",NULL,"Exact location unknown, but probably east of G 4840.  Possibly same as Junker's S 984.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Late Dynasty 4 or Dynasty 5
 2016,Western Cemetery,Wemtetka,Wemtetka                        ,NULL,"Junker, Hermann. Gîza 9. Das Mittelfeld des Westfriedhofs. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 73, Abhandlung 2. Vienna: Rudolph M. Rohrer, 1950, pp. 104-107, fig. 44, pl. 9 [d], plan 2 after pl. 20.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 110, plans 13-14.
@@ -19182,7 +19182,7 @@ Superstructure.  The mastaba is divided into two parts which are the funerary ch
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 121, plan 11.
 ",NULL,"Mastaba is in in field south of G 2100-II and north of G 4560, built against north wall of unnamed mastaba, northeast of D 118 and south of Khenemu.  Mastaba is drawn but not labeled on plan EG002029.,,",NULL,NULL,"S 124; chapel; unlabeled shaft,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,PorterMoss Date_Dynasty 6
 2019,Eastern Cemetery,Werirni,Werirni                         ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 205.
-",NULL,"Located between G 7810 and G 7820.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Probably Dynasty 5
+",NULL,"Located between G 7810 and G 7820.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Probably Dynasty 5
 2020,Western Cemetery,Werkai,Werkai                          ,NULL,"Junker, Hermann. Gîza 6. Die Mastabas des Nfr (Nefer), Kdfjj (Kedfi), Kahjf (Kahjef) und die westlich anschließenden Grabanlagen. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 72, Abhandlung 1. Vienna & Leipzig: Hölder-Pichler-Tempsky, 1943, pp. 241-242, figs. 51, 102-103, pl. 24 [a, b], plan after p. 273.
 
 Reisner, George.  Unpublished manuscript, GN3_L13_4000_p054.
@@ -19253,7 +19253,7 @@ Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Oth
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 32.
 
 Saleh, Abdel-Aziz. ""Excavations Around Mycerinus Pyramid Complex."" Mitteilungen des Deutschen Archäologischen Instituts, Abteilung Kairo 30 (1974), pp. 131, 133-134, 136, 149, 153.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2028,Menkaure Pyramid Complex,Menkaure Pyramid Temple,Menkaure    Pyramid   Temple    ,NULL,"Cwiek, Andrzej. Relief Decoration in the Royal Funerary Complexes of the Old Kingdom: Studies in the Development, Scene Content and Iconography. Warsaw: Institute of Archaeology, Faculty of History, Warsaw University, 2003, pp. 105-106.
 
 Faulkner, Raymond O. ""Review of 'Mycerinus. The Temples of the Third Pyramid at Giza'."" Journal of Egyptian Archaeology 19 (1933), p. 111. 
@@ -19281,7 +19281,7 @@ Sethe, Kurt. Urkunden des Alten Reichs. Erster Band. Urkunden des Ägyptischen A
 Smith, William Stevenson. ""The Old Kingdom in Egypt,"" The Cambridge Ancient History, rev. ed. of vols. I & II, Cambridge University Press, 1962, p. 35.
 
 Unsigned. ""The Dawn of Civilization in Egypt: Tracing the Culture of the Egyptians nearly to the Stone Age--Mummies Not of Ancient Origin--The Secret of the Sphinx Revealed."" Science Conspectus 2, No. 3 (February 1912), p. 77.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2029,Menkaure Quarry Cemetery,Menkaure Quarry,Menkaure    Quarry              ,NULL,"Flentye, Laurel. ""The Mastaba of Meresankh III (G 7530/7540) in the Eastern Cemetery at Giza: An Archaeological and Art Historical Analysis."" Bulletin of the Egyptian Museum 3 (2006), p. 72.
 
 Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orientforschung 32 (1985), p. 154. 
@@ -19289,7 +19289,7 @@ Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orien
 Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Other Mastaba Fields."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, p. 145. 
 
 Reisner, George A., and Clarence S. Fisher. ""Preliminary Report on the Work of the Harvard-Boston Expedition in 1911-13."" Annales du Service des Antiquités de l'Egypte 13 (1914), pp. 251-252, pl. 12.
-",NULL,"Menkaure Quarry and Menkaure Quarry Cemetery are treated as different names for the same site.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,"Menkaure Quarry and Menkaure Quarry Cemetery are treated as different names for the same site.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2035,Menkaure Pyramid Complex,Menkaure Valley Temple,Menkaure    Valley    Temple    ,NULL,"Arnold, Dieter. ""Old Kingdom Statues in their Architectural Setting."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, pp. 41-42, 44. 
 
 Bothmer, Bernard V. ""Notes on the Mycerinus Triad."" Bulletin of the Museum of Fine Arts, Boston 48, No. 271 (February 1950), p. 13.
@@ -19339,7 +19339,7 @@ Unsigned. ""The Dawn of Civilization in Egypt: Tracing the Culture of the Egypti
 Verner, Miroslav. ""Further Thoughts on the Khentkaus Problem."" Discussions in Egyptology 38 (1997), p. 113. 
 
 Wood, Wendy. ""A Reconstruction of the Triads of King Mycerinus."" Journal of Egyptian Archaeology 60 (1974), pp. 82-93, fig. 1.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2036,Menkaure Quarry Cemetery,MQ 1,MQ         1                    ,NULL,"Brovarski, Edward.  ""The Doors of Heaven."" Orientalia 46 (1977), p. 113.
 
 Callender, Vivienne G. and Peter Jánosi. ""The Tomb of Queen Khamerernebty II at Giza."" Mitteilungen des Deutschen Archäologischen Instituts, Abteilung Kairo 53 (1997), pp. 1, 19.
@@ -19626,7 +19626,7 @@ Reisner, George A. ""The Sphinx Awakens-Again."" The Rotarian 49, No. 1 (July 19
 Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concerning the Gread Pyramids of el-Gîza and Their Royal Constructors."" Bulletin of the John Rylands Library 44, No. 1 (September 1961), pp. 101-102. 
 
 Unsigned. ""The Dawn of Civilization in Egypt: Tracing the Culture of the Egyptians nearly to the Stone Age--Mummies Not of Ancient Origin--The Secret of the Sphinx Revealed."" Science Conspectus 2, No. 3 (February 1912), pp. 72, 77.
-",NULL,"Excavated in 1936-1937 by Hassan.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Khafre
+",NULL,"Excavated in 1936-1937 by Hassan.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Khafre
 2081,Sphinx Complex,Sphinx Temple,SphinxTemple                    ,NULL,"Arnold, Dieter. ""Old Kingdom Statues in their Architectural Setting."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, pp. 42-43, fig. 21. 
 
 Breasted, James H. Ancient Records of Egypt: Historical Documents from the Earliest Times to the Persian Conquest, Collected Edited and Translated with Commentary, Vol. 1: The First to the Seventeenth Dynasties. Ancient Records. Chicago: University of Chicago Press, 1906, p. 83.
@@ -19672,19 +19672,19 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, folded plan, Z/AA-4/5.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 41, plan 6.",NULL,"Temple of Thutmose I is built within the Sphinx complex, off northeast side of Amenhetep II Temple.  Excavated in 1936-1937 by Hassan.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,1,Mud-brick mastaba,PorterMoss Date_Tuthmosis I
-2084,Eastern Cemetery,Street G 7000,StreetG      7000               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-2085,Eastern Cemetery,Street G 7100,StreetG      7100               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+2084,Eastern Cemetery,Street G 7000,StreetG      7000               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+2085,Eastern Cemetery,Street G 7100,StreetG      7100               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2086,Eastern Cemetery,Street G 7200,StreetG      7200               ,NULL,"Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orientforschung 32 (1985), p. 153. 
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-2087,Eastern Cemetery,Street G 7300,StreetG      7300               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-2088,Eastern Cemetery,Street G 7400,StreetG      7400               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-2089,Eastern Cemetery,Street G 7500,StreetG      7500               ,NULL,NULL,NULL,"Street G 7500 lies between mastabas G 75XX and G 76XX.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-2090,Eastern Cemetery,Street G 7600,StreetG      7600               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+2087,Eastern Cemetery,Street G 7300,StreetG      7300               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+2088,Eastern Cemetery,Street G 7400,StreetG      7400               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+2089,Eastern Cemetery,Street G 7500,StreetG      7500               ,NULL,NULL,NULL,"Street G 7500 lies between mastabas G 75XX and G 76XX.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+2090,Eastern Cemetery,Street G 7600,StreetG      7600               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2091,Eastern Cemetery,Street G 7700,StreetG      7700               ,NULL,"Bolshakov, Andrey. ""Osiris in the Fourth Dynasty Again? The False Door of Jntj, MFA 31.781."" In Hedvig Györy, ed. Mélanges offerts à Edith Varga. Bulletin du Musée Hongrois des Beaux-Arts Supplément-2001, Budapest: Musée Hongrois des Beaux-Arts, 2001, p. 68.
 
 Manuelian, Peter Der. ""A Case of Prefabrication at Giza? The False Door of Inti."" Journal of the American Research Center in Egypt 35 (1998), p. 116.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-2092,Eastern Cemetery,Street G 7800,StreetG      7800               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+2092,Eastern Cemetery,Street G 7800,StreetG      7800               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2093,Khufu Pyramid Complex,Isis Temple,Isis  Temple                    ,NULL,"Breasted, James H. Ancient Records of Egypt: Historical Documents from the Earliest Times to the Persian Conquest, Collected Edited and Translated with Commentary, Vol. 1: The First to the Seventeenth Dynasties. Ancient Records. Chicago: University of Chicago Press, 1906, pp. 84-85.
 
 Flentye, Laurel. ""The Development of Art in the Fourth Dynasty: The Eastern and GIS Cemeteries at Giza."" In Mamdouh Eldmaty and Mai Trad, eds. Egyptian Museum Collections Around the World: Studies for the Centennial of the Egyptian Museum, Cairo. Cairo: Supreme Council of Antiquities, 2002, p. 388.
@@ -19710,11 +19710,11 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 Quibell, A.A. The Pyramids of Giza. Cairo: C.M.S. Bookshop, undated, p. 15.
 
 Smith, William Stevenson. ""The Old Kingdom in Egypt,"" The Cambridge Ancient History, rev. ed. of vols. I & II, Cambridge University Press, 1962, p. 29.
-",NULL,"Temple of Isis Mistress-of-the-Pyramid was constructed in Street G 7000, between east wall of G I-c and west wall of G 7140 portion of G 7130-7140.,,",NULL,NULL,"Shaft F; Shaft G; Shaft P; Shaft S; Room A; Room B; Room C; Room D; Room E; Room F; Room G; Room H; Room I; Room J; Room K; Room L; Room M; Room N; Room P; Room Q; Room R; Room S; Room T,,",NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dyn  21 with Dyn 26 enlargement
+",NULL,"Temple of Isis Mistress-of-the-Pyramid was constructed in Street G 7000, between east wall of G I-c and west wall of G 7140 portion of G 7130-7140.,,",NULL,NULL,"Shaft F; Shaft G; Shaft P; Shaft S; Room A; Room B; Room C; Room D; Room E; Room F; Room G; Room H; Room I; Room J; Room K; Room L; Room M; Room N; Room P; Room Q; Room R; Room S; Room T,,",NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dyn  21 with Dyn 26 enlargement
 2094,Wadi Cemetery (Reisner; north of W. Cem),Wadi Cemetery (GW),Wadi  Cemetery   GW             ,Wadi Cemetery is north of G 2000 (Lepsius 23).  Reisner excavated enough to determine that it was filled with many non-descript tombs.  He then covered it with the debris from excavations in the Western Cemetery.,"Giza Volume I (p.21-24) and Records of the Past.Volume.IV.Part.V.May.1905.
 
 Manuelian, Peter Der. ""On the Early History of Giza: The 'Lost' Wadi Cemetery (Giza Archives Gleanings, III)."" Journal of Egyptian Archaeology 95 (2009), pp. 105-140.
-",NULL,"Reisner cleared old (4th dynasty?) dump material, perhaps from construction G 2000, from the wadi cemetery north of G 2000 with 75 men from December 9, 1903 to January 13, 1904. After excavating about 80 mudbrick tombs with little value, he selected this area to dump all the material cleared from the NW corner of the Western Cemetery.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Reisner Date_Late Dynasty 3 or Dynasty 4
+",NULL,"Reisner cleared old (4th dynasty?) dump material, perhaps from construction G 2000, from the wadi cemetery north of G 2000 with 75 men from December 9, 1903 to January 13, 1904. After excavating about 80 mudbrick tombs with little value, he selected this area to dump all the material cleared from the NW corner of the Western Cemetery.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Reisner Date_Late Dynasty 3 or Dynasty 4
 2095,Western Cemetery,Western Cemetery,Western     Cemetery            ,NULL,"Faulkner, Raymond O. ""Review of 'A History of the Giza Necropolis'."" Journal of Egyptian Archaeology 32 (1946), pp. 105-106. 
 
 Flentye, Laurel. ""The Mastabas of Ankh-haf (G 7510) and Akhethetep and Meretites (G 7650) in the Eastern Cemetery at Giza: A Reassessment."" In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 292, 293, 298.
@@ -19744,7 +19744,7 @@ Reisner, George A. ""The Harvard-University-Museum of Fine Arts Egyptian Expedit
 Reisner, George A. ""Accessions to the Egyptian Department During 1914."" Bulletin of the Museum of Fine Arts, Boston 13, No. 76 (April 1915), pp. 29-36, figs. 1-4.
 
 Reisner, George A., and Clarence S. Fisher. ""Preliminary Report on the Work of the Harvard-Boston Expedition in 1911-13."" Annales du Service des Antiquités de l'Egypte 13 (1914), pp. 227-250, pls. 1-3.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2097,Western Cemetery,D 12,D         12                    ,NULL,"Hornemann, Types 6, pl.1483.
 
 Junker, Hermann. Gîza 9. Das Mittelfeld des Westfriedhofs. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 73, Abhandlung 2. Vienna: Rudolph M. Rohrer, 1950, plan 2 after pl. 20.
@@ -19843,7 +19843,7 @@ Woods, Alexandra. ""Contribution to a Controversy: A Date For the Tomb of kA(=j)
 ",NULL,"This G 2135 is south of G 2140 and excavated by Junker.  Shaft and chapels named by Reisner.  Some Reisner excavation notes also assign G 2135 to what is probably G 2134a XYZ.,,",NULL,NULL,"G 2135 A; chapel,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,Jánosi Date_Khufu or shortly thereafter
 2103,Western Cemetery,G 2193+2194,G       2193 2194               ,NULL,"Reisner, unpublished manuscript.  Cemetery en Eschelon page 105-106.",NULL,"Unclear from draft manuscript which shafts relate to G 2193 and which to G 2194.  This file assumes A, B, and C belong to G 2194 while X and Y belong to G 2193 based on visual review of map.,,",NULL,NULL,"G 2194 A; G 2194 B; G 2194 C; G 2193 X; G 2193 Y,,",NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
 2104,Western Cemetery,D 221,D        221                    ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 117.
-",NULL,"Exact position unknown, but probably in field northeast of G 4000, near D 220 aka TSJ by Junker which is north of D 116 which is on west-east line D 110-118.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Probably Dynasty 5-6
+",NULL,"Exact position unknown, but probably in field northeast of G 4000, near D 220 aka TSJ by Junker which is north of D 116 which is on west-east line D 110-118.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Probably Dynasty 5-6
 2105,Western Cemetery,G 1461,G       1461                    ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 64.
 
 Reisner, unpublished manuscript, Box L 8, Appendix J: The Mastabas in Cemeteries G 1400 and G 3000, p. 42.
@@ -20030,7 +20030,7 @@ Reisner, George A. ""Note on Overbuilding and Intrusive Burials at Gizah."" Jour
 
 Smith, William Stevenson. Ancient Egypt as Represented in the Museum of Fine Arts, Boston. Boston: Museum of Fine Arts, 1960 (6th ed.), pp. 64-68, figs. 38, 39.
 ",NULL,"Tomb/chapels on map EG 498 but not labeled.  Between shaft G 2385 A and G 2387.  In Brovarski's GM 7, maps 2 and 3 show this tomb with two mostly destroyed chapels a & b just south of G 2384.  Sabu-ptah Ibebi (G 2386/G 2381), possible owner of one of these two stone built chapels [G 2386a or G 2386b], is probably buried in sloping-passage tomb G 2381 C.  Merptahankh-meryre Ptahshepses Impy (G 2386/2381), possible owner of second of these two stone built chapels [G 2386a or G 2386b], is buried in sloping-passage tomb G 2381 A.,,",NULL,NULL,"G 2386 A; chapel a (destroyed); chapel b (destroyed),,",NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
-2111,Western Cemetery,G 2452,G       2452                    ,NULL,NULL,NULL,"G 2450 Y was renumbered G 2452 A.,,",NULL,NULL,"G 2452 A,,",NULL,NULL,1,1,NULL,0,(not assigned),_
+2111,Western Cemetery,G 2452,G       2452                    ,NULL,NULL,NULL,"G 2450 Y was renumbered G 2452 A.,,",NULL,NULL,"G 2452 A,,",NULL,NULL,1,1,NULL,NULL,NULL,_
 2115,Western Cemetery,G 3043,G       3043                    ,NULL,"Fisher, Clarence S. The Minor Cemetery at Giza. Philadelphia: The University Museum, 1924, p. 133.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, plan 9.
@@ -20062,14 +20062,14 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 Reisner, unpublished manuscript, Boxes L8 & L9, Appendix J: The Mastabas in Cemeteries G 1400 and G 3000, pp. 83-84.
 ",NULL,"This mastaba was only partially cleared.  No shafts excavated.  Only east side of mastaba shown west of G 3042 on Fisher's plan 1.  Note: Numbers G 3051-3070 unused.,,",NULL,NULL,"G 3050 Chapel,,",NULL,NULL,1,1,NULL,1,Mud-brick mastaba,PorterMoss Date_Dynasty 6
 2120,Western Cemetery,G 4211,G       4211                    ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, plan 15. 
-",NULL,"G 4211 is located at very southwest corner of Cemetery G 4000, southwest of G 4220 and west of where G 4210 should have been.  Not shown on any plans.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"G 4211 is located at very southwest corner of Cemetery G 4000, southwest of G 4220 and west of where G 4210 should have been.  Not shown on any plans.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2123,Western Cemetery,G 4453,G       4453                    ,NULL,"Junker, Hermann. Gîza 6. Die Mastabas des Nfr (Nefer), Kdfjj (Kedfi), Kahjf (Kahjef) und die westlich anschließenden Grabanlagen. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 72, Abhandlung 1. Vienna & Leipzig: Hölder-Pichler-Tempsky, 1943, plan after p. 273.
 
 Reisner, unpublished manuscript, Box L 13, Description of Mastabas in Cemetery G 4000, p. 5 a.
 ",NULL,"Mastaba built in street east of G 4451 and G 4452, remains of rubble construction with two shafts.,,",NULL,NULL,"S 2152; S 2156,,",NULL,NULL,1,1,NULL,6,Rubble-built mastaba,_
 2126,Western Cemetery,G 5041,G       5041                    ,NULL,"Junker, Hermann. Gîza 7. Der Ostabschnitt des Westfriedhofs, Erster Teil. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 72, Abhandlung 3. Vienna & Leipzig: Hölder-Pichler-Tempsky, 1944, p. 30, fig. 10, plan after pl. 40.
 ",NULL,"Mastaba fills street north of G 5040 & south of G 5050.  Junker labeled shafts S 894 a-e.  Reisner called mastaba G 5041 with shafts a-e.,,",NULL,NULL,"S 894 a; S 894 b; S 894 c; S 894 d; S 894 e,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
-2128,Western Cemetery,G 5244,G       5244                    ,NULL,NULL,NULL,"No reference to this mastaba in Reisner's unpublished manuscript.  Does it not exist?,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+2128,Western Cemetery,G 5244,G       5244                    ,NULL,NULL,NULL,"No reference to this mastaba in Reisner's unpublished manuscript.  Does it not exist?,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2132,Western Cemetery,G 6015,G       6015                    ,NULL,"Reisner, unpublished manuscript, Box L14.",NULL,"No shafts.  This mastaba is w. of G 6014 as sw corner of G 6010.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,3,Uncertain/destroyed,Reisner Date_Late Dynasty 5 or early Dyn 6
 2133,Western Cemetery,G 6016,G       6016                    ,NULL,"Reisner, unpublished manuscript, Box L14.",NULL,"This tomb is s. of G 6010 and w. of G 6015, perhaps partially under G 6015.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,3,Uncertain/destroyed,Reisner Date_Late Dynasty 5 or early Dyn 6
 2134,Western Cemetery,G 6045,G       6045                    ,NULL,"Reisner, unpublished manuscript, Box L14.",NULL,"N. of G 6041 per diary.  Mentioned in unpublished manuscript as part of G 6041-6046 but not subsequently mentioned as a unique site.  Not labeled on map EG 2029.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
@@ -20082,7 +20082,7 @@ Reisner, unpublished manuscript, Box L 13, Description of Mastabas in Cemetery G
 2141,Eastern Cemetery,G 7011,G       7011                    ,NULL,NULL,NULL,"Not in Porter-Moss III.  ,,",NULL,NULL,"G 7011 A; G 7011 B; G 7011 C; G 7011 D; G 7011 F; G 7011 H; G 7011 I; G 7011 J; G 7011 T,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 2142,Eastern Cemetery,G 7012,G       7012                    ,NULL,NULL,NULL,"Tomb is mislabeled as G 7112 on map EG000589.,,",NULL,NULL,"G 7012 A,,",NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
 2143,Eastern Cemetery,G 7013,G       7013                    ,NULL,NULL,NULL,"G 7013 A is located below an old rubble wall south of Isis Temple and west of G 7150.,,",NULL,NULL,"G 7013 A,,",NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
-2145,Eastern Cemetery,G 7052,G       7052                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 7052 A,,",NULL,NULL,1,1,NULL,0,(not assigned),_
+2145,Eastern Cemetery,G 7052,G       7052                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 7052 A,,",NULL,NULL,1,1,NULL,NULL,NULL,_
 2148,Eastern Cemetery,G 7247,G       7247                    ,NULL,"Lehmann, Katja. Der Serdab in den Privatgräbern des Alten Reiches 1-3. Ph.D. Dissertation, Universität Heidelberg, 2000, Kat. G248.
 ",NULL,"Intrusive shafts X and Y are sometimes called shafts A and B respectively.,,",NULL,NULL,"G 7247 C; G 7247 D; G 7247 E; G 7247 F; G 7247 G; G 7247 X; G 7247 Y; G 7247 Serdab,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,Reisner Date_Neweserra or earlier
 2150,Eastern Cemetery,G 7255,G       7255                    ,NULL,NULL,NULL,"Mastaba was built over G 7254.  Not actually marked on maps EG000574, EG000591, EG002032 or EG002884.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,3,Uncertain/destroyed,_
@@ -20207,7 +20207,7 @@ Reisner, unpublished manuscript, Box L 15, Description of Cemetery G 7000: Secon
 2175,Eastern Cemetery,G 7561,G       7561                    ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
 2176,Eastern Cemetery,G 7567,G       7567                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 7567 A; G 7567 B; G 7567 C; G 7567 Z,,",NULL,NULL,1,1,NULL,6,Rubble-built mastaba,_
 2177,Eastern Cemetery,G 7574,G       7574                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 7574 A; G 7574 B; G 7574 Z,,",NULL,NULL,1,1,NULL,9,Mud-brick+rubble mastaba,_
-2181,Eastern Cemetery,G 7608,G       7608                    ,NULL,NULL,NULL,"There is only a single reference to this mastaba in Vol.13.p.253 in 1935?,,",NULL,NULL,"G 7608 C,,",NULL,NULL,1,1,NULL,0,(not assigned),_
+2181,Eastern Cemetery,G 7608,G       7608                    ,NULL,NULL,NULL,"There is only a single reference to this mastaba in Vol.13.p.253 in 1935?,,",NULL,NULL,"G 7608 C,,",NULL,NULL,1,1,NULL,NULL,NULL,_
 2182,Eastern Cemetery,G 7610+7620,G       7610 7620               ,NULL,NULL,NULL,"On map EG000595, shaft G 7620 K is incorrectly labeled as G 7621 K.,,",NULL,NULL,"G 7610 A; G 7610 M; G 7610 N; G 7610 O; G 7610 P; G 7610 Q; G 7610 R; G 7610 S; G 7610 T; G 7610 U; G 7610 W; G 7610 X; G 7610 Y; G 7610 Z; G 7620 A; G 7620 H; G 7620 I; G 7620 J; G 7620 K; G 7620 L; G 7620 M; G 7620 N; G 7620 O; G 7620 P; G 7620 Q; G 7620 R; G 7620 S; G 7620 T; G 7620 U; G 7620 V; G 7620 W; G 7620 X; G 7620 Y,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,Reisner Date_Dynasty 5-6
 2186,Eastern Cemetery,G 7631,G       7631                    ,NULL,"Lehmann, Katja. Der Serdab in den Privatgräbern des Alten Reiches 1-3. Ph.D. Dissertation, Universität Heidelberg, 2000, Kat. G257.
 ",NULL,"Not in Porter-Moss III.,,",NULL,NULL,"G 7631 A; G 7631 B; G 7631 C; G 7631 X; G 7631 Y,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,Reisner Date_Dynasty 5-6
@@ -20330,7 +20330,7 @@ Reisner, unpublished manuscript, Box M 3, Description of Cemetery G 7000, p. 429
 Lepsius, Denkmaeler Text 1, p. 120 [lower].
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 291, plan 23, D-6 (?).
-",NULL,"Exact position unknown.  Approximately at coordinates D-6 on Porter-Moss Plan XXIII.  Perhaps in area of G 8410 (Itisen (2)), G 8422 (Rock Cut Tomb No. 14) and G 8424 (Suf).  Excavated by Lepsius.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 26
+",NULL,"Exact position unknown.  Approximately at coordinates D-6 on Porter-Moss Plan XXIII.  Perhaps in area of G 8410 (Itisen (2)), G 8422 (Rock Cut Tomb No. 14) and G 8424 (Suf).  Excavated by Lepsius.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 26
 2236,Central Field (Hassan),Lepsius 98,Lepsius        98               ,NULL,"Donadoni Roveri, Sarcofagi egizi, p. 125 [B 39].
 
 Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, folded plan, R-12/13 (?).
@@ -20346,11 +20346,11 @@ Wild, MSS. 3, pp. 38-39.
 2237,South Giza Cemetery (Z. Hawass),Lepsius 101,Lepsius       101               ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 296 [footnote].
 
 Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Text 1: Unteraegypten und Memphis [Giza pages only]. Leipzig: J.C. Hinrichs'sche Buchhandlung, 1897, pp. 122-123.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Saite
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Saite
 2238,South Giza Cemetery (Z. Hawass),Lepsius 102,Lepsius       102               ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 296 [footnote].
 
 Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Text 1: Unteraegypten und Memphis [Giza pages only]. Leipzig: J.C. Hinrichs'sche Buchhandlung, 1897, pp. 123-125.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Saite
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Saite
 2239,Eastern Cemetery,Itjer,Itjer                           ,NULL,"Ballerini, Notizia, pp. 65-66 note 1.
 
 Curto, Silvio. Gli Scavi Italiani a el-Ghiza (1903). Rome: Centro Per Le Antichitá E La Storia Dell'Arte del Vicino Oriente, 1993, pp. 31-33, pl. III.
@@ -20396,7 +20396,7 @@ Sethe, Kurt. Urkunden des Alten Reichs. Erster Band. Urkunden des Ägyptischen A
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 203, plan 18.
 
 Smith, William Stevenson. A History of Egyptian Sculpture and Painting in the Old Kingdom. London: Geoffrey Cumberlege, Oxford University Press on behalf of the Museum of Fine Arts, Boston, 1946, p. 52, pl. 20 [d].
-",NULL,"Position not marked on plan. North of tomb G 7711a.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 5-6
+",NULL,"Position not marked on plan. North of tomb G 7711a.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 5-6
 2249,Eastern Cemetery,Neferka,Neferka                         ,NULL,"Ballerini, Notizia, P. 45 [middle and bottom].
 
 Curto, Silvio. Gli Scavi Italiani a el-Ghiza (1903). Rome: Centro Per Le Antichitá E La Storia Dell'Arte del Vicino Oriente, 1993, pp. 13-31, fig. 22, pl. II.
@@ -20416,7 +20416,7 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 Schweitzer, in Orientalia, N.S. 19 (1950), p. 119.
 ",NULL,"Excavated by Abu-Bakr for Service des Antiquites (1945-6).  Wooden painted coffins near tomb of Tjery on Porter-Moss III plan XXXV.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,10,Rock-cut tomb,PorterMoss Date_Dynasty 26
 2253,Central Field (Hassan),Tjahorpeta,Tjahorpeta                      ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 291.
-",NULL,"Exact position unknown.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 30
+",NULL,"Exact position unknown.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 30
 2254,South Giza Cemetery (Z. Hawass),Tomb of Dynasty II,Tomb  of    Dynasty   II        ,NULL,"Kaplony, Inschriften 1, pp. 151-152.
 
 Kaplony, Inschriften 2, notes pp. 883, 885-890.
@@ -20426,7 +20426,7 @@ Petrie, in Egypt Exploration Fund.  Archaeological Report 1906-1907, pp. 27-28.
 Petrie, William F. Gizeh and Rifeh. London: School of Archaeology in Egypt, University College & Bernard Quaritch, 1907, p. 7 [14, 15], pl. 5 e [bottom], VIb-c.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 295.
-",NULL,"This Dynasty 2 mastaba was excavated by Petrie in 1906-7, and is covered by a Dynasty 26 mastaba.  It's exact position is uncertain, somewhare east of Covington's tomb.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 2; Dynasty 26
+",NULL,"This Dynasty 2 mastaba was excavated by Petrie in 1906-7, and is covered by a Dynasty 26 mastaba.  It's exact position is uncertain, somewhare east of Covington's tomb.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 2; Dynasty 26
 2255,Western Cemetery,S 2422/2423,S       2422 2423               ,NULL,"Junker, Hermann. Gîza 9. Das Mittelfeld des Westfriedhofs. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 73, Abhandlung 2. Vienna: Rudolph M. Rohrer, 1950, pp. 27-28, fig. 9, plan 1 after pl 20.
 ",NULL,"Mastaba is at southeast corner of S 2420/2421.,,",NULL,NULL,"S 2422; S 2423,,",NULL,NULL,1,1,NULL,3,Uncertain/destroyed,_
 2256,Menkaure Quarry Cemetery,MQ 101,MQ       101                    ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,10,Rock-cut tomb,PorterMoss Date_Dynasty 4
@@ -20490,7 +20490,7 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 2277,Eastern Cemetery,Service tomb 18,Service     tomb    18          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,10,Rock-cut tomb,Reisner Date_Dynasty 5
 2278,Eastern Cemetery,Service tomb 19,Service     tomb    19          ,NULL,NULL,NULL,NULL,NULL,NULL,"Service tomb 19 A,,",NULL,NULL,1,1,NULL,10,Rock-cut tomb,Reisner Date_Dynasty 5-6
 2287,Eastern Cemetery,G 7141,G       7141                    ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),Reisner Date_Saite-Ptolemaic
-2293,Western Cemetery,Enclosure Wall,Enclosure   Wall                ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+2293,Western Cemetery,Enclosure Wall,Enclosure   Wall                ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2294,Khafre Pyramid Complex,Khafre Pyramid Temple,KhafrePyramid    Temple         ,NULL,"Arnold, Dieter. ""Old Kingdom Statues in their Architectural Setting."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, pp. 41-43, fig. 20. 
 
 Bothmer, Bernard V. Egypt 1950: My First Visit. Oxford: Oxbow Books, 2003, pp. 139, 143.
@@ -20512,7 +20512,7 @@ Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orien
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 20-26.
 
 Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concerning the Gread Pyramids of el-Gîza and Their Royal Constructors."" Bulletin of the John Rylands Library 44, No. 1 (September 1961), p. 116.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2295,Menkaure Pyramid Complex,G III-a,G     III   a                   ,NULL,"Baud, Michel. ""The Tombs of Khamerernebty I and II at Giza."" Göttinger Miszellen 164 (1998), pp. 9, 14. 
 
 Baud, Michel. ""La tombe de la reine-mère xa-mrr-Nbtj Ire."" Bulletin de l'Institut Français d'Archéologie Orientale 95 (1995), pp. 11-21. 
@@ -20542,7 +20542,7 @@ Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Oth
 Reisner, Mycerinus, pp. 55-62, pl. 11.
 
 Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concerning the Gread Pyramids of el-Gîza and Their Royal Constructors."" Bulletin of the John Rylands Library 44, No. 1 (September 1961), p. 117. 
-",NULL,"No inscriptions were discovered in the tomb to indicate the tomb's owner.  However the three subsidiary pyramids have always been identified with the queens of King Menkaure. Since G III-a is the most prominent, Reisner suggests that this pyramid belonged to the wife of Menkaure called Khamerernebty [II].,,","Menkaure Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,"No inscriptions were discovered in the tomb to indicate the tomb's owner.  However the three subsidiary pyramids have always been identified with the queens of King Menkaure. Since G III-a is the most prominent, Reisner suggests that this pyramid belonged to the wife of Menkaure called Khamerernebty [II].,,","Menkaure Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2296,Menkaure Pyramid Complex,G III-a temple,G     III   a    temple         ,NULL,"Faulkner, Raymond O. ""Review of 'Mycerinus. The Temples of the Third Pyramid at Giza'."" Journal of Egyptian Archaeology 19 (1933), p. 111. 
 
 Fay, Biri. ""Royal Women as Represented in Sculpture during the Old Kingdom. Part II: Uninscribed Sculptures."" In Christiane Ziegler, ed. L'art de l'ancien empire égyptien. Paris: Musée du Louvre, 1999, p. 104.
@@ -20550,7 +20550,7 @@ Fay, Biri. ""Royal Women as Represented in Sculpture during the Old Kingdom. Par
 Friedman, Florence Dunn. ""The Menkaure Dyad(s)."" In Stephen E. Thompson and Peter Der Manuelian, eds. Egypt and Beyond: Essays Presented to Leonard H. Lesko upon his Retirement from the Wilbour Chair of Egyptology at Brown University June 2005. Providence: Department of Egyptology and Ancient Western Asian Studies, 2008, p. 123. 
 
 Hassan, Selim. Excavations at Gîza 4: 1932-1933. Cairo: Government Press, 1943, p. 92.
-",NULL,NULL,"Menkaure Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,"Menkaure Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2297,Khufu Pyramid Complex,G I-a,G     I     a                   ,NULL,"Baud, Michel. ""La tombe de la reine-mère xa-mrr-Nbtj Ire."" Bulletin de l'Institut Français d'Archéologie Orientale 95 (1995), p. 13. 
 
 Callender, Gae. ""Queen Hetepheres I."" Bulletin of the Australian Centre for Egyptology 1 (1990), p. 27.
@@ -20600,7 +20600,7 @@ Smith, William Stevenson. A History of Egyptian Sculpture and Painting in the Ol
 Smith, William Stevenson. ""The Origin of Some Unidentified Old Kingdom Reliefs."" American Journal of Archaeology 46 (1942), p. 524.
 
 Smith, William Stevenson. ""The Old Kingdom in Egypt,"" The Cambridge Ancient History, rev. ed. of vols. I & II, Cambridge University Press, 1962, p. 28.
-",NULL,"Queen's Pyramid G I-a is northern most of three Khufu queen's pyramids lying in a north-south line off east side of Khufu Pyramid and north of G I-b.  Excavated by Reisner.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Reisner Date_Dynasty 4
+",NULL,"Queen's Pyramid G I-a is northern most of three Khufu queen's pyramids lying in a north-south line off east side of Khufu Pyramid and north of G I-b.  Excavated by Reisner.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Reisner Date_Dynasty 4
 2298,Khufu Pyramid Complex,G I-b,G     I     b                   ,NULL,"Flentye, Laurel. ""The Development of Art in the Eastern and GIS Cemeteries at Giza during the Fourth Dynasty: Iconography and Style."" In Jean-Claude Goyon and Christine Cardin, eds. Proceedings of the Ninth International Congress of Egyptologists, Grenoble, 6-12 septembre 2004, vol. I. Orientalia Lovaniensia Analecta 150. Leuven: Uitgeveru Peeters en Departement Oosterse Studies, 2007, pp. 723, 730, note 6, fig. 1.
 
 Flentye, Laurel. ""The Mastabas of Ankh-haf (G 7510) and Akhethetep and Meretites (G 7650) in the Eastern Cemetery at Giza: A Reassessment."" In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 293, 294, 298, fig. 1.
@@ -20636,7 +20636,7 @@ Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concern
 Smith, William Stevenson. ""The Origin of Some Unidentified Old Kingdom Reliefs."" American Journal of Archaeology 46 (1942), pp. 523-525.
 
 Smith, William Stevenson. ""The Old Kingdom in Egypt,"" The Cambridge Ancient History, rev. ed. of vols. I & II, Cambridge University Press, 1962, p. 29.
-",NULL,"Queen's Pyramid G I-b is the middle of three Khufu queen's pyramids lying in a north-south line off east side of Khufu Pyramid, south of G I-a.  Excavated by Lepsius and Reisner.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Reisner Date_Dynasty 4
+",NULL,"Queen's Pyramid G I-b is the middle of three Khufu queen's pyramids lying in a north-south line off east side of Khufu Pyramid, south of G I-a.  Excavated by Lepsius and Reisner.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Reisner Date_Dynasty 4
 2299,Khufu Pyramid Complex,G I-c,G     I     c                   ,NULL,"Breasted, James H. Ancient Records of Egypt: Historical Documents from the Earliest Times to the Persian Conquest, Collected Edited and Translated with Commentary, Vol. 1: The First to the Seventeenth Dynasties. Ancient Records. Chicago: University of Chicago Press, 1906, p. 85.
 
 Flentye, Laurel. ""The Development of Art in the Eastern and GIS Cemeteries at Giza during the Fourth Dynasty: Iconography and Style."" In Jean-Claude Goyon and Christine Cardin, eds. Proceedings of the Ninth International Congress of Egyptologists, Grenoble, 6-12 septembre 2004, vol. I. Orientalia Lovaniensia Analecta 150. Leuven: Uitgeveru Peeters en Departement Oosterse Studies, 2007, p. 723, fig. 1.
@@ -20680,17 +20680,17 @@ Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concern
 Smith, William Stevenson. ""The Origin of Some Unidentified Old Kingdom Reliefs."" American Journal of Archaeology 46 (1942), p. 524.
 
 Smith, William Stevenson. ""The Old Kingdom in Egypt,"" The Cambridge Ancient History, rev. ed. of vols. I & II, Cambridge University Press, 1962, p. 29.
-",NULL,"Queen's Pyramid G I-c is the southern most of three Khufu queen's pyramids in a north-south line off east side of Khufu Pyramid, south of G I-b.  Excavated by Lepsius and Reisner.,,","Khufu Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Reisner Date_Dynasty 4
+",NULL,"Queen's Pyramid G I-c is the southern most of three Khufu queen's pyramids in a north-south line off east side of Khufu Pyramid, south of G I-b.  Excavated by Lepsius and Reisner.,,","Khufu Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Reisner Date_Dynasty 4
 2300,Khufu Pyramid Complex,G I-b temple,G     I     b    temple         ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 16.
-",NULL,"Queen's Pyramid G I-b is off east side of Khufu Pyramid and south of G I-a.  Its temple is off the east side of G I-b.  Twice Reisner's field notes call this a chapel rather than a temple.,,","Khufu Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Reisner Date_Dynasty 4
+",NULL,"Queen's Pyramid G I-b is off east side of Khufu Pyramid and south of G I-a.  Its temple is off the east side of G I-b.  Twice Reisner's field notes call this a chapel rather than a temple.,,","Khufu Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Reisner Date_Dynasty 4
 2301,Khufu Pyramid Complex,G I-b chapel,G     I     b    chapel         ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 16.
-",NULL,"This is also known as G I-b temple.,,","Khufu Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Reisner Date_Dynasty 4
+",NULL,"This is also known as G I-b temple.,,","Khufu Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Reisner Date_Dynasty 4
 2303,Khufu Pyramid Complex,Khufu Palace,Khufu Palace                    ,NULL,"Hawass, Zahi. ""Khufu's National Project: The Great Pyramid of Giza in the Year 2528 B.C."" In Peter Janosi, ed. Structure and Significance: Thoughts on Ancient Egyptian Architecture, Vienna: Verlag der Österreichischen Akademie der Wissenschaften, 2005, pp. 317, 324, 328, figs. 10, 11.
 
 Hawass, Zahi. ""Pyramid Construction. New Evidence Discovered at Giza."" In Heike Guksch and Daniel Polz, eds. Stationen. Beiträge zur Kulturgeschichte Ägyptens Rainer Stadelmann gewidmet, Mainz: Philipp von Zabern, 1998, p. 61.
 
 Lehner, Mark. ""The Development of the Giza Necropolis. The Khufu Project."" Mitteilungen des Deutschen Archäologischen Instituts, Abteilung Kairo 41 (1985), pp. 139-140, fig. 3c.
-",NULL,NULL,"Khufu's Palace?,,",NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,"Khufu's Palace?,,",NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2304,Khufu Pyramid Complex,G I-d,G     I     d                   ,NULL,"Flentye, Laurel. ""The Development of Art in the Eastern and GIS Cemeteries at Giza during the Fourth Dynasty: Iconography and Style."" In Jean-Claude Goyon and Christine Cardin, eds. Proceedings of the Ninth International Congress of Egyptologists, Grenoble, 6-12 septembre 2004, vol. I. Orientalia Lovaniensia Analecta 150. Leuven: Uitgeveru Peeters en Departement Oosterse Studies, 2007, p. 724.
 
 Hawass, Zahi. ""Khufu's National Project: The Great Pyramid of Giza in the Year 2528 B.C."" In Peter Janosi, ed. Structure and Significance: Thoughts on Ancient Egyptian Architecture, Vienna: Verlag der Österreichischen Akademie der Wissenschaften, 2005, pp. 314-315, fig. 4.
@@ -20702,11 +20702,11 @@ Hawass, Zahi. ""The Discovery of the Satellite Pyramid of Khufu (GI-d)."" In Pet
 Jánosi, Peter. ""Bemerkungen zur Entstehung, Lage und Datierung der Nekropolenfelder von Giza unter Cheops."" Sokar 4 (1. Halbjahr 2002), pp. 7-9, note 14, unnumbered figures. 
 
 Petrie, W. M. Flinders. The Pyramids and Temples of Gizeh. London: Histories & Mysteries of Man Ltd., 1990 (1st ed. London: Field and Tuer, 1883), pp. 108-110. 
-",NULL,"The post holes for G I-d were found east of G I-a, south of G 7000 X and north of G I-x (the unfinished pyramid).,,","Khufu Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Reisner Date_Dynasty 4
+",NULL,"The post holes for G I-d were found east of G I-a, south of G 7000 X and north of G I-x (the unfinished pyramid).,,","Khufu Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Reisner Date_Dynasty 4
 2305,Khufu Pyramid Complex,G I-e,G     I     e                   ,NULL,"Hawass, Zahi. ""The Great Sphinx at Giza: Date and Function."" In Gian Maria Zaccone and Tomaso Ricardi di Netro (eds.) Sesto Congresso Internazionale di Egittologia. Atti, Volume II. Turin, 1993, p. 186. 
 
 Petrie, W. M. Flinders. The Pyramids and Temples of Gizeh. London: Histories & Mysteries of Man Ltd., 1990 (1st ed. London: Field and Tuer, 1883), pp. 107-110. 
-",NULL,"Called ""Trial Passages"" by Petrie.  East of Khufu Pyramid and north of the Khufu boat, these passages are all that remain of an older pyramid that was destroyed to build Khufu Pyramid.,,","Khufu Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Reisner Date_Dynasty 4
+",NULL,"Called ""Trial Passages"" by Petrie.  East of Khufu Pyramid and north of the Khufu boat, these passages are all that remain of an older pyramid that was destroyed to build Khufu Pyramid.,,","Khufu Queen's Pyramid,,",NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Reisner Date_Dynasty 4
 2370,Western Cemetery,G 1307,G       1307                    ,NULL,NULL,NULL,"Even though G 1307 is written on an image, it's questionable that this tomb exists.  It's not on any map.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
 2385,Western Cemetery,G 1901,G       1901                    ,NULL,NULL,NULL,"NE of G 2000 = Lepsius 23,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 2386,Western Cemetery,G 1902,G       1902                    ,NULL,NULL,NULL,"NE of G 2000 = Lepsius 23,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
@@ -20761,7 +20761,7 @@ Reisner, unpublished manuscript, Box L 13, Description of Cemetery G 4000, p. 85
 ",NULL,NULL,NULL,NULL,"G 5411 A; G 5411 B; G 5411 C; G 5411 Serdab; G 5411 Chapel a; G 5411 Chapel b; G 5411 Chapel c; G 5411 Chapel d; G 5411 Chapel e,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 2511,Western Cemetery,G 5412,G       5412                    ,NULL,"Hawass, Zahi. ""A Burial with an Unusual Plaster Mask in the Western Cemetery of Khufu's Pyramid."" In Renée Friedman and Barbara Adams, eds. The Followers of Horus. Studies dedicated to Michael Allen Hoffman 1944-1990. Egyptian Studies Association Publication No. 2. Oxbow Monograph 20. Oxford: Oxbow Books, 1992, p. 329.
 ",NULL,NULL,NULL,NULL,"G 5412 D,,",NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
-2518,Eastern Cemetery,G 7000 QS,G       7000QS                  ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+2518,Eastern Cemetery,G 7000 QS,G       7000QS                  ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2519,Eastern Cemetery,G 7000 SE 85,G       7000SE      85          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 2520,Eastern Cemetery,G 7000 SE 110,G       7000SE     110          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 2521,Eastern Cemetery,G 7000 SE 116,G       7000SE     116          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
@@ -20805,7 +20805,7 @@ Reisner, unpublished manuscript, Box L 13, Description of Cemetery G 4000, p. 85
 2585,Eastern Cemetery,G 7121,G       7121                    ,NULL,NULL,NULL,"Mastaba G 7121, containing a single shaft, is formed by the fill between G 7110 and G 7120, linking them to make the double mastaba G 7110-7120.,,",NULL,NULL,",,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,Reisner Date_Khufu
 2593,Eastern Cemetery,G 7144,G       7144                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 7144 A; G 7144 B; G 7144 C; G 7144 D; G 7144 E; G 7144 F; G 7144 G; G 7144 H; G 7144 I; G 7144 J; G 7144 K; G 7144 L; G 7144 M; G 7144 N; G 7144 O; G 7144 P; G 7144 Q; G 7144 R; G 7144 S; G 7144 T,,",NULL,NULL,1,1,NULL,4,Stone+Brick-built mastaba,_
 2602,Eastern Cemetery,G 7160,G       7160                    ,NULL,NULL,NULL,"This tomb does not appear on any map.  Was it later renumbered by Reisner?,,",NULL,NULL,"G 7160 A,,",NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
-2603,Eastern Cemetery,G 7170,G       7170                    ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+2603,Eastern Cemetery,G 7170,G       7170                    ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2623,Eastern Cemetery,G 7330-7340,G       7330 7340               ,NULL,"Flentye, Laurel. ""The Development of Art in the Eastern and GIS Cemeteries at Giza during the Fourth Dynasty: Iconography and Style."" In Jean-Claude Goyon and Christine Cardin, eds. Proceedings of the Ninth International Congress of Egyptologists, Grenoble, 6-12 septembre 2004, vol. I. Orientalia Lovaniensia Analecta 150. Leuven: Uitgeveru Peeters en Departement Oosterse Studies, 2007, pp. 722, note 3, fig. 1.
 
 Jánosi, Peter. ""Bemerkungen zur Entstehung, Lage und Datierung der Nekropolenfelder von Giza unter Cheops."" Sokar 4 (1. Halbjahr 2002), pp. 7-9, unnumbered figures. 
@@ -20864,8 +20864,8 @@ Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orien
 Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Other Mastaba Fields."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, pp. 141, 145, fig. 80. 
 
 Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concerning the Gread Pyramids of el-Gîza and Their Royal Constructors."" Bulletin of the John Rylands Library 44, No. 1 (September 1961), p. 117. 
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
-2739,Other Region,Giza,Giza                            ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
+2739,Other Region,Giza,Giza                            ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2750,Khufu Pyramid Complex,Khufu Pyramid Temple,Khufu Pyramid    Temple         ,NULL,"Bernard V. Bothmer. ""On Realism in Egyptian Funerary Sculpture of the Old Kingdom."" In Madeleine E. Cody, ed. Egyptian Art. Selected Writings of Bernard V. Bothmer. Oxford: Oxford University Press, 2004, pp. 390–91. 
 
 Curto, Silvio. Gli Scavi Italiani a el-Ghiza (1903). Rome: Centro Per Le Antichitá E La Storia Dell'Arte del Vicino Oriente, 1993, pp. 11-12, pl. Ia-b.
@@ -20903,7 +20903,7 @@ Smith, William Stevenson. ""The Origin of Some Unidentified Old Kingdom Reliefs.
 Smith, William Stevenson. ""The Old Kingdom in Egypt,"" The Cambridge Ancient History, rev. ed. of vols. I & II, Cambridge University Press, 1962, pp. 12-13.
 
 Verner, Miroslav. ""Contemporaneous Evidence for the Relative Chronology of Dyns. 4 and 5."" In Erik Hornung, Rolf Krauss & David A. Warburton, eds. Ancient Egyptian Chronology, Leiden/Boston: Brill, 2006, p. 131.
-",NULL,"The Pyramid Temple or Mortuary Temple of Khufu is built against the east side of Khufu's pyramid.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,"The Pyramid Temple or Mortuary Temple of Khufu is built against the east side of Khufu's pyramid.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2796,Menkaure Pyramid Complex,Menkaure Pyramid,Menkaure    Pyramid             ,NULL,"Becker, Jürgen. ""Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem."" Sokar 8 (1. Halbjahr 2004), pp. 7, 10, 14, note 6. 
 
 Cwiek, Andrzej. Relief Decoration in the Royal Funerary Complexes of the Old Kingdom: Studies in the Development, Scene Content and Iconography. Warsaw: Institute of Archaeology, Faculty of History, Warsaw University, 2003, pp. 105-107.
@@ -20941,8 +20941,8 @@ Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concern
 Sakovich, Anthony P. ""Explaining the Shafts in Khufu's Pyramid at Giza."" Journal of the American Research Center in Egypt 42 (2005-6), p. 5.
 
 Saleh, Abdel-Aziz. ""Excavations Around Mycerinus Pyramid Complex."" Mitteilungen des Deutschen Archäologischen Instituts, Abteilung Kairo 30 (1974), pp. 131, 153.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
-2870,Other Region,WWI,WWI                             ,NULL,NULL,NULL,"These are all diary texts with comments by George Reisner about events in World War I.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Reisner Date_World War I
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
+2870,Other Region,WWI,WWI                             ,NULL,NULL,NULL,"These are all diary texts with comments by George Reisner about events in World War I.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Reisner Date_World War I
 2872,Eastern Cemetery,G 7600 T,G       7600T                   ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
 2873,Eastern Cemetery,G 7600 R,G       7600R                   ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
 2874,Eastern Cemetery,G 7600 S,G       7600S                   ,NULL,NULL,NULL,NULL,NULL,NULL,"chamber I; chamber II; chamber III; chamber IV; chamber V; chamber VI; chamber VII; chamber VIII,,",NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
@@ -20966,11 +20966,11 @@ Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orien
 Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Other Mastaba Fields."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, pp. 141, 145, fig. 80. 
 
 Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concerning the Gread Pyramids of el-Gîza and Their Royal Constructors."" Bulletin of the John Rylands Library 44, No. 1 (September 1961), p. 117. 
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2878,Menkaure Pyramid Complex,G III-b Temple,G     III   b    Temple         ,NULL,"Faulkner, Raymond O. ""Review of 'Mycerinus. The Temples of the Third Pyramid at Giza'."" Journal of Egyptian Archaeology 19 (1933), p. 111. 
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2879,Menkaure Pyramid Complex,G III-c Temple,G     III   c    Temple         ,NULL,"Faulkner, Raymond O. ""Review of 'Mycerinus. The Temples of the Third Pyramid at Giza'."" Journal of Egyptian Archaeology 19 (1933), p. 111. 
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_Dynasty 4
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_Dynasty 4
 2880,Eastern Cemetery,G 7000 SE 150,G       7000SE     150          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 2881,Eastern Cemetery,G 7000 SE 151,G       7000SE     151          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 2882,Eastern Cemetery,G 7000 SE 152,G       7000SE     152          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
@@ -20989,7 +20989,7 @@ Rowe, Alan. ""Studies in the Archaeology of the Near East II: Some Facts Concern
 2896,Western Cemetery,G 2019c,G       2019c                   ,NULL,"Reisner, unpublished manuscript, Box L 11, Description of Mastabas in Cemetery G 2000, p. 76.",NULL,"G 2019c has a single shaft B and is built against the northern wall of G 2019b.  Reisner initially called this shaft B in G 2019b and subsequently decided it should be a separate mastaba.  This causes some confusion in the documentation.  Unpublished Reisner manuscript GN3_L11_p076 clearly describes G 2019b with a single shaft A and G 2019c with a single shaft B.  Plan EG000497 shows shaft B north of G 2019b A, but does not label it as G 2019c which suggest to the viewer that shaft B is part of G 2019b.,,",NULL,NULL,"G 2019c B,,",NULL,NULL,1,1,NULL,9,Mud-brick+rubble mastaba,_
 2897,Western Cemetery,G 2049,G       2049                    ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, plan 11. 
 
-Reisner, unpublished manuscript, Box L 11, Description of Mastabas in Cemetery G 2000, p. 147.",NULL,"Exact location unknown but is north of G 2043, east of G 2000 and west of G 2046.  No other data given in Reisner's unpublished manuscript.  Area is shown but not specifically identified on plans.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+Reisner, unpublished manuscript, Box L 11, Description of Mastabas in Cemetery G 2000, p. 147.",NULL,"Exact location unknown but is north of G 2043, east of G 2000 and west of G 2046.  No other data given in Reisner's unpublished manuscript.  Area is shown but not specifically identified on plans.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 2898,Western Cemetery,G 2504,G       2504                    ,NULL,NULL,NULL,"G 2504 is not labeled on EG000495, but is the shaft X located just south of G 2077 (= G 2053; see map on Vol.06.p.006).,,",NULL,NULL,"G 2504 X,,",NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
 2899,Eastern Cemetery,G 7100 SW 2,G       7100SW       2          ,NULL,NULL,NULL,"Is not drawn or labeled on plan EG000592.  Is between shafts G 7157 A & D.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,Reisner Date_Roman
 2900,Eastern Cemetery,G 7000 E 9,G       7000E        9          ,NULL,NULL,NULL,"Not recorded on map EG010031, but located on top of G 7752.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
@@ -21036,17 +21036,17 @@ Reisner, unpublished manuscript, Box L 11, Description of Mastabas in Cemetery G
 2977,Western Cemetery,G 1007,G       1007                    ,NULL,NULL,NULL,"Burials accidentally uncovered in 1904 while clearing for RR.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 2988,Western Cemetery,G 2226,G       2226                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 2226 A; G 2226 B,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 2990,Western Cemetery,G 2306,G       2306                    ,NULL,NULL,NULL,NULL,NULL,NULL,"G 2306 X,,",NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
-2994,Western Cemetery,G 3350,G       3350                    ,NULL,NULL,NULL,"Where is this tomb?  Does it really exist?  Are the references on the skulls just typo's?  Could this be G 2335?,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+2994,Western Cemetery,G 3350,G       3350                    ,NULL,NULL,NULL,"Where is this tomb?  Does it really exist?  Are the references on the skulls just typo's?  Could this be G 2335?,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3006,Eastern Cemetery,G 7000 SE 77,G       7000SE      77          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
-3009,Eastern Cemetery,G 7000 SW trench 29,G       7000SW   trench    29   ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3010,Eastern Cemetery,G 7000 SW trench 31,G       7000SW   trench    31   ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+3009,Eastern Cemetery,G 7000 SW trench 29,G       7000SW   trench    29   ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3010,Eastern Cemetery,G 7000 SW trench 31,G       7000SW   trench    31   ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3011,Eastern Cemetery,G 7000 SW 26,G       7000SW      26          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 3012,Eastern Cemetery,G 7000 SW 34,G       7000SW      34          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 3013,Eastern Cemetery,G 7000 SW 36,G       7000SW      36          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 3030,Eastern Cemetery,G 7600 Pt XX,G       7600Pt   XX             ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,1,Mud-brick mastaba,Reisner Date_Ptolemaic
 3031,Eastern Cemetery,G 7600 Pt XXVII,G       7600Pt   XXVII          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,3,Uncertain/destroyed,Reisner Date_Ptolemaic
-3041,Other Region,Museum of Fine Arts,Museumof    Fine Arts           ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3046,Western Cemetery,Street G 4100,StreetG      4100               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+3041,Other Region,Museum of Fine Arts,Museumof    Fine Arts           ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3046,Western Cemetery,Street G 4100,StreetG      4100               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3048,Eastern Cemetery,G 7000 E 6,G       7000E        6          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 3049,Eastern Cemetery,G 7000 SE 69,G       7000SE      69          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 3050,Eastern Cemetery,G 7000 SE 76,G       7000SE      76          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
@@ -21120,32 +21120,32 @@ Reisner, unpublished manuscript, Box L 11, Description of Mastabas in Cemetery G
 3118,Eastern Cemetery,G 7500 Pt VIII,G       7500Pt   VIII           ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,3,Uncertain/destroyed,Reisner Date_Ptolemaic
 3119,Eastern Cemetery,G 7500 Pt IX,G       7500Pt   IX             ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,3,Uncertain/destroyed,Reisner Date_Ptolemaic
 3120,Western Cemetery (Mace),Western Cemetery (Mace),Western     Cemetery  Mace      ,Mastabas west of Lepsius 19 excavated by Mace in Jan 1903.,"Manuelian, Peter Der. ""A Re-examination of Reisner's Nucleus Cemetery Concept at Giza. Preliminary Remarks on Cemetery G 2100."" In Miroslav Bárta, ed. The Old Kingdom Art and Archaeology. Proceedings of the Conference held in Prague, May 31-June 4, 2004. Prague: Czech Institute of Egyptology, 2006, passim.
-",NULL,"In January 1903, Reisner sent Mr. A. C. Mace with a small party of trained workmen for a preliminary excavation of the western edge of the Western Cemetery. He excavated about 25 tombs west of Lepsius 19 and concluded it was more feasible to start from G 2000 (Lepsius 23) and work westward.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"In January 1903, Reisner sent Mr. A. C. Mace with a small party of trained workmen for a preliminary excavation of the western edge of the Western Cemetery. He excavated about 25 tombs west of Lepsius 19 and concluded it was more feasible to start from G 2000 (Lepsius 23) and work westward.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3121,Western Cemetery (Mace),G 10,G         10                    ,NULL,"Manuelian, Peter Der. ""On the Early History of Giza: The 'Lost' Wadi Cemetery (Giza Archives Gleanings, III)."" Journal of Egyptian Archaeology 95 (2009), p. 107.
 ",NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
-3122,Western Cemetery (Mace),G 11,G         11                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3123,Western Cemetery (Mace),G 12,G         12                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3124,Western Cemetery (Mace),G 13,G         13                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3125,Western Cemetery (Mace),G 14,G         14                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3126,Western Cemetery (Mace),G 15,G         15                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3127,Western Cemetery (Mace),G 16,G         16                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the  western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3128,Western Cemetery (Mace),G 17,G         17                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+3122,Western Cemetery (Mace),G 11,G         11                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3123,Western Cemetery (Mace),G 12,G         12                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3124,Western Cemetery (Mace),G 13,G         13                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3125,Western Cemetery (Mace),G 14,G         14                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3126,Western Cemetery (Mace),G 15,G         15                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3127,Western Cemetery (Mace),G 16,G         16                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the  western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3128,Western Cemetery (Mace),G 17,G         17                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3129,Western Cemetery (Mace),G 2,G          2                    ,NULL,"Manuelian, Peter Der. ""On the Early History of Giza: The 'Lost' Wadi Cemetery (Giza Archives Gleanings, III)."" Journal of Egyptian Archaeology 95 (2009), p. 107.
 ",NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,6,Rubble-built mastaba,_
 3130,Western Cemetery (Mace),G 20,G         20                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
-3131,Western Cemetery (Mace),G 21,G         21                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3132,Western Cemetery (Mace),G 22,G         22                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+3131,Western Cemetery (Mace),G 21,G         21                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3132,Western Cemetery (Mace),G 22,G         22                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3133,Western Cemetery (Mace),G 23,G         23                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,6,Rubble-built mastaba,_
 3134,Western Cemetery (Mace),G 24,G         24                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
-3135,Western Cemetery (Mace),G 25,G         25                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3136,Western Cemetery (Mace),G 3,G          3                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+3135,Western Cemetery (Mace),G 25,G         25                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3136,Western Cemetery (Mace),G 3,G          3                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3137,Western Cemetery (Mace),G 4,G          4                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 3138,Western Cemetery (Mace),G 5,G          5                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 3139,Western Cemetery (Mace),G 6,G          6                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 3141,Western Cemetery (Mace),G 8,G          8                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
-3142,Western Cemetery (Mace),G 7,G          7                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+3142,Western Cemetery (Mace),G 7,G          7                    ,NULL,NULL,NULL,"In January 1903, Reisner sent Mr. A.C. Mace to determine the western edge of the Western Cemetery. These outlying tombs were due west of Lepsius 19 and were numbered G 1 to G 25 by Mace.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3143,Western Cemetery,Cemetery G 6000,Cemetery    G     6000          ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 168-175.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3144,Eastern Cemetery,Bin 181,Bin      181                    ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 3145,Eastern Cemetery,Bin 182,Bin      182                    ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 3146,Eastern Cemetery,Bin 184,Bin      184                    ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
@@ -21170,9 +21170,9 @@ Reisner, unpublished manuscript, Box L 11, Description of Mastabas in Cemetery G
 3165,Western Cemetery,Pit 42,Pit       42                    ,NULL,NULL,NULL,"Located against east face of G 2160 between G 2160 and G 2180,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,Reisner Date_Ptolemaic
 3166,Western Cemetery,Pit 47,Pit       47                    ,NULL,NULL,NULL,"Located between G 2160 and G 2180,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,Reisner Date_Ptolemaic
 3167,Western Cemetery,Pit 48,Pit       48                    ,NULL,NULL,NULL,"Located between G 2160 and G 2180,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,Reisner Date_Ptolemaic
-3168,Western Cemetery,Street G 4200,StreetG      4200               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3169,Western Cemetery,Street G 4300,StreetG      4300               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-3170,Eastern Cemetery,RR Dump VII,RR    Dump  VII                 ,NULL,NULL,NULL,"This railway line to dump VII goes between G 7144 and G 7146,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+3168,Western Cemetery,Street G 4200,StreetG      4200               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3169,Western Cemetery,Street G 4300,StreetG      4300               ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+3170,Eastern Cemetery,RR Dump VII,RR    Dump  VII                 ,NULL,NULL,NULL,"This railway line to dump VII goes between G 7144 and G 7146,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3171,Eastern Cemetery,G 7000 SE 39,G       7000SE      39          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 3172,Eastern Cemetery,G 7000 SE 40,G       7000SE      40          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 3173,Eastern Cemetery,G 7000 SE 26,G       7000SE      26          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
@@ -21407,7 +21407,7 @@ Reisner, unpublished manuscript, Box L 11, Description of Mastabas in Cemetery G
 3403,Eastern Cemetery,Bin 159,Bin      159                    ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,Reisner Date_Late Period
 3404,Eastern Cemetery,G 7000 E 36,G       7000E       36          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
 3405,Eastern Cemetery,G 7000 E 22,G       7000E       22          ,NULL,NULL,NULL,"This tomb is between G 7920 W and Y, but not marked on map EG010032 where it should be marked.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,24,Pit,_
-3406,Eastern Cemetery,G 7074,G       7074                    ,NULL,"Reisner, unpublished manuscript.  Box L 15. Description of Cemetery G 7000: Secondary Mastabas of Dyn. 5-6: Appendix P; page 51-53.",NULL,"Inexplicable structure built partially over and partially to east of G 7062 after abandonment of the c.b. chapel.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Reisner Date_Saite-Ptolemaic
+3406,Eastern Cemetery,G 7074,G       7074                    ,NULL,"Reisner, unpublished manuscript.  Box L 15. Description of Cemetery G 7000: Secondary Mastabas of Dyn. 5-6: Appendix P; page 51-53.",NULL,"Inexplicable structure built partially over and partially to east of G 7062 after abandonment of the c.b. chapel.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Reisner Date_Saite-Ptolemaic
 3407,Eastern Cemetery,G 7062,G       7062                    ,NULL,"Reisner, unpublished manuscript.  Box L 15. Description of Cemetery G 7000: Secondary Mastabas of Dynasty 5-6; Appendix P: page 50.",NULL,NULL,NULL,NULL,"G 7062 Chapel,,",NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
 3408,Western Cemetery,G 2390,G       2390                    ,NULL,"Brovarski, Edward. The Senedjemib Complex, Part 1: The Mastabas of Senedjemib Inti (G 2370), Khnumenti (G 2374), and Senedjemib Mehi (G 2378). Giza Mastabas 7. Boston, Museum of Fine Arts, 2003, plans 2 and 3.
 
@@ -21427,7 +21427,7 @@ Manuelian, Peter Der. ""An Approach to Archaeological Information Management: Th
 Manuelian, Peter Der. ""A Race against Time in the Shadow of the Pyramids. The Museum of Fine Arts, Boston and the Giza Necropolis, 1902-1990."" KMT 1, No. 4 (1990-91), pp. 13, 18.
 
 Smith, William Stevenson. ""Harvard Camp, The Earliest American Archaeological Center in Egypt."" Archaeology 2 (1949), pp. 194–195.
-",NULL,"This is the complex of buildings used by George Reisner as 1) his family's living area, 2) workmen's living area, 3) object storage, and 4) staging area for objects arriving from various tombs.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"This is the complex of buildings used by George Reisner as 1) his family's living area, 2) workmen's living area, 3) object storage, and 4) staging area for objects arriving from various tombs.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 3413,Eastern Cemetery,G 7600 U,G       7600U                   ,NULL,NULL,NULL,NULL,NULL,NULL,"G 7600 U,,",NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
 3414,Menkaure Quarry Cemetery,MQ 201,MQ       201                    ,NULL,NULL,NULL,NULL,NULL,NULL,"MQ 201 A,,",NULL,NULL,1,1,NULL,10,Rock-cut tomb,_
 3415,Menkaure Quarry Cemetery,MQ 6,MQ         6                    ,NULL,NULL,NULL,NULL,NULL,NULL,"MQ 6 A, MQ 6 B,,",NULL,NULL,1,1,NULL,10,Rock-cut tomb,_
@@ -21438,7 +21438,7 @@ Smith, William Stevenson. ""Harvard Camp, The Earliest American Archaeological C
 Junker, Hermann. Gîza 11. Der Friedhof südlich der Cheopspyramide: Ostteil. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 74, Abhandlung 2. Vienna: Rudolph M. Rohrer, 1953, p. 148, figs. 52, 54, plan 1 of 2 after p. 211.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 218, plan 19.
-",NULL,"Drum lintel of Nebty found by Junker built into floor of later mastaba east of Iymery [I]. Although this unnumbered mastaba has been designated by her name, Nebty is probably not the owner since the drum lintel inscribed for her was reused in the tomb. ,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Junker Date_late Old Kingdom
+",NULL,"Drum lintel of Nebty found by Junker built into floor of later mastaba east of Iymery [I]. Although this unnumbered mastaba has been designated by her name, Nebty is probably not the owner since the drum lintel inscribed for her was reused in the tomb. ,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Junker Date_late Old Kingdom
 3419,Western Cemetery,S 2065,S       2065                    ,NULL,"Junker, Hermann. Gîza 6. Die Mastabas des Nfr (Nefer), Kdfjj (Kedfi), Kahjf (Kahjef) und die westlich anschließenden Grabanlagen. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 72, Abhandlung 1. Vienna & Leipzig: Hölder-Pichler-Tempsky, 1943, pp. 78-80, fig. 19, plan after p. 273.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 137, plan 15.
@@ -23334,7 +23334,7 @@ Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Se
 Lehner, Mark. ""Giza. A Contextual Approach to the Pyramids."" Archiv für Orientforschung 32 (1985), pp. 152, 153. 
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 230-293, plans 6, 20-23.
-",NULL,"Central Field is generally bounded on the west by Khafre's Causeway, and on the east by Queen Khentkaus's pyramid town.  Cemetery excavated mostly by Selim Hassan.  Cairo University (1929-1937).,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"Central Field is generally bounded on the west by Khafre's Causeway, and on the east by Queen Khentkaus's pyramid town.  Cemetery excavated mostly by Selim Hassan.  Cairo University (1929-1937).,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 4103,G I-South Cemetery,G I-South Cemetery,G     I     SouthCemetery       ,NULL,"Flentye, Laurel. ""The Development of Art in the Eastern and GIS Cemeteries at Giza during the Fourth Dynasty: Iconography and Style."" In Jean-Claude Goyon and Christine Cardin, eds. Proceedings of the Ninth International Congress of Egyptologists, Grenoble, 6-12 septembre 2004, vol. I. Orientalia Lovaniensia Analecta 150. Leuven: Uitgeveru Peeters en Departement Oosterse Studies, 2007, pp. 721, 724-726, 729-730, 734-735, fig. 2.
 
 Flentye, Laurel. ""The Development of the Eastern and GIS Cemeteries at Giza during the Fourth Dynasty."" In Miroslav Bárta, ed. The Old Kingdom Art and Archaeology. Proceedings of the Conference held in Prague, May 31-June 4, 2004. Prague: Czech Institute of Egyptology, 2006, pp. 138-140, fig. 2.
@@ -23348,7 +23348,7 @@ Hawass, Zahi. ""Pyramid Construction. New Evidence Discovered at Giza."" In Heik
 Kanawati, Naguib. ""Decoration of Burial Chambers, Sarcophagi and Coffins in the Old Kingdom."" In Khaled Daoud, Shafia Bedier & Sawsan Abd el-Fatah, eds. Studies in Honor of Ali Radwan. Supplément aux Annales du Service des Antiquités de l'Égypte, no. 34. Cairo: Supreme Council of Antiquities, 2005, pp. 57-58. 
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 216-228.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 4104,Central Field (Hassan),G 8164,G       8164                    ,NULL,"Hassan, Selim. Excavations at Gîza 5: 1933-1934. With Special Chapters on Methods of Excavation, the False-Door, and Other Archaeological and Religious Subjects. Cairo: Government Press, 1944, pp. 313-314 [9] (with text).
 
 Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, folded plan, G/H-8.
@@ -23358,23 +23358,23 @@ Jánosi, Peter.  Giza in der 4 Dynastie: Die Baugeschichte und Belegung einer Ne
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 233, plan 21, B-2, drawn but not labeled.
 ",NULL,"Rock-cut mastaba along western edge of Central Field, south of G 8172 (Lepsius 86), southeast of G 8166 (Lepsius 86-x) and northwest of G 8162 (Lepsius 86-z).  Excavated in 1933-1934 by Hassan.,,",NULL,NULL,"S 790,,",NULL,NULL,1,1,NULL,10,Rock-cut tomb,_
 4105,Eastern Cemetery,G 7300 Pt ii,G       7300Pt   ii             ,NULL,NULL,NULL,"Roman period walls are drawn in red over G 7330 on plan EG000580 but not labeled.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,3,Uncertain/destroyed,_
-4106,Eastern Cemetery,Farouk Guest-house,FaroukGuest house               ,NULL,NULL,NULL,"Guest house built in the Eastern Cemetery by King Farouk in early 20th century.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-4107,Western Cemetery,Henet,Henet                           ,NULL,NULL,NULL,"Mastaba discovered in 2005 between Reisner and Abu Bakr concessions.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-4108,Khufu Pyramid Complex,Khufu Boat Museum,Khufu Boat  Museum              ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+4106,Eastern Cemetery,Farouk Guest-house,FaroukGuest house               ,NULL,NULL,NULL,"Guest house built in the Eastern Cemetery by King Farouk in early 20th century.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+4107,Western Cemetery,Henet,Henet                           ,NULL,NULL,NULL,"Mastaba discovered in 2005 between Reisner and Abu Bakr concessions.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+4108,Khufu Pyramid Complex,Khufu Boat Museum,Khufu Boat  Museum              ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 4109,South Giza,South Giza,South Giza                      ,NULL,"Manuelian, Peter Der. ""On the Early History of Giza: The 'Lost' Wadi Cemetery (Giza Archives Gleanings, III)."" Journal of Egyptian Archaeology 95 (2009), pp. 134, 137, figs. 34, 35.
 
 Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Other Mastaba Fields."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, pp. 150, 151. 
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 294-297, plan 18.
-",NULL,"Region includes Muslim Cemetery as well as areas excavated by Mark Lehrner.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-4110,South Giza,Muslim Cemetery,MuslimCemetery                  ,NULL,NULL,NULL,"Modern cemetery is located at edge of South Giza at boundary with Central Field.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-4111,Other Region,Mena House Hotel,Mena  House Hotel               ,NULL,NULL,NULL,"Historical hotel at edge of Giza plateau built late in 19th century.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"Region includes Muslim Cemetery as well as areas excavated by Mark Lehrner.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+4110,South Giza,Muslim Cemetery,MuslimCemetery                  ,NULL,NULL,NULL,"Modern cemetery is located at edge of South Giza at boundary with Central Field.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+4111,Other Region,Mena House Hotel,Mena  House Hotel               ,NULL,NULL,NULL,"Historical hotel at edge of Giza plateau built late in 19th century.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 4112,Western Cemetery,Steindorff Cemetery,Steindorff  Cemetery            ,NULL,"Jánosi, Peter. ""Review of Georg Steindorff and Uvo Holscher, Die Mastabas westlich der Cheopspyramide, Munchner Agyptologische Untersuchungen 21 (Frankfort am Mainz, 1991)."" Wiener Zeitschrift für die Kunde des Morgenlandes 83 (1993), pp. 255-259.
 
 Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Other Mastaba Fields."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, p. 146. 
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 108-118.
-",NULL,"This is the portion of the Western Cemetery excavated by Steindorff.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"This is the portion of the Western Cemetery excavated by Steindorff.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 4113,Central Field (Hassan),G 8732,G       8732                    ,NULL,"Hassan, Selim. Excavations at Gîza 3: 1931-1932. Cairo: Faculty of Arts, Fouad I University & Government Press, 1941, pp. 47-49, figs. 42-43, pl. 19 [3].
 
 Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, folded plan,  S-12/13.
@@ -23390,7 +23390,7 @@ Brovarski, Edward. ""A Second Style in Egyptian Relief of the Old Kingdom."" In 
 Handoussa, Tohfa. ""An Act of Piety from the Western Cemetery at Giza."" In Stephen E. Thompson and Peter Der Manuelian, eds. Egypt and Beyond: Essays Presented to Leonard H. Lesko upon his Retirement from the Wilbour Chair of Egyptology at Brown University June 2005. Providence: Department of Egyptology and Ancient Western Asian Studies, 2008, pp. 149, 153. 
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pp. 47-52, 62-64, 179, plans 7, 10, 17.
-",NULL,"Portion of Western Cemetery excavated by Abu-Bakr in 1949-1950.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"Portion of Western Cemetery excavated by Abu-Bakr in 1949-1950.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 4115,Sphinx Complex,G 9080,G       9080                    ,NULL,"Hassan, Selim. Excavations at Gîza 8: 1936-1937. The Great Sphinx and its Secrets. Historical Studies in the Light of the Recent Excavations. Cairo: Government Press, 1953, plan on pl. 16.
 
 Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, folded plan, Y-3/4.
@@ -23546,7 +23546,7 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 ",NULL,"Mastaba is off south side of G 8972 (Mastaba of Shaft 35), north of G 8954 (Djedi).  Excavated in 1929-1930 by Hassan.,,",NULL,NULL,"S 55; S 56; S 57,,","
 ,,",NULL,1,1,NULL,2,Stone-built mastaba,_
 4143,Central Field (Hassan),Mastaba of Shaft Deleted,Mastaba     of   ShaftDeleted   ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"
-,,",NULL,1,1,NULL,0,(not assigned),_
+,,",NULL,1,1,NULL,NULL,NULL,_
 4144,Central Field (Hassan),G 8524,G       8524                    ,NULL,"Hassan, Selim. Excavations at Gîza 9: 1936-37-38. The Mastabas of the Eighth Season and their Description. Cairo: General Organisation for Government Printing Offices, 1960, folded plan, P-8.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, plan 23, B-6, drawn but not labeled.
@@ -23730,7 +23730,7 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 ,,",NULL,1,1,NULL,2,Stone-built mastaba,_
 4187,Eastern Cemetery,G 7624,G       7624                    ,NULL,NULL,NULL,"The only mention of G 7624 found, to date, is in George A. Reisner's unpublished manuscript for The History of the Giza Necropolis, Volume II, Appendix B: East Cemetery (Cem. 7000), page 82. The manuscript is stored in the Art of the Ancient World Department Archives of the Museum of Fine Arts, Boston, Massachusetts.
 
-It is, presumably, a rock-cut tomb just north of the the chapel of Meresankh III, G 7530-sub. This is either an otherwise unrecorded tomb, or (less likely) a mistaken reference for G 7524.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+It is, presumably, a rock-cut tomb just north of the the chapel of Meresankh III, G 7530-sub. This is either an otherwise unrecorded tomb, or (less likely) a mistaken reference for G 7524.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 4188,Western Cemetery,S 4170/4289,S       4170 4289               ,NULL,"Junker, Hermann. Gîza 9. Das Mittelfeld des Westfriedhofs. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 73, Abhandlung 2. Vienna: Rudolph M. Rohrer, 1950, p. 221, fig. 101, plan 3 after pl. 20.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, plan 13.
@@ -25351,7 +25351,7 @@ Junker, Hermann. Gîza 6. Die Mastabas des Nfr (Nefer), Kdfjj (Kedfi), Kahjf (Ka
 Kanawati, Naguib. Tombs at Giza. Kaiemankh (G 4561) and Seshemnefer I (G 4940), Volume I. Australian Centre for Egyptology Report 16. Warminster: Aris and Phillips, 2001, p. 15.
 
 Lehmann, Katja. Der Serdab in den Privatgräbern des Alten Reiches 1-3. Ph.D. Dissertation, Universität Heidelberg, 2000, Kat. G395.
-",NULL,"This tomb is a portico chapel at the southeast corner of G 2135.  Neither Junker nor Reisner ever gave it a number; we propose here to number it for the first time as G 2135a Qedfy.,,",NULL,NULL,"S 130, S 131, S 132, S 133, serdab, chapel,,",NULL,NULL,1,1,NULL,0,(not assigned),PorterMoss Date_End of Dyn. 5 or later
+",NULL,"This tomb is a portico chapel at the southeast corner of G 2135.  Neither Junker nor Reisner ever gave it a number; we propose here to number it for the first time as G 2135a Qedfy.,,",NULL,NULL,"S 130, S 131, S 132, S 133, serdab, chapel,,",NULL,NULL,1,1,NULL,NULL,NULL,PorterMoss Date_End of Dyn. 5 or later
 4575,Western Cemetery,G 2135a,G       2135a                   ,NULL,"Chauvet, Violaine. “Decoration and Architecture: The Definition of Private Tomb Environment.” Servant of Mut. Studies on Ancient Egypt in Honor of Edward F. Wente. Leiden: Brill, 2008, p. 49 note 54.
 
 Junker, Hermann. “Vorläufiger Bericht über die Grabungen bei den Pyramiden von Gizeh vom 22. Januar bis 7. April 1912,” Anzeiger der philosophische-historischen Klasse der kais. Akademie der Wissenschaften vom 10. Juli, Jahrgang 1912, Nr. XVIII (Vienna: kais. Akademie der Wissenschaften, 1912), p. 8.
@@ -25365,7 +25365,7 @@ Junker, Hermann. Gîza 6. Die Mastabas des Nfr (Nefer), Kdfjj (Kedfi), Kahjf (Ka
 Kanawati, Naguib. Tombs at Giza. Kaiemankh (G 4561) and Seshemnefer I (G 4940), Volume I. Australian Centre for Egyptology Report 16. Warminster: Aris and Phillips, 2001, p. 15.
 
 Lehmann, Katja. Der Serdab in den Privatgräbern des Alten Reiches 1-3. Ph.D. Dissertation, Universität Heidelberg, 2000, Kat. G395.
-",NULL,"This tomb is a portico chapel at the southeast corner of G 2135.  Neither Junker nor Reisner ever gave it a number; we propose here to number it for the first time as G 2135a Qedfy.,,",NULL,NULL,"S 130, S 131, S 132, S 133, serdab, chapel,,",NULL,NULL,1,1,NULL,0,(not assigned),Junker Date_Late Dynasty 5
+",NULL,"This tomb is a portico chapel at the southeast corner of G 2135.  Neither Junker nor Reisner ever gave it a number; we propose here to number it for the first time as G 2135a Qedfy.,,",NULL,NULL,"S 130, S 131, S 132, S 133, serdab, chapel,,",NULL,NULL,1,1,NULL,NULL,NULL,Junker Date_Late Dynasty 5
 4575,Western Cemetery,G 2135a,G       2135a                   ,NULL,"Chauvet, Violaine. “Decoration and Architecture: The Definition of Private Tomb Environment.” Servant of Mut. Studies on Ancient Egypt in Honor of Edward F. Wente. Leiden: Brill, 2008, p. 49 note 54.
 
 Junker, Hermann. “Vorläufiger Bericht über die Grabungen bei den Pyramiden von Gizeh vom 22. Januar bis 7. April 1912,” Anzeiger der philosophische-historischen Klasse der kais. Akademie der Wissenschaften vom 10. Juli, Jahrgang 1912, Nr. XVIII (Vienna: kais. Akademie der Wissenschaften, 1912), p. 8.
@@ -25379,7 +25379,7 @@ Junker, Hermann. Gîza 6. Die Mastabas des Nfr (Nefer), Kdfjj (Kedfi), Kahjf (Ka
 Kanawati, Naguib. Tombs at Giza. Kaiemankh (G 4561) and Seshemnefer I (G 4940), Volume I. Australian Centre for Egyptology Report 16. Warminster: Aris and Phillips, 2001, p. 15.
 
 Lehmann, Katja. Der Serdab in den Privatgräbern des Alten Reiches 1-3. Ph.D. Dissertation, Universität Heidelberg, 2000, Kat. G395.
-",NULL,"This tomb is a portico chapel at the southeast corner of G 2135.  Neither Junker nor Reisner ever gave it a number; we propose here to number it for the first time as G 2135a Qedfy.,,",NULL,NULL,"S 130, S 131, S 132, S 133, serdab, chapel,,",NULL,NULL,1,1,NULL,0,(not assigned),Baer Date_End of Dynasty 5 or later
+",NULL,"This tomb is a portico chapel at the southeast corner of G 2135.  Neither Junker nor Reisner ever gave it a number; we propose here to number it for the first time as G 2135a Qedfy.,,",NULL,NULL,"S 130, S 131, S 132, S 133, serdab, chapel,,",NULL,NULL,1,1,NULL,NULL,NULL,Baer Date_End of Dynasty 5 or later
 4576,Western Cemetery,G 2156c,G       2156c                   ,NULL,"Junker, Hermann. Gîza 3. Die Mastabas der vorgeschrittenen V. Dynastie auf dem Westfriedhof. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften. Vienna & Leipzig: Hölder-Pichler-Tempsky, 1938, pp. 146, 148, 156-163, figs. 1, 23-24, pl. 9 [a].
 
 Junker, Hermann. Gîza 7. Der Ostabschnitt des Westfriedhofs, Erster Teil. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 72, Abhandlung 3. Vienna & Leipzig: Hölder-Pichler-Tempsky, 1944, plan after plate 40.
@@ -25450,7 +25450,7 @@ Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Oth
 Rossi, Corinna. The Pyramids and the Sphinx. Vercelli: White Star, 2006, pp. 122-23.
 
 Siliotti, Alberto. Guide to the Pyramid of Egypt. Vercelli: White Star, 1997, p. 81, figs. I, j, and k.
-",NULL,"This chapel belongs to Kapunisut Kai, who is also the owner of mastaba G 4651.,,",NULL,NULL,"Chapel,,",NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"This chapel belongs to Kapunisut Kai, who is also the owner of mastaba G 4651.,,",NULL,NULL,"Chapel,,",NULL,NULL,1,1,NULL,NULL,NULL,_
 4607,Western Cemetery,S 4449,S       4449                    ,NULL,NULL,NULL,"Single shaft mastaba south of Ankhu (2)'s chapel and west of S 4437.  Drawn but not labeled on plans.,,",NULL,NULL,"S 4449,,",NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
 4608,Western Cemetery,S 4102/4103,S       4102 4103               ,NULL,"Junker, Hermann. Gîza 9. Das Mittelfeld des Westfriedhofs. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 73, Abhandlung 2. Vienna: Rudolph M. Rohrer, 1950, p. 199, fig. 89, plan 3 after pl. 20.
 
@@ -25481,13 +25481,13 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 4620,Western Cemetery,S 70,S         70                    ,NULL,"Junker, Hermann. Gîza 6. Die Mastabas des Nfr (Nefer), Kdfjj (Kedfi), Kahjf (Kahjef) und die westlich anschließenden Grabanlagen. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 72, Abhandlung 1. Vienna & Leipzig: Hölder-Pichler-Tempsky, 1943, p. 169, fig. 59, plan after p. 273.
 ",NULL,"Intrusive shaft in street east of S 18/84 and west of Maathep, against west side Maathep south of S 54a.,,",NULL,NULL,"S 70,,",NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
 4621,Western Cemetery,S 4214,S       4214                    ,NULL,"Junker, Hermann. Gîza 9. Das Mittelfeld des Westfriedhofs. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 73, Abhandlung 2. Vienna: Rudolph M. Rohrer, 1950, p. 215, fig. 98, pl. 2 [b], plan 3 after pl. 20 (not drawn or labeled).
-",NULL,"Shaft located east of Hepetweser. Porter-Moss III does not draw or label this shaft on plan 13; Junker labels it in fig. 98 of Giza IX but not on plan 3. It is neither drawn nor labeled on map EG019918.,,",NULL,NULL,"S 4214,,",NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"Shaft located east of Hepetweser. Porter-Moss III does not draw or label this shaft on plan 13; Junker labels it in fig. 98 of Giza IX but not on plan 3. It is neither drawn nor labeled on map EG019918.,,",NULL,NULL,"S 4214,,",NULL,NULL,1,1,NULL,NULL,NULL,_
 4622,Western Cemetery,S 894a/894e,S        894a      894e         ,NULL,"Junker, Hermann. Gîza 7. Der Ostabschnitt des Westfriedhofs, Erster Teil. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 72, Abhandlung 3. Vienna & Leipzig: Hölder-Pichler-Tempsky, 1944, p. 30, fig. 10, plan after pl. 40.
 ",NULL,"Mastaba consists of 5 shafts (S 894 a-e) in space between G 5050 (to N) and G 5040 (to S). Not to be confused with S 894 (east of this mastaba) which probably belongs to S 896/899.,,",NULL,NULL,"S 894 a; S 894 b; S 894 c; S 894 d; S 894 e,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 4623,Western Cemetery,S 692,S        692                    ,NULL,"Junker, Hermann. Gîza 8. Der Ostabschnitt des Westfriedhofs, Zweiter Teil. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 73, Abhandlung 1. Vienna: Rudolph M. Rohrer, 1947, pp. 154, 157, figs. 77, 80, plan after pl. 28. 
 ",NULL,"Shaft off east side of S 682/691 and west of the pyramid wall. Offering stone KHM_ÄS_8551 found E of S 692.,,",NULL,NULL,"S 692,,",NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
 4624,G I-South Cemetery,Magazin,Magazin                         ,NULL,"Junker, Hermann. Gîza 11. Der Friedhof südlich der Cheopspyramide: Ostteil. Bericht über die von der Akademie der Wissenschaften in Wien auf gemeinsame Kosten mit Dr. Wilhelm Pelizaeus unternommenen Grabungen auf dem Friedhof des Alten Reiches bei den Pyramiden von Giza. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 74, Abhandlung 2. Vienna: Rudolph M. Rohrer, 1953, plan after p. 298. 
-",NULL,"Long rectangular mud-brick structure south of Sehetepu Tepu and Heneni and west of Lepsius 53 with numerous storage jars found inside, called by Junker the ""Magazin."" Perhaps includes S 307 as seen in AEOS_II_5110.,,",NULL,NULL,"S 307 (?),,",NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"Long rectangular mud-brick structure south of Sehetepu Tepu and Heneni and west of Lepsius 53 with numerous storage jars found inside, called by Junker the ""Magazin."" Perhaps includes S 307 as seen in AEOS_II_5110.,,",NULL,NULL,"S 307 (?),,",NULL,NULL,1,1,NULL,NULL,NULL,_
 4625,Western Cemetery,S 2445,S       2445                    ,NULL,"Junker, Hermann. Gîza 9. Das Mittelfeld des Westfriedhofs. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 73, Abhandlung 2. Vienna: Rudolph M. Rohrer, 1950, plan 2 after pl. 20.
 ",NULL,"Mastaba is north of D 104 and abuts S end of D 213.,,",NULL,NULL,"S 2445; unnumbered shaft (possibly S 2444),,",NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
 4626,Western Cemetery,Lepsius 30,Lepsius        30               ,NULL,"Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Text 1: Unteraegypten und Memphis [Giza pages only]. Leipzig: J.C. Hinrichs'sche Buchhandlung, 1897, pp. 59-60.
@@ -25495,9 +25495,9 @@ Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Eg
 Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien.  Ergänzungsband [Giza plates only]. Berlin: Nicolaische Buchhandlung. Leipzig: J.C. Hinrichs'sche Buchhandlung, 1913, pl. 24.
 
 Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 168 (incorrectly equated with mastaba of Menhebu), plan 16.
-",NULL,"Porter & Moss mistakenly equate Lepsius 30 with Menhebu (unnumbered mastaba excavated by Junker, called G 5610 by Reisner). Reisner mistakenly equates Lepsius 30 with G 5540 (tomb of Hamka). Both of these mastabas have in situ false doors with the names of their owners. Lepsius never mentions an inscribed false door bearing a name in his description of Lepsius 30, whose location remains uncertain but, according to Lepsius, somewhere south of G 5520 (Lepsius 28). Lepsius records only a register of named offering bearers on each of the door jambs beneath the feet of the tomb owner, whose upper half and name are not preserved.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-4627,Western Cemetery,Cemetery G 2300,Cemetery    G     2300          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
-4628,Western Cemetery,Cemetery G 2400,Cemetery    G     2400          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,"Porter & Moss mistakenly equate Lepsius 30 with Menhebu (unnumbered mastaba excavated by Junker, called G 5610 by Reisner). Reisner mistakenly equates Lepsius 30 with G 5540 (tomb of Hamka). Both of these mastabas have in situ false doors with the names of their owners. Lepsius never mentions an inscribed false door bearing a name in his description of Lepsius 30, whose location remains uncertain but, according to Lepsius, somewhere south of G 5520 (Lepsius 28). Lepsius records only a register of named offering bearers on each of the door jambs beneath the feet of the tomb owner, whose upper half and name are not preserved.,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+4627,Western Cemetery,Cemetery G 2300,Cemetery    G     2300          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
+4628,Western Cemetery,Cemetery G 2400,Cemetery    G     2400          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 4629,Western Cemetery,G 1152a,G       1152a                   ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 56 with pencil margin notes about reused architrave (from G 1152a).
 ",NULL,NULL,NULL,NULL,"G 1152a A; G 1152a B; G 1152a C; G 1152a X ,,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,PorterMoss Date_End of Dynasty 5 or Dynasty 6
 4630,Western Cemetery,G 1156a,G       1156a                   ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, pencil margin notes of added finds on page 56.
@@ -25515,13 +25515,13 @@ Hawass, Zahi. ""The Statue of the Dwarf Pr-n(j)-anx(w) Recently Discovered at Gi
 Lehmann, Katja. Der Serdab in den Privatgräbern des Alten Reiches 1-3. Ph.D. Dissertation, Universität Heidelberg, 2000, Kat. G48.
 
 Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Other Mastaba Fields."" In Egyptian Art in the Age of the Pyramids. New York: The Metropolitan Museum of Art, 1999, p. 150. 
-",NULL,NULL,"Tomb is west of G 1457 and north of the mastaba of Seneb.,,",NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,"Tomb is west of G 1457 and north of the mastaba of Seneb.,,",NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 4632,Eastern Cemetery,Sensnefru,Sensnefru                       ,NULL,"Porter, Bertha, and Rosalind L.B. Moss. Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings 3: Memphis (Abû Rawâsh to Dahshûr). Oxford: The Clarendon Press, 1931. 2nd edition. 3: Memphis, Part 1 (Abû Rawâsh to Abûsîr), revised and augmented by Jaromír Málek. Oxford: The Clarendon Press, 1974, p. 202, plan 18.
 ",NULL,"Sometimes incorrectly included in G 7710 or Lepsius 71.,,","Rock-cut tomb north of G 7710 and south of Lepsius 71. Not labeled on plans EG000593, EG002032 or EG010028. ,,",NULL,NULL,NULL,NULL,1,1,NULL,10,Rock-cut tomb,PorterMoss Date_Dynasty 5
 5079,Menkaure Quarry Cemetery,MQ 500,MQ       500                    ,NULL,"Saleh, Abdel-Aziz. ""Excavations Around Mycerinus Pyramid Complex."" Mitteilungen des Deutschen Archäologischen Instituts, Abteilung Kairo 30 (1974), pp. 149, 151, pls. 31a, 32.
 ",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 5080,Menkaure Quarry Cemetery,MQ 501,MQ       501                    ,NULL,"Saleh, Abdel-Aziz. ""Excavations Around Mycerinus Pyramid Complex."" Mitteilungen des Deutschen Archäologischen Instituts, Abteilung Kairo 30 (1974), p. 149, pl. 31a.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),_
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,_
 5081,Menkaure Quarry Cemetery,MQ 502,MQ       502                    ,NULL,"Saleh, Abdel-Aziz. ""Excavations Around Mycerinus Pyramid Complex."" Mitteilungen des Deutschen Archäologischen Instituts, Abteilung Kairo 30 (1974), pp. 149-150, pl. 31a, b.
 ",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 5083,Eastern Cemetery,G 7000 SW 19,G       7000SW      19          ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,5,Shafts only (no superstructure),_
@@ -25530,21 +25530,21 @@ Manuelian, Peter Der. ""Excavating the Old Kingdom.  The Giza Necropolis and Oth
 5086,Western Cemetery,G 5231a,G       5231a                   ,NULL,NULL,NULL,"G 5231a originally contained shafts R-X.  These were later renamed G 5231a A-G, although it is uncertain which shaft is which.,,",NULL,NULL,"G 5231a A (=T?); G 5231a B (=U?); G 5231a C (=V); G 5231a D (=W?); G 5231a E (=X?); G 5231a F (=R); G 5231a G (=S),,",NULL,NULL,1,1,NULL,2,Stone-built mastaba,_
 5087,Eastern Cemetery,G 7811,G       7811                    ,NULL,"Reisner, unpublished manuscript, Box M 3, Description of Cemetery G 7000, pp. 438a, 438f-438g.
 ",NULL,"This small rock-cut tomb was originally numbered G 7810, but was changed to G 7811 when G 7580 (the stone-built mastaba of Djaty) was renumbered G 7810. It may actually consist of two separate tombs, which were at one point numbered G 7811a and G 7811b.,,",NULL,NULL,"G 7811 A; G 7811 B; G 7811 C,,",NULL,NULL,1,1,NULL,10,Rock-cut tomb,_
-5088,Western Cemetery,G 1219 X,G       1219X                   ,NULL,NULL,NULL,"G 1219 X is a later offering enclosure built to the east of G 1219 on top of the west wall of G 1220 and associated with the intrusive shafts G 1219 X and Y, which do not appear on most site plans, but are mentioned on unpublished manuscript page GN3_L06_p033. Additionally, a number of photos show shaft G 1219 Y.,,",NULL,NULL,"G 1219 X; G 1219 Y,,",NULL,NULL,1,1,NULL,0,(not assigned),_
+5088,Western Cemetery,G 1219 X,G       1219X                   ,NULL,NULL,NULL,"G 1219 X is a later offering enclosure built to the east of G 1219 on top of the west wall of G 1220 and associated with the intrusive shafts G 1219 X and Y, which do not appear on most site plans, but are mentioned on unpublished manuscript page GN3_L06_p033. Additionally, a number of photos show shaft G 1219 Y.,,",NULL,NULL,"G 1219 X; G 1219 Y,,",NULL,NULL,1,1,NULL,NULL,NULL,_
 5089,South Giza Cemetery (Z. Hawass),Lepsius 103,Lepsius       103               ,NULL,"Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Plates 1, Band 1 [Giza plates only]. Berlin: Nicolaische Buchhandlung, 1849-1859, pl. 31.
 
 Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Text 1: Unteraegypten und Memphis [Giza pages only]. Leipzig: J.C. Hinrichs'sche Buchhandlung, 1897, p. 125.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Lepsius Date_Saite
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Lepsius Date_Saite
 5090,South Giza Cemetery (Z. Hawass),Lepsius 104,Lepsius       104               ,NULL,"Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Plates 1, Band 1 [Giza plates only]. Berlin: Nicolaische Buchhandlung, 1849-1859, pl. 31.
 
 Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Text 1: Unteraegypten und Memphis [Giza pages only]. Leipzig: J.C. Hinrichs'sche Buchhandlung, 1897, p. 125.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Lepsius Date_Saite
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Lepsius Date_Saite
 5091,South Giza Cemetery (Z. Hawass),Lepsius 105,Lepsius       105               ,NULL,"Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Plates 1, Band 1 [Giza plates only]. Berlin: Nicolaische Buchhandlung, 1849-1859, pl. 31.
 
 Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Text 1: Unteraegypten und Memphis [Giza pages only]. Leipzig: J.C. Hinrichs'sche Buchhandlung, 1897, p. 125.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Lepsius Date_Saite
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Lepsius Date_Saite
 5092,South Giza Cemetery (Z. Hawass),Lepsius 106,Lepsius       106               ,NULL,"Lepsius, Carl Richard. Denkmäler aus Aegypten und Aethiopien. Text 1: Unteraegypten und Memphis [Giza pages only]. Leipzig: J.C. Hinrichs'sche Buchhandlung, 1897, p. 125.
-",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,0,(not assigned),Lepsius Date_Saite
+",NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,Lepsius Date_Saite
 5093,Western Cemetery,ABC-105,ABC      105                    ,NULL,"Radwan, Ali. ""The Nun-basin of Renpetneferet."" In Stephen E. Thompson and Peter Der Manuelian, eds. Egypt and Beyond: Essays Presented to Leonard H. Lesko upon his Retirement from the Wilbour Chair of Egyptology at Brown University June 2005. Providence: Department of Egyptology and Ancient Western Asian Studies, 2008, p. 277. 
 ",NULL,"Abu-Bakr Cemetery,,",NULL,NULL,NULL,NULL,NULL,1,1,NULL,1,Mud-brick mastaba,_
 5094,Western Cemetery,S 1030/1037,S       1030 1037               ,NULL,"Junker, Hermann. Gîza 7. Der Ostabschnitt des Westfriedhofs, Erster Teil. Akademie der Wissenschaften in Wien Philosophisch-historische Klasse Denkschriften 72, Abhandlung 3. Vienna & Leipzig: Hölder-Pichler-Tempsky, 1944, fig. 4, pls. 5-6, plan after pl. 40.
