@@ -212,9 +212,7 @@ with open('../data/sites_constituents_related.csv', 'rb') as csvfile:
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
 				print "this site could not be found!"
-				continue
-		if 'constituents' not in site:
-			site['constituents'] = []			
+				continue		
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
 
@@ -223,15 +221,59 @@ with open('../data/sites_constituents_related.csv', 'rb') as csvfile:
 
 		constituent_dict = {}
 		constituent_dict['role'] = row[role_index]
-		constituent_dict['constituent_id'] = constituent_id
-		constituent_dict['display_name'] =  display_name
-		constituent_dict['display_date'] = row[display_date_index] if row[display_date_index] != "NULL" else ""
-		site['constituents'].append(constituent_dict)
+		constituent_dict['constituentid'] = constituent_id
+		constituent_dict['displayname'] =  display_name
+		constituent_dict['displaydate'] = row[display_date_index] if row[display_date_index] != "NULL" else ""
 
 		constituent_type_key = int(row[constituent_type_id_index])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
 		if constituent_type not in site['relateditems']:
 			site['relateditems'][constituent_type] = []
-		site['relateditems'][constituent_type].append({'constituentid' : constituent_id, 'displayname' : display_name, 'constituenttypeid' : constituent_type_key})
+		site['relateditems'][constituent_type].append(constituent_dict)
 	if site:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+
+# Next, update site with all related Published Documentation
+with open('../data/sites_published_related.csv', 'rb') as csvfile:
+	# Get the query headers to use as keys in the JSON
+	headers = next(csvfile)
+	if headers.startswith(codecs.BOM_UTF8):
+		headers = headers[3:]
+	headers = headers.replace('\r\n','')
+	columns = headers.split(',')
+
+	site_id_index = columns.index('SiteID')
+	reference_id_index = columns.index('ReferenceID')
+	boiler_text_index = columns.index('BoilerText')
+
+	current_id = '-1'
+	site = {}
+	objects = csv.reader(csvfile, delimiter=',', quotechar='"')
+	for row in objects:
+		site_id = row[site_id_index]
+		if site_id not in SAMPLE_SITES:
+			continue
+		if site_id != current_id:
+			if site:
+				# will likely have multiple rows for one site because of many related constituents
+				# only get a new site if we have a new site id, but first save old site to elasticsearch
+				elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+			current_id = site_id
+			site = {}
+			if elasticsearch_connection.item_exists(site_id, 'sites'):
+				site = elasticsearch_connection.get_item(site_id, 'sites')
+			else:
+				print "this site could not be found!"
+				continue		
+		if 'relateditems' not in site:
+			site['relateditems'] = {}
+
+		reference_id = row[reference_id_index]
+		boiler_text = row[boiler_text_index]
+
+		if "publisheddocumentation" not in site['relateditems']:
+			site['relateditems']["publisheddocumentation"] = []
+		site['relateditems']["publisheddocumentation"].append({'referenceid' : reference_id, 'boilertext' : boiler_text})
+	if site:
+		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+

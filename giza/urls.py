@@ -15,6 +15,8 @@ urlpatterns = [
 
     url(r'^search/$', 'search.views.search', name='search'),
 
+    url(r'^sites/(?P<site_id>[\d]+)$', 'tms.views.site', name='get_site'),
+
     url(r'', include(wagtail_urls)),
 ]
 

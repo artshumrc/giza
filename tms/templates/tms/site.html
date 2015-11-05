@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}template-searchresults{% endblock %}
+
+{% block title %}Site{% endblock %}
+
+{% block content %}
+    <h1>Site Template</h1>
+
+    <h3>Tomb/Monument Details</h3>
+    <ul>
+    <li>{% if site.sitename %}{{ site.sitename }} : {% endif %}{{ site.sitenumber|default:"" }}</li>
+    {% for altnum in site.altnums %}
+        <li>{% if altnum.description %}{{ altnum.description }} : {% endif %}{{ altnum.altnum|default:"" }}
+        </li>
+    {% endfor %}
+    {% if site.sitetype.sitetype %}<li>{{ site.sitetype.sitetype }}</li>{% endif %} <!-- Add search by sitetype id --> 
+    {% if site.shafts %}<li>Shafts : {{ site.shafts }}</li>{% endif %} 
+    </ul>
+
+    {% if site.sitedates %}
+    <h3>Tomb/Monument Dating</h3>
+    <ul>
+    {% for sitedate in site.sitedates %}
+        <li>{% if sitedate.eventtype %}{{ sitedate.eventtype }} : {% endif %}{{ sitedate.datetext|default:"" }}
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if site.relateditems.ancientpeople %}
+    <h3>Associated Ancient People</h3>
+    <ul>
+    {% for person in site.relateditems.ancientpeople %}
+        <li>{% if person.role %}{{ person.role }} {% endif %}{{ person.displayname|default:"" }}{% if person.displaydate %}<br/>{{ person.displaydate }}{% endif %}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if site.relateditems.modernpeople %}
+    <h3>Associated Modern People</h3>
+    <ul>
+    {% for person in site.relateditems.modernpeople %}
+        <li>{% if person.role %}{{ person.role }} {% endif %}{{ person.displayname|default:"" }}{% if person.displaydate %}<br/>{{ person.displaydate }}{% endif %}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if site.bibreferences %}
+    <h3>Bibiliographies/References</h3>
+    <p>
+        {{ site.bibreferences|linebreaks }}
+    </p>
+    {% endif %}
+
+    {% if site.relateditems %}
+    <h3>Related Items</h3>
+    {% if site.relateditems.photos %}
+        <p>{{ site.relateditems.photos|length }} Photo{{ site.relateditems.photos|length|pluralize }}</p>
+    {% endif %}
+    {% if site.relateditems.finds %}
+        <p>{{ site.relateditems.finds|length }} Find{{ site.relateditems.finds|length|pluralize }}</p>
+    {% endif %}
+    {% if site.relateditems.ancientpeople %}
+        <p>{{ site.relateditems.ancientpeople|length }} Ancient P{{ site.relateditems.ancientpeople|length|pluralize:"erson,eople" }}</p>
+    {% endif %}
+    {% if site.relateditems.plansanddrawings %}
+        <p>{{ site.relateditems.plansanddrawings|length }} Plan{{ site.relateditems.plansanddrawings|length|pluralize }} and Drawing{{ site.relateditems.plansanddrawings|length|pluralize }}</p>
+    {% endif %}
+    {% if site.relateditems.publisheddocumentation %}
+        <p>{{ site.relateditems.publisheddocumentation|length }} Published Document{{ site.relateditems.publisheddocumentation|length|pluralize }}</p>
+    {% endif %}
+    {% if site.relateditems.modernpeople %}
+        <p>{{ site.relateditems.modernpeople|length }} Modern P{{ site.relateditems.modernpeople|length|pluralize:"erson,eople" }}</p>
+    {% endif %}
+    {% if site.relateditems.unpublisheddocumentation %}
+        <p>{{ site.relateditems.unpublisheddocumentation|length }} Unpublished Document{{ site.relateditems.unpublisheddocumentation|length|pluralize }}</p>
+    {% endif %}
+    {% if site.relateditems.diarypages %}
+        <p>{{ site.relateditems.diarypages|length }} Diary Page{{ site.relateditems.diarypages|length|pluralize }}</p>
+    {% endif %}
+    {% endif %}
+{% endblock %}

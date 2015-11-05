@@ -26,6 +26,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 INSTALLED_APPS = [
     'home',
     'search',
+    'tms',
 
     'wagtail.wagtailforms',
     'wagtail.wagtailredirects',
@@ -98,6 +99,14 @@ DATABASES = {
     }
 }
 
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch',
+        'URLS': ['http://localhost:9200'],
+        'INDEX': 'giza',
+        'TIMEOUT': 5,
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
