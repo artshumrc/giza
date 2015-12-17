@@ -279,3 +279,43 @@ with open('../data/sites_published_related.csv', 'rb') as csvfile:
 	if site:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
 
+# Update site with all related photos
+with open('../data/sites_photos_related.csv', 'rb') as csvfile:
+	# Get the query headers to use as keys in the JSON
+	headers = next(csvfile)
+	if headers.startswith(codecs.BOM_UTF8):
+		headers = headers[3:]
+	headers = headers.replace('\r\n','')
+	columns = headers.split(',')
+
+	site_id_index = columns.index('SiteID')
+	media_master_id_index = columns.index('MediaMasterID')
+
+	current_id = '-1'
+	site = {}
+	objects = csv.reader(csvfile, delimiter=',', quotechar='"')
+	for row in objects:
+		site_id = row[site_id_index]
+		if site_id not in SAMPLE_SITES:
+			continue
+		if site_id != current_id:
+			if site:
+				# will likely have multiple rows for one site because of many related constituents
+				# only get a new site if we have a new site id, but first save old site to elasticsearch
+				elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+			current_id = site_id
+			site = {}
+			if elasticsearch_connection.item_exists(site_id, 'sites'):
+				site = elasticsearch_connection.get_item(site_id, 'sites')
+			else:
+				print "this site could not be found!"
+				continue		
+		if 'relateditems' not in site:
+			site['relateditems'] = {}
+
+		media_master_id = row[media_master_id_index]
+		if "photos" not in site['relateditems']:
+			site['relateditems']["photos"] = []
+		site['relateditems']["photos"].append({'mediamasterid' : media_master_id})
+	if site:
+		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
