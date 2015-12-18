@@ -12,6 +12,7 @@ from classifications import CLASSIFICATIONS, CONSTITUENTTYPES
 
 # First update each Site with the latest data
 # This is the basic information/metadata that comprises a Site
+print "Starting sites.csv..."
 with open('../data/sites.csv', 'rb') as csvfile:
 	# Get the query headers to use as keys in the JSON
 	headers = next(csvfile)
@@ -84,8 +85,10 @@ with open('../data/sites.csv', 'rb') as csvfile:
 	if site:
 		# save last site to elasticsearch
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+print "Finished sites.csv..."
 
 # Update relevant sites with alternate numbers
+print "Starting sites_altnums.csv..."
 with open('../data/sites_altnums.csv', 'rb') as csvfile:
 	# Get the query headers to use as keys in the JSON
 	headers = next(csvfile)
@@ -116,7 +119,7 @@ with open('../data/sites_altnums.csv', 'rb') as csvfile:
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "this site could not be found!"
+				print "%s could not be found!" % site_id
 				continue
 
 		if 'altnums' not in site:
@@ -124,9 +127,11 @@ with open('../data/sites_altnums.csv', 'rb') as csvfile:
 		altnum = row[altnum_index]
 		description = row[description_index] if row[description_index] != "NULL" else ""
 		site['altnums'].append({"altnum" : altnum, "description" : description})
+print "Finished sites_altnums.csv..."
 
 # Update all related items from the Objects table
 # TODO: Get Primary Image URL (need an image server first) 
+print "Starting sites_objects_related.csv..."
 with open('../data/sites_objects_related.csv', 'rb') as csvfile:
 	# Get the query headers to use as keys in the JSON
 	headers = next(csvfile)
@@ -158,7 +163,7 @@ with open('../data/sites_objects_related.csv', 'rb') as csvfile:
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "this site could not be found!"
+				print "%s could not be found!" % site_id
 				continue
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
@@ -179,8 +184,10 @@ with open('../data/sites_objects_related.csv', 'rb') as csvfile:
 		site['relateditems'][classification].append({'objectid' : object_id, 'title' : object_title, 'classificationid' : classification_key})
 	if site:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+print "Finished sites_objects_related.csv..."
 
 # Next, update site with all related Constituents
+print "Starting sites_constituents_related.csv..."
 with open('../data/sites_constituents_related.csv', 'rb') as csvfile:
 	# Get the query headers to use as keys in the JSON
 	headers = next(csvfile)
@@ -213,7 +220,7 @@ with open('../data/sites_constituents_related.csv', 'rb') as csvfile:
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "this site could not be found!"
+				print "%s could not be found!" % site_id
 				continue		
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
@@ -234,8 +241,10 @@ with open('../data/sites_constituents_related.csv', 'rb') as csvfile:
 		site['relateditems'][constituent_type].append(constituent_dict)
 	if site:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+print "Finished sites_constituents_related.csv..."
 
 # Next, update site with all related Published Documentation
+print "Starting sites_published_related.csv..."
 with open('../data/sites_published_related.csv', 'rb') as csvfile:
 	# Get the query headers to use as keys in the JSON
 	headers = next(csvfile)
@@ -265,7 +274,7 @@ with open('../data/sites_published_related.csv', 'rb') as csvfile:
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "this site could not be found!"
+				print "%s could not be found!" % site_id
 				continue		
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
@@ -278,8 +287,10 @@ with open('../data/sites_published_related.csv', 'rb') as csvfile:
 		site['relateditems']["publisheddocumentation"].append({'referenceid' : reference_id, 'boilertext' : boiler_text})
 	if site:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+print "Finished sites_published_related.csv..."
 
 # Update site with all related photos
+print "Starting sites_photos_related.csv..."
 with open('../data/sites_photos_related.csv', 'rb') as csvfile:
 	# Get the query headers to use as keys in the JSON
 	headers = next(csvfile)
@@ -308,7 +319,7 @@ with open('../data/sites_photos_related.csv', 'rb') as csvfile:
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "this site could not be found!"
+				print "%s could not be found!" % site_id
 				continue		
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
@@ -319,3 +330,4 @@ with open('../data/sites_photos_related.csv', 'rb') as csvfile:
 		site['relateditems']["photos"].append({'mediamasterid' : media_master_id})
 	if site:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
+print "Finished sites_photos_related.csv..."
