@@ -8,7 +8,7 @@ import elasticsearch_connection
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES
 
-SAMPLE_SITES = ('1175', '670', '671', '672', '1509', '677', '2080', '2796', '2028', '2035', '2245', '2043', '3461', '3412')
+#SAMPLE_SITES = ('1175', '670', '671', '672', '1509', '677', '2080', '2796', '2028', '2035', '2245', '2043', '3461', '3412')
 
 # First update each Site with the latest data
 # This is the basic information/metadata that comprises a Site
@@ -27,8 +27,8 @@ with open('../data/sites.csv', 'rb') as csvfile:
 	current_id = '-1'
 	for row in objects:
 		site_id = row[site_id_index]
-		if site_id not in SAMPLE_SITES:
-			continue
+		#if site_id not in SAMPLE_SITES:
+		#	continue
 		# could have multiple rows for one site because of multiple SiteDates or other pieces of information
 		# only create a new site if we have a new site id, but first save old site to elasticsearch
 		if site_id != current_id:
@@ -103,8 +103,8 @@ with open('../data/sites_altnums.csv', 'rb') as csvfile:
 	objects = csv.reader(csvfile, delimiter=',', quotechar='"')
 	for row in objects:
 		site_id = row[site_id_index]
-		if site_id not in SAMPLE_SITES:
-			continue
+		#if site_id not in SAMPLE_SITES:
+		#	continue
 		
 		if site_id != current_id:
 			if site:
@@ -146,8 +146,8 @@ with open('../data/sites_objects_related.csv', 'rb') as csvfile:
 	objects = csv.reader(csvfile, delimiter=',', quotechar='"')
 	for row in objects:
 		site_id = row[site_id_index]
-		if site_id not in SAMPLE_SITES:
-			continue
+		#if site_id not in SAMPLE_SITES:
+		#	continue
 		if site_id != current_id:
 			if site:
 				# will likely have multiple rows for one site because of many related objects
@@ -201,8 +201,8 @@ with open('../data/sites_constituents_related.csv', 'rb') as csvfile:
 	objects = csv.reader(csvfile, delimiter=',', quotechar='"')
 	for row in objects:
 		site_id = row[site_id_index]
-		if site_id not in SAMPLE_SITES:
-			continue
+		#if site_id not in SAMPLE_SITES:
+		#	continue
 		if site_id != current_id:
 			if site:
 				# will likely have multiple rows for one site because of many related constituents
@@ -253,8 +253,8 @@ with open('../data/sites_published_related.csv', 'rb') as csvfile:
 	objects = csv.reader(csvfile, delimiter=',', quotechar='"')
 	for row in objects:
 		site_id = row[site_id_index]
-		if site_id not in SAMPLE_SITES:
-			continue
+		#if site_id not in SAMPLE_SITES:
+		#	continue
 		if site_id != current_id:
 			if site:
 				# will likely have multiple rows for one site because of many related constituents
@@ -296,8 +296,8 @@ with open('../data/sites_photos_related.csv', 'rb') as csvfile:
 	objects = csv.reader(csvfile, delimiter=',', quotechar='"')
 	for row in objects:
 		site_id = row[site_id_index]
-		if site_id not in SAMPLE_SITES:
-			continue
+		#if site_id not in SAMPLE_SITES:
+		#	continue
 		if site_id != current_id:
 			if site:
 				# will likely have multiple rows for one site because of many related constituents
