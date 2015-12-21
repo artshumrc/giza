@@ -181,7 +181,11 @@ with open('../data/sites_objects_related.csv', 'rb') as csvfile:
 
 		if classification not in site['relateditems']:
 			site['relateditems'][classification] = []
-		site['relateditems'][classification].append({'objectid' : object_id, 'title' : object_title, 'classificationid' : classification_key})
+		site['relateditems'][classification].append({
+			'id' : object_id, 
+			'title' : object_title, 
+			'displaytext' : object_title,
+			'classificationid' : classification_key})
 	if site:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
 print "Finished sites_objects_related.csv..."
@@ -227,12 +231,16 @@ with open('../data/sites_constituents_related.csv', 'rb') as csvfile:
 
 		constituent_id = row[constituent_id_index]
 		display_name = row[display_name_index]
+		display_date = ""
+		if row[display_date_index] != "NULL":
+			display_date = row[display_date_index]
 
 		constituent_dict = {}
 		constituent_dict['role'] = row[role_index]
-		constituent_dict['constituentid'] = constituent_id
-		constituent_dict['displayname'] =  display_name
-		constituent_dict['displaydate'] = row[display_date_index] if row[display_date_index] != "NULL" else ""
+		constituent_dict['id'] = constituent_id
+		constituent_dict['displayname'] = display_name
+		constituent_dict['displaydate'] = display_date
+		constituent_dict['displaytext'] = display_name
 
 		constituent_type_key = int(row[constituent_type_id_index])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
@@ -243,7 +251,7 @@ with open('../data/sites_constituents_related.csv', 'rb') as csvfile:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
 print "Finished sites_constituents_related.csv..."
 
-# Next, update site with all related Published Documentation
+# Next, update site with all related Published Documents
 print "Starting sites_published_related.csv..."
 with open('../data/sites_published_related.csv', 'rb') as csvfile:
 	# Get the query headers to use as keys in the JSON
@@ -282,9 +290,12 @@ with open('../data/sites_published_related.csv', 'rb') as csvfile:
 		reference_id = row[reference_id_index]
 		boiler_text = row[boiler_text_index]
 
-		if "publisheddocumentation" not in site['relateditems']:
-			site['relateditems']["publisheddocumentation"] = []
-		site['relateditems']["publisheddocumentation"].append({'referenceid' : reference_id, 'boilertext' : boiler_text})
+		if "publisheddocuments" not in site['relateditems']:
+			site['relateditems']["publisheddocuments"] = []
+		site['relateditems']["publisheddocuments"].append({
+			'id' : reference_id, 
+			'boilertext' : boiler_text,
+			'displaytext' : boiler_text})
 	if site:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
 print "Finished sites_published_related.csv..."
@@ -327,7 +338,10 @@ with open('../data/sites_photos_related.csv', 'rb') as csvfile:
 		media_master_id = row[media_master_id_index]
 		if "photos" not in site['relateditems']:
 			site['relateditems']["photos"] = []
-		site['relateditems']["photos"].append({'mediamasterid' : media_master_id})
+		site['relateditems']["photos"].append({
+			'id' : media_master_id,
+			'displaytext' : media_master_id
+			})
 	if site:
 		elasticsearch_connection.add_or_update_item(current_id, json.dumps(site), 'sites')
 print "Finished sites_photos_related.csv..."

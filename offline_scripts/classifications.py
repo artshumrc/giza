@@ -1,12 +1,12 @@
 CLASSIFICATIONS = {
 	0 : "finds",
-	1 : "unpublisheddocumentation",
-	2 : "unpublisheddocumentation",
-	3 : "unpublisheddocumentation",
+	1 : "unpublisheddocuments",
+	2 : "unpublisheddocuments",
+	3 : "unpublisheddocuments",
 	4 : "diarypages",
 	5 : "diarypages",
 	6 : 'plansanddrawings',
-	7 : "unpublisheddocumentation",
+	7 : "unpublisheddocuments",
 	8 : "finds",
 	18 : "finds",
 	23 : "finds",
@@ -24,9 +24,9 @@ CLASSIFICATIONS = {
 	58 : "finds",
 	64 : "finds",
 	65 : "finds",
-	71 : "unpublisheddocumentation",
+	71 : "unpublisheddocuments",
 	76 : "finds",
-	77 : "unpublisheddocumentation",
+	77 : "unpublisheddocuments",
 	79 : "finds",
 	80 : "finds",
 	81 : "finds",
@@ -72,11 +72,11 @@ CLASSIFICATIONS = {
 	121 : "finds",
 	122 : "finds",
 	123 : "finds",
-	124 : "unpublisheddocumentation",
+	124 : "unpublisheddocuments",
 	129 : "finds",
 	132 : "finds",
 	135 : "finds",
-	136 : "unpublisheddocumentation"
+	136 : "unpublisheddocuments"
 }
 
 CONSTITUENTTYPES = {

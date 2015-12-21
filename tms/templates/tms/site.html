@@ -55,30 +55,30 @@
     {% endif %}
 
     {% if site.relateditems %}
-    <h3>Related Items</h3>
-    {% if site.relateditems.photos %}
-        <p>{{ site.relateditems.photos|length }} Photo{{ site.relateditems.photos|length|pluralize }}</p>
-    {% endif %}
-    {% if site.relateditems.finds %}
-        <p>{{ site.relateditems.finds|length }} Find{{ site.relateditems.finds|length|pluralize }}</p>
-    {% endif %}
-    {% if site.relateditems.ancientpeople %}
-        <p>{{ site.relateditems.ancientpeople|length }} Ancient P{{ site.relateditems.ancientpeople|length|pluralize:"erson,eople" }}</p>
-    {% endif %}
-    {% if site.relateditems.plansanddrawings %}
-        <p>{{ site.relateditems.plansanddrawings|length }} Plan{{ site.relateditems.plansanddrawings|length|pluralize }} and Drawing{{ site.relateditems.plansanddrawings|length|pluralize }}</p>
-    {% endif %}
-    {% if site.relateditems.publisheddocumentation %}
-        <p>{{ site.relateditems.publisheddocumentation|length }} Published Document{{ site.relateditems.publisheddocumentation|length|pluralize }}</p>
-    {% endif %}
-    {% if site.relateditems.modernpeople %}
-        <p>{{ site.relateditems.modernpeople|length }} Modern P{{ site.relateditems.modernpeople|length|pluralize:"erson,eople" }}</p>
-    {% endif %}
-    {% if site.relateditems.unpublisheddocumentation %}
-        <p>{{ site.relateditems.unpublisheddocumentation|length }} Unpublished Document{{ site.relateditems.unpublisheddocumentation|length|pluralize }}</p>
-    {% endif %}
-    {% if site.relateditems.diarypages %}
-        <p>{{ site.relateditems.diarypages|length }} Diary Page{{ site.relateditems.diarypages|length|pluralize }}</p>
-    {% endif %}
+        <h3>Related Items</h3>
+        {% if site.relateditems.photos %}
+            <p><a href="{% url 'get_site_related_items' site.siteid 'photos' %}">{{ site.relateditems.photos|length }} Photo{{ site.relateditems.photos|length|pluralize }}</a></p>
+        {% endif %}
+        {% if site.relateditems.finds %}
+            <p><a href="{% url 'get_site_related_items' site.siteid 'finds' %}">{{ site.relateditems.finds|length }} Find{{ site.relateditems.finds|length|pluralize }}</a></p>
+        {% endif %}
+        {% if site.relateditems.ancientpeople %}
+            <p><a href="{% url 'get_site_related_items' site.siteid 'ancientpeople' %}">{{ site.relateditems.ancientpeople|length }} Ancient P{{ site.relateditems.ancientpeople|length|pluralize:"erson,eople" }}</a></p>
+        {% endif %}
+        {% if site.relateditems.plansanddrawings %}
+            <p><a href="{% url 'get_site_related_items' site.siteid 'plansanddrawings' %}">{{ site.relateditems.plansanddrawings|length }} Plan{{ site.relateditems.plansanddrawings|length|pluralize }} and Drawing{{ site.relateditems.plansanddrawings|length|pluralize }}</a></p>
+        {% endif %}
+        {% if site.relateditems.publisheddocuments %}
+            <p><a href="{% url 'get_site_related_items' site.siteid 'publisheddocuments' %}">{{ site.relateditems.publisheddocuments|length }} Published Document{{ site.relateditems.publisheddocuments|length|pluralize }}</a></p>
+        {% endif %}
+        {% if site.relateditems.modernpeople %}
+            <p><a href="{% url 'get_site_related_items' site.siteid 'modernpeople' %}">{{ site.relateditems.modernpeople|length }} Modern P{{ site.relateditems.modernpeople|length|pluralize:"erson,eople" }}</a></p>
+        {% endif %}
+        {% if site.relateditems.unpublisheddocuments %}
+            <p><a href="{% url 'get_site_related_items' site.siteid 'unpublisheddocuments' %}">{{ site.relateditems.unpublisheddocuments|length }} Unpublished Document{{ site.relateditems.unpublisheddocuments|length|pluralize }}</a></p>
+        {% endif %}
+        {% if site.relateditems.diarypages %}
+            <p><a href="{% url 'get_site_related_items' site.siteid 'diarypages' %}">{{ site.relateditems.diarypages|length }} Diary Page{{ site.relateditems.diarypages|length|pluralize }}</a></p>
+        {% endif %}
     {% endif %}
 {% endblock %}
