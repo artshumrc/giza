@@ -172,7 +172,7 @@ with open('../data/sites_objects_related.csv', 'rb') as csvfile:
 		object_id = int(row[object_id_index])
 
 		object_title = row[object_title_index]
-		if classification == "diary pages" and object_title.lower() == "null":
+		if classification == "diarypages" and object_title.lower() == "null":
 			object_number = row[object_number_index]
 			idx = object_number.find('_')
 			object_title = object_number[idx+1:]

@@ -3,7 +3,7 @@ TODO: Get Primary Image URL (need an image server first) */
 SELECT Sites.SiteID, SiteName, SiteNumber, SiteSortNumber, HistoricalNotes, 
 LegalNotes + ',,' AS BibReferences, LocationNotes, 
 Sites.Remarks + ',,' AS Remarks, 
-Sites.Description + ',,' Description, Condition, 
+Sites.Description + ',,' AS Description, Condition, 
 Environment + ',,' Shafts, 
 ResearchActivity + ',,' AS ResearchActivity, 
 ResearcherComments + ',,' AS ResearcherComments, IsPublic, 
