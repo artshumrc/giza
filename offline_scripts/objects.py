@@ -26,8 +26,8 @@ def process_objects():
 		classification_key = int(row[classification_id_index])
 		classification = CLASSIFICATIONS.get(classification_key)
 
-		if object_id not in SAMPLE_OBJECTS:
-			return (object, current_id)
+		#if object_id not in SAMPLE_OBJECTS:
+		#	return (object, current_id)
 
 		# I don't think there are any duplicate rows for objects, but keep it here since it doesn't break anything
 		if object_id != current_id:

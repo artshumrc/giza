@@ -5,14 +5,16 @@ from tms import models
 
 import json
 
-related_display_text = {'finds' : 'Finds', 
+related_display_text = {
+	'finds' : 'Finds', 
 	'diarypages' : 'Diary Pages', 
 	'modernpeople' : 'Modern People', 
 	'ancientpeople' : 'Ancient People',
 	'plansanddrawings' : 'Plans and Drawings',
 	'unpublisheddocuments' : 'Unpublished Documents',
 	'publisheddocuments' : 'Published Documents',
-	'photos' : 'Photos'}
+	'photos' : 'Photos'
+}
 
 def site(request, id):
 	# get site in elasticsearch and render or return 404
@@ -34,7 +36,11 @@ def site_related_items(request, id, relation):
 		raise Http404("Site does not exist")
 
 def find(request, id):
-	return
+	try:
+		find = models.get_item(id, 'finds')
+		return render(request, 'tms/find.html', {'find': find})
+	except:
+		raise Http404("Site does not exist")
 
 def find_related_items(request, id, relation):
 	return
@@ -58,7 +64,11 @@ def photo_related_items(request, id, relation):
 	return
 
 def plansanddrawings(request, id):
-	return
+	try:
+		plansanddrawings = models.get_item(id, 'plansanddrawings')
+		return render(request, 'tms/plansanddrawings.html', {'plansanddrawings': plansanddrawings})
+	except:
+		raise Http404("Site does not exist")
 
 def plansanddrawings_related_items(request, id, relation):
 	return
@@ -70,7 +80,11 @@ def publisheddocument_related_items(request, id, relation):
 	return
 
 def unpublisheddocument(request, id):
-	return
+	try:
+		unpublisheddocument = models.get_item(id, 'unpublisheddocuments')
+		return render(request, 'tms/unpublisheddocument.html', {'unpublisheddocument': unpublisheddocument})
+	except:
+		raise Http404("Site does not exist")
 
 def unpublisheddocument_related_items(request, id, relation):
 	return

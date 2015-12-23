@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}template-searchresults{% endblock %}
+
+{% block title %}Site{% endblock %}
+
+{% block content %}
+    <h1>Find Template</h1>
+
+    {% if find.title %}
+    <p><b>Title: </b>{{ find.title }}</p>
+    {% endif %}
+    {% if find.entrydate %}
+    <p><b>Entry date(s): </b>{{ find.entrydate }}</p>
+    {% endif %}
+    {% if find.provenance %}
+    <p><b>Findspot: </b>{{ find.provenance }}</p>
+    {% endif %}
+    {% if find.medium %}
+    <p><b>Medium: </b>{{ find.medium }}</p>
+    {% endif %}
+    {% if find.dimensions %}
+    <p><b>Dimensions: </b>{{ find.dimensions }}</p>
+    {% endif %}
+    {% if find.description %}
+    <p><b>Description: </b>{{ find.description }}</p>
+    {% endif %}
+    {% if find.notes %}
+    <p><b>Notes: </b>{{ find.notes }}</p>
+    {% endif %}
+    {% if find.pubreferences %}
+    <p><b>Selected Published References: </b>{{ find.pubreferences }}</p>
+    {% endif %}
+    {% if find.objectownerdetails %}
+    <p><b>Object Owner Details: </b>{{ find.objectownerdetails }}</p>
+    {% endif %}
+
+{% endblock %}
