@@ -21,59 +21,59 @@ def process_sites():
 
 	def process_site_row(site, current_id):
 		site_id = row[site_id_index]
-			#if site_id not in SAMPLE_SITES:
-			#	continue
-			# could have multiple rows for one site because of multiple SiteDates or other pieces of information
-			# only create a new site if we have a new site id, but first save old site to elasticsearch
-			if site_id != current_id:
-				save(site)
-				current_id = site_id
-				site = {}
+		#if site_id not in SAMPLE_SITES:
+		#	continue
+		# could have multiple rows for one site because of multiple SiteDates or other pieces of information
+		# only create a new site if we have a new site id, but first save old site to elasticsearch
+		if site_id != current_id:
+			save(site)
+			current_id = site_id
+			site = {}
 
-			# loop through each row
-			for index, value in enumerate(columns):
-				key = value.lower()
-				row_value = row[index]
+		# loop through each row
+		for index, value in enumerate(columns):
+			key = value.lower()
+			row_value = row[index]
 
-				# cleanup row data
-				if row_value.isdigit():
-					row_value = int(row_value)
-				elif row_value == "NULL":
-					row_value = None
-				else:
-					row_value = row_value.replace(',,','')
+			# cleanup row data
+			if row_value.isdigit():
+				row_value = int(row_value)
+			elif row_value == "NULL":
+				row_value = None
+			else:
+				row_value = row_value.replace(',,','')
 
-				if 'sitetype' in key:
-					if not row_value:
-						continue
-					# group sitetype fields into an object
-					if 'sitetype' not in site:
-						site['sitetype'] = {}
-					site['sitetype'][key] = row_value
-				elif 'sitedates' in key:
-					# there can be multiple sitedates
-					# create an array that contains all sitedate objects
-					if 'sitedates' not in site:
-						site['sitedates'] = []
-					# key looks like 'SiteDates_EventType_DateText'
-					# row data looks like 'PorterMoss Date_Dynasty 5-6'
-					# split on _ (and ignore first value in key)
-					keys = key.split('_')[1:]
-					if len(keys) > 2:
-						print "too many items after splitting"
-					values = row_value.split('_')
-					if len(values) > 2:
-						print "too many items after splitting"
-					date = {}
-					for i, k in enumerate(keys):
-						if values[i]:
-							date[k.lower()] = values[i]
-					if date:
-						site['sitedates'].append(date)
-				else:
-					# no special processing - just add it to the JSON
-					site[key] = row_value
-			return (site, current_id)
+			if 'sitetype' in key:
+				if not row_value:
+					continue
+				# group sitetype fields into an object
+				if 'sitetype' not in site:
+					site['sitetype'] = {}
+				site['sitetype'][key] = row_value
+			elif 'sitedates' in key:
+				# there can be multiple sitedates
+				# create an array that contains all sitedate objects
+				if 'sitedates' not in site:
+					site['sitedates'] = []
+				# key looks like 'SiteDates_EventType_DateText'
+				# row data looks like 'PorterMoss Date_Dynasty 5-6'
+				# split on _ (and ignore first value in key)
+				keys = key.split('_')[1:]
+				if len(keys) > 2:
+					print "too many items after splitting"
+				values = row_value.split('_')
+				if len(values) > 2:
+					print "too many items after splitting"
+				date = {}
+				for i, k in enumerate(keys):
+					if values[i]:
+						date[k.lower()] = values[i]
+				if date:
+					site['sitedates'].append(date)
+			else:
+				# no special processing - just add it to the JSON
+				site[key] = row_value
+		return (site, current_id)
 
 	print "Starting Sites..."
 	if CURSOR:
@@ -504,7 +504,7 @@ def process_cursor_row(cursor_row):
 	return row
 
 def save(site):
-	if site:
+	if site and 'siteid' in site:
 		elasticsearch_connection.add_or_update_item(site['siteid'], json.dumps(site), 'sites')
 
 if __name__ == "__main__":
