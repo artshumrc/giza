@@ -1,6 +1,5 @@
 # Object display data 
 # TODO: Get Primary Image URL (need an image server first)
-# Need Department? 
 OBJECTS = """
 SELECT Objects.ObjectID, Objects.ObjectNumber, Objects.ObjectStatusID, Objects.ClassificationID, Objects.ObjectName + ',,' as ObjectOwnerDetails,
 Objects.Dated as EntryDate, replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.Medium + ',,' as Medium, 

@@ -45,6 +45,12 @@ def find(request, id):
 def find_related_items(request, id, relation):
 	return
 
+def diarypage(request, id):
+	return
+
+def diarypage_related_items(request, id, relation):
+	return
+
 def ancientperson(request, id):
 	return
 

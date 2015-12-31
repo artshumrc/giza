@@ -499,6 +499,8 @@ def process_cursor_row(cursor_row):
 			row.append(str(x))
 		elif isinstance(x, unicode):
 			row.append(x.encode('utf-8'))
+		elif x is None:
+			row.append("NULL")
 		else:
 			row.append(str(x))
 	return row

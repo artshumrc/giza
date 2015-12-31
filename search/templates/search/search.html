@@ -13,11 +13,11 @@
         <input type="submit" value="Search">
     </form>
 
-    {% if search_results %}
+    {% if hits %}
         <ul>
-            {% for result in search_results %}
+            {% for result in hits %}
                 <li>
-                    <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
+                    <h4><a href="{% url result.type result.id %}">{{ result.source }}</a></h4>
                     {% if result.search_description %}
                         {{ result.search_description|safe }}
                     {% endif %}
@@ -25,14 +25,21 @@
             {% endfor %}
         </ul>
 
-        {% if search_results.has_previous %}
-            <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
+        {% if hits.has_previous %}
+            <a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;page={{ hits.previous_page_number }}">Previous</a>
         {% endif %}
 
-        {% if search_results.has_next %}
-            <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
+        {% if hits.has_next %}
+            <a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;page={{ hits.next_page_number }}">Next</a>
         {% endif %}
-    {% elif search_query %}
+    {% elif search_query and not counts %}
         No results found
+    {% endif %}
+    {% if counts %}
+        <ul>
+        {% for count in counts %}
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type={{ count.key }}">{{ count.key }} : {{ count.doc_count }}</a></li>
+        {% endfor %}
+        </ul>
     {% endif %}
 {% endblock %}
