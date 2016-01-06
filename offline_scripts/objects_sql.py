@@ -1,7 +1,7 @@
 # Object display data 
 # TODO: Get Primary Image URL (need an image server first)
 OBJECTS = """
-SELECT Objects.ObjectID, Objects.ObjectNumber, Objects.ObjectStatusID, Objects.ClassificationID, Objects.ObjectName + ',,' as ObjectOwnerDetails,
+SELECT Objects.ObjectID as ID, Objects.ObjectNumber, Objects.ObjectStatusID, Objects.ClassificationID, Objects.ObjectName + ',,' as ObjectOwnerDetails,
 Objects.Dated as EntryDate, replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.Medium + ',,' as Medium, 
 Objects.Dimensions + ',,' as Dimensions, Objects.CreditLine, Objects.Description + ',,' AS Description, Objects.Provenance, 
 Objects.PubReferences + ',,' AS PubReferences, Objects.Notes + ',,' AS Notes, Objects.Chat + ',,' as DiaryTranscription, 
@@ -17,7 +17,7 @@ ORDER BY Objects.ObjectID
 
 # Related Sites for all Objects
 RELATED_SITES = """
-SELECT Objects.ObjectID, SiteObjXrefs.SiteID, 
+SELECT Objects.ObjectID as ID, SiteObjXrefs.SiteID, 
 Sites.SiteName, Sites.SiteNumber
 FROM Objects 
 LEFT JOIN SiteObjXrefs ON Objects.ObjectID=SiteObjXrefs.ObjectID
@@ -29,12 +29,13 @@ ORDER BY Objects.ObjectID
 
 # Related Constituents (Modern and Ancient) for all Objects
 RELATED_CONSTITUENTS = """
-SELECT ConXrefs.ID as ObjectID, Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID, 
-Constituents.DisplayName, Constituents.DisplayDate
+SELECT ConXrefs.ID as ID, Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID, 
+Constituents.DisplayName, Constituents.DisplayDate, Objects.ClassificationID
 FROM ConXrefs 
 LEFT JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
 LEFT JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID
 LEFT JOIN Roles on ConXrefs.RoleID=Roles.RoleID
+LEFT JOIN Objects on ConXrefs.ID=Objects.ObjectID
 WHERE ConXrefs.TableID=108
 AND Constituents.Active=1
 AND ConXrefDetails.Unmasked=1
@@ -43,7 +44,7 @@ ORDER BY ConXrefs.ID
 
 # Related Published Documents for all Objects 
 RELATED_PUBLISHED = """
-SELECT RefXrefs.ID as ObjectID, ReferenceMaster.ReferenceID, ReferenceMaster.BoilerText
+SELECT RefXrefs.ID as ID, ReferenceMaster.ReferenceID, ReferenceMaster.BoilerText
 FROM RefXrefs 
 LEFT JOIN ReferenceMaster on RefXrefs.ReferenceID=ReferenceMaster.ReferenceID
 WHERE RefXrefs.TableID=108
@@ -51,7 +52,7 @@ ORDER BY RefXrefs.ID
 """
 
 RELATED_UNPUBLISHED = """
-SELECT ID1 as ObjectID, ID2 as UnpublishedID, 
+SELECT ID1 as ID, ID2 as UnpublishedID, 
 replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS UnpublishedTitle
 FROM Associations 
 LEFT JOIN ObjTitles on Associations.ID2=ObjTitles.ObjectID
@@ -62,7 +63,7 @@ ORDER BY ID1
 
 # Related Media for all Objects
 RELATED_MEDIA = """
-SELECT MediaXrefs.ID as ObjectID, MediaMaster.MediaMasterID
+SELECT MediaXrefs.ID as ID, MediaMaster.MediaMasterID
 FROM MediaXrefs 
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID

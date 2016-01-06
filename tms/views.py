@@ -40,10 +40,20 @@ def find(request, id):
 		find = models.get_item(id, 'finds')
 		return render(request, 'tms/find.html', {'find': find})
 	except:
-		raise Http404("Site does not exist")
+		raise Http404("Find does not exist")
 
 def find_related_items(request, id, relation):
-	return
+	# get find's related items in elasticsearch and render or return 404
+	try:
+		find = models.get_item(id, 'finds')
+		print find
+		print relation
+		related_items = find['relateditems'][relation]
+		return render(request, 'tms/find_related.html', {'relateditems': related_items, 
+			'displaytext' : related_display_text[relation],
+			'relation' : relation })
+	except:
+		raise Http404("Find does not exist")
 
 def diarypage(request, id):
 	return
@@ -74,7 +84,7 @@ def plansanddrawings(request, id):
 		plansanddrawings = models.get_item(id, 'plansanddrawings')
 		return render(request, 'tms/plansanddrawings.html', {'plansanddrawings': plansanddrawings})
 	except:
-		raise Http404("Site does not exist")
+		raise Http404("Plan and Drawing does not exist")
 
 def plansanddrawings_related_items(request, id, relation):
 	return
@@ -90,7 +100,7 @@ def unpublisheddocument(request, id):
 		unpublisheddocument = models.get_item(id, 'unpublisheddocuments')
 		return render(request, 'tms/unpublisheddocument.html', {'unpublisheddocument': unpublisheddocument})
 	except:
-		raise Http404("Site does not exist")
+		raise Http404("Unpublished Document does not exist")
 
 def unpublisheddocument_related_items(request, id, relation):
 	return
