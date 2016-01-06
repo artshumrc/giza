@@ -522,6 +522,7 @@ if __name__ == "__main__":
 	except:
 		print "Could not connect to gizacardtms, defaulting to CSV files"
 
+	## process_sites MUST go first.  The other methods can go in any order
 	process_sites()
 	process_site_altnums()
 	process_site_related_objects()

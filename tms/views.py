@@ -13,7 +13,8 @@ related_display_text = {
 	'plansanddrawings' : 'Plans and Drawings',
 	'unpublisheddocuments' : 'Unpublished Documents',
 	'publisheddocuments' : 'Published Documents',
-	'photos' : 'Photos'
+	'photos' : 'Photos',
+	'sites' : 'Sites'
 }
 
 def site(request, id):
@@ -46,8 +47,6 @@ def find_related_items(request, id, relation):
 	# get find's related items in elasticsearch and render or return 404
 	try:
 		find = models.get_item(id, 'finds')
-		print find
-		print relation
 		related_items = find['relateditems'][relation]
 		return render(request, 'tms/find_related.html', {'relateditems': related_items, 
 			'displaytext' : related_display_text[relation],

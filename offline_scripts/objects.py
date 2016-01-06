@@ -99,6 +99,84 @@ def process_objects():
 	
 	print "Finished Objects..."
 
+def process_object_related_sites():
+	def get_indices():
+		id_index = columns.index('ID')
+		site_id_index = columns.index('SiteID')
+		site_name_index = columns.index('SiteName')
+		site_number_index = columns.index('SiteNumber')
+		classification_id_index = columns.index('ClassificationID')
+		return (id_index, site_id_index, site_name_index, site_number_index, classification_id_index)
+
+	def process_object_row(object, current_id):
+		id = row[id_index]
+		classification_key = int(row[classification_id_index])
+		classification = CLASSIFICATIONS.get(classification_key)
+
+		if id != current_id:
+			# may have multiple rows for one object because of many related constituents
+			save(object)
+			current_id = id
+			object = {}
+			if elasticsearch_connection.item_exists(id, classification):
+				object = elasticsearch_connection.get_item(id, classification)
+			else:
+				print "%s could not be found!" % id
+				return(object, current_id)
+		if 'relateditems' not in object:
+			object['relateditems'] = {}
+
+		site_id = row[site_id_index]
+		site_name = row[site_name_index]
+		site_number = row[site_number_index]
+
+		site_dict = {}
+		site_dict['id'] = site_id
+		site_dict['sitename'] = site_name
+		site_dict['sitenumber'] = site_number
+		site_dict['displaytext'] = "%s, %s" % (site_name, site_number)
+
+		if 'sites' not in object['relateditems']:
+			object['relateditems']['sites'] = []
+		object['relateditems']['sites'].append(site_dict)
+		return(object, current_id)
+
+	print "Starting Objects Related Sites..."
+	if CURSOR:
+		sql_command = objects_sql.RELATED_SITES
+		CURSOR.execute(sql_command)
+		columns = [column[0] for column in CURSOR.description]
+		(id_index, site_id_index, site_name_index, site_number_index, classification_id_index) = get_indices()
+
+		object = {}
+		current_id = '-1'
+		cursor_row = CURSOR.fetchone()
+		while cursor_row is not None:
+			row = process_cursor_row(cursor_row)
+			(object, current_id) = process_object_row(object, current_id)
+			cursor_row = CURSOR.fetchone()
+   		# save last object to elasticsearch
+		save(object)
+	else:
+		with open('../data/objects_sites_related.csv', 'rb') as csvfile:
+			# Get the query headers to use as keys in the JSON
+			headers = next(csvfile)
+			if headers.startswith(codecs.BOM_UTF8):
+				headers = headers[3:]
+			headers = headers.replace('\r\n','')
+			columns = headers.split(',')
+			(id_index, site_id_index, site_name_index, site_number_index, classification_id_index) = get_indices()
+
+			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
+			object = {}
+			current_id = '-1'
+			for row in rows:
+				(object, current_id) = process_object_row(object, current_id)
+			# save last object to elasticsearch
+			save(object)
+
+	print "Finished Objects Related Sites..."
+
 def process_object_related_constituents():
 	def get_indices():
 		id_index = columns.index('ID')
@@ -184,6 +262,79 @@ def process_object_related_constituents():
 
 	print "Finished Objects Related Constituents..."
 
+def process_object_related_published():
+	def get_indices():
+		id_index = columns.index('ID')
+		reference_id_index = columns.index('ReferenceID')
+		boiler_text_index = columns.index('BoilerText')
+		classification_id_index = columns.index('ClassificationID')
+		return (id_index, reference_id_index, boiler_text_index, classification_id_index)
+
+	def process_object_row(object, current_id):
+		id = row[id_index]
+		classification_key = int(row[classification_id_index])
+		classification = CLASSIFICATIONS.get(classification_key)
+
+		if id != current_id:
+			# may have multiple rows for one object because of many related constituents
+			save(object)
+			current_id = id
+			object = {}
+			if elasticsearch_connection.item_exists(id, classification):
+				object = elasticsearch_connection.get_item(id, classification)
+			else:
+				print "%s could not be found!" % id
+				return(object, current_id)
+		if 'relateditems' not in object:
+			object['relateditems'] = {}
+
+		reference_id = row[reference_id_index]
+		boiler_text = row[boiler_text_index]
+
+		if 'publisheddocuments' not in object['relateditems']:
+			object['relateditems']['publisheddocuments'] = []
+		object['relateditems']['publisheddocuments'].append({
+			'id' : reference_id, 
+			'boilertext' : boiler_text,
+			'displaytext' : boiler_text})
+		return(object, current_id)
+
+	print "Starting Objects Related Published..."
+	if CURSOR:
+		sql_command = objects_sql.RELATED_PUBLISHED
+		CURSOR.execute(sql_command)
+		columns = [column[0] for column in CURSOR.description]
+		(id_index, reference_id_index, boiler_text_index, classification_id_index) = get_indices()
+
+		object = {}
+		current_id = '-1'
+		cursor_row = CURSOR.fetchone()
+		while cursor_row is not None:
+			row = process_cursor_row(cursor_row)
+			(object, current_id) = process_object_row(object, current_id)
+			cursor_row = CURSOR.fetchone()
+   		# save last object to elasticsearch
+		save(object)
+	else:
+		with open('../data/objects_sites_related.csv', 'rb') as csvfile:
+			# Get the query headers to use as keys in the JSON
+			headers = next(csvfile)
+			if headers.startswith(codecs.BOM_UTF8):
+				headers = headers[3:]
+			headers = headers.replace('\r\n','')
+			columns = headers.split(',')
+			(id_index, reference_id_index, boiler_text_index, classification_id_index) = get_indices()
+
+			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
+			object = {}
+			current_id = '-1'
+			for row in rows:
+				(object, current_id) = process_object_row(object, current_id)
+			# save last object to elasticsearch
+			save(object)
+
+	print "Finished Objects Related Published..."
+
 def process_cursor_row(cursor_row):
 	row = []
 	for x in cursor_row:
@@ -214,5 +365,8 @@ if __name__ == "__main__":
 	except:
 		print "Could not connect to gizacardtms, defaulting to CSV files"
 
+	## process_objects MUST go first.  Other methods can go in any order
 	process_objects()
+	process_object_related_sites()
 	process_object_related_constituents()
+	process_object_related_published()

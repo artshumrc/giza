@@ -46,20 +46,23 @@
 
     {% if find.relateditems %}
         <h3>Related Items</h3>
-        {% if find.relateditems.photos %}
-            <p><a href="{% url 'get_find_related_items' find.id 'photos' %}">{{ find.relateditems.photos|length }} Photo{{ find.relateditems.photos|length|pluralize }}</a></p>
+        {% if find.relateditems.sites %}
+            <p><a href="{% url 'get_find_related_items' find.id 'sites' %}">{{ find.relateditems.sites|length }} Site{{ find.relateditems.sites|length|pluralize }}</a></p>
         {% endif %}
         {% if find.relateditems.ancientpeople %}
             <p><a href="{% url 'get_find_related_items' find.id 'ancientpeople' %}">{{ find.relateditems.ancientpeople|length }} Ancient P{{ find.relateditems.ancientpeople|length|pluralize:"erson,eople" }}</a></p>
+        {% endif %}
+        {% if find.relateditems.modernpeople %}
+            <p><a href="{% url 'get_find_related_items' find.id 'modernpeople' %}">{{ find.relateditems.modernpeople|length }} Modern P{{ find.relateditems.modernpeople|length|pluralize:"erson,eople" }}</a></p>
+        {% endif %}
+        {% if find.relateditems.photos %}
+            <p><a href="{% url 'get_find_related_items' find.id 'photos' %}">{{ find.relateditems.photos|length }} Photo{{ find.relateditems.photos|length|pluralize }}</a></p>
         {% endif %}
         {% if find.relateditems.plansanddrawings %}
             <p><a href="{% url 'get_find_related_items' find.id 'plansanddrawings' %}">{{ find.relateditems.plansanddrawings|length }} Plan{{ find.relateditems.plansanddrawings|length|pluralize }} and Drawing{{ find.relateditems.plansanddrawings|length|pluralize }}</a></p>
         {% endif %}
         {% if find.relateditems.publisheddocuments %}
             <p><a href="{% url 'get_find_related_items' find.id 'publisheddocuments' %}">{{ find.relateditems.publisheddocuments|length }} Published Document{{ find.relateditems.publisheddocuments|length|pluralize }}</a></p>
-        {% endif %}
-        {% if find.relateditems.modernpeople %}
-            <p><a href="{% url 'get_find_related_items' find.id 'modernpeople' %}">{{ find.relateditems.modernpeople|length }} Modern P{{ find.relateditems.modernpeople|length|pluralize:"erson,eople" }}</a></p>
         {% endif %}
         {% if find.relateditems.unpublisheddocuments %}
             <p><a href="{% url 'get_find_related_items' find.id 'unpublisheddocuments' %}">{{ find.relateditems.unpublisheddocuments|length }} Unpublished Document{{ find.relateditems.unpublisheddocuments|length|pluralize }}</a></p>
