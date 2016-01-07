@@ -316,7 +316,7 @@ def process_object_related_published():
    		# save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_sites_related.csv', 'rb') as csvfile:
+		with open('../data/objects_published_related.csv', 'rb') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			if headers.startswith(codecs.BOM_UTF8):
@@ -334,6 +334,149 @@ def process_object_related_published():
 			save(object)
 
 	print "Finished Objects Related Published..."
+
+def process_object_related_unpublished():
+	def get_indices():
+		id_index = columns.index('ID')
+		unpublished_id_index = columns.index('UnpublishedID')
+		unpublished_title_index = columns.index('UnpublishedTitle')
+		classification_id_index = columns.index('ClassificationID')
+		return (id_index, unpublished_id_index, unpublished_title_index, classification_id_index)
+
+	def process_object_row(object, current_id):
+		id = row[id_index]
+		classification_key = int(row[classification_id_index])
+		classification = CLASSIFICATIONS.get(classification_key)
+
+		if id != current_id:
+			# may have multiple rows for one object because of many related constituents
+			save(object)
+			current_id = id
+			object = {}
+			if elasticsearch_connection.item_exists(id, classification):
+				object = elasticsearch_connection.get_item(id, classification)
+			else:
+				print "%s could not be found!" % id
+				return(object, current_id)
+		if 'relateditems' not in object:
+			object['relateditems'] = {}
+
+		unpublished_id = row[unpublished_id_index]
+		unpublished_title = row[unpublished_title_index]
+
+		if 'unpublisheddocuments' not in object['relateditems']:
+			object['relateditems']['unpublisheddocuments'] = []
+		object['relateditems']['unpublisheddocuments'].append({
+			'id' : unpublished_id, 
+			'text' : unpublished_title,
+			'displaytext' : unpublished_title})
+		return(object, current_id)
+
+	print "Starting Objects Related Unpublished..."
+	if CURSOR:
+		sql_command = objects_sql.RELATED_UNPUBLISHED
+		CURSOR.execute(sql_command)
+		columns = [column[0] for column in CURSOR.description]
+		(id_index, unpublished_id_index, unpublished_title_index, classification_id_index) = get_indices()
+
+		object = {}
+		current_id = '-1'
+		cursor_row = CURSOR.fetchone()
+		while cursor_row is not None:
+			row = process_cursor_row(cursor_row)
+			(object, current_id) = process_object_row(object, current_id)
+			cursor_row = CURSOR.fetchone()
+   		# save last object to elasticsearch
+		save(object)
+	else:
+		with open('../data/objects_unpublished_related.csv', 'rb') as csvfile:
+			# Get the query headers to use as keys in the JSON
+			headers = next(csvfile)
+			if headers.startswith(codecs.BOM_UTF8):
+				headers = headers[3:]
+			headers = headers.replace('\r\n','')
+			columns = headers.split(',')
+			(id_index, unpublished_id_index, unpublished_title_index, classification_id_index) = get_indices()
+
+			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
+			object = {}
+			current_id = '-1'
+			for row in rows:
+				(object, current_id) = process_object_row(object, current_id)
+			# save last object to elasticsearch
+			save(object)
+
+	print "Finished Objects Related Unpublished..."
+
+def process_object_related_photos():
+	def get_indices():
+		id_index = columns.index('ID')
+		media_master_id_index = columns.index('MediaMasterID')
+		classification_id_index = columns.index('ClassificationID')
+		return (id_index, media_master_id_index, classification_id_index)
+
+	def process_object_row(object, current_id):
+		id = row[id_index]
+		classification_key = int(row[classification_id_index])
+		classification = CLASSIFICATIONS.get(classification_key)
+
+		if id != current_id:
+			# may have multiple rows for one object because of many related constituents
+			save(object)
+			current_id = id
+			object = {}
+			if elasticsearch_connection.item_exists(id, classification):
+				object = elasticsearch_connection.get_item(id, classification)
+			else:
+				print "%s could not be found!" % id
+				return(object, current_id)
+		if 'relateditems' not in object:
+			object['relateditems'] = {}
+
+		media_master_id = row[media_master_id_index]
+
+		if 'photos' not in object['relateditems']:
+			object['relateditems']['photos'] = []
+		object['relateditems']['photos'].append({
+			'id' : media_master_id, 
+			'displaytext' : media_master_id})
+		return(object, current_id)
+
+	print "Starting Objects Related Photos..."
+	if CURSOR:
+		sql_command = objects_sql.RELATED_MEDIA
+		CURSOR.execute(sql_command)
+		columns = [column[0] for column in CURSOR.description]
+		(id_index, media_master_id_index, classification_id_index) = get_indices()
+
+		object = {}
+		current_id = '-1'
+		cursor_row = CURSOR.fetchone()
+		while cursor_row is not None:
+			row = process_cursor_row(cursor_row)
+			(object, current_id) = process_object_row(object, current_id)
+			cursor_row = CURSOR.fetchone()
+   		# save last object to elasticsearch
+		save(object)
+	else:
+		with open('../data/objects_photos_related.csv', 'rb') as csvfile:
+			# Get the query headers to use as keys in the JSON
+			headers = next(csvfile)
+			if headers.startswith(codecs.BOM_UTF8):
+				headers = headers[3:]
+			headers = headers.replace('\r\n','')
+			columns = headers.split(',')
+			(id_index, media_master_id_index, classification_id_index) = get_indices()
+
+			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
+			object = {}
+			current_id = '-1'
+			for row in rows:
+				(object, current_id) = process_object_row(object, current_id)
+			# save last object to elasticsearch
+			save(object)
+
+	print "Finished Objects Related Photos..."
 
 def process_cursor_row(cursor_row):
 	row = []
@@ -370,3 +513,5 @@ if __name__ == "__main__":
 	process_object_related_sites()
 	process_object_related_constituents()
 	process_object_related_published()
+	process_object_related_unpublished()
+	process_object_related_photos()

@@ -72,7 +72,7 @@ FROM MediaXrefs
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 WHERE MediaXrefs.TableID=189
-AND PublicAccess=1
+AND MediaMaster.PublicAccess=1
 AND MediaRenditions.MediaTypeID=1
 ORDER BY MediaXrefs.ID
 """
