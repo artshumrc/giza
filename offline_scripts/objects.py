@@ -18,7 +18,7 @@ def process_objects():
 	def get_indices():
 		id_index = columns.index('ID')
 		classification_id_index = columns.index('ClassificationID')
-		object_number_index = columns.index('ObjectNumber')
+		object_number_index = columns.index('Number')
 		return (id_index, classification_id_index, object_number_index)
 
 	def process_object_row(object, current_id):

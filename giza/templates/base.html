@@ -22,9 +22,42 @@
 
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
-
-        {% block content %}{% endblock %}
-
+        <header>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">My Giza</a></li>
+                <li><a href="#">Giza Library</a></li>
+                <li><a href="#">Search the Archives</a></li>
+                <li><a href="#">News</a></li>
+                <li><a href="#">Educational Resources</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Support Us</a></li>
+                <li>
+                    <form action="{% url 'search' %}" method="get">
+                        <input type="text" name="q"{% if search_query %} value="{{ search_query }}"{% endif %}>
+                        <input type="submit" value="Search">
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        
+    </header>
+    <section id="content">
+            {% block content %}{% endblock %}
+    </section>
+    <footer>
+        <ul>
+            <li><a href="#">Contact the Giza Project</a></li>
+            <li><a href="#">Support the Giza Project</a></li>
+            <li><a href="#">Site Map</a></li>
+            <li><a href="#">Terms of Use</a></li>
+            <li><a href="#">Partners</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Legal Information</a></li>
+        </ul>
+    </footer>
         {# Global javascript #}
         <script type="text/javascript" src="{% static 'js/giza.js' %}"></script>
 

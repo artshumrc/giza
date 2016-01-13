@@ -1,7 +1,7 @@
 # Object display data 
 # TODO: Get Primary Image URL (need an image server first)
 OBJECTS = """
-SELECT Objects.ObjectID as ID, Objects.ObjectNumber, Objects.ObjectStatusID, Objects.ClassificationID, Objects.ObjectName + ',,' as ObjectOwnerDetails,
+SELECT Objects.ObjectID as ID, Objects.ObjectNumber as Number, Objects.ObjectStatusID, Objects.ClassificationID, Objects.ObjectName + ',,' as ObjectOwnerDetails,
 Objects.Dated as EntryDate, replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.Medium + ',,' as Medium, 
 Objects.Dimensions + ',,' as Dimensions, Objects.CreditLine, Objects.Description + ',,' AS Description, Objects.Provenance, 
 Objects.PubReferences + ',,' AS PubReferences, Objects.Notes + ',,' AS Notes, Objects.Chat + ',,' as DiaryTranscription, 
@@ -11,7 +11,6 @@ LEFT JOIN ObjTitles on Objects.ObjectID=ObjTitles.ObjectID
 LEFT JOIN ObjPkgList on Objects.ObjectID=ObjPkgList.objectid
 WHERE Objects.PublicAccess = 1
 AND Objects.ObjectID >= 0
-AND ObjPkgList.objectnumber IS NOT NULL
 ORDER BY Objects.ObjectID
 """
 
@@ -39,6 +38,7 @@ LEFT JOIN Objects on ConXrefs.ID=Objects.ObjectID
 WHERE ConXrefs.TableID=108
 AND Constituents.Active=1
 AND ConXrefDetails.Unmasked=1
+AND Objects.PublicAccess=1
 ORDER BY ConXrefs.ID
 """
 

@@ -1,84 +1,88 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags %}
 
-{% block body_class %}template-searchresults{% endblock %}
+{% block body_class %}template-site{% endblock %}
 
 {% block title %}Site{% endblock %}
 
 {% block content %}
-    <h1>Site Template</h1>
+    <div class="main">
+        <div class="main_content">
+        <h3>Tomb/Monument Details</h3>
+        <ul class="data_block">
+        <li>{% if site.sitename %}{{ site.sitename }} : {% endif %}{{ site.sitenumber|default:"" }}</li>
+        {% for altnum in site.altnums %}
+            <li>{% if altnum.description %}{{ altnum.description }} : {% endif %}{{ altnum.altnum|default:"" }}
+            </li>
+        {% endfor %}
+        {% if site.sitetype %}<li>{{ site.sitetype.sitetype }}</li>{% endif %} <!-- Add search by sitetype id --> 
+        {% if site.shafts %}<li>Shafts : {{ site.shafts }}</li>{% endif %} 
+        </ul>
 
-    <h3>Tomb/Monument Details</h3>
-    <ul>
-    <li>{% if site.sitename %}{{ site.sitename }} : {% endif %}{{ site.sitenumber|default:"" }}</li>
-    {% for altnum in site.altnums %}
-        <li>{% if altnum.description %}{{ altnum.description }} : {% endif %}{{ altnum.altnum|default:"" }}
-        </li>
-    {% endfor %}
-    {% if site.sitetype %}<li>{{ site.sitetype.sitetype }}</li>{% endif %} <!-- Add search by sitetype id --> 
-    {% if site.shafts %}<li>Shafts : {{ site.shafts }}</li>{% endif %} 
-    </ul>
-
-    {% if site.sitedates %}
-    <h3>Tomb/Monument Dating</h3>
-    <ul>
-    {% for sitedate in site.sitedates %}
-        <li>{% if sitedate.eventtype %}{{ sitedate.eventtype }} : {% endif %}{{ sitedate.datetext|default:"" }}
-        </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-
-    {% if site.relateditems.ancientpeople %}
-    <h3>Associated Ancient People</h3>
-    <ul>
-    {% for person in site.relateditems.ancientpeople %}
-        <li>{% if person.role %}{{ person.role }} {% endif %}{{ person.displayname|default:"" }}{% if person.displaydate %}<br/>{{ person.displaydate }}{% endif %}</li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-
-    {% if site.relateditems.modernpeople %}
-    <h3>Associated Modern People</h3>
-    <ul>
-    {% for person in site.relateditems.modernpeople %}
-        <li>{% if person.role %}{{ person.role }} {% endif %}{{ person.displayname|default:"" }}{% if person.displaydate %}<br/>{{ person.displaydate }}{% endif %}</li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-
-    {% if site.bibreferences %}
-    <h3>Bibiliographies/References</h3>
-    <p>
-        {{ site.bibreferences|linebreaks }}
-    </p>
-    {% endif %}
-
-    {% if site.relateditems %}
-        <h3>Related Items</h3>
-        {% if site.relateditems.photos %}
-            <p><a href="{% url 'get_site_related_items' site.siteid 'photos' %}">{{ site.relateditems.photos|length }} Photo{{ site.relateditems.photos|length|pluralize }}</a></p>
+        {% if site.sitedates %}
+        <h3>Tomb/Monument Dating</h3>
+        <ul class="data_block">
+        {% for sitedate in site.sitedates %}
+            <li>{% if sitedate.eventtype %}{{ sitedate.eventtype }} : {% endif %}{{ sitedate.datetext|default:"" }}
+            </li>
+        {% endfor %}
+        </ul>
         {% endif %}
-        {% if site.relateditems.finds %}
-            <p><a href="{% url 'get_site_related_items' site.siteid 'finds' %}">{{ site.relateditems.finds|length }} Find{{ site.relateditems.finds|length|pluralize }}</a></p>
-        {% endif %}
+
         {% if site.relateditems.ancientpeople %}
-            <p><a href="{% url 'get_site_related_items' site.siteid 'ancientpeople' %}">{{ site.relateditems.ancientpeople|length }} Ancient P{{ site.relateditems.ancientpeople|length|pluralize:"erson,eople" }}</a></p>
+        <h3>Associated Ancient People</h3>
+        <ul class="data_block">
+        {% for person in site.relateditems.ancientpeople %}
+            <li>{% if person.role %}{{ person.role }} {% endif %}{{ person.displayname|default:"" }}{% if person.displaydate %}<br/>{{ person.displaydate }}{% endif %}</li>
+        {% endfor %}
+        </ul>
         {% endif %}
-        {% if site.relateditems.plansanddrawings %}
-            <p><a href="{% url 'get_site_related_items' site.siteid 'plansanddrawings' %}">{{ site.relateditems.plansanddrawings|length }} Plan{{ site.relateditems.plansanddrawings|length|pluralize }} and Drawing{{ site.relateditems.plansanddrawings|length|pluralize }}</a></p>
-        {% endif %}
-        {% if site.relateditems.publisheddocuments %}
-            <p><a href="{% url 'get_site_related_items' site.siteid 'publisheddocuments' %}">{{ site.relateditems.publisheddocuments|length }} Published Document{{ site.relateditems.publisheddocuments|length|pluralize }}</a></p>
-        {% endif %}
+
         {% if site.relateditems.modernpeople %}
-            <p><a href="{% url 'get_site_related_items' site.siteid 'modernpeople' %}">{{ site.relateditems.modernpeople|length }} Modern P{{ site.relateditems.modernpeople|length|pluralize:"erson,eople" }}</a></p>
+        <h3>Associated Modern People</h3>
+        <ul class="data_block">
+        {% for person in site.relateditems.modernpeople %}
+            <li>{% if person.role %}{{ person.role }} {% endif %}{{ person.displayname|default:"" }}{% if person.displaydate %}<br/>{{ person.displaydate }}{% endif %}</li>
+        {% endfor %}
+        </ul>
         {% endif %}
-        {% if site.relateditems.unpublisheddocuments %}
-            <p><a href="{% url 'get_site_related_items' site.siteid 'unpublisheddocuments' %}">{{ site.relateditems.unpublisheddocuments|length }} Unpublished Document{{ site.relateditems.unpublisheddocuments|length|pluralize }}</a></p>
+
+        {% if site.bibreferences %}
+        <h3>Bibiliographies/References</h3>
+        <div>
+            {{ site.bibreferences|linebreaks }}
+        </div>
         {% endif %}
-        {% if site.relateditems.diarypages %}
-            <p><a href="{% url 'get_site_related_items' site.siteid 'diarypages' %}">{{ site.relateditems.diarypages|length }} Diary Page{{ site.relateditems.diarypages|length|pluralize }}</a></p>
+        </div>
+
+        <div class="related">
+        {% if site.relateditems %}
+            <h3>Related Items</h3>
+            {% if site.relateditems.photos %}
+                <p><a href="{% url 'get_site_related_items' site.siteid 'photos' %}"><img src="{% static 'images/photos.jpg' %}"/><br/>{{ site.relateditems.photos|length }} Photo{{ site.relateditems.photos|length|pluralize }}</a></p>
+            {% endif %}
+            {% if site.relateditems.finds %}
+                <p><a href="{% url 'get_site_related_items' site.siteid 'finds' %}"><img src="{% static 'images/finds.jpg' %}"/><br/>{{ site.relateditems.finds|length }} Find{{ site.relateditems.finds|length|pluralize }}</a></p>
+            {% endif %}
+            {% if site.relateditems.ancientpeople %}
+                <p><a href="{% url 'get_site_related_items' site.siteid 'ancientpeople' %}"><img src="{% static 'images/ancient.jpg' %}"/><br/>{{ site.relateditems.ancientpeople|length }} Ancient P{{ site.relateditems.ancientpeople|length|pluralize:"erson,eople" }}</a></p>
+            {% endif %}
+            {% if site.relateditems.plansanddrawings %}
+                <p><a href="{% url 'get_site_related_items' site.siteid 'plansanddrawings' %}"><img src="{% static 'images/plans.jpg' %}"/><br/>{{ site.relateditems.plansanddrawings|length }} Plan{{ site.relateditems.plansanddrawings|length|pluralize }} and Drawing{{ site.relateditems.plansanddrawings|length|pluralize }}</a></p>
+            {% endif %}
+            {% if site.relateditems.publisheddocuments %}
+                <p><a href="{% url 'get_site_related_items' site.siteid 'publisheddocuments' %}"><img src="{% static 'images/published.jpg' %}"/><br/>{{ site.relateditems.publisheddocuments|length }} Published Document{{ site.relateditems.publisheddocuments|length|pluralize }}</a></p>
+            {% endif %}
+            {% if site.relateditems.modernpeople %}
+                <p><a href="{% url 'get_site_related_items' site.siteid 'modernpeople' %}"><img src="{% static 'images/modern.jpg' %}"/><br/>{{ site.relateditems.modernpeople|length }} Modern P{{ site.relateditems.modernpeople|length|pluralize:"erson,eople" }}</a></p>
+            {% endif %}
+            {% if site.relateditems.unpublisheddocuments %}
+                <p><a href="{% url 'get_site_related_items' site.siteid 'unpublisheddocuments' %}"><img src="{% static 'images/unpublished.jpg' %}"/><br/>{{ site.relateditems.unpublisheddocuments|length }} Unpublished Document{{ site.relateditems.unpublisheddocuments|length|pluralize }}</a></p>
+            {% endif %}
+            {% if site.relateditems.diarypages %}
+                <p><a href="{% url 'get_site_related_items' site.siteid 'diarypages' %}"><img src="{% static 'images/diaries.jpg' %}"/><br/>{{ site.relateditems.diarypages|length }} Diary Page{{ site.relateditems.diarypages|length|pluralize }}</a></p>
+            {% endif %}
         {% endif %}
-    {% endif %}
+        </div>
+    </div>
 {% endblock %}
