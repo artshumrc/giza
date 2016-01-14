@@ -16,9 +16,14 @@ curl -XPUT 'http://localhost:9200/giza' -d '
                     "type" : "string",
                     "index":"not_analyzed" 
                 },
-                "altnums.altnum" : {
-                     "type" : "string",
-                    "index":"not_analyzed" 
+                "altnums" : {
+                    "type" : "nested",
+                    "properties": {
+                        "altnum": {
+                            "type" : "string",
+                            "index":"not_analyzed"
+                        }
+                    }
                 }
             }
         },
