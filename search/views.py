@@ -37,8 +37,7 @@ def search(request):
         if results_total == 1:
             source = search_results['hits']['hits'][0].get('_source')
             return HttpResponseRedirect(reverse(type, args=(source.get('id'),)))
-        elif results_total == 0 and type == 'sites':
-            
+        #elif results_total == 0 and type == 'sites':
         else:
             # we have 0 or more than 1 result, treat it as a normal search result
             # this shouldn't happen, since we are doing a termed search on number
