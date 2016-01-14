@@ -16,7 +16,7 @@ CURSOR = None
 # This is the basic information/metadata that comprises a Site
 def process_sites():
 	def get_indices():
-		site_id_index = columns.index('SiteID')
+		site_id_index = columns.index('ID')
 		return site_id_index
 
 	def process_site_row(site, current_id):
@@ -73,6 +73,8 @@ def process_sites():
 			else:
 				# no special processing - just add it to the JSON
 				site[key] = row_value
+		display_text = (site['sitename'] + " : " if site['sitename'] else "") + (site['number'] if site['number'] else "")
+		site['displaytext'] = display_text
 		return (site, current_id)
 
 	print "Starting Sites..."
@@ -506,8 +508,8 @@ def process_cursor_row(cursor_row):
 	return row
 
 def save(site):
-	if site and 'siteid' in site:
-		elasticsearch_connection.add_or_update_item(site['siteid'], json.dumps(site), 'sites')
+	if site and 'id' in site:
+		elasticsearch_connection.add_or_update_item(site['id'], json.dumps(site), 'sites')
 
 if __name__ == "__main__":
 	try:

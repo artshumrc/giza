@@ -60,6 +60,7 @@ def process_objects():
 					object[key] = row_value
 			else:
 				object[key] = row_value
+		object['displaytext'] = object['title']
 		return (object, current_id)
 
 	print "Starting Objects..."

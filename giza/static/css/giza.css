@@ -97,14 +97,17 @@ section#content {
 	float: right;
 	width: 90%;
 	border-left: 1px solid lightgray;
+	margin-left: -1px;
     padding-left: 3%;
     height: 100%;
 }
 .related {
-	float: left;
+	float: right;
 	width: 10%;
     text-align: center;
     font-size: .75em;
+    border-right: 1px solid lightgray;
+    padding-right: 1%;
 }
 ul.data_block {
 	list-style-type: none;

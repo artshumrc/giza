@@ -12,7 +12,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     "mappings": {
         "sites" : {
             "properties": {
-                "sitenumber": {
+                "number": {
                     "type" : "string",
                     "index":"not_analyzed" 
                 },

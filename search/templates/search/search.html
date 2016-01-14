@@ -12,10 +12,7 @@
         <ul>
             {% for result in hits %}
                 <li>
-                    <h4><a href="{% url result.type result.id %}">{{ result.source }}</a></h4>
-                    {% if result.search_description %}
-                        {{ result.search_description|safe }}
-                    {% endif %}
+                    <h4><a href="{% url result.type result.id %}">{{ result.source.displaytext }}</a></h4>
                 </li>
             {% endfor %}
         </ul>
@@ -31,10 +28,29 @@
         No results found
     {% endif %}
     {% if counts %}
-        <ul>
-        {% for count in counts %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type={{ count.key }}">{{ count.key }} : {{ count.doc_count }}</a></li>
-        {% endfor %}
-        </ul>
+        {% if counts.sites %}
+            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=sites"><img src="{% static 'images/sites.jpg' %}"/><br/>{{ counts.sites.display_text }} : {{ counts.sites.doc_count }}</a></p>
+        {% endif %}
+        {% if counts.photos %}
+            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=photos"><img src="{% static 'images/photos.jpg' %}"/><br/>{{ counts.photos.display_text }} : {{ counts.photos.doc_count }}</a></p>
+        {% endif %}
+        {% if counts.finds %}
+            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=finds"><img src="{% static 'images/finds.jpg' %}"/><br/>{{ counts.finds.display_text }} : {{ counts.finds.doc_count }}</a></p>
+        {% endif %}
+        {% if counts.modernpeople %}
+            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=modernpeople"><img src="{% static 'images/modernpeople.jpg' %}"/><br/>{{ counts.modernpeople.display_text }} : {{ counts.modernpeople.doc_count }}</a></p>
+        {% endif %}
+        {% if counts.diarypages %}
+            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=diarypages"><img src="{% static 'images/diarypages.jpg' %}"/><br/>{{ counts.diarypages.display_text }} : {{ counts.diarypages.doc_count }}</a></p>
+        {% endif %}
+        {% if counts.plansanddrawings %}
+            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=plansanddrawings"><img src="{% static 'images/plansanddrawings.jpg' %}"/><br/>{{ counts.plansanddrawings.display_text }} : {{ counts.plansanddrawings.doc_count }}</a></p>
+        {% endif %}
+        {% if counts.publisheddocuments %}
+            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=publisheddocuments"><img src="{% static 'images/publisheddocuments.jpg' %}"/><br/>{{ counts.publisheddocuments.display_text }} : {{ counts.publisheddocuments.doc_count }}</a></p>
+        {% endif %}
+        {% if counts.unpublisheddocuments %}
+            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=unpublisheddocuments"><img src="{% static 'images/unpublisheddocuments.jpg' %}"/><br/>{{ counts.unpublisheddocuments.display_text }} : {{ counts.unpublisheddocuments.doc_count }}</a></p>
+        {% endif %}
     {% endif %}
 {% endblock %}

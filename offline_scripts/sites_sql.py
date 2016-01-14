@@ -1,7 +1,7 @@
 # Site display data 
 # TODO: Get Primary Image URL (need an image server first)
 SITES = """
-SELECT Sites.SiteID, SiteName, SiteNumber, SiteSortNumber, HistoricalNotes, 
+SELECT Sites.SiteID as ID, SiteName, SiteNumber as Number, SiteSortNumber, HistoricalNotes, 
 LegalNotes + ',,' AS BibReferences, LocationNotes, 
 Sites.Remarks + ',,' AS Remarks, 
 Sites.Description + ',,' AS Description, Condition, 

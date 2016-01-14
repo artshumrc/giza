@@ -2,25 +2,15 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 
 from tms import models
-
+from utils.views_utils import RELATED_DISPLAY_TEXT
 import json
 
-related_display_text = {
-	'finds' : 'Finds', 
-	'diarypages' : 'Diary Pages', 
-	'modernpeople' : 'Modern People', 
-	'ancientpeople' : 'Ancient People',
-	'plansanddrawings' : 'Plans and Drawings',
-	'unpublisheddocuments' : 'Unpublished Documents',
-	'publisheddocuments' : 'Published Documents',
-	'photos' : 'Photos',
-	'sites' : 'Sites'
-}
 
 def site(request, id):
 	# get site in elasticsearch and render or return 404
 	try:
 		site = models.get_item(id, 'sites')
+		print site
 		return render(request, 'tms/site.html', {'site': site})
 	except:
 		raise Http404("Site does not exist")
@@ -31,7 +21,7 @@ def site_related_items(request, id, relation):
 		site = models.get_item(id, 'sites')
 		related_items = site['relateditems'][relation]
 		return render(request, 'tms/site_related.html', {'relateditems': related_items, 
-			'displaytext' : related_display_text[relation],
+			'displaytext' : RELATED_DISPLAY_TEXT[relation],
 			'relation' : relation })
 	except:
 		raise Http404("Site does not exist")
@@ -49,7 +39,7 @@ def find_related_items(request, id, relation):
 		find = models.get_item(id, 'finds')
 		related_items = find['relateditems'][relation]
 		return render(request, 'tms/find_related.html', {'relateditems': related_items, 
-			'displaytext' : related_display_text[relation],
+			'displaytext' : RELATED_DISPLAY_TEXT[relation],
 			'relation' : relation })
 	except:
 		raise Http404("Find does not exist")
