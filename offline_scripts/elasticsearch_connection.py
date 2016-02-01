@@ -19,6 +19,8 @@ def add_or_update_item(item_id, document, source):
 
 # Checks if item exists in elasticsearch, returns boolean
 def item_exists(item_id, source):
+    if (item_id is None or source is None):
+        return False
     return es.exists(index=ELASTICSEARCH_INDEX, doc_type=source, id=item_id)
 
 def get_all_item_ids_with_type(source):
