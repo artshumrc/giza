@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
 
+    url(r'^$', 'tms.views.index', name="index"),
+
     url(r'^search/$', 'search.views.search', name='search'),
 
     url(r'^sites/(?P<id>[\d]+)/?$', 'tms.views.site', name='sites'),
@@ -30,17 +32,26 @@ urlpatterns = [
     url(r'^modernpeople/(?P<id>[\d]+)/?$', 'tms.views.modernperson', name='modernpeople'),
     url(r'^modernpeople/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.modernperson_related_items', name='get_modernperson_related_items'),
 
+    url(r'^institutions/(?P<id>[\d]+)/?$', 'tms.views.institution', name='institutions'),
+    url(r'^institutions/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.institution_related_items', name='get_institution_related_items'),
+
+    url(r'^groups/(?P<id>[\d]+)/?$', 'tms.views.group', name='groups'),
+    url(r'^groups/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.group_related_items', name='get_group_related_items'),
+
+    url(r'^animals/(?P<id>[\d]+)/?$', 'tms.views.animal', name='animals'),
+    url(r'^animals/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.animal_related_items', name='get_animal_related_items'),
+
     url(r'^photos/(?P<id>[\d]+)/?$', 'tms.views.photo', name='photos'),
     url(r'^photos/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.photo_related_items', name='get_photo_related_items'),
 
     url(r'^plansanddrawings/(?P<id>[\d]+)/?$', 'tms.views.plansanddrawings', name='plansanddrawings'),
     url(r'^plansanddrawings/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.plansanddrawings_related_items', name='get_plansanddrawings_related_items'),
 
-    url(r'^publisheddocuments/(?P<id>[\d]+)/?$', 'tms.views.publisheddocument', name='publisheddocuments'),
-    url(r'^publisheddocuments/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.publisheddocument_related_items', name='get_publisheddocument_related_items'),
+    url(r'^pubdocs/(?P<id>[\d]+)/?$', 'tms.views.pubdoc', name='pubdocs'),
+    url(r'^pubdocs/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.pubdoc_related_items', name='get_pubdoc_related_items'),
 
-    url(r'^unpublisheddocuments/(?P<id>[\d]+)/?$', 'tms.views.unpublisheddocument', name='unpublisheddocuments'),
-    url(r'^unpublisheddocuments/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.unpublisheddocument_related_items', name='get_unpublisheddocument_related_items'),
+    url(r'^unpubdocs/(?P<id>[\d]+)/?$', 'tms.views.unpubdoc', name='unpubdocs'),
+    url(r'^unpubdocs/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.unpubdoc_related_items', name='get_unpubdoc_related_items'),
 
     url(r'', include(wagtail_urls)),
 ]

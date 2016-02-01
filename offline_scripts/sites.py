@@ -364,7 +364,7 @@ def process_site_related_published():
 		#if site_id not in SAMPLE_SITES:
 		#	continue
 		if site_id != current_id:
-			# will likely have multiple rows for one site because of many related constituents
+			# will likely have multiple rows for one site because of many related published
 			# only get a new site if we have a new site id, but first save old site to elasticsearch
 			save(site)
 			current_id = site_id
@@ -380,9 +380,9 @@ def process_site_related_published():
 		reference_id = row[reference_id_index]
 		boiler_text = row[boiler_text_index]
 
-		if "publisheddocuments" not in site['relateditems']:
-			site['relateditems']["publisheddocuments"] = []
-		site['relateditems']["publisheddocuments"].append({
+		if "pubdocs" not in site['relateditems']:
+			site['relateditems']["pubdocs"] = []
+		site['relateditems']["pubdocs"].append({
 			'id' : reference_id, 
 			'boilertext' : boiler_text,
 			'displaytext' : boiler_text})
@@ -436,7 +436,7 @@ def process_site_related_photos():
 		#if site_id not in SAMPLE_SITES:
 		#	continue
 		if site_id != current_id:
-			# will likely have multiple rows for one site because of many related constituents
+			# will likely have multiple rows for one site because of many related photos
 			# only get a new site if we have a new site id, but first save old site to elasticsearch
 			save(site)
 			current_id = site_id

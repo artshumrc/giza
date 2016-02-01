@@ -25,6 +25,7 @@ def process_objects():
 		id = row[id_index]
 		classification_key = int(row[classification_id_index])
 		classification = CLASSIFICATIONS.get(classification_key)
+		object_number = row[object_number_index]
 
 		#if id not in SAMPLE_OBJECTS:
 		#	return (object, current_id)
@@ -52,7 +53,6 @@ def process_objects():
 			if 'title' in key:
 				object_title = row_value
 				if classification == "diarypages" and object_title is None:
-					object_number = row[object_number_index]
 					idx = object_number.find('_')
 					object_title = object_number[idx+1:]
 					object[key] = object_title
@@ -60,7 +60,10 @@ def process_objects():
 					object[key] = row_value
 			else:
 				object[key] = row_value
+		# Add some extra fields not in the TMS data
 		object['displaytext'] = object['title']
+		prefix_idx = object_number.find('_')
+		object['altnumber'] = object_number[prefix_idx+1:]
 		return (object, current_id)
 
 	print "Starting Objects..."
@@ -292,9 +295,9 @@ def process_object_related_published():
 		reference_id = row[reference_id_index]
 		boiler_text = row[boiler_text_index]
 
-		if 'publisheddocuments' not in object['relateditems']:
-			object['relateditems']['publisheddocuments'] = []
-		object['relateditems']['publisheddocuments'].append({
+		if 'pubdocs' not in object['relateditems']:
+			object['relateditems']['pubdocs'] = []
+		object['relateditems']['pubdocs'].append({
 			'id' : reference_id, 
 			'boilertext' : boiler_text,
 			'displaytext' : boiler_text})
@@ -365,9 +368,9 @@ def process_object_related_unpublished():
 		unpublished_id = row[unpublished_id_index]
 		unpublished_title = row[unpublished_title_index]
 
-		if 'unpublisheddocuments' not in object['relateditems']:
-			object['relateditems']['unpublisheddocuments'] = []
-		object['relateditems']['unpublisheddocuments'].append({
+		if 'unpubdocs' not in object['relateditems']:
+			object['relateditems']['unpubdocs'] = []
+		object['relateditems']['unpubdocs'].append({
 			'id' : unpublished_id, 
 			'text' : unpublished_title,
 			'displaytext' : unpublished_title})
@@ -494,6 +497,11 @@ def process_cursor_row(cursor_row):
 
 def save(object):
 	if object and 'id' in object:
+		if not object['classification']:
+			# ignore for now, but this should send an email notification that there is missing data
+			# so that the classifications.py file can be updated
+			print "%s is missing a classification, ignoring for now" % (object['id'])
+			return
 		elasticsearch_connection.add_or_update_item(object['id'], json.dumps(object), object['classification'])
 
 if __name__ == "__main__":

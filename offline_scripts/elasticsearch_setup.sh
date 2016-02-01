@@ -33,14 +33,22 @@ curl -XPUT 'http://localhost:9200/giza' -d '
                     "type" : "string",
                     "index":"not_analyzed" 
                 },
+                 "altnumber": {
+                    "type" : "string",
+                    "index":"not_analyzed" 
+                },
                 "entrydate": {
                     "type": "string"
                 }
             }
         },
-        "unpublisheddocuments" : {
+        "unpubdocs" : {
             "properties": {
                  "number": {
+                    "type" : "string",
+                    "index":"not_analyzed" 
+                },
+                 "altnumber": {
                     "type" : "string",
                     "index":"not_analyzed" 
                 },
@@ -55,6 +63,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
                     "type" : "string",
                     "index":"not_analyzed" 
                 },
+                 "altnumber": {
+                    "type" : "string",
+                    "index":"not_analyzed" 
+                },
                 "entrydate": {
                     "type": "string"
                 }
@@ -63,6 +75,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         "plansanddrawings" : {
             "properties": {
                  "number": {
+                    "type" : "string",
+                    "index":"not_analyzed" 
+                },
+                 "altnumber": {
                     "type" : "string",
                     "index":"not_analyzed" 
                 },

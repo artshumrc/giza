@@ -70,17 +70,26 @@
             {% if site.relateditems.plansanddrawings %}
                 <p><a href="{% url 'get_site_related_items' site.id 'plansanddrawings' %}"><img src="{% static 'images/plansanddrawings.jpg' %}"/><br/>{{ site.relateditems.plansanddrawings|length }} Plan{{ site.relateditems.plansanddrawings|length|pluralize }} and Drawing{{ site.relateditems.plansanddrawings|length|pluralize }}</a></p>
             {% endif %}
-            {% if site.relateditems.publisheddocuments %}
-                <p><a href="{% url 'get_site_related_items' site.id 'publisheddocuments' %}"><img src="{% static 'images/publisheddocuments.jpg' %}"/><br/>{{ site.relateditems.publisheddocuments|length }} Published Document{{ site.relateditems.publisheddocuments|length|pluralize }}</a></p>
+            {% if site.relateditems.pubdocs %}
+                <p><a href="{% url 'get_site_related_items' site.id 'pubdocs' %}"><img src="{% static 'images/pubdocs.jpg' %}"/><br/>{{ site.relateditems.pubdocs|length }} Published Document{{ site.relateditems.pubdocs|length|pluralize }}</a></p>
             {% endif %}
             {% if site.relateditems.modernpeople %}
                 <p><a href="{% url 'get_site_related_items' site.id 'modernpeople' %}"><img src="{% static 'images/modernpeople.jpg' %}"/><br/>{{ site.relateditems.modernpeople|length }} Modern P{{ site.relateditems.modernpeople|length|pluralize:"erson,eople" }}</a></p>
             {% endif %}
-            {% if site.relateditems.unpublisheddocuments %}
-                <p><a href="{% url 'get_site_related_items' site.id 'unpublisheddocuments' %}"><img src="{% static 'images/unpublisheddocuments.jpg' %}"/><br/>{{ site.relateditems.unpublisheddocuments|length }} Unpublished Document{{ site.relateditems.unpublisheddocuments|length|pluralize }}</a></p>
+            {% if site.relateditems.unpubdocs %}
+                <p><a href="{% url 'get_site_related_items' site.id 'unpubdocs' %}"><img src="{% static 'images/unpubdocs.jpg' %}"/><br/>{{ site.relateditems.unpubdocs|length }} Unpublished Document{{ site.relateditems.unpubdocs|length|pluralize }}</a></p>
             {% endif %}
             {% if site.relateditems.diarypages %}
                 <p><a href="{% url 'get_site_related_items' site.id 'diarypages' %}"><img src="{% static 'images/diarypages.jpg' %}"/><br/>{{ site.relateditems.diarypages|length }} Diary Page{{ site.relateditems.diarypages|length|pluralize }}</a></p>
+            {% endif %}
+            {% if site.relateditems.institutions %}
+                <p><a href="{% url 'get_site_related_items' site.id 'institutions' %}"><!-- <img src="{% static 'images/institutions.jpg' %}"/> --><br/>{{ site.relateditems.institutions|length }} Institution{{ site.relateditems.institutions|length|pluralize }}</a></p>
+            {% endif %}
+            {% if site.relateditems.groups %}
+                <p><a href="{% url 'get_site_related_items' site.id 'groups' %}"><!-- <img src="{% static 'images/groups.jpg' %}"/> --><br/>{{ site.relateditems.groups|length }} Group{{ site.relateditems.groups|length|pluralize }}</a></p>
+            {% endif %}
+            {% if site.relateditems.animals %}
+                <p><a href="{% url 'get_site_related_items' site.id 'animals' %}"><!-- <img src="{% static 'images/animals.jpg' %}"/> --><br/>{{ site.relateditems.animals|length }} Animal{{ site.relateditems.animals|length|pluralize }}</a></p>
             {% endif %}
         {% endif %}
         </div>

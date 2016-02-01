@@ -5,6 +5,8 @@ from tms import models
 from utils.views_utils import RELATED_DISPLAY_TEXT
 import json
 
+def index(request):
+	return render(request, 'tms/index.html')
 
 def site(request, id):
 	# get site in elasticsearch and render or return 404
@@ -62,6 +64,24 @@ def modernperson(request, id):
 def modernperson_related_items(request, id, relation):
 	return
 
+def institution(request, id):
+	return
+
+def institution_related_items(request, id, relation):
+	return
+
+def group(request, id):
+	return
+
+def group_related_items(request, id, relation):
+	return
+
+def animal(request, id):
+	return
+
+def animal_related_items(request, id, relation):
+	return
+
 def photo(request, id):
 	return
 
@@ -78,20 +98,20 @@ def plansanddrawings(request, id):
 def plansanddrawings_related_items(request, id, relation):
 	return
 
-def publisheddocument(request, id):
+def pubdoc(request, id):
 	return
 
-def publisheddocument_related_items(request, id, relation):
+def pubdoc_related_items(request, id, relation):
 	return
 
-def unpublisheddocument(request, id):
+def unpubdoc(request, id):
 	try:
-		unpublisheddocument = models.get_item(id, 'unpublisheddocuments')
-		return render(request, 'tms/unpublisheddocument.html', {'unpublisheddocument': unpublisheddocument})
+		unpubdoc = models.get_item(id, 'unpubdocs')
+		return render(request, 'tms/unpubdoc.html', {'unpubdoc': unpubdoc})
 	except:
 		raise Http404("Unpublished Document does not exist")
 
-def unpublisheddocument_related_items(request, id, relation):
+def unpubdoc_related_items(request, id, relation):
 	return
 
 def add_headers(response):

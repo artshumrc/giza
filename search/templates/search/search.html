@@ -46,11 +46,11 @@
         {% if counts.plansanddrawings %}
             <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=plansanddrawings"><img src="{% static 'images/plansanddrawings.jpg' %}"/><br/>{{ counts.plansanddrawings.display_text }} : {{ counts.plansanddrawings.doc_count }}</a></p>
         {% endif %}
-        {% if counts.publisheddocuments %}
-            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=publisheddocuments"><img src="{% static 'images/publisheddocuments.jpg' %}"/><br/>{{ counts.publisheddocuments.display_text }} : {{ counts.publisheddocuments.doc_count }}</a></p>
+        {% if counts.pubdocs %}
+            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=pubdocs"><img src="{% static 'images/pubdocs.jpg' %}"/><br/>{{ counts.pubdocs.display_text }} : {{ counts.pubdocs.doc_count }}</a></p>
         {% endif %}
-        {% if counts.unpublisheddocuments %}
-            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=unpublisheddocuments"><img src="{% static 'images/unpublisheddocuments.jpg' %}"/><br/>{{ counts.unpublisheddocuments.display_text }} : {{ counts.unpublisheddocuments.doc_count }}</a></p>
+        {% if counts.unpubdocs %}
+            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=unpubdocs"><img src="{% static 'images/unpubdocs.jpg' %}"/><br/>{{ counts.unpubdocs.display_text }} : {{ counts.unpubdocs.doc_count }}</a></p>
         {% endif %}
     {% endif %}
 {% endblock %}

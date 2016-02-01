@@ -63,11 +63,11 @@
             {% if find.relateditems.plansanddrawings %}
                 <p><a href="{% url 'get_find_related_items' find.id 'plansanddrawings' %}"><img src="{% static 'images/plansanddrawings.jpg' %}"/><br/>{{ find.relateditems.plansanddrawings|length }} Plan{{ find.relateditems.plansanddrawings|length|pluralize }} and Drawing{{ find.relateditems.plansanddrawings|length|pluralize }}</a></p>
             {% endif %}
-            {% if find.relateditems.publisheddocuments %}
-                <p><a href="{% url 'get_find_related_items' find.id 'publisheddocuments' %}"><img src="{% static 'images/publisheddocuments.jpg' %}"/><br/>{{ find.relateditems.publisheddocuments|length }} Published Document{{ find.relateditems.publisheddocuments|length|pluralize }}</a></p>
+            {% if find.relateditems.pubdocs %}
+                <p><a href="{% url 'get_find_related_items' find.id 'pubdocs' %}"><img src="{% static 'images/pubdocs.jpg' %}"/><br/>{{ find.relateditems.pubdocs|length }} Published Document{{ find.relateditems.pubdocs|length|pluralize }}</a></p>
             {% endif %}
-            {% if find.relateditems.unpublisheddocuments %}
-                <p><a href="{% url 'get_find_related_items' find.id 'unpublisheddocuments' %}"><img src="{% static 'images/unpublisheddocuments.jpg' %}"/><br/>{{ find.relateditems.unpublisheddocuments|length }} Unpublished Document{{ find.relateditems.unpublisheddocuments|length|pluralize }}</a></p>
+            {% if find.relateditems.unpubdocs %}
+                <p><a href="{% url 'get_find_related_items' find.id 'unpubdocs' %}"><img src="{% static 'images/unpubdocs.jpg' %}"/><br/>{{ find.relateditems.unpubdocs|length }} Unpublished Document{{ find.relateditems.unpubdocs|length|pluralize }}</a></p>
             {% endif %}
             {% if find.relateditems.diarypages %}
                 <p><a href="{% url 'get_find_related_items' find.id 'diarypages' %}"><img src="{% static 'images/diarypages.jpg' %}"/><br/>{{ find.relateditems.diarypages|length }} Diary Page{{ find.relateditems.diarypages|length|pluralize }}</a></p>
