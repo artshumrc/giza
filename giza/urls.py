@@ -8,12 +8,12 @@ from wagtail.wagtailcore import urls as wagtail_urls
 
 
 urlpatterns = [
+    url(r'^$', 'tms.views.index', name="index"),
+
     url(r'^django-admin/', include(admin.site.urls)),
 
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
-
-    url(r'^$', 'tms.views.index', name="index"),
 
     url(r'^search/$', 'search.views.search', name='search'),
 
