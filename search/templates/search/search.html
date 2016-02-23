@@ -6,9 +6,18 @@
 {% block title %}Search{% endblock %}
 
 {% block content %}
-    <h1>Search</h1>
-
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3>Search Results</h3>
     {% if hits %}
+        <p>{{ total }} result{{ total|length|pluralize }} for "{{ search_query }}"</p>
+        {% if has_previous %}
+            <a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;page={{ previous_page_number }}&amp;type={{ type }}">Previous</a>
+        {% endif %}
+
+        {% if has_next %}
+            <a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;page={{ next_page_number }}&amp;type={{ type }}">Next</a>
+        {% endif %}
         <ul>
             {% for result in hits %}
                 <li>
@@ -16,41 +25,39 @@
                 </li>
             {% endfor %}
         </ul>
-
-        {% if hits.has_previous %}
-            <a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;page={{ hits.previous_page_number }}">Previous</a>
-        {% endif %}
-
-        {% if hits.has_next %}
-            <a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;page={{ hits.next_page_number }}">Next</a>
-        {% endif %}
-    {% elif search_query and not counts %}
+    {% elif search_query and total == 0 %}
         No results found
     {% endif %}
+    </div>
+    <div class="search_facets col-sm-3 col-md-2 sidebar">
     {% if counts %}
+    <ul class="nav nav-sidebar">
         {% if counts.sites %}
-            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=sites"><img src="{% static 'images/sites.jpg' %}"/><br/>{{ counts.sites.display_text }} : {{ counts.sites.doc_count }}</a></p>
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=sites">{{ counts.sites.display_text }} ({{ counts.sites.doc_count }})</a></li>
         {% endif %}
         {% if counts.photos %}
-            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=photos"><img src="{% static 'images/photos.jpg' %}"/><br/>{{ counts.photos.display_text }} : {{ counts.photos.doc_count }}</a></p>
+            <li><a href="#">{{ counts.photos.display_text }} ({{ counts.photos.doc_count }})</a></li>
         {% endif %}
         {% if counts.finds %}
-            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=finds"><img src="{% static 'images/finds.jpg' %}"/><br/>{{ counts.finds.display_text }} : {{ counts.finds.doc_count }}</a></p>
+            <li><a href="#">{{ counts.finds.display_text }} ({{ counts.finds.doc_count }})</a></li>
         {% endif %}
         {% if counts.modernpeople %}
-            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=modernpeople"><img src="{% static 'images/modernpeople.jpg' %}"/><br/>{{ counts.modernpeople.display_text }} : {{ counts.modernpeople.doc_count }}</a></p>
+            <li><a href="#">{{ counts.modernpeople.display_text }} ({{ counts.modernpeople.doc_count }})</a></li>
         {% endif %}
         {% if counts.diarypages %}
-            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=diarypages"><img src="{% static 'images/diarypages.jpg' %}"/><br/>{{ counts.diarypages.display_text }} : {{ counts.diarypages.doc_count }}</a></p>
+            <li><a href="#">{{ counts.diarypages.display_text }} ({{ counts.diarypages.doc_count }})</a></li>
         {% endif %}
         {% if counts.plansanddrawings %}
-            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=plansanddrawings"><img src="{% static 'images/plansanddrawings.jpg' %}"/><br/>{{ counts.plansanddrawings.display_text }} : {{ counts.plansanddrawings.doc_count }}</a></p>
+            <li><a href="#">{{ counts.plansanddrawings.display_text }} ({{ counts.plansanddrawings.doc_count }})</a></li>
         {% endif %}
         {% if counts.pubdocs %}
-            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=pubdocs"><img src="{% static 'images/pubdocs.jpg' %}"/><br/>{{ counts.pubdocs.display_text }} : {{ counts.pubdocs.doc_count }}</a></p>
+            <li><a href="#">{{ counts.pubdocs.display_text }} ({{ counts.pubdocs.doc_count }})</a></li>
         {% endif %}
         {% if counts.unpubdocs %}
-            <p><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=unpubdocs"><img src="{% static 'images/unpubdocs.jpg' %}"/><br/>{{ counts.unpubdocs.display_text }} : {{ counts.unpubdocs.doc_count }}</a></p>
+            <li><a href="#">{{ counts.unpubdocs.display_text }} ({{ counts.unpubdocs.doc_count }})</a></li>
         {% endif %}
+    </ul>
     {% endif %}
+    </div>
+    </div>
 {% endblock %}
