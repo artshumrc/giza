@@ -30,31 +30,31 @@
     {% endif %}
     </div>
     <div class="search_facets col-sm-3 col-md-2 sidebar">
-    {% if counts %}
+    {% if facets %}
     <ul class="nav nav-sidebar">
-        {% if counts.sites %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=sites">{{ counts.sites.display_text }} ({{ counts.sites.doc_count }})</a></li>
+        {% if facets.sites %}
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=sites">{{ facets.sites.display_text }} ({{ facets.sites.doc_count }})</a></li>
         {% endif %}
-        {% if counts.photos %}
-            <li><a href="#">{{ counts.photos.display_text }} ({{ counts.photos.doc_count }})</a></li>
+        {% if facets.photos %}
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=photos">{{ facets.photos.display_text }} ({{ facets.photos.doc_count }})</a></li>
         {% endif %}
-        {% if counts.finds %}
-            <li><a href="#">{{ counts.finds.display_text }} ({{ counts.finds.doc_count }})</a></li>
+        {% if facets.finds %}
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=finds">{{ facets.finds.display_text }} ({{ facets.finds.doc_count }})</a></li>
         {% endif %}
-        {% if counts.modernpeople %}
-            <li><a href="#">{{ counts.modernpeople.display_text }} ({{ counts.modernpeople.doc_count }})</a></li>
+        {% if facets.modernpeople %}
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=modernpeople">{{ facets.modernpeople.display_text }} ({{ facets.modernpeople.doc_count }})</a></li>
         {% endif %}
-        {% if counts.diarypages %}
-            <li><a href="#">{{ counts.diarypages.display_text }} ({{ counts.diarypages.doc_count }})</a></li>
+        {% if facets.diarypages %}
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=diarypages">{{ facets.diarypages.display_text }} ({{ facets.diarypages.doc_count }})</a></li>
         {% endif %}
-        {% if counts.plansanddrawings %}
-            <li><a href="#">{{ counts.plansanddrawings.display_text }} ({{ counts.plansanddrawings.doc_count }})</a></li>
+        {% if facets.plansanddrawings %}
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=plansanddrawings">{{ facets.plansanddrawings.display_text }} ({{ facets.plansanddrawings.doc_count }})</a></li>
         {% endif %}
-        {% if counts.pubdocs %}
-            <li><a href="#">{{ counts.pubdocs.display_text }} ({{ counts.pubdocs.doc_count }})</a></li>
+        {% if facets.pubdocs %}
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=pubdocs">{{ facets.pubdocs.display_text }} ({{ facets.pubdocs.doc_count }})</a></li>
         {% endif %}
-        {% if counts.unpubdocs %}
-            <li><a href="#">{{ counts.unpubdocs.display_text }} ({{ counts.unpubdocs.doc_count }})</a></li>
+        {% if facets.unpubdocs %}
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=unpubdocs">{{ facets.unpubdocs.display_text }} ({{ facets.unpubdocs.doc_count }})</a></li>
         {% endif %}
     </ul>
     {% endif %}

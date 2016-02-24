@@ -12,11 +12,12 @@ RESULTS_SIZE = 20
 
 def search(request):
     search_query = request.GET.get('q', None)
-    type = request.GET.get('type', '_all')
+    type = request.GET.get('type', '')
     page = int(request.GET.get('page', 1))
     results_from = 0
     # calculate elasticsearch's from, using the page value
     results_from = (page - 1) * RESULTS_SIZE
+    print search_query, type, page, results_from
 
     # check if user is trying to search by specific item number
     number_query = False
@@ -29,7 +30,7 @@ def search(request):
 
     # values being passed to template
     hits = []
-    counts = {}
+    facets = {}
     has_next = False
     has_previous = False
     previous_page_number = 0
@@ -78,7 +79,7 @@ def search(request):
             }
         })
         for count in search_results['aggregations']['aggregation']['buckets']:
-            counts[count['key']] = {
+            facets[count['key']] = {
                 'doc_count' : count['doc_count'],
                 'display_text' : RELATED_DISPLAY_TEXT[count['key']]
                 }
@@ -98,7 +99,7 @@ def search(request):
     return render(request, 'search/search.html', {
         'search_query' : search_query,
         'hits' : hits,
-        'counts' : counts,
+        'facets' : facets,
         'total' : total,
         'has_previous' : has_previous,
         'previous_page_number' : previous_page_number,
