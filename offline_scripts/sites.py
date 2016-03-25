@@ -3,7 +3,6 @@ import codecs
 import elasticsearch_connection
 import getpass
 import json
-import pyodbc
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES
 import sites_sql
@@ -75,6 +74,7 @@ def process_sites():
 				site[key] = row_value
 		display_text = (site['sitename'] + " : " if site['sitename'] else "") + (site['number'] if site['number'] else "")
 		site['displaytext'] = display_text
+		site['tombowner'] = False
 		return (site, current_id)
 
 	print "Starting Sites..."
@@ -302,7 +302,8 @@ def process_site_related_constituents():
 			display_date = row[display_date_index]
 
 		constituent_dict = {}
-		constituent_dict['role'] = row[role_index]
+		role = row[role_index]
+		constituent_dict['role'] = role
 		constituent_dict['id'] = constituent_id
 		constituent_dict['displayname'] = display_name
 		constituent_dict['displaydate'] = display_date
@@ -313,6 +314,8 @@ def process_site_related_constituents():
 		if constituent_type not in site['relateditems']:
 			site['relateditems'][constituent_type] = []
 		site['relateditems'][constituent_type].append(constituent_dict)
+		if role == 'Tomb Owner':
+			site['tombowner'] = True
 		return(site, current_id)
 
 	print "Starting Sites Related Constituents..."
@@ -513,6 +516,7 @@ def save(site):
 
 if __name__ == "__main__":
 	try:
+		import pyodbc
 		dsn = 'gizadatasource'
 		user = 'RC\\rsinghal'
 		password = getpass.getpass()

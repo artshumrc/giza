@@ -24,7 +24,32 @@ curl -XPUT 'http://localhost:9200/giza' -d '
                             "index":"not_analyzed"
                         }
                     }
-                }
+                },
+                "sitename": {
+                    "type" : "string",
+                    "fields" : {
+                        "raw" : {
+                            "type" : "string",
+                            "index" : "not_analyzed"
+                        }
+                    }
+                },
+                "sitetype": {
+                  "properties": {
+                     "sitetype": {
+                        "type": "string",
+                        "fields" : {
+                            "raw" : {
+                                "type" : "string",
+                                "index" : "not_analyzed"
+                            }
+                        }
+                     },
+                     "sitetypeid": {
+                        "type": "long"
+                     }
+                  }
+               }
             }
         },
         "finds" : {
