@@ -12,8 +12,16 @@ def site(request, id):
 	# get site in elasticsearch and render or return 404
 	try:
 		site = models.get_item(id, 'sites')
-		print site
 		return render(request, 'tms/site.html', {'site': site})
+	except:
+		raise Http404("Site does not exist")
+
+def site_json(request, id):
+	try:
+		site = json.dumps(models.get_item(id, 'sites'))
+		response = HttpResponse(site)
+		add_headers(response)
+		return response
 	except:
 		raise Http404("Site does not exist")
 
@@ -35,6 +43,15 @@ def find(request, id):
 	except:
 		raise Http404("Find does not exist")
 
+def find_json(request, id):
+	try:
+		site = json.dumps(models.get_item(id, 'finds'))
+		response = HttpResponse(site)
+		add_headers(response)
+		return response
+	except:
+		raise Http404("Find does not exist")
+
 def find_related_items(request, id, relation):
 	# get find's related items in elasticsearch and render or return 404
 	try:
@@ -49,10 +66,16 @@ def find_related_items(request, id, relation):
 def diarypage(request, id):
 	return
 
+def diarypage_json(request, id):
+	return
+
 def diarypage_related_items(request, id, relation):
 	return
 
 def ancientperson(request, id):
+	return
+
+def ancientperson_json(request, id):
 	return
 
 def ancientperson_related_items(request, id, relation):
@@ -61,10 +84,16 @@ def ancientperson_related_items(request, id, relation):
 def modernperson(request, id):
 	return
 
+def modernperson_json(request, id):
+	return
+
 def modernperson_related_items(request, id, relation):
 	return
 
 def institution(request, id):
+	return
+
+def institution_json(request, id):
 	return
 
 def institution_related_items(request, id, relation):
@@ -73,16 +102,25 @@ def institution_related_items(request, id, relation):
 def group(request, id):
 	return
 
+def group_json(request, id):
+	return
+
 def group_related_items(request, id, relation):
 	return
 
 def animal(request, id):
 	return
 
+def animal_json(request, id):
+	return
+
 def animal_related_items(request, id, relation):
 	return
 
 def photo(request, id):
+	return
+
+def photo_json(request, id):
 	return
 
 def photo_related_items(request, id, relation):
@@ -95,10 +133,16 @@ def plansanddrawings(request, id):
 	except:
 		raise Http404("Plan and Drawing does not exist")
 
+def plansanddrawings_json(request, id):
+	return
+
 def plansanddrawings_related_items(request, id, relation):
 	return
 
 def pubdoc(request, id):
+	return
+
+def pubdoc_json(request, id):
 	return
 
 def pubdoc_related_items(request, id, relation):
@@ -110,6 +154,9 @@ def unpubdoc(request, id):
 		return render(request, 'tms/unpubdoc.html', {'unpubdoc': unpubdoc})
 	except:
 		raise Http404("Unpublished Document does not exist")
+
+def unpubdoc_json(request, id):
+	return
 
 def unpubdoc_related_items(request, id, relation):
 	return
