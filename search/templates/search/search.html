@@ -21,7 +21,7 @@
         <ul>
             {% for result in hits %}
                 <li>
-                    <h4><a href="{% url result.type result.id %}">{{ result.source.displaytext }}</a></h4>
+                    <h4><a href="{% url 'get_type_html' result.type result.id %}">{{ result.source.displaytext }}</a></h4>
                 </li>
             {% endfor %}
         </ul>

@@ -8,158 +8,36 @@ import json
 def index(request):
 	return render(request, 'tms/index.html')
 
-def site(request, id):
+def get_type_html(request, type, id):
 	# get site in elasticsearch and render or return 404
 	try:
-		site = models.get_item(id, 'sites')
-		return render(request, 'tms/site.html', {'site': site})
+		type_object = models.get_item(id, type)
+		print type, id
+		return render(request, 'tms/'+type+'.html', {'object': type_object})
 	except:
-		raise Http404("Site does not exist")
+		raise Http404("There was an error getting this item")
 
-def site_json(request, id):
+def get_type_json(request, type, id):
 	try:
-		site = json.dumps(models.get_item(id, 'sites'))
-		response = HttpResponse(site)
+		type_json = json.dumps(models.get_item(id, type))
+		response = HttpResponse(type_json)
 		add_headers(response)
 		return response
 	except:
-		raise Http404("Site does not exist")
+		raise Http404("There was an error getting this item")
 
-def site_related_items(request, id, relation):
+def get_type_related_items(request, type, id, relation):
 	# get site's related items in elasticsearch and render or return 404
 	try:
-		site = models.get_item(id, 'sites')
-		related_items = site['relateditems'][relation]
-		return render(request, 'tms/site_related.html', {'relateditems': related_items, 
+		print type, id, relation
+		type_object = models.get_item(id, type)
+		related_items = type_object['relateditems'][relation]
+		print RELATED_DISPLAY_TEXT[relation]
+		return render(request, 'tms/'+type+'_related.html', {'relateditems': related_items, 
 			'displaytext' : RELATED_DISPLAY_TEXT[relation],
 			'relation' : relation })
 	except:
-		raise Http404("Site does not exist")
-
-def find(request, id):
-	try:
-		find = models.get_item(id, 'finds')
-		return render(request, 'tms/find.html', {'find': find})
-	except:
-		raise Http404("Find does not exist")
-
-def find_json(request, id):
-	try:
-		site = json.dumps(models.get_item(id, 'finds'))
-		response = HttpResponse(site)
-		add_headers(response)
-		return response
-	except:
-		raise Http404("Find does not exist")
-
-def find_related_items(request, id, relation):
-	# get find's related items in elasticsearch and render or return 404
-	try:
-		find = models.get_item(id, 'finds')
-		related_items = find['relateditems'][relation]
-		return render(request, 'tms/find_related.html', {'relateditems': related_items, 
-			'displaytext' : RELATED_DISPLAY_TEXT[relation],
-			'relation' : relation })
-	except:
-		raise Http404("Find does not exist")
-
-def diarypage(request, id):
-	return
-
-def diarypage_json(request, id):
-	return
-
-def diarypage_related_items(request, id, relation):
-	return
-
-def ancientperson(request, id):
-	return
-
-def ancientperson_json(request, id):
-	return
-
-def ancientperson_related_items(request, id, relation):
-	return
-
-def modernperson(request, id):
-	return
-
-def modernperson_json(request, id):
-	return
-
-def modernperson_related_items(request, id, relation):
-	return
-
-def institution(request, id):
-	return
-
-def institution_json(request, id):
-	return
-
-def institution_related_items(request, id, relation):
-	return
-
-def group(request, id):
-	return
-
-def group_json(request, id):
-	return
-
-def group_related_items(request, id, relation):
-	return
-
-def animal(request, id):
-	return
-
-def animal_json(request, id):
-	return
-
-def animal_related_items(request, id, relation):
-	return
-
-def photo(request, id):
-	return
-
-def photo_json(request, id):
-	return
-
-def photo_related_items(request, id, relation):
-	return
-
-def plansanddrawings(request, id):
-	try:
-		plansanddrawings = models.get_item(id, 'plansanddrawings')
-		return render(request, 'tms/plansanddrawings.html', {'plansanddrawings': plansanddrawings})
-	except:
-		raise Http404("Plan and Drawing does not exist")
-
-def plansanddrawings_json(request, id):
-	return
-
-def plansanddrawings_related_items(request, id, relation):
-	return
-
-def pubdoc(request, id):
-	return
-
-def pubdoc_json(request, id):
-	return
-
-def pubdoc_related_items(request, id, relation):
-	return
-
-def unpubdoc(request, id):
-	try:
-		unpubdoc = models.get_item(id, 'unpubdocs')
-		return render(request, 'tms/unpubdoc.html', {'unpubdoc': unpubdoc})
-	except:
-		raise Http404("Unpublished Document does not exist")
-
-def unpubdoc_json(request, id):
-	return
-
-def unpubdoc_related_items(request, id, relation):
-	return
+		raise Http404("There was an error getting this item")
 
 def add_headers(response):
     response["Access-Control-Allow-Origin"] = "*"

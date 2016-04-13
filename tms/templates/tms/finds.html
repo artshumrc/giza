@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}template-find{% endblock %}
+
+{% block title %}Find{% endblock %}
+
+{% block content %}
+ <div class="main">
+        <div class="main_content">
+        {% if object.title %}
+        <p><b>Title: </b>{{ object.title }}</p>
+        {% endif %}
+        {% if object.entrydate or object.fieldnumber %}
+            <div>
+            <span><b>Object register entry:</b></span>
+            {% if object.fieldnumber %}
+            <br/><span>Field number: {{ object.fieldnumber }}</span>
+            {% endif %}
+            {% if object.entrydate %}
+            <br/><span>Entry date(s): {{ object.entrydate }}</span>
+            {% endif %}
+            </div>
+        {% endif %}
+        {% if object.objectownerdetails %}
+        <p><b>Object Owner Details: </b>{{ object.objectownerdetails }}</p>
+        {% endif %}
+        {% if object.provenance %}
+        <p><b>Findspot: </b>{{ object.provenance }}</p>
+        {% endif %}
+        {% if object.medium %}
+        <p><b>Medium: </b>{{ object.medium }}</p>
+        {% endif %}
+        {% if object.dimensions %}
+        <p><b>Expedition Measurements: </b>{{ object.dimensions }}</p>
+        {% endif %}
+        {% if object.description %}
+        <p><b>Description: </b>{{ object.description }}</p>
+        {% endif %}
+        {% if object.notes %}
+        <p><b>Notes: </b>{{ object.notes }}</p>
+        {% endif %}
+        {% if object.pubreferences %}
+        <p><b>Selected Published References: </b>{{ object.pubreferences }}</p>
+        {% endif %}
+        </div>
+
+        <div class="related">
+        {% if object.relateditems %}
+            <h3>Related Items</h3>
+            {% if object.relateditems.sites %}
+                <p><a href="{% url 'get_type_related_items' 'finds' object.id 'sites' %}"><img src="{% static 'images/sites.jpg' %}"/><br/>{{ object.relateditems.sites|length }} Site{{ object.relateditems.sites|length|pluralize }}</a></p>
+            {% endif %}
+            {% if object.relateditems.ancientpeople %}
+                <p><a href="{% url 'get_type_related_items' 'finds' object.id 'ancientpeople' %}"><img src="{% static 'images/ancientpeople.jpg' %}"/><br/>{{ object.relateditems.ancientpeople|length }} Ancient P{{ object.relateditems.ancientpeople|length|pluralize:"erson,eople" }}</a></p>
+            {% endif %}
+            {% if object.relateditems.modernpeople %}
+                <p><a href="{% url 'get_type_related_items' 'finds' object.id 'modernpeople' %}"><img src="{% static 'images/modernpeople.jpg' %}"/><br/>{{ object.relateditems.modernpeople|length }} Modern P{{ object.relateditems.modernpeople|length|pluralize:"erson,eople" }}</a></p>
+            {% endif %}
+            {% if object.relateditems.photos %}
+                <p><a href="{% url 'get_type_related_items' 'finds' object.id 'photos' %}"><img src="{% static 'images/photos.jpg' %}"/><br/>{{ object.relateditems.photos|length }} Photo{{ object.relateditems.photos|length|pluralize }}</a></p>
+            {% endif %}
+            {% if object.relateditems.plansanddrawings %}
+                <p><a href="{% url 'get_type_related_items' 'finds' object.id 'plansanddrawings' %}"><img src="{% static 'images/plansanddrawings.jpg' %}"/><br/>{{ object.relateditems.plansanddrawings|length }} Plan{{ object.relateditems.plansanddrawings|length|pluralize }} and Drawing{{ object.relateditems.plansanddrawings|length|pluralize }}</a></p>
+            {% endif %}
+            {% if object.relateditems.pubdocs %}
+                <p><a href="{% url 'get_type_related_items' 'finds' object.id 'pubdocs' %}"><img src="{% static 'images/pubdocs.jpg' %}"/><br/>{{ object.relateditems.pubdocs|length }} Published Document{{ object.relateditems.pubdocs|length|pluralize }}</a></p>
+            {% endif %}
+            {% if object.relateditems.unpubdocs %}
+                <p><a href="{% url 'get_type_related_items' 'finds' object.id 'unpubdocs' %}"><img src="{% static 'images/unpubdocs.jpg' %}"/><br/>{{ object.relateditems.unpubdocs|length }} Unpublished Document{{ object.relateditems.unpubdocs|length|pluralize }}</a></p>
+            {% endif %}
+            {% if object.relateditems.diarypages %}
+                <p><a href="{% url 'get_type_related_items' 'finds' object.id 'diarypages' %}"><img src="{% static 'images/diarypages.jpg' %}"/><br/>{{ object.relateditems.diarypages|length }} Diary Page{{ object.relateditems.diarypages|length|pluralize }}</a></p>
+            {% endif %}
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}
