@@ -185,12 +185,13 @@ def process_object_related_constituents():
 	def get_indices():
 		id_index = columns.index('ID')
 		role_index = columns.index('Role')
+		role_id_index = columns.index('RoleID')
 		constituent_id_index = columns.index('ConstituentID')
 		constituent_type_id_index = columns.index('ConstituentTypeID')
 		display_name_index = columns.index('DisplayName')
 		display_date_index = columns.index('DisplayDate')
 		classification_id_index = columns.index('ClassificationID')
-		return (id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index)
+		return (id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index)
 
 	def process_object_row(object, current_id):
 		id = row[id_index]
@@ -218,6 +219,7 @@ def process_object_related_constituents():
 
 		constituent_dict = {}
 		constituent_dict['role'] = row[role_index]
+		constituent_dict['roleid'] = row[role_id_index]
 		constituent_dict['id'] = constituent_id
 		constituent_dict['displayname'] = display_name
 		constituent_dict['displaydate'] = display_date
@@ -228,6 +230,12 @@ def process_object_related_constituents():
 		if constituent_type not in object['relateditems']:
 			object['relateditems'][constituent_type] = []
 		object['relateditems'][constituent_type].append(constituent_dict)
+
+		# if this is a diarypage, parse out any "Mentioned on this page" (RoleID==48)
+		if classification == 'diarypages' and constituent_dict['roleid'] == '48':
+			if 'mentioned' not in object:
+				object['mentioned'] = []
+			object['mentioned'].append(constituent_dict)
 		return(object, current_id)
 
 	print "Starting Objects Related Constituents..."
@@ -235,7 +243,7 @@ def process_object_related_constituents():
 		sql_command = objects_sql.RELATED_CONSTITUENTS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index) = get_indices()
+		(id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index) = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -254,7 +262,7 @@ def process_object_related_constituents():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index) = get_indices()
+			(id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}

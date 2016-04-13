@@ -29,10 +29,8 @@ def get_type_json(request, type, id):
 def get_type_related_items(request, type, id, relation):
 	# get site's related items in elasticsearch and render or return 404
 	try:
-		print type, id, relation
 		type_object = models.get_item(id, type)
 		related_items = type_object['relateditems'][relation]
-		print RELATED_DISPLAY_TEXT[relation]
 		return render(request, 'tms/'+type+'_related.html', {'relateditems': related_items, 
 			'displaytext' : RELATED_DISPLAY_TEXT[relation],
 			'relation' : relation })

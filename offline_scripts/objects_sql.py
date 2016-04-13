@@ -28,7 +28,7 @@ ORDER BY Objects.ObjectID
 
 # Related Constituents (Modern and Ancient) for all Objects
 RELATED_CONSTITUENTS = """
-SELECT ConXrefs.ID as ID, Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID, 
+SELECT ConXrefs.ID as ID, Roles.Role, Roles.RoleID, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID, 
 Constituents.DisplayName, Constituents.DisplayDate, Objects.ClassificationID
 FROM ConXrefs 
 LEFT JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
