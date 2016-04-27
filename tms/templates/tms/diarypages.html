@@ -17,9 +17,9 @@
         {% if object.diarytranscription %}
         <p><b>Diary Transcription: </b><br>{{ object.diarytranscription|linebreaks }}</p>
         {% endif %}
-        {% if object.mentioned %}
+        {% if object.mentioned and object.mentioned.people %}
         <p><b>Mentioned on this page: </b></p>
-        {% for mentioned in object.mentioned %}
+        {% for mentioned in object.mentioned.people %}
             <span>{{ mentioned.displaytext }}</span><br>
         {% endfor %}
         {% endif %}

@@ -143,6 +143,15 @@ def process_object_related_sites():
 		if 'sites' not in object['relateditems']:
 			object['relateditems']['sites'] = []
 		object['relateditems']['sites'].append(site_dict)
+
+		# for unpubdocs, add sites for "Mentioned on this page"
+		if classification == "unpubdocs":
+			if 'mentioned' not in object:
+				object['mentioned'] = {}
+			if 'sites' not in object['mentioned']:
+				object['mentioned']['sites'] = []
+			object['mentioned']['sites'].append(site_dict)
+
 		return(object, current_id)
 
 	print "Starting Objects Related Sites..."
@@ -231,11 +240,20 @@ def process_object_related_constituents():
 			object['relateditems'][constituent_type] = []
 		object['relateditems'][constituent_type].append(constituent_dict)
 
-		# if this is a diarypage, parse out any "Mentioned on this page" (RoleID==48)
-		if classification == 'diarypages' and constituent_dict['roleid'] == '48':
+		# parse out any constituents "Mentioned on this page" (RoleID==48)
+		if constituent_dict['roleid'] == '48':
 			if 'mentioned' not in object:
-				object['mentioned'] = []
-			object['mentioned'].append(constituent_dict)
+				object['mentioned'] = {}
+			if 'people' not in object['mentioned']:
+				object['mentioned']['people'] = []
+			object['mentioned']['people'].append(constituent_dict)
+
+		# parse out any "Author" (RoleID==50)
+		if constituent_dict['roleid'] == '50':
+			if 'author' not in object:
+				object['author'] = []
+			object['author'].append(constituent_dict)
+		
 		return(object, current_id)
 
 	print "Starting Objects Related Constituents..."
