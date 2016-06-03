@@ -8,10 +8,19 @@ Objects.PubReferences + ',,' AS PubReferences, Objects.Notes + ',,' AS Notes, Ob
 Objects.CuratorialRemarks + ',,' AS Remarks, ObjPkgList.objectnumber as FieldNumber
 FROM Objects 
 LEFT JOIN ObjTitles on Objects.ObjectID=ObjTitles.ObjectID
-LEFT JOIN ObjPkgList on Objects.ObjectID=ObjPkgList.objectid
+LEFT JOIN ObjPkgList on Objects.ObjectID=ObjPkgList.ObjectID
 WHERE Objects.PublicAccess = 1
 AND Objects.ObjectID >= 0
 ORDER BY Objects.ObjectID
+"""
+
+GEOCODES = """
+SELECT ObjGeography.ObjectID as ID, ObjGeography.GeoCodeID, GeoCodes.GeoCode, ObjGeography.Region, ObjGeography.City, Objects.ClassificationID
+FROM ObjGeography
+LEFT JOIN GeoCodes on ObjGeography.GeoCodeID=GeoCodes.GeoCodeID
+LEFT JOIN Objects on ObjGeography.ObjectID=Objects.ObjectID
+WHERE ObjGeography.ObjectID >= 0
+AND ObjGeography.GeoCodeID > 0
 """
 
 # Related Sites for all Objects

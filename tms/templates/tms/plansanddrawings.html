@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}template-plansanddrawings{% endblock %}
+
+{% block title %}Plans and Drawings{% endblock %}
+
+{% block content %}
+ <div class="main">
+        <div class="main_content">
+        {% if object.title %}
+        <p><b>Title: </b>{{ object.title }}</p>
+        {% endif %}
+        {% if object.geocode %}
+        <span><b>{{ object.geocode.geocode }}:</b></span><br>
+        <span>{{ object.geocode.region }}, {{ object.geocode.city }}</span><br>
+        <br>
+        <span><b>Tombs and Monuments:</b></span><br>
+        {% for site in object.relateditems.sites %}
+            <span>{{ site.sitenumber }}</span><br>
+        {% endfor %}
+        <br>
+        {% endif %}
+        {% if object.remarks %}
+        <p><b>Remarks: </b>{{ object.remarks }}</p>
+        {% endif %}
+        {% if object.mentioned and object.mentioned.people %}
+        <p><b>Mentioned on this page: </b></p>
+        {% for mentioned in object.mentioned.people %}
+            <span>{{ mentioned.displaytext }}</span><br>
+        {% endfor %}
+        {% endif %}
+
+        </div>
+
+        <div class="related">
+        {% if object.relateditems %}
+            <h3>Related Items</h3>
+            {% if object.relateditems.sites %}
+                <p><a href="{% url 'get_type_related_items' 'plansanddrawings' object.id 'sites' %}"><img src="{% static 'images/sites.jpg' %}"/><br/>{{ object.relateditems.sites|length }} Site{{ object.relateditems.sites|length|pluralize }}</a></p>
+            {% endif %}
+            {% if object.relateditems.ancientpeople %}
+                <p><a href="{% url 'get_type_related_items' 'plansanddrawings' object.id 'ancientpeople' %}"><img src="{% static 'images/ancientpeople.jpg' %}"/><br/>{{ object.relateditems.ancientpeople|length }} Ancient P{{ object.relateditems.ancientpeople|length|pluralize:"erson,eople" }}</a></p>
+            {% endif %}
+            {% if object.relateditems.modernpeople %}
+                <p><a href="{% url 'get_type_related_items' 'plansanddrawings' object.id 'modernpeople' %}"><img src="{% static 'images/modernpeople.jpg' %}"/><br/>{{ object.relateditems.modernpeople|length }} Modern P{{ object.relateditems.modernpeople|length|pluralize:"erson,eople" }}</a></p>
+            {% endif %}
+            {% if object.relateditems.photos %}
+                <p><a href="{% url 'get_type_related_items' 'plansanddrawings' object.id 'photos' %}"><img src="{% static 'images/photos.jpg' %}"/><br/>{{ object.relateditems.photos|length }} Photo{{ object.relateditems.photos|length|pluralize }}</a></p>
+            {% endif %}
+            {% if object.relateditems.diarypages %}
+                <p><a href="{% url 'get_type_related_items' 'plansanddrawings' object.id 'diarypages' %}"><img src="{% static 'images/diarypages.jpg' %}"/><br/>{{ object.relateditems.diarypages|length }} Diary Page{{ object.relateditems.diarypages|length|pluralize }}</a></p>
+            {% endif %}
+            {% if object.relateditems.pubdocs %}
+                <p><a href="{% url 'get_type_related_items' 'plansanddrawings' object.id 'pubdocs' %}"><img src="{% static 'images/pubdocs.jpg' %}"/><br/>{{ object.relateditems.pubdocs|length }} Published Document{{ object.relateditems.pubdocs|length|pluralize }}</a></p>
+            {% endif %}
+            {% if object.relateditems.unpubdocs %}
+                <p><a href="{% url 'get_type_related_items' 'plansanddrawings' object.id 'unpubdocs' %}"><img src="{% static 'images/unpubdocs.jpg' %}"/><br/>{{ object.relateditems.unpubdocs|length }} Unpublished Document{{ object.relateditems.unpubdocs|length|pluralize }}</a></p>
+            {% endif %}
+            {% if object.relateditems.finds %}
+                <p><a href="{% url 'get_type_related_items' 'plansanddrawings' object.id 'finds' %}"><img src="{% static 'images/finds.jpg' %}"/><br/>{{ object.relateditems.finds|length }} Find{{ object.relateditems.finds|length|pluralize }}</a></p>
+            {% endif %}
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

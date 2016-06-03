@@ -103,6 +103,77 @@ def process_objects():
 	
 	print "Finished Objects..."
 
+def process_object_geocodes():
+	def get_indices():
+		id_index = columns.index('ID')
+		geo_code_id_index = columns.index('GeoCodeID')
+		geo_code_index = columns.index('GeoCode')
+		region_index = columns.index('Region')
+		city_index = columns.index('City')
+		classification_id_index = columns.index('ClassificationID')
+		return (id_index, geo_code_id_index, geo_code_index, region_index, city_index, classification_id_index)
+
+	def process_object_row(object, current_id):
+		id = row[id_index]
+		classification_key = int(row[classification_id_index])
+		classification = CLASSIFICATIONS.get(classification_key)
+
+		if id != current_id:
+			# may have multiple rows for one object because of many related constituents
+			save(object)
+			current_id = id
+			object = {}
+			if elasticsearch_connection.item_exists(id, classification):
+				object = elasticsearch_connection.get_item(id, classification)
+			else:
+				print "%s could not be found!" % id
+				return(object, current_id)
+
+		geocode_dict = {}
+		geocode_dict['id'] = row[geo_code_id_index]
+		geocode_dict['geocode'] = row[geo_code_index]
+		geocode_dict['region'] = row[region_index]
+		geocode_dict['city'] = row[city_index]
+		object['geocode'] = geocode_dict
+
+		return(object, current_id)
+
+	print "Starting Objects Geocodes..."
+	if CURSOR:
+		sql_command = objects_sql.GEOCODES
+		CURSOR.execute(sql_command)
+		columns = [column[0] for column in CURSOR.description]
+		(id_index, geo_code_id_index, geo_code_index, region_index, city_index, classification_id_index) = get_indices()
+
+		object = {}
+		current_id = '-1'
+		cursor_row = CURSOR.fetchone()
+		while cursor_row is not None:
+			row = process_cursor_row(cursor_row)
+			(object, current_id) = process_object_row(object, current_id)
+			cursor_row = CURSOR.fetchone()
+   		# save last object to elasticsearch
+		save(object)
+	else:
+		with open('../data/objects_geocodes.csv', 'rb') as csvfile:
+			# Get the query headers to use as keys in the JSON
+			headers = next(csvfile)
+			if headers.startswith(codecs.BOM_UTF8):
+				headers = headers[3:]
+			headers = headers.replace('\r\n','')
+			columns = headers.split(',')
+			(id_index, geo_code_id_index, geo_code_index, region_index, city_index, classification_id_index) = get_indices()
+
+			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
+			object = {}
+			current_id = '-1'
+			for row in rows:
+				(object, current_id) = process_object_row(object, current_id)
+			# save last object to elasticsearch
+			save(object)
+
+	print "Finished Objects Geocodes..."
+
 def process_object_related_sites():
 	def get_indices():
 		id_index = columns.index('ID')
@@ -545,6 +616,7 @@ if __name__ == "__main__":
 
 	## process_objects MUST go first.  Other methods can go in any order
 	process_objects()
+	process_object_geocodes()
 	process_object_related_sites()
 	process_object_related_constituents()
 	process_object_related_published()
