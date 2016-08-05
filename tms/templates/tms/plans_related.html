@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}template-searchresults{% endblock %}
+
+{% block title %}Plans - Related {{displaytext}}{% endblock %}
+
+{% block content %}
+    <h1>Related {{displaytext}}</h1>
+
+    {% for item in relateditems %}
+        <p><a href="{% url 'get_type_html' relation item.id %}">{{item.displaytext}}</a></p>
+    {% endfor %}
+{% endblock %}

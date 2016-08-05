@@ -126,7 +126,7 @@ def process_site_altnums():
 		site_id = row[site_id_index]
 		#if site_id not in SAMPLE_SITES:
 		#	continue
-		
+
 		if site_id != current_id:
 			# will likely have multiple rows for one site because of many related objects
 			# only get a new site if we have a new site id, but first save old site to elasticsearch
@@ -183,7 +183,7 @@ def process_site_altnums():
 
 # Update all related items from the Objects table
 # TODO: Get Primary Image URL (need an image server first)
-def  process_site_related_objects():
+def process_site_related_objects():
 	def get_indices():
 		site_id_index = columns.index('SiteID')
 		classification_id_index = columns.index('ClassificationID')
@@ -207,7 +207,7 @@ def  process_site_related_objects():
 			else:
 				print "%s could not be found!" % site_id
 				return (site, current_id)
-		
+
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
 		classification_key = int(row[classification_id_index])
@@ -215,8 +215,8 @@ def  process_site_related_objects():
 		object_id = int(row[object_id_index])
 
 		object_title = row[object_title_index]
+		object_number = row[object_number_index]
 		if classification == "diarypages" and object_title.lower() == "null":
-			object_number = row[object_number_index]
 			idx = object_number.find('_')
 			object_title = object_number[idx+1:]
 		if object_title.lower() == "null":
@@ -225,10 +225,11 @@ def  process_site_related_objects():
 		if classification not in site['relateditems']:
 			site['relateditems'][classification] = []
 		site['relateditems'][classification].append({
-			'id' : object_id, 
-			'title' : object_title, 
+			'id' : object_id,
+			'title' : object_title,
 			'displaytext' : object_title,
-			'classificationid' : classification_key})
+			'classificationid' : classification_key,
+			'number' : object_number})
 		return (site, current_id)
 
 	print "Starting Sites Related Objects..."
@@ -361,7 +362,7 @@ def process_site_related_published():
 		reference_id_index = columns.index('ReferenceID')
 		boiler_text_index = columns.index('BoilerText')
 		return (site_id_index, reference_id_index, boiler_text_index)
-	
+
 	def process_site_row(site, current_id):
 		site_id = row[site_id_index]
 		#if site_id not in SAMPLE_SITES:
@@ -386,7 +387,7 @@ def process_site_related_published():
 		if "pubdocs" not in site['relateditems']:
 			site['relateditems']["pubdocs"] = []
 		site['relateditems']["pubdocs"].append({
-			'id' : reference_id, 
+			'id' : reference_id,
 			'boilertext' : boiler_text,
 			'displaytext' : boiler_text})
 		return(site, current_id)
@@ -424,7 +425,7 @@ def process_site_related_published():
 				(site, current_id) = process_site_row(site, current_id)
 			# save last object to elasticsearch
 			save(site)
-	
+
 	print "Finished Sites Related Published..."
 
 # Update site with all related photos
@@ -448,7 +449,7 @@ def process_site_related_photos():
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
 				print "%s could not be found!" % site_id
-				return(site, current_id)		
+				return(site, current_id)
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
 

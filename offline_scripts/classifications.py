@@ -5,7 +5,7 @@ CLASSIFICATIONS = {
 	3 : "unpubdocs",
 	4 : "diarypages",
 	5 : "diarypages",
-	6 : 'plansanddrawings',
+	6 : 'plansanddrawings', # eventually will become deprecated
 	7 : "unpubdocs",
 	8 : "finds",
 	18 : "finds",
@@ -76,7 +76,9 @@ CLASSIFICATIONS = {
 	129 : "finds",
 	132 : "finds",
 	135 : "finds",
-	136 : "unpubdocs"
+	136 : "unpubdocs",
+	139 : "plans",
+	140 : "drawings"
 }
 
 CONSTITUENTTYPES = {
