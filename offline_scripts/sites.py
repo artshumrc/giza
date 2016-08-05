@@ -190,7 +190,8 @@ def process_site_related_objects():
 		object_id_index = columns.index('ObjectID')
 		object_title_index = columns.index('Title')
 		object_number_index = columns.index('ObjectNumber')
-		return (site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index)
+		object_date_index = columns.index('ObjectDate')
+		return (site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index)
 
 	def process_site_row(site, current_id):
 		site_id = row[site_id_index]
@@ -214,6 +215,7 @@ def process_site_related_objects():
 		classification = CLASSIFICATIONS.get(classification_key)
 		object_id = int(row[object_id_index])
 
+		date = "" if row[object_date_index].lower() == "null" else row[object_date_index]
 		object_title = row[object_title_index]
 		object_number = row[object_number_index]
 		if classification == "diarypages" and object_title.lower() == "null":
@@ -229,7 +231,8 @@ def process_site_related_objects():
 			'title' : object_title,
 			'displaytext' : object_title,
 			'classificationid' : classification_key,
-			'number' : object_number})
+			'number' : object_number,
+			'date' : date})
 		return (site, current_id)
 
 	print "Starting Sites Related Objects..."
@@ -237,7 +240,7 @@ def process_site_related_objects():
 		sql_command = sites_sql.RELATED_OBJECTS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index) = get_indices()
+		(site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index) = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -256,7 +259,7 @@ def process_site_related_objects():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index) = get_indices()
+			(site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
@@ -276,7 +279,8 @@ def process_site_related_constituents():
 		constituent_type_id_index = columns.index('ConstituentTypeID')
 		display_name_index = columns.index('DisplayName')
 		display_date_index = columns.index('DisplayDate')
-		return (site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index)
+		remarks_index = columns.index('Remarks')
+		return (site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index)
 
 	def process_site_row(site, current_id):
 		site_id = row[site_id_index]
@@ -304,11 +308,13 @@ def process_site_related_constituents():
 
 		constituent_dict = {}
 		role = row[role_index]
+		description = row[remarks_index]
 		constituent_dict['role'] = role
 		constituent_dict['id'] = constituent_id
 		constituent_dict['displayname'] = display_name
 		constituent_dict['displaydate'] = display_date
 		constituent_dict['displaytext'] = display_name
+		constituent_dict['description'] = description
 
 		constituent_type_key = int(row[constituent_type_id_index])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
@@ -324,7 +330,7 @@ def process_site_related_constituents():
 		sql_command = sites_sql.RELATED_CONSTITUENTS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index) = get_indices()
+		(site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index) = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -343,7 +349,7 @@ def process_site_related_constituents():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index) = get_indices()
+			(site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
@@ -361,7 +367,8 @@ def process_site_related_published():
 		site_id_index = columns.index('SiteID')
 		reference_id_index = columns.index('ReferenceID')
 		boiler_text_index = columns.index('BoilerText')
-		return (site_id_index, reference_id_index, boiler_text_index)
+		date_index = columns.index('DisplayDate')
+		return (site_id_index, reference_id_index, boiler_text_index, date_index)
 
 	def process_site_row(site, current_id):
 		site_id = row[site_id_index]
@@ -383,13 +390,15 @@ def process_site_related_published():
 
 		reference_id = row[reference_id_index]
 		boiler_text = row[boiler_text_index]
+		date = row[date_index]
 
 		if "pubdocs" not in site['relateditems']:
 			site['relateditems']["pubdocs"] = []
 		site['relateditems']["pubdocs"].append({
 			'id' : reference_id,
 			'boilertext' : boiler_text,
-			'displaytext' : boiler_text})
+			'displaytext' : boiler_text,
+			'date' : date})
 		return(site, current_id)
 
 	print "Starting Sites Related Published..."
@@ -397,7 +406,7 @@ def process_site_related_published():
 		sql_command = sites_sql.RELATED_PUBLISHED
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, reference_id_index, boiler_text_index) = get_indices()
+		(site_id_index, reference_id_index, boiler_text_index, date_index) = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -416,7 +425,7 @@ def process_site_related_published():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, reference_id_index, boiler_text_index) = get_indices()
+			(site_id_index, reference_id_index, boiler_text_index, date_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
@@ -433,7 +442,8 @@ def process_site_related_photos():
 	def get_indices():
 		site_id_index = columns.index('SiteID')
 		media_master_id_index = columns.index('MediaMasterID')
-		return (site_id_index, media_master_id_index)
+		primary_display_index = columns.index('PrimaryDisplay')
+		return (site_id_index, media_master_id_index, primary_display_index)
 
 	def process_site_row(site, current_id):
 		site_id = row[site_id_index]
@@ -458,7 +468,8 @@ def process_site_related_photos():
 			site['relateditems']["photos"] = []
 		site['relateditems']["photos"].append({
 			'id' : media_master_id,
-			'displaytext' : media_master_id
+			'displaytext' : media_master_id,
+			'primarydisplay' : True if row[primary_display_index] == '1' else False
 			})
 		return(site, current_id)
 
@@ -467,7 +478,7 @@ def process_site_related_photos():
 		sql_command = sites_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, media_master_id_index) = get_indices()
+		(site_id_index, media_master_id_index, primary_display_index) = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -486,7 +497,7 @@ def process_site_related_photos():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, media_master_id_index) = get_indices()
+			(site_id_index, media_master_id_index, primary_display_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
