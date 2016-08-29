@@ -4,7 +4,7 @@ RELATED_DISPLAY_TEXT = {
 	'modernpeople' 		: 'Modern People',
 	'ancientpeople' 	: 'Ancient People',
 	'plansanddrawings' 	: 'Plans and Drawings',
-	'plans'				: 'Plans',
+	'plans'				: 'Maps and Plans',
 	'drawings'			: 'Drawings',
 	'unpubdocs' 		: 'Unpublished Documents',
 	'pubdocs' 			: 'Published Documents',

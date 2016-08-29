@@ -466,6 +466,7 @@ def process_site_related_photos():
 		media_master_id = row[media_master_id_index]
 		if "photos" not in site['relateditems']:
 			site['relateditems']["photos"] = []
+		# TODO add primary photo as a top level item as well?
 		site['relateditems']["photos"].append({
 			'id' : media_master_id,
 			'displaytext' : media_master_id,

@@ -100,7 +100,7 @@ def process_objects():
 				(object, current_id) = process_object_row(object, current_id)
 			# save last object to elasticsearch
 			save(object)
-	
+
 	print "Finished Objects..."
 
 def process_object_geocodes():
@@ -271,7 +271,8 @@ def process_object_related_constituents():
 		display_name_index = columns.index('DisplayName')
 		display_date_index = columns.index('DisplayDate')
 		classification_id_index = columns.index('ClassificationID')
-		return (id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index)
+		remarks_index = columns.index('Remarks')
+		return (id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index, remarks_index)
 
 	def process_object_row(object, current_id):
 		id = row[id_index]
@@ -293,6 +294,7 @@ def process_object_related_constituents():
 
 		constituent_id = row[constituent_id_index]
 		display_name = row[display_name_index]
+		description = row[remarks_index]
 		display_date = ""
 		if row[display_date_index] != "NULL":
 			display_date = row[display_date_index]
@@ -304,6 +306,7 @@ def process_object_related_constituents():
 		constituent_dict['displayname'] = display_name
 		constituent_dict['displaydate'] = display_date
 		constituent_dict['displaytext'] = display_name
+		constituent_dict['description'] = description
 
 		constituent_type_key = int(row[constituent_type_id_index])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
@@ -324,7 +327,7 @@ def process_object_related_constituents():
 			if 'author' not in object:
 				object['author'] = []
 			object['author'].append(constituent_dict)
-		
+
 		return(object, current_id)
 
 	print "Starting Objects Related Constituents..."
@@ -332,7 +335,7 @@ def process_object_related_constituents():
 		sql_command = objects_sql.RELATED_CONSTITUENTS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index) = get_indices()
+		(id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index, remarks_index) = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -351,7 +354,7 @@ def process_object_related_constituents():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index) = get_indices()
+			(id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index, remarks_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
@@ -369,7 +372,8 @@ def process_object_related_published():
 		reference_id_index = columns.index('ReferenceID')
 		boiler_text_index = columns.index('BoilerText')
 		classification_id_index = columns.index('ClassificationID')
-		return (id_index, reference_id_index, boiler_text_index, classification_id_index)
+		date_index = columns.index('DisplayDate')
+		return (id_index, reference_id_index, boiler_text_index, classification_id_index, date_index)
 
 	def process_object_row(object, current_id):
 		id = row[id_index]
@@ -391,13 +395,15 @@ def process_object_related_published():
 
 		reference_id = row[reference_id_index]
 		boiler_text = row[boiler_text_index]
+		date = row[date_index]
 
 		if 'pubdocs' not in object['relateditems']:
 			object['relateditems']['pubdocs'] = []
 		object['relateditems']['pubdocs'].append({
-			'id' : reference_id, 
+			'id' : reference_id,
 			'boilertext' : boiler_text,
-			'displaytext' : boiler_text})
+			'displaytext' : boiler_text,
+			'date' : date})
 		return(object, current_id)
 
 	print "Starting Objects Related Published..."
@@ -405,7 +411,7 @@ def process_object_related_published():
 		sql_command = objects_sql.RELATED_PUBLISHED
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, reference_id_index, boiler_text_index, classification_id_index) = get_indices()
+		(id_index, reference_id_index, boiler_text_index, classification_id_index, date_index) = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -424,7 +430,7 @@ def process_object_related_published():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, reference_id_index, boiler_text_index, classification_id_index) = get_indices()
+			(id_index, reference_id_index, boiler_text_index, classification_id_index, date_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
@@ -442,7 +448,8 @@ def process_object_related_unpublished():
 		unpublished_id_index = columns.index('UnpublishedID')
 		unpublished_title_index = columns.index('UnpublishedTitle')
 		classification_id_index = columns.index('ClassificationID')
-		return (id_index, unpublished_id_index, unpublished_title_index, classification_id_index)
+		object_date_index = columns.index('ObjectDate')
+		return (id_index, unpublished_id_index, unpublished_title_index, classification_id_index, object_date_index)
 
 	def process_object_row(object, current_id):
 		id = row[id_index]
@@ -464,13 +471,15 @@ def process_object_related_unpublished():
 
 		unpublished_id = row[unpublished_id_index]
 		unpublished_title = row[unpublished_title_index]
+		date = "" if row[object_date_index].lower() == "null" else row[object_date_index]
 
 		if 'unpubdocs' not in object['relateditems']:
 			object['relateditems']['unpubdocs'] = []
 		object['relateditems']['unpubdocs'].append({
-			'id' : unpublished_id, 
+			'id' : unpublished_id,
 			'text' : unpublished_title,
-			'displaytext' : unpublished_title})
+			'displaytext' : unpublished_title,
+			'date' : date})
 		return(object, current_id)
 
 	print "Starting Objects Related Unpublished..."
@@ -478,7 +487,7 @@ def process_object_related_unpublished():
 		sql_command = objects_sql.RELATED_UNPUBLISHED
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, unpublished_id_index, unpublished_title_index, classification_id_index) = get_indices()
+		(id_index, unpublished_id_index, unpublished_title_index, classification_id_index, object_date_index) = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -497,7 +506,7 @@ def process_object_related_unpublished():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, unpublished_id_index, unpublished_title_index, classification_id_index) = get_indices()
+			(id_index, unpublished_id_index, unpublished_title_index, classification_id_index, object_date_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
@@ -514,7 +523,8 @@ def process_object_related_photos():
 		id_index = columns.index('ID')
 		media_master_id_index = columns.index('MediaMasterID')
 		classification_id_index = columns.index('ClassificationID')
-		return (id_index, media_master_id_index, classification_id_index)
+		primary_display_index = columns.index('PrimaryDisplay')
+		return (id_index, media_master_id_index, classification_id_index, primary_display_index)
 
 	def process_object_row(object, current_id):
 		id = row[id_index]
@@ -539,8 +549,10 @@ def process_object_related_photos():
 		if 'photos' not in object['relateditems']:
 			object['relateditems']['photos'] = []
 		object['relateditems']['photos'].append({
-			'id' : media_master_id, 
-			'displaytext' : media_master_id})
+			'id' : media_master_id,
+			'displaytext' : media_master_id,
+			'primarydisplay' : True if row[primary_display_index] == '1' else False
+			})
 		return(object, current_id)
 
 	print "Starting Objects Related Photos..."
@@ -548,7 +560,7 @@ def process_object_related_photos():
 		sql_command = objects_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, media_master_id_index, classification_id_index) = get_indices()
+		(id_index, media_master_id_index, classification_id_index, primary_display_index) = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -567,7 +579,7 @@ def process_object_related_photos():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, media_master_id_index, classification_id_index) = get_indices()
+			(id_index, media_master_id_index, classification_id_index, primary_display_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
