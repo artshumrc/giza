@@ -8,12 +8,12 @@ import json
 def index(request):
 	return render(request, 'tms/index.html')
 
-def get_type_html(request, type, id):
+def get_type_html(request, type, id, view):
 	# get site in elasticsearch and render or return 404
 	try:
 		type_object = models.get_item(id, type)
 		print type, id
-		return render(request, 'tms/'+type+'.html', {'object': type_object})
+		return render(request, 'tms/'+view+'.html', {'object': type_object})
 	except:
 		raise Http404("There was an error getting this item")
 
@@ -31,7 +31,7 @@ def get_type_related_items(request, type, id, relation):
 	try:
 		type_object = models.get_item(id, type)
 		related_items = type_object['relateditems'][relation]
-		return render(request, 'tms/'+type+'_related.html', {'relateditems': related_items, 
+		return render(request, 'tms/'+type+'_related.html', {'relateditems': related_items,
 			'displaytext' : RELATED_DISPLAY_TEXT[relation],
 			'relation' : relation })
 	except:

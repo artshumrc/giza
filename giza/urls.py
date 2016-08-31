@@ -17,9 +17,8 @@ urlpatterns = [
 
     url(r'^search/$', 'search.views.search', name='search'),
 
-    url(r'^(?P<type>[a-z]+)/(?P<id>[\d]+)/?$', 'tms.views.get_type_html', name='get_type_html'),
+    url(r'^(?P<type>[a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full)?/$', 'tms.views.get_type_html', name='get_type_html'),
     url(r'^(?P<type>[a-z]+)/(?P<id>[\d]+)\.json$', 'tms.views.get_type_json', name='get_type_json'),
-    url(r'^(?P<type>[a-z]+)/(?P<id>[\d]+)/(?P<relation>[a-z]+)/?$', 'tms.views.get_type_related_items', name='get_type_related_items'),
 
     url(r'', include(wagtail_urls)),
 ]

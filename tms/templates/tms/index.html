@@ -6,7 +6,28 @@
 {% block title %}Giza Archives Project{% endblock %}
 
 {% block content %}
-    <div class="main">
-        <p>The Giza Archives Project home page</p>
-    </div>
+<div class="home-hero-container">
+  <div class="row">
+    <div id="hero-home" data-interchange="[{% static 'partials/home/small.html' %}, small], [{% static 'partials/home/medium.html' %}, medium], [{% static 'partials/home/large.html' %}, large]"></div>
+
+  </div>
+</div>
+
+  <div class="row" data-equalizer data-equalize-on="medium">
+    <section class="medium-6 columns">
+      <div class="secondary callout" data-equalizer-watch>
+        <p>New to Giza? <a href="giza3d.html">Explore Giza3D.</a></p>
+        <a href="giza3d.html"><img src="{% static 'images/home-giza3d.png' %}" alt="appropriate alt"></a>
+      </div>
+    </section>
+    <section class="medium-6 columns">
+      <div class="secondary callout" data-equalizer-watch>
+        <p>Like what we do? <a href="donate.html">Support our project.</a></p>
+        <blockquote>
+          <p>The Giza Project, an international collaboration based at Harvard University, aims to assemble and provide access to all archaeological records about the most famous site in the world: the Pyramids, surrounding cemeteries, and settlements of Giza, Egypt.  <a href="donate.html">Read more</a></p>
+        </blockquote>
+        <p class="text-right"><a href="donate.html" class="button hollow secondary">Donate now</a></p>
+      </div>
+    </section>
+  </div>
 {% endblock %}
