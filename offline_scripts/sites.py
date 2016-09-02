@@ -443,7 +443,11 @@ def process_site_related_photos():
 		site_id_index = columns.index('SiteID')
 		media_master_id_index = columns.index('MediaMasterID')
 		primary_display_index = columns.index('PrimaryDisplay')
-		return (site_id_index, media_master_id_index, primary_display_index)
+		thumb_path_index = columns.index('ThumbPathName')
+		thumb_file_index = columns.index('ThumbFileName')
+		main_path_index = columns.index('MainPathName')
+		main_file_index = columns.index('MainFileName')
+		return (site_id_index, media_master_id_index, primary_display_index, thumb_path_index, thumb_file_index, main_path_index, main_file_index)
 
 	def process_site_row(site, current_id):
 		site_id = row[site_id_index]
@@ -464,13 +468,23 @@ def process_site_related_photos():
 			site['relateditems'] = {}
 
 		media_master_id = row[media_master_id_index]
+		thumbnail_url = get_image_url(row[thumb_path_index], row[thumb_file_index])
+		main_url = get_image_url(row[main_path_index], row[main_file_index])
+
 		if "photos" not in site['relateditems']:
 			site['relateditems']["photos"] = []
-		# TODO add primary photo as a top level item as well?
+		# add primary photo as a top level item as well
+		if row[primary_display_index] == '1':
+			site['primarydisplay'] = {
+			'thumbnail' : thumbnail_url,
+			'main' : main_url
+			}
 		site['relateditems']["photos"].append({
 			'id' : media_master_id,
 			'displaytext' : media_master_id,
-			'primarydisplay' : True if row[primary_display_index] == '1' else False
+			'primarydisplay' : True if row[primary_display_index] == '1' else False,
+			'thumbnail' : thumbnail_url,
+			'main' : main_url
 			})
 		return(site, current_id)
 
@@ -479,7 +493,7 @@ def process_site_related_photos():
 		sql_command = sites_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, media_master_id_index, primary_display_index) = get_indices()
+		(site_id_index, media_master_id_index, primary_display_index, thumb_path_index, thumb_file_index, main_path_index, main_file_index) = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -498,7 +512,7 @@ def process_site_related_photos():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, media_master_id_index, primary_display_index) = get_indices()
+			(site_id_index, media_master_id_index, primary_display_index, thumb_path_index, thumb_file_index, main_path_index, main_file_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
@@ -509,6 +523,16 @@ def process_site_related_photos():
 			save(site)
 
 	print "Finished Sites Related Photos..."
+
+def get_image_url(path, filename):
+	idx = path.find('images')
+	if idx == -1:
+		return ""
+	path = path[idx:].replace('\\','/')
+	if not path.endswith('/'):
+		path = path + '/'
+	url = 'http://gizamedia.rc.fas.harvard.edu/' + path + filename
+	return url
 
 def process_cursor_row(cursor_row):
 	row = []

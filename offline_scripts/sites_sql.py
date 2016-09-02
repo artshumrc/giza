@@ -66,10 +66,15 @@ ORDER BY RefXrefs.ID
 
 # Related Media for all Sites
 RELATED_MEDIA = """
-SELECT MediaXrefs.ID as SiteID, MediaMaster.MediaMasterID, MediaXrefs.PrimaryDisplay
+SELECT MediaXrefs.ID as SiteID, MediaMaster.MediaMasterID, MediaXrefs.PrimaryDisplay,
+ThumbPath.Path as ThumbPathName, MediaRenditions.ThumbFileName,
+MainPath.Path as MainPathName, MediaFiles.FileName as MainFileName
 FROM MediaXrefs
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
+LEFT JOIN MediaFiles on MediaRenditions.RenditionID=MediaFiles.RenditionID
+LEFT JOIN MediaPaths AS ThumbPath on MediaRenditions.ThumbPathID=ThumbPath.PathID
+LEFT JOIN MediaPaths AS MainPath on MediaFiles.PathID=MainPath.PathID
 WHERE MediaXrefs.TableID=189
 AND MediaMaster.PublicAccess=1
 AND MediaRenditions.MediaTypeID=1

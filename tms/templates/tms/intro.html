@@ -27,7 +27,9 @@
 
     <section class="large-8 columns">
       <p><img src="{% static 'images/full-khafre.png' %}" alt="appropriate alt"></p>
-      <p>Khafre was king during the Fourth Dynasty of ancient Egypt’s Old Kingdom; builder of the Second Pyramid at Giza. and probably of the Great Sphinx as well. Known two thousand years later by the Greeks as King Chephren.</p>
+      {% if object.description %}
+      <p>{{ object.description }}</p>
+      {% endif %}
       <div class="row">
         <div class="medium-6 columns">
           <section class="detailblock">
