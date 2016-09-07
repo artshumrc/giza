@@ -1,97 +1,21 @@
-{% extends "base.html" %}
-{% load static wagtailcore_tags %}
-
-{% block body_class %}template-site{% endblock %}
-
-{% block title %}Site{% endblock %}
-
-{% block content %}
-    <div class="main">
-        <div class="main_content">
-        <h3>Tomb/Monument Details</h3>
-        <ul class="data_block">
-        <li>{% if object.sitename %}{{ object.sitename }} : {% endif %}{{ object.number|default:"" }}</li>
-        {% for altnum in object.altnums %}
-            <li>{% if altnum.description %}{{ altnum.description }} : {% endif %}{{ altnum.altnum|default:"" }}
-            </li>
-        {% endfor %}
-        {% if object.sitetype %}<li>{{ object.sitetype.sitetype }}</li>{% endif %} <!-- Add search by sitetype id --> 
-        {% if object.shafts %}<li>Shafts : {{ object.shafts }}</li>{% endif %} 
-        </ul>
-
-        {% if object.sitedates %}
-        <h3>Tomb/Monument Dating</h3>
-        <ul class="data_block">
-        {% for sitedate in object.sitedates %}
-            <li>{% if sitedate.eventtype %}{{ sitedate.eventtype }} : {% endif %}{{ sitedate.datetext|default:"" }}
-            </li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-
-        {% if object.relateditems.ancientpeople %}
-        <h3>Associated Ancient People</h3>
-        <ul class="data_block">
-        {% for person in object.relateditems.ancientpeople %}
-            <li>{% if person.role %}{{ person.role }} {% endif %}{{ person.displayname|default:"" }}{% if person.displaydate %}<br/>{{ person.displaydate }}{% endif %}</li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-
-        {% if object.relateditems.modernpeople %}
-        <h3>Associated Modern People</h3>
-        <ul class="data_block">
-        {% for person in object.relateditems.modernpeople %}
-            <li>{% if person.role %}{{ person.role }} {% endif %}{{ person.displayname|default:"" }}{% if person.displaydate %}<br/>{{ person.displaydate }}{% endif %}</li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-
-        {% if object.bibreferences %}
-        <h3>Bibiliographies/References</h3>
-        <div>
-            {{ object.bibreferences|linebreaks }}
-        </div>
-        {% endif %}
-        </div>
-
-        <div class="related">
-        {% if object.relateditems %}
-            <h3>Related Items</h3>
-            {% if object.relateditems.photos %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'photos' %}"><img src="{% static 'images/photos.jpg' %}"/><br/>{{ object.relateditems.photos|length }} Photo{{ object.relateditems.photos|length|pluralize }}</a></p>
-            {% endif %}
-            {% if object.relateditems.finds %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'finds' %}"><img src="{% static 'images/finds.jpg' %}"/><br/>{{ object.relateditems.finds|length }} Find{{ object.relateditems.finds|length|pluralize }}</a></p>
-            {% endif %}
-            {% if object.relateditems.ancientpeople %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'ancientpeople' %}"><img src="{% static 'images/ancientpeople.jpg' %}"/><br/>{{ object.relateditems.ancientpeople|length }} Ancient P{{ object.relateditems.ancientpeople|length|pluralize:"erson,eople" }}</a></p>
-            {% endif %}
-            {% if object.relateditems.plansanddrawings %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'plansanddrawings' %}"><img src="{% static 'images/plansanddrawings.jpg' %}"/><br/>{{ object.relateditems.plansanddrawings|length }} Plan{{ object.relateditems.plansanddrawings|length|pluralize }} and Drawing{{ object.relateditems.plansanddrawings|length|pluralize }}</a></p>
-            {% endif %}
-            {% if object.relateditems.pubdocs %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'pubdocs' %}"><img src="{% static 'images/pubdocs.jpg' %}"/><br/>{{ object.relateditems.pubdocs|length }} Published Document{{ object.relateditems.pubdocs|length|pluralize }}</a></p>
-            {% endif %}
-            {% if object.relateditems.modernpeople %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'modernpeople' %}"><img src="{% static 'images/modernpeople.jpg' %}"/><br/>{{ object.relateditems.modernpeople|length }} Modern P{{ object.relateditems.modernpeople|length|pluralize:"erson,eople" }}</a></p>
-            {% endif %}
-            {% if object.relateditems.unpubdocs %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'unpubdocs' %}"><img src="{% static 'images/unpubdocs.jpg' %}"/><br/>{{ object.relateditems.unpubdocs|length }} Unpublished Document{{ object.relateditems.unpubdocs|length|pluralize }}</a></p>
-            {% endif %}
-            {% if object.relateditems.diarypages %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'diarypages' %}"><img src="{% static 'images/diarypages.jpg' %}"/><br/>{{ object.relateditems.diarypages|length }} Diary Page{{ object.relateditems.diarypages|length|pluralize }}</a></p>
-            {% endif %}
-            {% if object.relateditems.institutions %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'institutions' %}"><!-- <img src="{% static 'images/institutions.jpg' %}"/> --><br/>{{ object.relateditems.institutions|length }} Institution{{ object.relateditems.institutions|length|pluralize }}</a></p>
-            {% endif %}
-            {% if object.relateditems.groups %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'groups' %}"><!-- <img src="{% static 'images/groups.jpg' %}"/> --><br/>{{ object.relateditems.groups|length }} Group{{ object.relateditems.groups|length|pluralize }}</a></p>
-            {% endif %}
-            {% if object.relateditems.animals %}
-                <p><a href="{% url 'get_type_related_items' 'sites' object.id 'animals' %}"><!-- <img src="{% static 'images/animals.jpg' %}"/> --><br/>{{ object.relateditems.animals|length }} Animal{{ object.relateditems.animals|length|pluralize }}</a></p>
-            {% endif %}
-        {% endif %}
-        </div>
-    </div>
-{% endblock %}
+<dl>
+  {% for person in object.relateditems.ancientpeople %}
+    {% if person.role %}<dt>{{person.role}}: </dt>{% endif %}
+    <dd>{{ person.displayname|default:"" }}</dd>
+  {% endfor %}
+  {% for person in object.relateditems.modernpeople %}
+    {% if person.role %}<dt>{{person.role}}: </dt>{% endif %}
+    <dd>{{ person.displayname|default:"" }} {% if person.displaydate %}<br/>{{ person.displaydate }}{% endif %}</dd>
+  {% endfor %}
+  {% for altnum in object.altnums %}
+      {% if altnum.description %}<dt>{{ altnum.description }}: </dt>{% endif %}
+      <dd>{{ altnum.altnum|default:"" }}</dd>
+  {% endfor %}
+  {% for sitedate in object.sitedates %}
+      {% if sitedate.eventtype %}<dt>{{ sitedate.eventtype }}: </dt>{% endif %}
+      <dd>{{ sitedate.datetext|default:"" }}</dd>
+  {% endfor %}
+    <dt>EXTRA DATA NOT IN TEMPLATE</dt>
+  {% if object.sitetype %}<dd>{{ object.sitetype.sitetype }}</dd>{% endif %} <!-- Add search by sitetype id -->
+  {% if object.shafts %}<dd>Shafts : {{ object.shafts }}</dd>{% endif %}
+</dl>

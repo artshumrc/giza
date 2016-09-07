@@ -14,7 +14,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
             "properties": {
                 "number": {
                     "type" : "string",
-                    "index":"not_analyzed" 
+                    "index":"not_analyzed"
                 },
                 "altnums" : {
                     "type" : "nested",
@@ -52,15 +52,15 @@ curl -XPUT 'http://localhost:9200/giza' -d '
                }
             }
         },
-        "finds" : {
+        "objects" : {
             "properties": {
                  "number": {
                     "type" : "string",
-                    "index":"not_analyzed" 
+                    "index":"not_analyzed"
                 },
                  "altnumber": {
                     "type" : "string",
-                    "index":"not_analyzed" 
+                    "index":"not_analyzed"
                 },
                 "entrydate": {
                     "type": "string"
@@ -71,11 +71,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
             "properties": {
                  "number": {
                     "type" : "string",
-                    "index":"not_analyzed" 
+                    "index":"not_analyzed"
                 },
                  "altnumber": {
                     "type" : "string",
-                    "index":"not_analyzed" 
+                    "index":"not_analyzed"
                 },
                 "entrydate": {
                     "type": "string"
@@ -86,11 +86,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
             "properties": {
                  "number": {
                     "type" : "string",
-                    "index":"not_analyzed" 
+                    "index":"not_analyzed"
                 },
                  "altnumber": {
                     "type" : "string",
-                    "index":"not_analyzed" 
+                    "index":"not_analyzed"
                 },
                 "entrydate": {
                     "type": "string"
@@ -101,11 +101,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
             "properties": {
                  "number": {
                     "type" : "string",
-                    "index":"not_analyzed" 
+                    "index":"not_analyzed"
                 },
                  "altnumber": {
                     "type" : "string",
-                    "index":"not_analyzed" 
+                    "index":"not_analyzed"
                 },
                 "entrydate": {
                     "type": "string"

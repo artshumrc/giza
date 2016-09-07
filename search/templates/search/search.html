@@ -38,8 +38,8 @@
         {% if facets.photos %}
             <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=photos">{{ facets.photos.display_text }} ({{ facets.photos.doc_count }})</a></li>
         {% endif %}
-        {% if facets.finds %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=finds">{{ facets.finds.display_text }} ({{ facets.finds.doc_count }})</a></li>
+        {% if facets.objects %}
+            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=objects">{{ facets.objects.display_text }} ({{ facets.objects.doc_count }})</a></li>
         {% endif %}
         {% if facets.modernpeople %}
             <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=modernpeople">{{ facets.modernpeople.display_text }} ({{ facets.modernpeople.doc_count }})</a></li>

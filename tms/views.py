@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 
 from tms import models
-from utils.views_utils import RELATED_DISPLAY_TEXT
 import json
 
 def index(request):
@@ -12,8 +11,8 @@ def get_type_html(request, type, id, view):
 	# get site in elasticsearch and render or return 404
 	try:
 		type_object = models.get_item(id, type)
-		print type, id
-		return render(request, 'tms/'+view+'.html', {'object': type_object})
+		print type, id, view
+		return render(request, 'tms/'+view+'.html', {'object': type_object, 'type': type})
 	except:
 		raise Http404("There was an error getting this item")
 
@@ -23,17 +22,6 @@ def get_type_json(request, type, id):
 		response = HttpResponse(type_json)
 		add_headers(response)
 		return response
-	except:
-		raise Http404("There was an error getting this item")
-
-def get_type_related_items(request, type, id, relation):
-	# get site's related items in elasticsearch and render or return 404
-	try:
-		type_object = models.get_item(id, type)
-		related_items = type_object['relateditems'][relation]
-		return render(request, 'tms/'+type+'_related.html', {'relateditems': related_items,
-			'displaytext' : RELATED_DISPLAY_TEXT[relation],
-			'relation' : relation })
 	except:
 		raise Http404("There was an error getting this item")
 

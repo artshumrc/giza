@@ -1,16 +1,19 @@
-RELATED_DISPLAY_TEXT = {
-	'finds' 			: 'Finds',
+CATEGORIES = {
+	'sites' 			: 'Sites',
+	'objects' 			: 'Objects',
 	'diarypages' 		: 'Diary Pages',
-	'modernpeople' 		: 'Modern People',
-	'ancientpeople' 	: 'Ancient People',
-	'plansanddrawings' 	: 'Plans and Drawings',
-	'plans'				: 'Maps and Plans',
+	'plansanddrawings' 	: 'Plans and Drawings', # being phased out
+	'mapsandplans'		: 'Maps and Plans',
 	'drawings'			: 'Drawings',
 	'unpubdocs' 		: 'Unpublished Documents',
 	'pubdocs' 			: 'Published Documents',
 	'photos' 			: 'Photos',
-	'sites' 			: 'Sites',
+	'ancientpeople' 	: 'Ancient People',
+	'modernpeople' 		: 'Modern People',
 	'institutions' 		: 'Institutions',
 	'groups' 			: 'Groups',
-	'animals'			: 'Animals'
+	'animals'			: 'Animals',
+	'3dmodels'			: '3D Models',
+	'videos'			: 'Videos',
+	'audio'				: 'Audio'
 }

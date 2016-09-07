@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailsearch.models import Query
 from utils.elastic_backend import es, ES_INDEX
-from utils.views_utils import RELATED_DISPLAY_TEXT
+from utils.views_utils import CATEGORIES
 
 RESULTS_SIZE = 20
 
@@ -39,11 +39,11 @@ def search(request):
 
     if number_query:
         # user is searching for an exact item using its number
-        # such as 'finds:HUMFA_27-5-1'
+        # such as 'objects:HUMFA_27-5-1'
         search_results = es.search(index=ES_INDEX, doc_type=type, body={
           "query": {
             "term": {
-                "number": number 
+                "number": number
             }
           }
         })
@@ -81,21 +81,21 @@ def search(request):
         for count in search_results['aggregations']['aggregation']['buckets']:
             facets[count['key']] = {
                 'doc_count' : count['doc_count'],
-                'display_text' : RELATED_DISPLAY_TEXT[count['key']]
+                'display_text' : CATEGORIES[count['key']]
                 }
-        
+
         for hit in search_results['hits']['hits']:
             hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
-        
+
         total = search_results['hits']['total']
-        
+
         if page > 1:
             has_previous = True
             previous_page_number = page - 1
         if (total / RESULTS_SIZE > page) or (total / RESULTS_SIZE == page and total % RESULTS_SIZE > 0):
             has_next = True
             next_page_number = page + 1
-    
+
     return render(request, 'search/search.html', {
         'search_query' : search_query,
         'hits' : hits,
@@ -107,4 +107,3 @@ def search(request):
         'next_page_number' : next_page_number,
         'type' : type
     })
-

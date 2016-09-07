@@ -16,7 +16,7 @@
           <h5>Show:</h5>
           <div class="button-group">
             <a class="secondary button">Intro View</a>
-            <a class="button" href="full.html">Full View</a>
+            <a class="button" href="{% url 'get_type_html' type object.id 'full' %}">Full View</a>
           </div>
         </div>
       </div>
@@ -48,23 +48,23 @@
           </section>
         </div>
         <div class="medium-6 columns">
-          {% if object.relateditems.finds %}
+          {% if object.relateditems.objects %}
             <section class="detailblock">
               <h3><span class="icon-vase"></span> Objects <a name="objects"></a></h3>
-               {% for item in object.relateditems.finds|slice:":5" %}
+               {% for item in object.relateditems.objects|slice:":5" %}
                 <div class="media-object">
                   <div class="media-object-section">
                     <div class="thumbnail">
-                      <a href="{% url 'get_type_html' 'finds' item.id 'intro' %}"><img src= "{% static 'images/object1.png' %}"></a> <!-- TODO: USE IMAGE FROM DB --> <!-- TODO: use cookies for intro/full -->
+                      <a href="{% url 'get_type_html' 'objects' item.id 'intro' %}"><img src= "{% static 'images/object1.png' %}"></a> <!-- TODO: USE IMAGE FROM DB --> <!-- TODO: use cookies for intro/full -->
                     </div>
                   </div>
                   <div class="media-object-section">
-                    <p><a href="{% url 'get_type_html' 'finds' item.id 'intro' %}">{{item.displaytext}}</a><br> <!-- TODO: use cookies for intro/full -->
+                    <p><a href="{% url 'get_type_html' 'objects' item.id 'intro' %}">{{item.displaytext}}</a><br> <!-- TODO: use cookies for intro/full -->
                     {{item.number}}</p>
                   </div>
                 </div>
                 {% endfor %}
-                <p><a href="#">View all {{ object.relateditems.finds|length }} Objects &gt; </a></p>
+                <p><a href="#">View all {{ object.relateditems.objects|length }} Objects &gt; </a></p>
             </section>
           {% endif %}
           {% if object.relateditems.drawings %}
