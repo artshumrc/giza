@@ -191,7 +191,9 @@ def process_site_related_objects():
 		object_title_index = columns.index('Title')
 		object_number_index = columns.index('ObjectNumber')
 		object_date_index = columns.index('ObjectDate')
-		return (site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index)
+		thumb_path_index = columns.index('ThumbPathName')
+		thumb_file_index = columns.index('ThumbFileName')
+		return (site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index, thumb_path_index, thumb_file_index)
 
 	def process_site_row(site, current_id):
 		site_id = row[site_id_index]
@@ -214,6 +216,7 @@ def process_site_related_objects():
 		classification_key = int(row[classification_id_index])
 		classification = CLASSIFICATIONS.get(classification_key)
 		object_id = int(row[object_id_index])
+		thumbnail_url = get_image_url(row[thumb_path_index], row[thumb_file_index])
 
 		date = "" if row[object_date_index].lower() == "null" else row[object_date_index]
 		object_title = row[object_title_index]
@@ -232,7 +235,8 @@ def process_site_related_objects():
 			'displaytext' : object_title,
 			'classificationid' : classification_key,
 			'number' : object_number,
-			'date' : date})
+			'date' : date,
+			'thumbnail' : thumbnail_url})
 		return (site, current_id)
 
 	print "Starting Sites Related Objects..."
@@ -240,7 +244,7 @@ def process_site_related_objects():
 		sql_command = sites_sql.RELATED_OBJECTS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index) = get_indices()
+		(site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index, thumb_path_index, thumb_file_index) = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -259,7 +263,7 @@ def process_site_related_objects():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index) = get_indices()
+			(site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index, thumb_path_index, thumb_file_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
@@ -280,7 +284,9 @@ def process_site_related_constituents():
 		display_name_index = columns.index('DisplayName')
 		display_date_index = columns.index('DisplayDate')
 		remarks_index = columns.index('Remarks')
-		return (site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index)
+		thumb_path_index = columns.index('ThumbPathName')
+		thumb_file_index = columns.index('ThumbFileName')
+		return (site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index, thumb_path_index, thumb_file_index)
 
 	def process_site_row(site, current_id):
 		site_id = row[site_id_index]
@@ -305,6 +311,7 @@ def process_site_related_constituents():
 		display_date = ""
 		if row[display_date_index] != "NULL":
 			display_date = row[display_date_index]
+		thumbnail_url = get_image_url(row[thumb_path_index], row[thumb_file_index])
 
 		constituent_dict = {}
 		role = row[role_index]
@@ -315,12 +322,14 @@ def process_site_related_constituents():
 		constituent_dict['displaydate'] = display_date
 		constituent_dict['displaytext'] = display_name
 		constituent_dict['description'] = description
+		constituent_dict['thumbnail'] = thumbnail_url
 
 		constituent_type_key = int(row[constituent_type_id_index])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
 		if constituent_type not in site['relateditems']:
 			site['relateditems'][constituent_type] = []
 		site['relateditems'][constituent_type].append(constituent_dict)
+		# is this needed?
 		if role == 'Tomb Owner':
 			site['tombowner'] = True
 		return(site, current_id)
@@ -330,7 +339,7 @@ def process_site_related_constituents():
 		sql_command = sites_sql.RELATED_CONSTITUENTS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index) = get_indices()
+		(site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index, thumb_path_index, thumb_file_index) = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -349,7 +358,7 @@ def process_site_related_constituents():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index) = get_indices()
+			(site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index, thumb_path_index, thumb_file_index) = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}

@@ -31,27 +31,42 @@ ORDER BY Sites.SiteID
 # TODO: Get Primary Image URL (need an image server first)
 RELATED_OBJECTS = """
 SELECT Sites.SiteID, SiteObjXrefs.ObjectID,
-replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber, Objects.ClassificationID, Objects.Dated as ObjectDate
+replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber, Objects.ClassificationID, Objects.Dated as ObjectDate,
+MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM Sites
 LEFT JOIN SiteObjXrefs ON Sites.SiteID=SiteObjXrefs.SiteID
 LEFT JOIN Objects ON SiteObjXrefs.ObjectID=Objects.ObjectID
 LEFT JOIN ObjTitles ON SiteObjXrefs.ObjectID=ObjTitles.ObjectID
+LEFT JOIN MediaXrefs on Objects.ObjectID=MediaXrefs.ID
+LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
+LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
+LEFT JOIN MediaPaths on MediaRenditions.ThumbPathID=MediaPaths.PathID
 WHERE Sites.IsPublic = 1
 AND Objects.PublicAccess = 1
+AND MediaXrefs.TableID=108
+AND MediaXrefs.PrimaryDisplay=1
 ORDER BY Sites.SiteID
 """
 
 # Related Constituents (Modern and Ancient) for all Sites
+# Also grab the primary thumbnail photo for each Constituent
 RELATED_CONSTITUENTS = """
 SELECT ConXrefs.ID as SiteID, Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
-Constituents.DisplayName, Constituents.DisplayDate, Constituents.Remarks
+Constituents.DisplayName, Constituents.DisplayDate, Constituents.Remarks,
+MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM ConXrefs
 LEFT JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
 LEFT JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID
 LEFT JOIN Roles on ConXrefs.RoleID=Roles.RoleID
+LEFT JOIN MediaXrefs on Constituents.ConstituentID=MediaXrefs.ID
+LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
+LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
+LEFT JOIN MediaPaths on MediaRenditions.ThumbPathID=MediaPaths.PathID
 WHERE ConXrefs.TableID=189
 AND Constituents.Active=1
 AND ConXrefDetails.Unmasked=1
+AND MediaXrefs.TableID=23
+AND MediaXrefs.PrimaryDisplay=1
 ORDER BY ConXrefs.ID
 """
 
@@ -66,7 +81,7 @@ ORDER BY RefXrefs.ID
 
 # Related Media for all Sites
 RELATED_MEDIA = """
-SELECT MediaXrefs.ID as SiteID, MediaMaster.MediaMasterID, MediaXrefs.PrimaryDisplay,
+SELECT MediaXrefs.ID as SiteID, MediaMaster.MediaMasterID, MediaXrefs.PrimaryDisplay, MediaRenditions.RenditionNumber,
 ThumbPath.Path as ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path as MainPathName, MediaFiles.FileName as MainFileName
 FROM MediaXrefs
@@ -78,5 +93,6 @@ LEFT JOIN MediaPaths AS MainPath on MediaFiles.PathID=MainPath.PathID
 WHERE MediaXrefs.TableID=189
 AND MediaMaster.PublicAccess=1
 AND MediaRenditions.MediaTypeID=1
+AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
 ORDER BY MediaXrefs.ID
 """
