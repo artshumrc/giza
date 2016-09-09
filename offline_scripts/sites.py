@@ -117,13 +117,15 @@ def process_sites():
 # Update relevant sites with alternate numbers
 def process_site_altnums():
 	def get_indices():
-		site_id_index = columns.index('SiteID')
-		altnum_index = columns.index('AltNum')
-		description_index = columns.index('Description')
-		return (site_id_index, altnum_index, description_index)
+		indices = {
+			'site_id_index' : columns.index('SiteID'),
+			'altnum_index' : columns.index('AltNum'),
+			'description_index' : columns.index('Description')
+		}
+		return indices
 
 	def process_site_row(site, current_id):
-		site_id = row[site_id_index]
+		site_id = row[indices['site_id_index']]
 		#if site_id not in SAMPLE_SITES:
 		#	continue
 
@@ -141,8 +143,8 @@ def process_site_altnums():
 
 		if 'altnums' not in site:
 			site['altnums'] = []
-		altnum = row[altnum_index]
-		description = row[description_index] if row[description_index] != "NULL" else ""
+		altnum = row[indices['altnum_index']]
+		description = row[indices['description_index']] if row[indices['description_index']] != "NULL" else ""
 		site['altnums'].append({"altnum" : altnum, "description" : description})
 		return (site, current_id)
 
@@ -151,7 +153,7 @@ def process_site_altnums():
 		sql_command = sites_sql.ALTNUMS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, altnum_index, description_index) = get_indices()
+		indices = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -170,7 +172,7 @@ def process_site_altnums():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, altnum_index, description_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
@@ -185,18 +187,20 @@ def process_site_altnums():
 # TODO: Get Primary Image URL (need an image server first)
 def process_site_related_objects():
 	def get_indices():
-		site_id_index = columns.index('SiteID')
-		classification_id_index = columns.index('ClassificationID')
-		object_id_index = columns.index('ObjectID')
-		object_title_index = columns.index('Title')
-		object_number_index = columns.index('ObjectNumber')
-		object_date_index = columns.index('ObjectDate')
-		thumb_path_index = columns.index('ThumbPathName')
-		thumb_file_index = columns.index('ThumbFileName')
-		return (site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index, thumb_path_index, thumb_file_index)
+		indices = {
+			'site_id_index' : columns.index('SiteID'),
+			'classification_id_index' : columns.index('ClassificationID'),
+			'object_id_index' : columns.index('ObjectID'),
+			'object_title_index' : columns.index('Title'),
+			'object_number_index' : columns.index('ObjectNumber'),
+			'object_date_index' : columns.index('ObjectDate'),
+			'thumb_path_index' : columns.index('ThumbPathName'),
+			'thumb_file_index' : columns.index('ThumbFileName')
+		}
+		return indices
 
 	def process_site_row(site, current_id):
-		site_id = row[site_id_index]
+		site_id = row[indices['site_id_index']]
 		#if site_id not in SAMPLE_SITES:
 		#	continue
 		if site_id != current_id:
@@ -213,14 +217,14 @@ def process_site_related_objects():
 
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
-		classification_key = int(row[classification_id_index])
+		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
-		object_id = int(row[object_id_index])
-		thumbnail_url = get_image_url(row[thumb_path_index], row[thumb_file_index])
+		object_id = int(row[indices['object_id_index']])
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 
-		date = "" if row[object_date_index].lower() == "null" else row[object_date_index]
-		object_title = row[object_title_index]
-		object_number = row[object_number_index]
+		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
+		object_title = row[indices['object_title_index']]
+		object_number = row[indices['object_number_index']]
 		if classification == "diarypages" and object_title.lower() == "null":
 			idx = object_number.find('_')
 			object_title = object_number[idx+1:]
@@ -244,7 +248,7 @@ def process_site_related_objects():
 		sql_command = sites_sql.RELATED_OBJECTS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index, thumb_path_index, thumb_file_index) = get_indices()
+		indices = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -263,7 +267,7 @@ def process_site_related_objects():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, classification_id_index, object_id_index, object_title_index, object_number_index, object_date_index, thumb_path_index, thumb_file_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
@@ -277,19 +281,21 @@ def process_site_related_objects():
 # Next, update site with all related Constituents
 def process_site_related_constituents():
 	def get_indices():
-		site_id_index = columns.index('SiteID')
-		role_index = columns.index('Role')
-		constituent_id_index = columns.index('ConstituentID')
-		constituent_type_id_index = columns.index('ConstituentTypeID')
-		display_name_index = columns.index('DisplayName')
-		display_date_index = columns.index('DisplayDate')
-		remarks_index = columns.index('Remarks')
-		thumb_path_index = columns.index('ThumbPathName')
-		thumb_file_index = columns.index('ThumbFileName')
-		return (site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index, thumb_path_index, thumb_file_index)
+		indices = {
+			'site_id_index' : columns.index('SiteID'),
+			'role_index' : columns.index('Role'),
+			'constituent_id_index' : columns.index('ConstituentID'),
+			'constituent_type_id_index' : columns.index('ConstituentTypeID'),
+			'display_name_index' : columns.index('DisplayName'),
+			'display_date_index' : columns.index('DisplayDate'),
+			'remarks_index' : columns.index('Remarks'),
+			'thumb_path_index' : columns.index('ThumbPathName'),
+			'thumb_file_index' : columns.index('ThumbFileName')
+		}
+		return indices
 
 	def process_site_row(site, current_id):
-		site_id = row[site_id_index]
+		site_id = row[indices['site_id_index']]
 		#if site_id not in SAMPLE_SITES:
 		#	continue
 		if site_id != current_id:
@@ -306,16 +312,16 @@ def process_site_related_constituents():
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
 
-		constituent_id = row[constituent_id_index]
-		display_name = row[display_name_index]
+		constituent_id = row[indices['constituent_id_index']]
+		display_name = row[indices['display_name_index']]
 		display_date = ""
-		if row[display_date_index] != "NULL":
-			display_date = row[display_date_index]
-		thumbnail_url = get_image_url(row[thumb_path_index], row[thumb_file_index])
+		if row[indices['display_date_index']] != "NULL":
+			display_date = row[indices['display_date_index']]
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 
 		constituent_dict = {}
-		role = row[role_index]
-		description = row[remarks_index]
+		role = row[indices['role_index']]
+		description = row[indices['remarks_index']]
 		constituent_dict['role'] = role
 		constituent_dict['id'] = constituent_id
 		constituent_dict['displayname'] = display_name
@@ -324,7 +330,7 @@ def process_site_related_constituents():
 		constituent_dict['description'] = description
 		constituent_dict['thumbnail'] = thumbnail_url
 
-		constituent_type_key = int(row[constituent_type_id_index])
+		constituent_type_key = int(row[indices['constituent_type_id_index']])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
 		if constituent_type not in site['relateditems']:
 			site['relateditems'][constituent_type] = []
@@ -339,7 +345,7 @@ def process_site_related_constituents():
 		sql_command = sites_sql.RELATED_CONSTITUENTS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index, thumb_path_index, thumb_file_index) = get_indices()
+		indices = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -358,7 +364,7 @@ def process_site_related_constituents():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, role_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, remarks_index, thumb_path_index, thumb_file_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
@@ -373,14 +379,19 @@ def process_site_related_constituents():
 # Next, update site with all related Published Documents
 def process_site_related_published():
 	def get_indices():
-		site_id_index = columns.index('SiteID')
-		reference_id_index = columns.index('ReferenceID')
-		boiler_text_index = columns.index('BoilerText')
-		date_index = columns.index('DisplayDate')
-		return (site_id_index, reference_id_index, boiler_text_index, date_index)
+		indices = {
+			'site_id_index' : columns.index('SiteID'),
+			'reference_id_index' : columns.index('ReferenceID'),
+			'title_index' : columns.index('Title'),
+			'boiler_text_index' : columns.index('BoilerText'),
+			'date_index' : columns.index('DisplayDate'),
+			'path_index' : columns.index('MainPathName'),
+			'file_index' : columns.index('MainFileName')
+		}
+		return indices
 
 	def process_site_row(site, current_id):
-		site_id = row[site_id_index]
+		site_id = row[indices['site_id_index']]
 		#if site_id not in SAMPLE_SITES:
 		#	continue
 		if site_id != current_id:
@@ -397,17 +408,20 @@ def process_site_related_published():
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
 
-		reference_id = row[reference_id_index]
-		boiler_text = row[boiler_text_index]
-		date = row[date_index]
+		reference_id = row[indices['reference_id_index']]
+		title = row[indices['title_index']]
+		boiler_text = row[indices['boiler_text_index']]
+		date = row[indices['date_index']]
+		main_url = get_media_url(row[indices['path_index']], row[indices['file_index']])
 
 		if "pubdocs" not in site['relateditems']:
 			site['relateditems']["pubdocs"] = []
 		site['relateditems']["pubdocs"].append({
 			'id' : reference_id,
 			'boilertext' : boiler_text,
-			'displaytext' : boiler_text,
-			'date' : date})
+			'displaytext' : title,
+			'date' : date,
+			'url' : main_url})
 		return(site, current_id)
 
 	print "Starting Sites Related Published..."
@@ -415,7 +429,7 @@ def process_site_related_published():
 		sql_command = sites_sql.RELATED_PUBLISHED
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, reference_id_index, boiler_text_index, date_index) = get_indices()
+		indices = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -434,7 +448,7 @@ def process_site_related_published():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, reference_id_index, boiler_text_index, date_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
@@ -449,17 +463,19 @@ def process_site_related_published():
 # Update site with all related photos
 def process_site_related_photos():
 	def get_indices():
-		site_id_index = columns.index('SiteID')
-		media_master_id_index = columns.index('MediaMasterID')
-		primary_display_index = columns.index('PrimaryDisplay')
-		thumb_path_index = columns.index('ThumbPathName')
-		thumb_file_index = columns.index('ThumbFileName')
-		main_path_index = columns.index('MainPathName')
-		main_file_index = columns.index('MainFileName')
-		return (site_id_index, media_master_id_index, primary_display_index, thumb_path_index, thumb_file_index, main_path_index, main_file_index)
+		indices = {
+			'site_id_index' : columns.index('SiteID'),
+			'media_master_id_index' : columns.index('MediaMasterID'),
+			'primary_display_index' : columns.index('PrimaryDisplay'),
+			'thumb_path_index' : columns.index('ThumbPathName'),
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'main_path_index' : columns.index('MainPathName'),
+			'main_file_index' : columns.index('MainFileName')
+		}
+		return indices
 
 	def process_site_row(site, current_id):
-		site_id = row[site_id_index]
+		site_id = row[indices['site_id_index']]
 		#if site_id not in SAMPLE_SITES:
 		#	continue
 		if site_id != current_id:
@@ -476,14 +492,14 @@ def process_site_related_photos():
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
 
-		media_master_id = row[media_master_id_index]
-		thumbnail_url = get_image_url(row[thumb_path_index], row[thumb_file_index])
-		main_url = get_image_url(row[main_path_index], row[main_file_index])
+		media_master_id = row[indices['media_master_id_index']]
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 
 		if "photos" not in site['relateditems']:
 			site['relateditems']["photos"] = []
 		# add primary photo as a top level item as well
-		if row[primary_display_index] == '1':
+		if row[indices['primary_display_index']] == '1':
 			site['primarydisplay'] = {
 			'thumbnail' : thumbnail_url,
 			'main' : main_url
@@ -491,7 +507,7 @@ def process_site_related_photos():
 		site['relateditems']["photos"].append({
 			'id' : media_master_id,
 			'displaytext' : media_master_id,
-			'primarydisplay' : True if row[primary_display_index] == '1' else False,
+			'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
 			'thumbnail' : thumbnail_url,
 			'main' : main_url
 			})
@@ -502,7 +518,7 @@ def process_site_related_photos():
 		sql_command = sites_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(site_id_index, media_master_id_index, primary_display_index, thumb_path_index, thumb_file_index, main_path_index, main_file_index) = get_indices()
+		indices = get_indices()
 
 		site = {}
 		current_id = '-1'
@@ -521,7 +537,7 @@ def process_site_related_photos():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(site_id_index, media_master_id_index, primary_display_index, thumb_path_index, thumb_file_index, main_path_index, main_file_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			site = {}
@@ -533,7 +549,7 @@ def process_site_related_photos():
 
 	print "Finished Sites Related Photos..."
 
-def get_image_url(path, filename):
+def get_media_url(path, filename):
 	idx = path.find('images')
 	if idx == -1:
 		return ""

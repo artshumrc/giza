@@ -72,11 +72,23 @@ ORDER BY ConXrefs.ID
 
 # Related Published Documents for all Sites
 RELATED_PUBLISHED = """
-SELECT RefXrefs.ID as SiteID, ReferenceMaster.ReferenceID, ReferenceMaster.BoilerText, ReferenceMaster.DisplayDate
-FROM RefXrefs
-LEFT JOIN ReferenceMaster on RefXrefs.ReferenceID=ReferenceMaster.ReferenceID
-WHERE RefXrefs.TableID=189
-ORDER BY RefXrefs.ID
+SELECT RefXrefs.ID as SiteID, ReferenceMaster.ReferenceID, ReferenceMaster.Title,
+ReferenceMaster.BoilerText, ReferenceMaster.DisplayDate,
+MainPath.Path as MainPathName, MediaFiles.FileName as MainFileName
+FROM Sites
+JOIN RefXRefs on Sites.SiteID=RefXRefs.ID
+JOIN ReferenceMaster on RefXRefs.ReferenceID=ReferenceMaster.ReferenceID
+JOIN MediaXrefs on ReferenceMaster.ReferenceID=MediaXrefs.ID
+JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
+JOIN MediaRenditions on MediaXrefs.MediaMasterID=MediaRenditions.MediaMasterID
+JOIN MediaFiles on MediaRenditions.RenditionID=MediaFiles.RenditionID
+JOIN MediaPaths AS MainPath on MediaFiles.PathID=MainPath.PathID
+WHERE MediaXrefs.PrimaryDisplay=1
+AND MediaMaster.PublicAccess=1
+AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
+AND MediaXrefs.TableID=143
+AND MediaTypeID=4
+ORDER BY SiteID
 """
 
 # Related Media for all Sites

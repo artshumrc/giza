@@ -191,11 +191,11 @@
               <div class="media-object">
                 <div class="media-object-section">
                   <div class="thumbnail">
-                    <a href="#"><span class="icon-file-text-o"></span></a>
+                    <a href="{{ item.url }}"><span class="icon-file-text-o"></span></a>
                   </div>
                 </div>
                 <div class="media-object-section">
-                  <p><a href="#">{{ item.displaytext }}</a><br>
+                  <p><a href="{{ item.url }}">{{ item.displaytext }}</a><br>
                   {{ item.date }}</p>
                 </div>
               </div>
@@ -208,19 +208,19 @@
               <div class="media-object">
                 <div class="media-object-section">
                   <div class="thumbnail">
-                    <a href="#"><span class="icon-file-text-o"></span></a>
+                    <a href="{% url 'get_type_html' 'unpubdocs' item.id 'intro' %}"><img src= "{{ item.thumbnail }}"></a>
                   </div>
                 </div>
                 <div class="media-object-section">
-                  <p><a href="#">{{ item.displaytext }}</a><br>
+                  <p><a href="{% url 'get_type_html' 'unpubdocs' item.id 'intro' %}">{{ item.displaytext }}</a><br>
                   {{ item.number }}</p>
                 </div>
               </div>
               {% endfor %}
-              <p><a href="#">View all {{ object.relateditems.unpubdocs|length }} Unpublished Documents</a></p>
+              <p><a href="#">View all {{ object.relateditems.unpubdocs|length }} Unpublished Documents &gt;</a></p>
               {% endif %}
               <h4>Bibliography</h4>
-              <p><a href="#">View full bibliography (48 items)</a></p>
+              <p><a href="#">View full bibliography</a></p>
           </section>
         </div>
     </section>
