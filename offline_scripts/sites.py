@@ -4,7 +4,7 @@ import elasticsearch_connection
 import getpass
 import json
 
-from classifications import CLASSIFICATIONS, CONSTITUENTTYPES
+from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import sites_sql
 
 #SAMPLE_SITES = ('1175', '670', '671', '672', '1509', '677', '2080', '2796', '2028', '2035', '2245', '2043', '3461', '3412')
@@ -460,13 +460,16 @@ def process_site_related_published():
 
 	print "Finished Sites Related Published..."
 
-# Update site with all related photos
-def process_site_related_photos():
+# Update site with all related media
+def process_site_related_media():
 	def get_indices():
 		indices = {
 			'site_id_index' : columns.index('SiteID'),
 			'media_master_id_index' : columns.index('MediaMasterID'),
 			'primary_display_index' : columns.index('PrimaryDisplay'),
+			'media_type_id_index' : columns.index('MediaTypeID'),
+			'description_index' : columns.index('Description'),
+			'caption_index' : columns.index('PublicCaption'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
 			'thumb_file_index' : columns.index('ThumbFileName'),
 			'main_path_index' : columns.index('MainPathName'),
@@ -492,28 +495,30 @@ def process_site_related_photos():
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
 
+		media_type_key = int(row[indices['media_type_id_index']])
+		media_type = MEDIATYPES.get(media_type_key)
 		media_master_id = row[indices['media_master_id_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 
-		if "photos" not in site['relateditems']:
-			site['relateditems']["photos"] = []
+		if media_type not in site['relateditems']:
+			site['relateditems'][media_type] = []
 		# add primary photo as a top level item as well
 		if row[indices['primary_display_index']] == '1':
 			site['primarydisplay'] = {
 			'thumbnail' : thumbnail_url,
 			'main' : main_url
 			}
-		site['relateditems']["photos"].append({
+		site['relateditems'][media_type].append({
 			'id' : media_master_id,
-			'displaytext' : media_master_id,
+			'displaytext' : row[indices['caption_index']],
 			'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
 			'thumbnail' : thumbnail_url,
 			'main' : main_url
 			})
 		return(site, current_id)
 
-	print "Starting Sites Related Photos..."
+	print "Starting Sites Related Media..."
 	if CURSOR:
 		sql_command = sites_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
@@ -530,7 +535,7 @@ def process_site_related_photos():
    		# save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_photos_related.csv', 'rb') as csvfile:
+		with open('../data/sites_media_related.csv', 'rb') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			if headers.startswith(codecs.BOM_UTF8):
@@ -547,7 +552,7 @@ def process_site_related_photos():
 			# save last object to elasticsearch
 			save(site)
 
-	print "Finished Sites Related Photos..."
+	print "Finished Sites Related Media..."
 
 def get_media_url(path, filename):
 	idx = path.find('images')
@@ -596,4 +601,4 @@ if __name__ == "__main__":
 	process_site_related_objects()
 	process_site_related_constituents()
 	process_site_related_published()
-	process_site_related_photos()
+	process_site_related_media()

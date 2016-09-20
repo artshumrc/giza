@@ -88,3 +88,12 @@ CONSTITUENTTYPES = {
 	4 : "groups",
 	5 : "animals"
 }
+
+MEDIATYPES = {
+	1 : "photos",
+	2 : "audio",
+	3 : "videos",
+	4 : "document",
+	5 : "microfilm",
+	6 : "3dmodels"
+}

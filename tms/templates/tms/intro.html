@@ -32,24 +32,22 @@
       {% endif %}
       <div class="row">
         <div class="medium-6 columns">
-          <!-- {% if object.relateditems.3dmodels %} -->
+          {% if object.relateditems.3dmodels %}
           <section class="detailblock">
             <h3><span class="icon-icon-pyramid-3d"></span> Giza 3D <a name="giza3d"></a></h3>
             <img src="{% static 'images/video2.png' %}" alt="appropriate alt">
             <p><a href="#">Title/caption for 3D Model One</a></p>
           </section>
-          <!-- {% endif %} -->
-          <!-- {% if object.relateditems.videos %} -->
+          {% endif %}
+          {% if object.relateditems.videos %}
           <section class="detailblock">
             <h3><span class="icon-video-camera"></span> Videos <a name="videos"></a></h3>
-            <img src="{% static 'images/video1.png' %}" alt="">
-            <p><a href="#">Video One Name</a></p>
-            <img src="{% static 'images/video2.png' %}" alt="">
-            <p><a href="#">Video Two Name</a></p>
-            <img src="{% static 'images/video1.png' %}" alt="">
-            <p><a href="#">Khafre Quarry Cemetery, northwest corner of Khafre pyramid</a></p>
+            {% for item in object.relateditems.videos|slice:"3" %}
+              <img src="{{ item.thumbnail }}" alt="">
+              <p><a href="#">{{ item.displaytext }}</a></p>
+            {% endfor %}
           </section>
-          <!-- {% endif %} -->
+          {% endif %}
         </div>
         <div class="medium-6 columns">
           {% if object.relateditems.objects %}
@@ -119,7 +117,7 @@
           {% if object.relateditems.mapsandplans %}
           <section class="secondary callout detailblock">
           <h3><span class="icon-map-o"></span> Maps &amp; Plans <a name="maps"></a></h3>
-          {% for item in object.relateditems.mapsandplans %}
+          {% for item in object.relateditems.mapsandplans|slice:"2" %}
           <div class="row medium-up-1 large-up-2">
             <div class="column">
               <a href="#"><img src="{{ item.thumbnail }}" class="thumbnail" alt=""></a>
@@ -134,7 +132,7 @@
         <section class="secondary callout detailblock">
           <h3><span class="icon-camera"></span> Photos <a name="photos"></a></h3>
           <div class="row small-up-2 medium-up-3 large-up-6">
-            {% for item in object.relateditems.photos|slice:"6" %}
+            {% for item in object.relateditems.photos|slice:"12" %}
             <div class="column">
               <a href="#"><img src="{{ item.thumbnail }}" class="thumbnail" alt=""></a>
             </div>
@@ -147,7 +145,7 @@
         {% if object.relateditems.ancientpeople %}
           <h3><span class="icon-user"></span> People <a name="people"></a></h3>
             <h4>Ancient People</h4>
-            {% for item in object.relateditems.ancientpeople %}
+            {% for item in object.relateditems.ancientpeople|slice:"3" %}
             <div class="media-object">
               <div class="media-object-section">
                 <div class="thumbnail">
@@ -164,7 +162,7 @@
           {% endif %}
           {% if object.relateditems.modernpeople %}
             <h4>Modern People</h4>
-            {% for item in object.relateditems.modernpeople %}
+            {% for item in object.relateditems.modernpeople|slice:"2" %}
             <div class="media-object">
               <div class="media-object-section">
                 <div class="thumbnail">
