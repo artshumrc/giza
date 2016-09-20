@@ -32,18 +32,19 @@
       {% endif %}
       <div class="row">
         <div class="medium-6 columns">
-          {% if object.relateditems.3dmodels %}
           <section class="detailblock">
             <h3><span class="icon-icon-pyramid-3d"></span> Giza 3D <a name="giza3d"></a></h3>
             <img src="{% static 'images/video2.png' %}" alt="appropriate alt">
             <p><a href="#">Title/caption for 3D Model One</a></p>
           </section>
-          {% endif %}
           {% if object.relateditems.videos %}
           <section class="detailblock">
             <h3><span class="icon-video-camera"></span> Videos <a name="videos"></a></h3>
             {% for item in object.relateditems.videos|slice:"3" %}
-              <img src="{{ item.thumbnail }}" alt="">
+              <video width="100%" height="100%" poster="{{ item.thumbnail }}" controls>
+                <source src="{{ item.main }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
               <p><a href="#">{{ item.displaytext }}</a></p>
             {% endfor %}
           </section>

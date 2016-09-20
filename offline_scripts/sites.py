@@ -501,6 +501,12 @@ def process_site_related_media():
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 
+		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
+		# so, make sure we are only using videos that are mp4s
+		if media_type_key == 3:
+			if not row[indices['main_file_index']].endswith('mp4'):
+				return(site, current_id)
+
 		if media_type not in site['relateditems']:
 			site['relateditems'][media_type] = []
 		# add primary photo as a top level item as well
