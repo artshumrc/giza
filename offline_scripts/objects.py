@@ -322,6 +322,7 @@ def process_object_related_constituents():
 		constituent_dict['displaydate'] = display_date
 		constituent_dict['displaytext'] = display_name
 		constituent_dict['description'] = description
+		constituent_dict['thumbnail'] = thumbnail_url
 
 		constituent_type_key = int(row[indices['constituent_type_id_index']])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)

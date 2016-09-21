@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}template-find{% endblock %}
+
+{% block title %}Find{% endblock %}
+
+{% block content %}
+ <div class="main">
+        <div class="main_content">
+        {% if object.title %}
+        <p><b>Title: </b>{{ object.title }}</p>
+        {% endif %}
+        {% if object.entrydate or object.fieldnumber %}
+            <div>
+            <span><b>Object register entry:</b></span>
+            {% if object.fieldnumber %}
+            <br/><span>Field number: {{ object.fieldnumber }}</span>
+            {% endif %}
+            {% if object.entrydate %}
+            <br/><span>Entry date(s): {{ object.entrydate }}</span>
+            {% endif %}
+            </div>
+        {% endif %}
+        {% if object.objectownerdetails %}
+        <p><b>Object Owner Details: </b>{{ object.objectownerdetails }}</p>
+        {% endif %}
+        {% if object.provenance %}
+        <p><b>Findspot: </b>{{ object.provenance }}</p>
+        {% endif %}
+        {% if object.medium %}
+        <p><b>Medium: </b>{{ object.medium }}</p>
+        {% endif %}
+        {% if object.dimensions %}
+        <p><b>Expedition Measurements: </b>{{ object.dimensions }}</p>
+        {% endif %}
+        {% if object.description %}
+        <p><b>Description: </b>{{ object.description }}</p>
+        {% endif %}
+        {% if object.notes %}
+        <p><b>Notes: </b>{{ object.notes }}</p>
+        {% endif %}
+        {% if object.pubreferences %}
+        <p><b>Selected Published References: </b>{{ object.pubreferences }}</p>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,33 +1,64 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags %}
 
-{% block body_class %}template-index{% endblock %}
+{% block body_class %}section-home-body{% endblock %}
 
-{% block title %}Giza Archives Project{% endblock %}
+{% block title %}Digital Giza | Home{% endblock %}
 
 {% block content %}
 <div class="home-hero-container">
-  <div class="row">
-    <div id="hero-home" data-interchange="[{% static 'partials/home/small.html' %}, small], [{% static 'partials/home/medium.html' %}, medium], [{% static 'partials/home/large.html' %}, large]"></div>
+        <div class="row row-padded">
 
-  </div>
-</div>
+            <div class="video-bg-home"
+                data-vide-bg="{% static 'video/GizaHome_web' %}"
+                data-vide-options="posterType: jpg, loop: true, position: 0% -5%">
 
-  <div class="row" data-equalizer data-equalize-on="medium">
-    <section class="medium-6 columns">
-      <div class="secondary callout" data-equalizer-watch>
-        <p>New to Giza? <a href="giza3d.html">Explore Giza3D.</a></p>
+                <div class="home-hero-title">
+                    <h1><span class="title-text-alt">Welcome to the</span> Giza Plateau</h1>
+                </div>
+
+                <div class="home-hero-content">
+                  <div class="medium-8 columns">
+                    <p class="lead text-alt" style="line-height: 1.4">The Giza Project gives you access to the largest collection of information, media and research materials ever assembled about the Pyramids and related sites on Egypt&rsquo;s Giza Plateau. </p>
+                  </div>
+                  <div class="medium-4 columns">
+                    <form action="{% url 'results' %}">
+                        <p class="text-alt" style="color: #fff; margin-bottom: 0.1rem;"><em>Search the archives:</em></>
+                      <div class="input-group" style="margin-bottom: 0.1rem;">
+                        <input class="input-group-field" type="text" name="q" placeholder="Search">
+                        <div class="input-group-button">
+                          <button type="submit" class="button icon-search"></button>
+                        </div>
+                      </div>
+                    </form>
+                    <small>or go to <a class="link-lighter" href="{% url 'search' %}">Advanced Search</a></small>
+                  </div>
+                </div>
+
+                <div class="home-hero-overlay"></div>
+
+              </div>
+
+              <!--<div id="hero-home" data-interchange="[partials/home/small.html, small], [partials/home/medium.html, medium], [partials/home/large.html, large]"></div> -->
+
+        </div>
+      </div>
+
+      <div class="row" data-equalizer data-equalize-on="medium">
+              <section class="medium-6 columns">
+                <div class="secondary callout" data-equalizer-watch>
+                  <p>New to Giza? <a href="giza3d.html">Explore Giza3D.</a></p>
         <a href="giza3d.html"><img src="{% static 'images/home-giza3d.png' %}" alt="appropriate alt"></a>
       </div>
-    </section>
-    <section class="medium-6 columns">
-      <div class="secondary callout" data-equalizer-watch>
-        <p>Like what we do? <a href="donate.html">Support our project.</a></p>
-        <blockquote>
-          <p>The Giza Project, an international collaboration based at Harvard University, aims to assemble and provide access to all archaeological records about the most famous site in the world: the Pyramids, surrounding cemeteries, and settlements of Giza, Egypt.  <a href="donate.html">Read more</a></p>
-        </blockquote>
-        <p class="text-right"><a href="donate.html" class="button hollow secondary">Donate now</a></p>
-      </div>
-    </section>
-  </div>
+          </section>
+          <section class="medium-6 columns">
+            <div class="secondary callout" data-equalizer-watch>
+              <p>Like what we do? <a href="donate.html">Support our project.</a></p>
+              <blockquote class="home-quote">
+                <p>&ldquo;The Giza Project, an international collaboration based at Harvard University, aims to assemble and provide access to all archaeological records about the most famous site in the world: the Pyramids, surrounding cemeteries, and settlements of Giza, Egypt.&rdquo;  <a href="donate.html">Read more</a></p>
+              </blockquote>
+              <p class="text-right"><a href="donate.html" class="button primary">Donate now</a></p>
+            </div>
+          </section>
+        </div>
 {% endblock %}

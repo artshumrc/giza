@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags %}
 
-{% block body_class %}header-full{% endblock %}
+{% block body_class %}section-explore-body header-full{% endblock %}
 
-{% block title %}Giza Archives Project{% endblock %}
+{% block title %}Digital Giza | {{ object.displaytext }}{% endblock %}
 
 {% block content %}
   <div class="page-header">
@@ -26,8 +26,8 @@
           <div class="view-mode-toggle">
             <h5>Show:</h5>
             <div class="button-group">
-              <a class="button" href="{% url 'get_type_html' type object.id 'intro' %}">Intro View</a>
-              <a class="secondary button">Full View</a>
+              <a class="secondary button" href="{% url 'get_type_html' type object.id 'intro' %}">Intro View</a>
+              <a class="primary button">Full View</a>
             </div>
           </div>
 
