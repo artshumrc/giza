@@ -1,5 +1,4 @@
 # Site display data
-# TODO: Get Primary Image URL (need an image server first)
 SITES = """
 SELECT Sites.SiteID as ID, SiteName, SiteNumber as Number, SiteSortNumber, HistoricalNotes,
 LegalNotes + ',,' AS BibReferences, LocationNotes,
@@ -28,7 +27,6 @@ ORDER BY Sites.SiteID
 """
 
 # Related Objects for all Sites
-# TODO: Get Primary Image URL (need an image server first)
 RELATED_OBJECTS = """
 SELECT Sites.SiteID, SiteObjXrefs.ObjectID,
 replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber, Objects.ClassificationID, Objects.Dated as ObjectDate,

@@ -6,58 +6,5 @@
 {% block title %}Search{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-    <h3>Search Results</h3>
-    {% if hits %}
-        <p>{{ total }} result{{ total|length|pluralize }} for "{{ search_query }}"</p>
-        {% if has_previous %}
-            <a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;page={{ previous_page_number }}&amp;type={{ type }}">Previous</a>
-        {% endif %}
-
-        {% if has_next %}
-            <a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;page={{ next_page_number }}&amp;type={{ type }}">Next</a>
-        {% endif %}
-        <ul>
-            {% for result in hits %}
-                <li>
-                    <h4><a href="{% url 'get_type_html' result.type result.id %}">{{ result.source.displaytext }}</a></h4>
-                </li>
-            {% endfor %}
-        </ul>
-    {% elif search_query and total == 0 %}
-        No results found
-    {% endif %}
-    </div>
-    <div class="search_facets col-sm-3 col-md-2 sidebar">
-    {% if facets %}
-    <ul class="nav nav-sidebar">
-        {% if facets.sites %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=sites">{{ facets.sites.display_text }} ({{ facets.sites.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.photos %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=photos">{{ facets.photos.display_text }} ({{ facets.photos.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.objects %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=objects">{{ facets.objects.display_text }} ({{ facets.objects.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.modernpeople %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=modernpeople">{{ facets.modernpeople.display_text }} ({{ facets.modernpeople.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.diarypages %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=diarypages">{{ facets.diarypages.display_text }} ({{ facets.diarypages.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.plansanddrawings %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=plansanddrawings">{{ facets.plansanddrawings.display_text }} ({{ facets.plansanddrawings.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.pubdocs %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=pubdocs">{{ facets.pubdocs.display_text }} ({{ facets.pubdocs.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.unpubdocs %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=unpubdocs">{{ facets.unpubdocs.display_text }} ({{ facets.unpubdocs.doc_count }})</a></li>
-        {% endif %}
-    </ul>
-    {% endif %}
-    </div>
-    </div>
+<h3>Advanced Search</h3>
 {% endblock %}

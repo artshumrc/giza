@@ -11,6 +11,9 @@ from utils.views_utils import CATEGORIES
 RESULTS_SIZE = 20
 
 def search(request):
+    return render(request, 'search/search.html')
+
+def results(request):
     search_query = request.GET.get('q', None)
     type = request.GET.get('type', '')
     page = int(request.GET.get('page', 1))
@@ -96,7 +99,7 @@ def search(request):
             has_next = True
             next_page_number = page + 1
 
-    return render(request, 'search/search.html', {
+    return render(request, 'search/results.html', {
         'search_query' : search_query,
         'hits' : hits,
         'facets' : facets,

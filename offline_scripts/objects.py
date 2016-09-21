@@ -5,10 +5,10 @@ import getpass
 import json
 import pyodbc
 
-from classifications import CLASSIFICATIONS, CONSTITUENTTYPES
+from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import objects_sql
 
-SAMPLE_OBJECTS = ('61198', '15332', '15059', '52264', '50823', '35634', '5614', '46942', '48325', '3461', '25389', '25501')
+# SAMPLE_OBJECTS = ('61198', '15332', '15059', '52264', '50823', '35634', '5614', '46942', '48325', '3461', '25389', '25501')
 
 CURSOR = None
 
@@ -16,16 +16,18 @@ CURSOR = None
 # This is the basic information/metadata that comprises a Object
 def process_objects():
 	def get_indices():
-		id_index = columns.index('ID')
-		classification_id_index = columns.index('ClassificationID')
-		object_number_index = columns.index('Number')
-		return (id_index, classification_id_index, object_number_index)
+		indices = {
+			'id_index' : columns.index('ID'),
+			'classification_id_index' : columns.index('ClassificationID'),
+			'object_number_index' : columns.index('Number')
+		}
+		return indices
 
 	def process_object_row(object, current_id):
-		id = row[id_index]
-		classification_key = int(row[classification_id_index])
+		id = row[indices['id_index']]
+		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
-		object_number = row[object_number_index]
+		object_number = row[indices['object_number_index']]
 
 		#if id not in SAMPLE_OBJECTS:
 		#	return (object, current_id)
@@ -71,7 +73,7 @@ def process_objects():
 		sql_command = objects_sql.OBJECTS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, classification_id_index, object_number_index) = get_indices()
+		indices = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -91,7 +93,7 @@ def process_objects():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, classification_id_index, object_number_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
@@ -105,17 +107,19 @@ def process_objects():
 
 def process_object_geocodes():
 	def get_indices():
-		id_index = columns.index('ID')
-		geo_code_id_index = columns.index('GeoCodeID')
-		geo_code_index = columns.index('GeoCode')
-		region_index = columns.index('Region')
-		city_index = columns.index('City')
-		classification_id_index = columns.index('ClassificationID')
-		return (id_index, geo_code_id_index, geo_code_index, region_index, city_index, classification_id_index)
+		indices = {
+			'id_index' : columns.index('ID'),
+			'geo_code_id_index' : columns.index('GeoCodeID'),
+			'geo_code_index' : columns.index('GeoCode'),
+			'region_index' : columns.index('Region'),
+			'city_index' : columns.index('City'),
+			'classification_id_index' : columns.index('ClassificationID')
+		}
+		return indices
 
 	def process_object_row(object, current_id):
-		id = row[id_index]
-		classification_key = int(row[classification_id_index])
+		id = row[indices['id_index']]
+		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
 
 		if id != current_id:
@@ -130,10 +134,10 @@ def process_object_geocodes():
 				return(object, current_id)
 
 		geocode_dict = {}
-		geocode_dict['id'] = row[geo_code_id_index]
-		geocode_dict['geocode'] = row[geo_code_index]
-		geocode_dict['region'] = row[region_index]
-		geocode_dict['city'] = row[city_index]
+		geocode_dict['id'] = row[indices['geo_code_id_index']]
+		geocode_dict['geocode'] = row[indices['geo_code_index']]
+		geocode_dict['region'] = row[indices['region_index']]
+		geocode_dict['city'] = row[indices['city_index']]
 		object['geocode'] = geocode_dict
 
 		return(object, current_id)
@@ -143,7 +147,7 @@ def process_object_geocodes():
 		sql_command = objects_sql.GEOCODES
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, geo_code_id_index, geo_code_index, region_index, city_index, classification_id_index) = get_indices()
+	 	indices = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -162,7 +166,7 @@ def process_object_geocodes():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, geo_code_id_index, geo_code_index, region_index, city_index, classification_id_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
@@ -176,16 +180,20 @@ def process_object_geocodes():
 
 def process_object_related_sites():
 	def get_indices():
-		id_index = columns.index('ID')
-		site_id_index = columns.index('SiteID')
-		site_name_index = columns.index('SiteName')
-		site_number_index = columns.index('SiteNumber')
-		classification_id_index = columns.index('ClassificationID')
-		return (id_index, site_id_index, site_name_index, site_number_index, classification_id_index)
+		indices = {
+			'id_index' : columns.index('ID'),
+			'site_id_index' : columns.index('SiteID'),
+			'site_name_index' : columns.index('SiteName'),
+			'site_number_index' : columns.index('SiteNumber'),
+			'classification_id_index' : columns.index('ClassificationID'),
+			'thumb_path_index' : columns.index('ThumbPathName'),
+			'thumb_file_index' : columns.index('ThumbFileName')
+		}
+		return indices
 
 	def process_object_row(object, current_id):
-		id = row[id_index]
-		classification_key = int(row[classification_id_index])
+		id = row[indices['id_index']]
+		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
 
 		if id != current_id:
@@ -201,15 +209,17 @@ def process_object_related_sites():
 		if 'relateditems' not in object:
 			object['relateditems'] = {}
 
-		site_id = row[site_id_index]
-		site_name = row[site_name_index]
-		site_number = row[site_number_index]
+		site_id = row[indices['site_id_index']]
+		site_name = row[indices['site_name_index']]
+		site_number = row[indices['site_number_index']]
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 
 		site_dict = {}
 		site_dict['id'] = site_id
 		site_dict['sitename'] = site_name
 		site_dict['sitenumber'] = site_number
 		site_dict['displaytext'] = "%s, %s" % (site_name, site_number)
+		site_dict['thumbnail'] = thumbnail_url
 
 		if 'sites' not in object['relateditems']:
 			object['relateditems']['sites'] = []
@@ -230,7 +240,7 @@ def process_object_related_sites():
 		sql_command = objects_sql.RELATED_SITES
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, site_id_index, site_name_index, site_number_index, classification_id_index) = get_indices()
+		indices = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -249,7 +259,7 @@ def process_object_related_sites():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, site_id_index, site_name_index, site_number_index, classification_id_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
@@ -263,20 +273,24 @@ def process_object_related_sites():
 
 def process_object_related_constituents():
 	def get_indices():
-		id_index = columns.index('ID')
-		role_index = columns.index('Role')
-		role_id_index = columns.index('RoleID')
-		constituent_id_index = columns.index('ConstituentID')
-		constituent_type_id_index = columns.index('ConstituentTypeID')
-		display_name_index = columns.index('DisplayName')
-		display_date_index = columns.index('DisplayDate')
-		classification_id_index = columns.index('ClassificationID')
-		remarks_index = columns.index('Remarks')
-		return (id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index, remarks_index)
+		indices = {
+			'id_index' : columns.index('ID'),
+			'role_index' : columns.index('Role'),
+			'role_id_index' : columns.index('RoleID'),
+			'constituent_id_index' : columns.index('ConstituentID'),
+			'constituent_type_id_index' : columns.index('ConstituentTypeID'),
+			'display_name_index' : columns.index('DisplayName'),
+			'display_date_index' : columns.index('DisplayDate'),
+			'classification_id_index' : columns.index('ClassificationID'),
+			'remarks_index' : columns.index('Remarks'),
+			'thumb_path_index' : columns.index('ThumbPathName'),
+			'thumb_file_index' : columns.index('ThumbFileName')
+		}
+		return indices
 
 	def process_object_row(object, current_id):
-		id = row[id_index]
-		classification_key = int(row[classification_id_index])
+		id = row[indices['id_index']]
+		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
 
 		if id != current_id:
@@ -292,23 +306,24 @@ def process_object_related_constituents():
 		if 'relateditems' not in object:
 			object['relateditems'] = {}
 
-		constituent_id = row[constituent_id_index]
-		display_name = row[display_name_index]
-		description = row[remarks_index]
+		constituent_id = row[indices['constituent_id_index']]
+		display_name = row[indices['display_name_index']]
+		description = row[indices['remarks_index']]
 		display_date = ""
-		if row[display_date_index] != "NULL":
-			display_date = row[display_date_index]
+		if row[indices['display_date_index']] != "NULL":
+			display_date = row[indices['display_date_index']]
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 
 		constituent_dict = {}
-		constituent_dict['role'] = row[role_index]
-		constituent_dict['roleid'] = row[role_id_index]
+		constituent_dict['role'] = row[indices['role_index']]
+		constituent_dict['roleid'] = row[indices['role_id_index']]
 		constituent_dict['id'] = constituent_id
 		constituent_dict['displayname'] = display_name
 		constituent_dict['displaydate'] = display_date
 		constituent_dict['displaytext'] = display_name
 		constituent_dict['description'] = description
 
-		constituent_type_key = int(row[constituent_type_id_index])
+		constituent_type_key = int(row[indices['constituent_type_id_index']])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
 		if constituent_type not in object['relateditems']:
 			object['relateditems'][constituent_type] = []
@@ -335,7 +350,7 @@ def process_object_related_constituents():
 		sql_command = objects_sql.RELATED_CONSTITUENTS
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index, remarks_index) = get_indices()
+		indices = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -354,7 +369,7 @@ def process_object_related_constituents():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, role_index, role_id_index, constituent_id_index, constituent_type_id_index, display_name_index, display_date_index, classification_id_index, remarks_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
@@ -368,16 +383,21 @@ def process_object_related_constituents():
 
 def process_object_related_published():
 	def get_indices():
-		id_index = columns.index('ID')
-		reference_id_index = columns.index('ReferenceID')
-		boiler_text_index = columns.index('BoilerText')
-		classification_id_index = columns.index('ClassificationID')
-		date_index = columns.index('DisplayDate')
-		return (id_index, reference_id_index, boiler_text_index, classification_id_index, date_index)
+		indices = {
+			'id_index' : columns.index('ID'),
+			'reference_id_index' : columns.index('ReferenceID'),
+			'title_index' : columns.index('Title'),
+			'boiler_text_index' : columns.index('BoilerText'),
+			'classification_id_index' : columns.index('ClassificationID'),
+			'date_index' : columns.index('DisplayDate'),
+			'path_index' : columns.index('MainPathName'),
+			'file_index' : columns.index('MainFileName')
+		}
+		return indices
 
 	def process_object_row(object, current_id):
-		id = row[id_index]
-		classification_key = int(row[classification_id_index])
+		id = row[indices['id_index']]
+		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
 
 		if id != current_id:
@@ -393,9 +413,11 @@ def process_object_related_published():
 		if 'relateditems' not in object:
 			object['relateditems'] = {}
 
-		reference_id = row[reference_id_index]
-		boiler_text = row[boiler_text_index]
-		date = row[date_index]
+		reference_id = row[indices['reference_id_index']]
+		title = row[indices['title_index']]
+		boiler_text = row[indices['boiler_text_index']]
+		date = row[indices['date_index']]
+		main_url = get_media_url(row[indices['path_index']], row[indices['file_index']])
 
 		if 'pubdocs' not in object['relateditems']:
 			object['relateditems']['pubdocs'] = []
@@ -403,7 +425,8 @@ def process_object_related_published():
 			'id' : reference_id,
 			'boilertext' : boiler_text,
 			'displaytext' : boiler_text,
-			'date' : date})
+			'date' : date,
+			'url' : main_url})
 		return(object, current_id)
 
 	print "Starting Objects Related Published..."
@@ -411,7 +434,7 @@ def process_object_related_published():
 		sql_command = objects_sql.RELATED_PUBLISHED
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, reference_id_index, boiler_text_index, classification_id_index, date_index) = get_indices()
+		indices = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -430,7 +453,7 @@ def process_object_related_published():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, reference_id_index, boiler_text_index, classification_id_index, date_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
@@ -444,16 +467,20 @@ def process_object_related_published():
 
 def process_object_related_unpublished():
 	def get_indices():
-		id_index = columns.index('ID')
-		unpublished_id_index = columns.index('UnpublishedID')
-		unpublished_title_index = columns.index('UnpublishedTitle')
-		classification_id_index = columns.index('ClassificationID')
-		object_date_index = columns.index('ObjectDate')
-		return (id_index, unpublished_id_index, unpublished_title_index, classification_id_index, object_date_index)
+		indices = {
+			'id_index' : columns.index('ID'),
+			'unpublished_id_index' : columns.index('UnpublishedID'),
+			'unpublished_title_index' : columns.index('UnpublishedTitle'),
+			'classification_id_index' : columns.index('ClassificationID'),
+			'object_date_index' : columns.index('ObjectDate'),
+			'thumb_path_index' : columns.index('ThumbPathName'),
+			'thumb_file_index' : columns.index('ThumbFileName')
+		}
+		return indices
 
 	def process_object_row(object, current_id):
-		id = row[id_index]
-		classification_key = int(row[classification_id_index])
+		id = row[indices['id_index']]
+		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
 
 		if id != current_id:
@@ -469,9 +496,10 @@ def process_object_related_unpublished():
 		if 'relateditems' not in object:
 			object['relateditems'] = {}
 
-		unpublished_id = row[unpublished_id_index]
-		unpublished_title = row[unpublished_title_index]
-		date = "" if row[object_date_index].lower() == "null" else row[object_date_index]
+		unpublished_id = row[indices['unpublished_id_index']]
+		unpublished_title = row[indices['unpublished_title_index']]
+		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 
 		if 'unpubdocs' not in object['relateditems']:
 			object['relateditems']['unpubdocs'] = []
@@ -479,7 +507,8 @@ def process_object_related_unpublished():
 			'id' : unpublished_id,
 			'text' : unpublished_title,
 			'displaytext' : unpublished_title,
-			'date' : date})
+			'date' : date,
+			'thumbnail' : thumbnail_url})
 		return(object, current_id)
 
 	print "Starting Objects Related Unpublished..."
@@ -487,7 +516,7 @@ def process_object_related_unpublished():
 		sql_command = objects_sql.RELATED_UNPUBLISHED
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, unpublished_id_index, unpublished_title_index, classification_id_index, object_date_index) = get_indices()
+		indices = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -506,7 +535,7 @@ def process_object_related_unpublished():
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, unpublished_id_index, unpublished_title_index, classification_id_index, object_date_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
@@ -518,17 +547,26 @@ def process_object_related_unpublished():
 
 	print "Finished Objects Related Unpublished..."
 
-def process_object_related_photos():
+def process_object_related_media():
 	def get_indices():
-		id_index = columns.index('ID')
-		media_master_id_index = columns.index('MediaMasterID')
-		classification_id_index = columns.index('ClassificationID')
-		primary_display_index = columns.index('PrimaryDisplay')
-		return (id_index, media_master_id_index, classification_id_index, primary_display_index)
+		indices = {
+			'id_index' : columns.index('ID'),
+			'media_master_id_index' : columns.index('MediaMasterID'),
+			'classification_id_index' : columns.index('ClassificationID'),
+			'primary_display_index' : columns.index('PrimaryDisplay'),
+			'media_type_id_index' : columns.index('MediaTypeID'),
+			'description_index' : columns.index('Description'),
+			'caption_index' : columns.index('PublicCaption'),
+			'thumb_path_index' : columns.index('ThumbPathName'),
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'main_path_index' : columns.index('MainPathName'),
+			'main_file_index' : columns.index('MainFileName')
+		}
+		return indices
 
 	def process_object_row(object, current_id):
-		id = row[id_index]
-		classification_key = int(row[classification_id_index])
+		id = row[indices['id_index']]
+		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
 
 		if id != current_id:
@@ -544,23 +582,41 @@ def process_object_related_photos():
 		if 'relateditems' not in object:
 			object['relateditems'] = {}
 
-		media_master_id = row[media_master_id_index]
+		media_type_key = int(row[indices['media_type_id_index']])
+		media_type = MEDIATYPES.get(media_type_key)
+		media_master_id = row[indices['media_master_id_index']]
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 
-		if 'photos' not in object['relateditems']:
-			object['relateditems']['photos'] = []
-		object['relateditems']['photos'].append({
+		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
+		# so, make sure we are only using videos that are mp4s
+		if media_type_key == 3:
+			if not row[indices['main_file_index']].endswith('mp4'):
+				return(site, current_id)
+
+		if media_type not in object['relateditems']:
+			object['relateditems'][media_type] = []
+		# add primary photo as a top level item as well
+		if row[indices['primary_display_index']] == '1':
+			object['primarydisplay'] = {
+			'thumbnail' : thumbnail_url,
+			'main' : main_url
+			}
+		object['relateditems'][media_type].append({
 			'id' : media_master_id,
-			'displaytext' : media_master_id,
-			'primarydisplay' : True if row[primary_display_index] == '1' else False
+			'displaytext' : row[indices['caption_index']],
+			'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
+			'thumbnail' : thumbnail_url,
+			'main' : main_url
 			})
 		return(object, current_id)
 
-	print "Starting Objects Related Photos..."
+	print "Starting Objects Related Media..."
 	if CURSOR:
 		sql_command = objects_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-		(id_index, media_master_id_index, classification_id_index, primary_display_index) = get_indices()
+		indices = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -572,14 +628,14 @@ def process_object_related_photos():
    		# save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_photos_related.csv', 'rb') as csvfile:
+		with open('../data/objects_media_related.csv', 'rb') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			if headers.startswith(codecs.BOM_UTF8):
 				headers = headers[3:]
 			headers = headers.replace('\r\n','')
 			columns = headers.split(',')
-			(id_index, media_master_id_index, classification_id_index, primary_display_index) = get_indices()
+			indices = get_indices()
 
 			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 			object = {}
@@ -589,7 +645,17 @@ def process_object_related_photos():
 			# save last object to elasticsearch
 			save(object)
 
-	print "Finished Objects Related Photos..."
+	print "Finished Objects Related Media..."
+
+def get_media_url(path, filename):
+	idx = path.find('images')
+	if idx == -1:
+		return ""
+	path = path[idx:].replace('\\','/')
+	if not path.endswith('/'):
+		path = path + '/'
+	url = 'http://gizamedia.rc.fas.harvard.edu/' + path + filename
+	return url
 
 def process_cursor_row(cursor_row):
 	row = []
@@ -633,4 +699,4 @@ if __name__ == "__main__":
 	process_object_related_constituents()
 	process_object_related_published()
 	process_object_related_unpublished()
-	process_object_related_photos()
+	process_object_related_media()
