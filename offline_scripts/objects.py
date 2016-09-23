@@ -7,6 +7,7 @@ import pyodbc
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import objects_sql
+from utils import get_media_url, process_cursor_row
 
 # SAMPLE_OBJECTS = ('61198', '15332', '15059', '52264', '50823', '35634', '5614', '46942', '48325', '3461', '25389', '25501')
 
@@ -647,29 +648,6 @@ def process_object_related_media():
 			save(object)
 
 	print "Finished Objects Related Media..."
-
-def get_media_url(path, filename):
-	idx = path.find('images')
-	if idx == -1:
-		return ""
-	path = path[idx:].replace('\\','/')
-	if not path.endswith('/'):
-		path = path + '/'
-	url = 'http://gizamedia.rc.fas.harvard.edu/' + path + filename
-	return url
-
-def process_cursor_row(cursor_row):
-	row = []
-	for x in cursor_row:
-		if isinstance(x, int):
-			row.append(str(x))
-		elif isinstance(x, unicode):
-			row.append(x.encode('utf-8'))
-		elif x is None:
-			row.append("NULL")
-		else:
-			row.append(str(x))
-	return row
 
 def save(object):
 	if object and 'id' in object:

@@ -6,6 +6,7 @@ import json
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import sites_sql
+from utils import get_media_url, process_cursor_row
 
 #SAMPLE_SITES = ('1175', '670', '671', '672', '1509', '677', '2080', '2796', '2028', '2035', '2245', '2043', '3461', '3412')
 
@@ -184,7 +185,6 @@ def process_site_altnums():
 	print "Finished Sites AltNums..."
 
 # Update all related items from the Objects table
-# TODO: Get Primary Image URL (need an image server first)
 def process_site_related_objects():
 	def get_indices():
 		indices = {
@@ -559,29 +559,6 @@ def process_site_related_media():
 			save(site)
 
 	print "Finished Sites Related Media..."
-
-def get_media_url(path, filename):
-	idx = path.find('images')
-	if idx == -1:
-		return ""
-	path = path[idx:].replace('\\','/')
-	if not path.endswith('/'):
-		path = path + '/'
-	url = 'http://gizamedia.rc.fas.harvard.edu/' + path + filename
-	return url
-
-def process_cursor_row(cursor_row):
-	row = []
-	for x in cursor_row:
-		if isinstance(x, int):
-			row.append(str(x))
-		elif isinstance(x, unicode):
-			row.append(x.encode('utf-8'))
-		elif x is None:
-			row.append("NULL")
-		else:
-			row.append(str(x))
-	return row
 
 def save(site):
 	if site and 'id' in site:
