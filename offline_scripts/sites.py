@@ -115,6 +115,77 @@ def process_sites():
 
 	print "Finished Sites..."
 
+def process_site_dates():
+	def get_indices():
+		indices = {
+			'site_id_index' : columns.index('SiteID'),
+			'event_type_index' : columns.index('EventType'),
+			'date_text_index' : columns.index('DateText')
+		}
+		return indices
+
+	def process_site_row(site, current_id):
+		site_id = row[indices['site_id_index']]
+
+		if site_id != current_id:
+			# will likely have multiple rows for one site because of many related objects
+			# only get a new site if we have a new site id, but first save old site to elasticsearch
+			save(site)
+			current_id = site_id
+			site = {}
+			if elasticsearch_connection.item_exists(site_id, 'sites'):
+				site = elasticsearch_connection.get_item(site_id, 'sites')
+			else:
+				print "%s could not be found!" % site_id
+				return (site, current_id)
+
+			if 'sitedates' not in site:
+				site['sitedates'] = []
+
+			event_type = row[indices['event_type_index']]
+			date_text = row[indices['date_text_index']]
+
+			site['sitedates'].append({
+				'type' : event_type,
+				'date' : date_text
+			})
+		return (site, current_id)
+
+	print "Starting Sites Dates..."
+	if CURSOR:
+		sql_command = sites_sql.SITEDATES
+		CURSOR.execute(sql_command)
+		columns = [column[0] for column in CURSOR.description]
+		indices = get_indices()
+
+		site = {}
+		current_id = '-1'
+		cursor_row = CURSOR.fetchone()
+		while cursor_row is not None:
+			row = process_cursor_row(cursor_row)
+			(site, current_id) = process_site_row(site, current_id)
+			cursor_row = CURSOR.fetchone()
+   		# save last object to elasticsearch
+		save(site)
+	else:
+		with open('../data/sites_dates.csv', 'rb') as csvfile:
+			# Get the query headers to use as keys in the JSON
+			headers = next(csvfile)
+			if headers.startswith(codecs.BOM_UTF8):
+				headers = headers[3:]
+			headers = headers.replace('\r\n','')
+			columns = headers.split(',')
+			indices = get_indices()
+
+			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
+			site = {}
+			current_id = '-1'
+			for row in rows:
+				(site, current_id) = process_site_row(site, current_id)
+			# save last object to elasticsearch
+			save(site)
+	print "Finished Sites Dates..."
+
 # Update relevant sites with alternate numbers
 def process_site_altnums():
 	def get_indices():
@@ -580,6 +651,7 @@ if __name__ == "__main__":
 
 	## process_sites MUST go first.  The other methods can go in any order
 	process_sites()
+	process_site_dates()
 	process_site_altnums()
 	process_site_related_objects()
 	process_site_related_constituents()

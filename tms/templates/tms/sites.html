@@ -12,8 +12,8 @@
       <dd>{{ altnum.altnum|default:"" }}</dd>
   {% endfor %}
   {% for sitedate in object.sitedates %}
-      {% if sitedate.eventtype %}<dt>{{ sitedate.eventtype }}: </dt>{% endif %}
-      <dd>{{ sitedate.datetext|default:"" }}</dd>
+      {% if sitedate.type %}<dt>{{ sitedate.type }}: </dt>{% endif %}
+      <dd>{{ sitedate.date|default:"" }}</dd>
   {% endfor %}
     <dt>EXTRA DATA NOT IN TEMPLATE</dt>
   {% if object.sitetype %}<dd>{{ object.sitetype.sitetype }}</dd>{% endif %} <!-- Add search by sitetype id -->

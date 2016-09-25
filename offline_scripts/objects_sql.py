@@ -1,14 +1,19 @@
 # Object display data
-# TODO: Get Primary Image URL (need an image server first)
 OBJECTS = """
-SELECT Objects.ObjectID as ID, Objects.ObjectNumber as Number, Objects.ObjectStatusID, Objects.ClassificationID, Objects.ObjectName + ',,' as ObjectOwnerDetails,
+SELECT Objects.ObjectID as ID, Objects.ObjectNumber as Number, Objects.ObjectStatusID, Objects.ClassificationID,
+(Classifications.Classification + ISNULL(('-' + Classifications.SubClassification),'')) AS ClassificationText,
+Objects.ObjectName + ',,' as ObjectOwnerDetails, Departments.Department, ObjContext.Period,
 Objects.Dated as EntryDate, replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.Medium + ',,' as Medium,
 Objects.Dimensions + ',,' as Dimensions, Objects.CreditLine, Objects.Description + ',,' AS Description, Objects.Provenance,
 Objects.PubReferences + ',,' AS PubReferences, Objects.Notes + ',,' AS Notes, Objects.Chat + ',,' as DiaryTranscription,
-Objects.CuratorialRemarks + ',,' AS Remarks, ObjPkgList.objectnumber as FieldNumber
+Objects.CuratorialRemarks + ',,' AS Remarks, ObjPkgList.objectnumber as FieldNumber, TextEntries.TextEntry as ProblemsQuestions
 FROM Objects
-LEFT JOIN ObjTitles on Objects.ObjectID=ObjTitles.ObjectID
+LEFT JOIN ObjTitles on Objects.ObjectID=ObjTitles.ObjectID AND ObjTitles.DisplayOrder=1
 LEFT JOIN ObjPkgList on Objects.ObjectID=ObjPkgList.ObjectID
+LEFT JOIN Classifications on Objects.ClassificationID=Classifications.ClassificationID
+LEFT JOIN Departments on Objects.DepartmentID=Departments.DepartmentID
+LEFT JOIN ObjContext on Objects.ObjectID=ObjContext.ObjectID
+LEFT JOIN TextEntries on Objects.ObjectID=TextEntries.ID AND TextEntries.TableID=108 AND TextEntries.TextTypeID=12
 WHERE Objects.PublicAccess = 1
 AND Objects.ObjectID >= 0
 ORDER BY Objects.ObjectID
@@ -17,10 +22,21 @@ ORDER BY Objects.ObjectID
 GEOCODES = """
 SELECT ObjGeography.ObjectID as ID, ObjGeography.GeoCodeID, GeoCodes.GeoCode, ObjGeography.Region, ObjGeography.City, Objects.ClassificationID
 FROM ObjGeography
-LEFT JOIN GeoCodes on ObjGeography.GeoCodeID=GeoCodes.GeoCodeID
-LEFT JOIN Objects on ObjGeography.ObjectID=Objects.ObjectID
+JOIN GeoCodes on ObjGeography.GeoCodeID=GeoCodes.GeoCodeID
+JOIN Objects on ObjGeography.ObjectID=Objects.ObjectID AND Objects.PublicAccess=1
 WHERE ObjGeography.ObjectID >= 0
 AND ObjGeography.GeoCodeID > 0
+"""
+
+# Alternate Numbers for Objects
+ALTNUMS = """
+SELECT Objects.ObjectID, Objects.ClassificationID, AltNums.AltNum, AltNums.Description
+FROM Objects
+LEFT JOIN AltNums ON Objects.ObjectID=AltNums.ID AND AltNums.TableID=108
+WHERE Objects.PublicAccess = 1
+AND AltNums.AltNum IS NOT NULL
+AND AltNums.Description != 'Artemis_ObjectID'
+ORDER BY Objects.ObjectID
 """
 
 # Related Sites for all Objects
@@ -72,7 +88,7 @@ Objects.ClassificationID, ReferenceMaster.DisplayDate,
 MainPath.Path as MainPathName, MediaFiles.FileName as MainFileName
 FROM Objects
 JOIN RefXRefs on Objects.ObjectID=RefXRefs.ID
-LEFT JOIN ReferenceMaster on RefXrefs.ReferenceID=ReferenceMaster.ReferenceID
+JOIN ReferenceMaster on RefXrefs.ReferenceID=ReferenceMaster.ReferenceID
 JOIN MediaXrefs on ReferenceMaster.ReferenceID=MediaXrefs.ID
 JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 JOIN MediaRenditions on MediaXrefs.MediaMasterID=MediaRenditions.MediaMasterID
@@ -83,6 +99,7 @@ AND MediaMaster.PublicAccess=1
 AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
 AND MediaXrefs.TableID=143
 AND MediaTypeID=4
+AND Objects.PublicAccess=1
 ORDER BY Objects.ObjectID
 """
 
@@ -113,7 +130,7 @@ MainPath.Path as MainPathName, MediaFiles.FileName as MainFileName
 FROM MediaXrefs
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
-LEFT JOIN Objects on MediaXrefs.ID=Objects.ObjectID
+JOIN Objects on MediaXrefs.ID=Objects.ObjectID AND Objects.PublicAccess=1
 LEFT JOIN MediaFiles on MediaRenditions.RenditionID=MediaFiles.RenditionID
 LEFT JOIN MediaPaths AS ThumbPath on MediaRenditions.ThumbPathID=ThumbPath.PathID
 LEFT JOIN MediaPaths AS MainPath on MediaFiles.PathID=MainPath.PathID

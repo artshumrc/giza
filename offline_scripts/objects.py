@@ -179,6 +179,75 @@ def process_object_geocodes():
 
 	print "Finished Objects Geocodes..."
 
+# Update relevant objects with alternate numbers
+def process_object_altnums():
+	def get_indices():
+		indices = {
+			'object_id_index' : columns.index('ObjectID'),
+			'classification_id_index' : columns.index('ClassificationID'),
+			'altnum_index' : columns.index('AltNum'),
+			'description_index' : columns.index('Description')
+		}
+		return indices
+
+	def process_object_row(object, current_id):
+		object_id = row[indices['object_id_index']]
+		classification_key = int(row[indices['classification_id_index']])
+		classification = CLASSIFICATIONS.get(classification_key)
+
+		if object_id != current_id:
+			# will likely have multiple rows
+			save(object)
+			current_id = object_id
+			object = {}
+			if elasticsearch_connection.item_exists(object_id, classification):
+				object = elasticsearch_connection.get_item(object_id, classification)
+			else:
+				print "%s could not be found!" % object_id
+				return (object, current_id)
+
+		if 'altnums' not in object:
+			object['altnums'] = []
+		altnum = row[indices['altnum_index']]
+		description = row[indices['description_index']] if row[indices['description_index']] != "NULL" else ""
+		object['altnums'].append({"altnum" : altnum, "description" : description})
+		return (object, current_id)
+
+	print "Starting Objects AltNums..."
+	if CURSOR:
+		sql_command = objects_sql.ALTNUMS
+		CURSOR.execute(sql_command)
+		columns = [column[0] for column in CURSOR.description]
+		indices = get_indices()
+
+		object = {}
+		current_id = '-1'
+		cursor_row = CURSOR.fetchone()
+		while cursor_row is not None:
+			row = process_cursor_row(cursor_row)
+			(object, current_id) = process_object_row(object, current_id)
+			cursor_row = CURSOR.fetchone()
+   		# save last object to elasticsearch
+		save(object)
+	else:
+		with open('../data/objects_altnums.csv', 'rb') as csvfile:
+			# Get the query headers to use as keys in the JSON
+			headers = next(csvfile)
+			if headers.startswith(codecs.BOM_UTF8):
+				headers = headers[3:]
+			headers = headers.replace('\r\n','')
+			columns = headers.split(',')
+			indices = get_indices()
+
+			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
+			object = {}
+			current_id = '-1'
+			for row in rows:
+				(object, current_id) = process_object_row(object, current_id)
+			# save last object to elasticsearch
+			save(object)
+	print "Finished Objects AltNums..."
+
 def process_object_related_sites():
 	def get_indices():
 		indices = {
@@ -674,6 +743,7 @@ if __name__ == "__main__":
 	## process_objects MUST go first.  Other methods can go in any order
 	process_objects()
 	process_object_geocodes()
+	process_object_altnums()
 	process_object_related_sites()
 	process_object_related_constituents()
 	process_object_related_published()

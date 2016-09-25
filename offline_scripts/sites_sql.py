@@ -7,12 +7,18 @@ Sites.Description + ',,' AS Description, Condition,
 Environment + ',,' Shafts,
 ResearchActivity + ',,' AS ResearchActivity,
 ResearcherComments + ',,' AS ResearcherComments, IsPublic,
-Active, Sites.harvardID, SiteTypes.SiteTypeID, SiteTypes.SiteType,
-(ISNULL(SiteDates.EventType,'') + '_' + ISNULL(SiteDates.DateText,'')) AS SiteDates_EventType_DateText
+Active, Sites.harvardID, SiteTypes.SiteTypeID, SiteTypes.SiteType
 FROM Sites
 LEFT OUTER JOIN SiteTypes ON Sites.SiteTypeID=SiteTypes.SiteTypeID AND SiteTypes.SiteTypeID != 0
-LEFT OUTER JOIN SiteDates ON Sites.SiteID=SiteDates.SiteID
 WHERE IsPublic = 1
+ORDER BY Sites.SiteID
+"""
+
+SITEDATES = """
+SELECT Sites.SiteID, SiteDates.EventType, SiteDates.DateText
+FROM Sites
+JOIN SiteDates on Sites.SiteID=SiteDates.SiteID
+WHERE Sites.IsPublic=1
 ORDER BY Sites.SiteID
 """
 
