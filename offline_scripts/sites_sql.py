@@ -7,9 +7,10 @@ Sites.Description + ',,' AS Description, Condition,
 Environment + ',,' Shafts,
 ResearchActivity + ',,' AS ResearchActivity,
 ResearcherComments + ',,' AS ResearcherComments, IsPublic,
-Active, Sites.harvardID, SiteTypes.SiteTypeID, SiteTypes.SiteType
+Active, Sites.harvardID, SiteTypes.SiteTypeID, SiteTypes.SiteType, TextEntries.TextEntry as ProblemsQuestions
 FROM Sites
 LEFT OUTER JOIN SiteTypes ON Sites.SiteTypeID=SiteTypes.SiteTypeID AND SiteTypes.SiteTypeID != 0
+LEFT JOIN TextEntries on Sites.SiteID=TextEntries.ID AND TextEntries.TableID=189 AND TextEntries.TextTypeID=1
 WHERE IsPublic = 1
 ORDER BY Sites.SiteID
 """
