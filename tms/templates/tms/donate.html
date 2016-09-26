@@ -6,7 +6,7 @@
 {% block title %}Digital Giza | Donate{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header header-bg-2" id="content">
         <div class="row title">
           <header class="large-12 columns">
             <h1>Donate <a name="top"></a></h1>
@@ -25,17 +25,26 @@
           <section class="medium-8 columns">
             <form>
               <fieldset>
-                <legend>Choose Donation Amount</legend>
-                <div class="secondary button-group">
-                  <a class="button">$50</a>
-                  <a class="button">$100</a>
-                  <a class="button">$500</a>
-                  <a class="button">$1000</a>
-                </div>
-                <p><strong>Or enter in your own amount.</strong> Whole dollar amounts only.</p>
-                <div class="input-group">
-                  <span class="input-group-label">$</span>
-                  <input class="input-group-field" type="number">
+                <legend class="h4">Donation Amount</legend>
+                <div class="row">
+                  <div class="medium-6 column">
+                    <label>Choose donation amount:
+                      <div class="button-group">
+                        <a class="button secondary">$50</a>
+                        <a class="button primary">$100</a>
+                        <a class="button secondary">$500</a>
+                        <a class="button secondary">$1000</a>
+                      </div>
+                    </label>
+                  </div>
+                  <div class="medium-6 column">
+                    <label>Or enter in your own amount.</label>
+                    <div class="input-group">
+                      <span class="input-group-label">$</span>
+                      <input class="input-group-field" type="tel">
+                    </div>
+                    <p class="text-smaller" style="margin-top: -0.5em;"><em>Whole dollar amounts only.</em></p>
+                  </div>
                 </div>
               </fieldset>
               <fieldset>
@@ -187,8 +196,8 @@
             </form>
           </section>
           <aside class="medium-4 columns">
-            <div class="secondary callout">
-              <p>Instead of donating using our form, you can also donate using PayPal.</p>
+            <div class="feature-block secondary">
+              <p>Instead of donating by credit card, you can also donate using PayPal.</p>
               <p class="text-center"><img src="{% static 'images/paypal.gif' %}" alt=""></p>
             </div>
           </aside>

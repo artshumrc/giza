@@ -9,9 +9,9 @@ from wagtail.wagtailcore import urls as wagtail_urls
 
 urlpatterns = [
     url(r'^$', 'tms.views.index', name="index"),
-    url(r'^(?P<page_name>about|blog|contact|news|resources)/$', 'tms.views.about', name="about"),
+    url(r'^(?P<page_name>about|blog|contact|gizacard|news|resources)/$', 'tms.views.about', name="about"),
     url(r'^(?P<page_name>donate)/$', 'tms.views.donate', name="donate"),
-    url(r'^(?P<page_name>commontopics|explorevideos|faq|gizaintro)/$', 'tms.views.explore', name="explore"),
+    url(r'^(?P<page_name>archeology|commontopics|explorevideos|faq|gizaintro)/$', 'tms.views.explore', name="explore"),
 
     url(r'^django-admin/', include(admin.site.urls)),
 

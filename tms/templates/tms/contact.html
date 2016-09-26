@@ -6,7 +6,7 @@
 {% block title %}Digital Giza | Contact Us{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header header-bg-6" id="content">
         <div class="row title">
           <header class="large-12 columns">
             <h1>Contact Us <a name="top"></a></h1>
@@ -14,13 +14,13 @@
         </div>
       </div>
 
-        <div class="row">
-          <div class="large-12 columns">
-            <h3>Questions? Comments? Concerns? Let us know.</h3>
-            <p class="lead">We’d love to hear from you. All fields required.</p>
-            <p><em>Please note: although we make every effort to respond, we are unable to personally reply to every comment.</em></p>
-          </div>
+      <div class="row">
+        <div class="large-12 columns">
+          <h2>Questions? Comments? Concerns? Let us know.</h2>
+          <p class="lead">We’d love to hear from you.</p>
+          <p><em>All fields below are required. Please note: although we make every effort to respond, we are unable to personally reply to every comment.</em></p>
         </div>
+      </div>
 
         <div class="row lines">
           <section class="medium-8 columns">
@@ -41,7 +41,7 @@
             </form>
           </section>
           <aside class="medium-4 columns">
-            <img src="{% static 'images/contact.png' %}" alt="A pyramid.">
+            <div class="thumbnail"><img src="{% static 'images/contact.png' %}" alt="A pyramid."></div>
           </aside>
         </div>
 {% endblock %}
