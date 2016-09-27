@@ -248,6 +248,80 @@ def process_object_altnums():
 			save(object)
 	print "Finished Objects AltNums..."
 
+# Update relevant objects with alternate numbers
+def process_object_flexfields():
+	def get_indices():
+		indices = {
+			'object_id_index' : columns.index('ObjectID'),
+			'classification_id_index' : columns.index('ClassificationID'),
+			'group_name_index' : columns.index('GroupName'),
+			'field_name_index' : columns.index('UserFieldName')
+		}
+		return indices
+
+	def process_object_row(object, current_id):
+		object_id = row[indices['object_id_index']]
+		classification_key = int(row[indices['classification_id_index']])
+		classification = CLASSIFICATIONS.get(classification_key)
+
+		if object_id != current_id:
+			# will likely have multiple rows
+			save(object)
+			current_id = object_id
+			object = {}
+			if elasticsearch_connection.item_exists(object_id, classification):
+				object = elasticsearch_connection.get_item(object_id, classification)
+			else:
+				print "%s could not be found!" % object_id
+				return (object, current_id)
+
+		if 'flexfields' not in object:
+			object['flexfields'] = {}
+
+		groupname = row[indices['group_name_index']]
+		if groupname not in object['flexfields']:
+			object['flexfields'][groupname] = []
+
+		fieldname = row[indices['field_name_index']]
+		object['flexfields'][groupname].append(fieldname)
+		return (object, current_id)
+
+	print "Starting Objects Flex Fields..."
+	if CURSOR:
+		sql_command = objects_sql.FLEXFIELDS
+		CURSOR.execute(sql_command)
+		columns = [column[0] for column in CURSOR.description]
+		indices = get_indices()
+
+		object = {}
+		current_id = '-1'
+		cursor_row = CURSOR.fetchone()
+		while cursor_row is not None:
+			row = process_cursor_row(cursor_row)
+			(object, current_id) = process_object_row(object, current_id)
+			cursor_row = CURSOR.fetchone()
+   		# save last object to elasticsearch
+		save(object)
+	else:
+		with open('../data/objects_flexfields.csv', 'rb') as csvfile:
+			# Get the query headers to use as keys in the JSON
+			headers = next(csvfile)
+			if headers.startswith(codecs.BOM_UTF8):
+				headers = headers[3:]
+			headers = headers.replace('\r\n','')
+			columns = headers.split(',')
+			indices = get_indices()
+
+			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
+			object = {}
+			current_id = '-1'
+			for row in rows:
+				(object, current_id) = process_object_row(object, current_id)
+			# save last object to elasticsearch
+			save(object)
+	print "Finished Objects Flex Fields..."
+
+
 def process_object_related_sites():
 	def get_indices():
 		indices = {
@@ -744,6 +818,7 @@ if __name__ == "__main__":
 	process_objects()
 	process_object_geocodes()
 	process_object_altnums()
+	process_object_flexfields()
 	process_object_related_sites()
 	process_object_related_constituents()
 	process_object_related_published()

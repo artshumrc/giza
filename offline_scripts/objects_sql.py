@@ -39,6 +39,16 @@ AND AltNums.Description != 'Artemis_ObjectID'
 ORDER BY Objects.ObjectID
 """
 
+# Flex Fields (i.e. user defined fields) for Objects with Classification `Human Remains`
+FLEXFIELDS = """
+SELECT Objects.ObjectID, Objects.ClassificationID, UserFieldGroups.GroupName, UserFields.UserFieldName
+FROM UserFieldXrefs
+JOIN UserFields on UserFieldXrefs.UserFieldID=UserFields.UserFieldID
+JOIN UserFieldGroups on UserFieldXrefs.UserFieldGroupID=UserFieldGroups.UserFieldGroupID
+JOIN Objects on UserFieldXrefs.ID=Objects.ObjectID AND Objects.ClassificationID=83
+ORDER BY Objects.ObjectID
+"""
+
 # Related Sites for all Objects
 RELATED_SITES = """
 SELECT Objects.ObjectID as ID, SiteObjXrefs.SiteID,
