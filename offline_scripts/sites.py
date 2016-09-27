@@ -457,8 +457,9 @@ def process_site_related_published():
 			'boiler_text_index' : columns.index('BoilerText'),
 			'date_index' : columns.index('DisplayDate'),
 			'path_index' : columns.index('MainPathName'),
-			'file_index' : columns.index('MainFileName')
-		}
+			'file_index' : columns.index('MainFileName'),
+			'thumb_path_index' : columns.index('ThumbPathName'),
+			'thumb_file_index' : columns.index('ThumbFileName')		}
 		return indices
 
 	def process_site_row(site, current_id):
@@ -484,6 +485,7 @@ def process_site_related_published():
 		boiler_text = row[indices['boiler_text_index']]
 		date = row[indices['date_index']]
 		main_url = get_media_url(row[indices['path_index']], row[indices['file_index']])
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 
 		if "pubdocs" not in site['relateditems']:
 			site['relateditems']["pubdocs"] = []
@@ -492,7 +494,8 @@ def process_site_related_published():
 			'boilertext' : boiler_text,
 			'displaytext' : title,
 			'date' : date,
-			'url' : main_url})
+			'url' : main_url,
+			'thumbnail' : thumbnail_url})
 		return(site, current_id)
 
 	print "Starting Sites Related Published..."

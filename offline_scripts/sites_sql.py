@@ -79,6 +79,7 @@ ORDER BY ConXrefs.ID
 RELATED_PUBLISHED = """
 SELECT RefXrefs.ID as SiteID, ReferenceMaster.ReferenceID, ReferenceMaster.Title,
 ReferenceMaster.BoilerText, ReferenceMaster.DisplayDate,
+ThumbPath.Path as ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path as MainPathName, MediaFiles.FileName as MainFileName
 FROM Sites
 JOIN RefXRefs on Sites.SiteID=RefXRefs.ID
@@ -87,7 +88,8 @@ JOIN MediaXrefs on ReferenceMaster.ReferenceID=MediaXrefs.ID
 JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 JOIN MediaRenditions on MediaXrefs.MediaMasterID=MediaRenditions.MediaMasterID
 JOIN MediaFiles on MediaRenditions.RenditionID=MediaFiles.RenditionID
-JOIN MediaPaths AS MainPath on MediaFiles.PathID=MainPath.PathID
+LEFT JOIN MediaPaths AS ThumbPath on MediaRenditions.ThumbPathID=ThumbPath.PathID
+LEFT JOIN MediaPaths AS MainPath on MediaFiles.PathID=MainPath.PathID
 WHERE MediaXrefs.PrimaryDisplay=1
 AND MediaMaster.PublicAccess=1
 AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
