@@ -394,7 +394,7 @@ def process_site_related_constituents():
 		constituent_dict = {}
 		role = row[indices['role_index']]
 		# update the set of roles for this site
-		if role not in site['roles'] and :
+		if role not in site['roles']:
 			site['roles'].append(role)
 
 		description = row[indices['remarks_index']]
