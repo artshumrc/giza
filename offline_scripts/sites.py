@@ -75,7 +75,8 @@ def process_sites():
 				site[key] = row_value
 		display_text = (site['sitename'] + " : " if site['sitename'] else "") + (site['number'] if site['number'] else "")
 		site['displaytext'] = display_text
-		site['tombowner'] = False
+		site['tombowner'] = {}
+		site['roles'] = []
 		return (site, current_id)
 
 	print "Starting Sites..."
@@ -392,6 +393,10 @@ def process_site_related_constituents():
 
 		constituent_dict = {}
 		role = row[indices['role_index']]
+		# update the set of roles for this site
+		if role not in site['roles'] and :
+			site['roles'].append(role)
+
 		description = row[indices['remarks_index']]
 		constituent_dict['role'] = role
 		constituent_dict['id'] = constituent_id
@@ -406,9 +411,9 @@ def process_site_related_constituents():
 		if constituent_type not in site['relateditems']:
 			site['relateditems'][constituent_type] = []
 		site['relateditems'][constituent_type].append(constituent_dict)
-		# is this needed?
+
 		if role == 'Tomb Owner':
-			site['tombowner'] = True
+			site['tombowner'] = constituent_dict
 		return(site, current_id)
 
 	print "Starting Sites Related Constituents..."

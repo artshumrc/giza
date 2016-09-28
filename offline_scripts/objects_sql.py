@@ -55,8 +55,8 @@ SELECT Objects.ObjectID as ID, SiteObjXrefs.SiteID,
 Sites.SiteName, Sites.SiteNumber, Objects.ClassificationID,
 MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM Objects
-LEFT JOIN SiteObjXrefs ON Objects.ObjectID=SiteObjXrefs.ObjectID
-LEFT JOIN Sites ON SiteObjXrefs.SiteID=Sites.SiteID
+JOIN SiteObjXrefs ON Objects.ObjectID=SiteObjXrefs.ObjectID
+JOIN Sites ON SiteObjXrefs.SiteID=Sites.SiteID
 LEFT JOIN MediaXrefs on Sites.SiteID=MediaXrefs.ID
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID

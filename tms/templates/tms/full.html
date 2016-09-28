@@ -6,737 +6,535 @@
 {% block title %}Digital Giza | {{ object.displaytext }}{% endblock %}
 
 {% block content %}
-  <div class="page-header">
-    <div class="row title">
-      <header class="large-12 columns">
-        <h1>{{ object.displaytext }}<a name="top"></a></h1>
-      </header>
+<div class="page-header header-bg-1" id="content">
+  <div class="row title">
+    <header class="large-12 columns">
+      <h1>{{ object.displaytext }}<a name="top"></a></h1>
+    </header>
+  </div>
+</div>
+
+
+<div class="row content-start">
+  <nav class="medium-4 columns medium-push-8">
+    <div class="title-bar" data-responsive-toggle="jumpmenu" data-hide-for="medium">
+      <button class="menu-icon" type="button" data-toggle></button>
+      <div class="title-bar-title">Jump to...</div>
     </div>
+
+    <div class="feature-block secondary" id="jumpmenu">
+      <div class="feature-block__body">
+
+        <div class="view-mode-toggle">
+          <h5 class="heading-em">Show:</h5>
+          <div class="button-group">
+            <a class="secondary button" href="{% url 'get_type_html' type object.id 'intro' %}">Intro View</a>
+            <a class="primary button">Full View</a>
+          </div>
+        </div>
+
+        <h5 class="heading-em">Jump to:</h5>
+        <ul class="vertical menu">
+          <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
+          {% if object.relateditems.objects %}
+          <li><a href="#objects"><span class="icon-vase icon-fw"></span> Finds <span class="badge">{{ object.relateditems.objects|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.diarypages %}
+          <li><a href="#diary"><span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages <span class="badge">{{ object.relateditems.diarypages|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.mapsandplans %}
+          <li><a href="#maps"><span class="icon-map-o icon-fw"></span> Maps &amp; Plans <span class="badge">{{ object.relateditems.mapsandplans|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.drawings %}
+          <li><a href="#drawings"><span class="icon-pencil-square-o icon-fw"></span> Drawings <span class="badge">{{ object.relateditems.drawings|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.photos %}
+          <li><a href="#photos"><span class="icon-camera icon-fw"></span> Photos <span class="badge">{{ object.relateditems.photos|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.giza3d %}
+          <li><a href="#models"><span class="icon-icon-pyramid-3d icon-fw"></span> 3D Models <span class="badge">{{ object.relateditems.giza3d|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.videos %}
+          <li><a href="#videos"><span class="icon-video-camera icon-fw"></span> Videos <span class="badge">{{ object.relateditems.videos|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.audio %}
+          <li><a href="#videos"><span class="icon-volume-up icon-fw"></span> Audio <span class="badge">{{ object.relateditems.audio|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
+          <li><a href="#people"><span class="icon-user icon-fw"></span> People <span class="badge">
+            {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+            {{ apnum|add:mpnum }}
+            {% endwith %}
+          </span></a></li>
+          {% endif %}
+          {% if object.relateditems.institutions %}
+          <li><a href="#institutions"><span class="icon-university icon-fw"></span> Institutions <span class="badge">{{ object.relateditems.institutions|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.groups %}
+          <li><a href="#groups"><span class="icon-users icon-fw"></span> Groups <span class="badge">{{ object.relateditems.groups|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.animals %}
+          <li><a href="#animals"><span class="icon-users icon-fw"></span> Animals <span class="badge">{{ object.relateditems.animals|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.pubdocs %}
+          <li><a href="#published"><span class="icon-book icon-fw"></span> Published Documents <span class="badge">{{ object.relateditems.pubdocs|length }}</span></a></li>
+          {% endif %}
+          {% if object.relateditems.unpubdocs %}
+          <li><a href="#unpublished"><span class="icon-file-text-o icon-fw"></span> Unpublished Documents <span class="badge">{{ object.relateditems.unpubdocs|length }}</span></a></li>
+          {% endif %}
+          {% if object.bibreferences %}
+          <li><a href="#biblio"><span class="icon-info-circle icon-fw"></span> Full Bibliography </a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <section class="medium-8 columns medium-pull-4">
+      <div class="item__featured-image">
+        {% if object.primarydisplay.main %}<img src="{{ object.primarydisplay.main }}" alt="">{% endif %}
+        <p class="item__featured-image__caption">
+          Caption for this photo.
+        </p>
+      </div>
+      <div class="item__overview">
+
+        <ul class="item__featured-properties">
+          <li class="item__property item__property--primary">
+            Site ID: {{ object.number }}
+          </li>
+          <li class="item__property">
+            Site name: {{ object.sitename }}
+          </li>
+        </ul>
+
+        {% if object.description %}
+        <div class="item__featured-description">
+          <p class="lead text-alt">
+            {{ object.description }}
+          </p>
+        </div>
+        {% endif %}
+      </div>
+    </section>
   </div>
 
-
-    <div class="row content-start">
-      <nav class="medium-4 columns medium-push-8">
-        <div class="title-bar" data-responsive-toggle="jumpmenu" data-hide-for="medium">
-          <button class="menu-icon" type="button" data-toggle></button>
-          <div class="title-bar-title">Jump to...</div>
+  <div class="row">
+    <section class="medium-8 columns">
+      <section id="featureBlock_details" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-info-circle icon-padded"></i> Details
+            <a name="details"></a>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_details">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
         </div>
-        <div class="secondary callout" id="jumpmenu">
-
-          <div class="view-mode-toggle">
-            <h5>Show:</h5>
-            <div class="button-group">
-              <a class="secondary button" href="{% url 'get_type_html' type object.id 'intro' %}">Intro View</a>
-              <a class="primary button">Full View</a>
-            </div>
-          </div>
-
-          <h5>Jump to:</h5>
-          <ul class="vertical menu">
-            <li><a href="#details"><span class="icon-info-circle"></span> Details</a></li>
-            {% if object.relateditems.giza3d %}
-              <li><a href="#giza3d"><span class="icon-icon-pyramid-3d"></span> Giza3D <span class="secondary badge">{{ object.relateditems.giza3d|length }}</span></a></li>
-            {% endif %}
-            {% if object.relateditems.videos %}
-              <li><a href="#videos"><span class="icon-video-camera"></span> Videos <span class="secondary badge">{{ object.relateditems.videos|length }}</span></a></li>
-            {% endif %}
-            {% if object.relateditems.mapsandplans %}
-              <li><a href="#maps"><span class="icon-map-o"></span> Maps &amp; Plans <span class="secondary badge">{{ object.relateditems.mapsandplans|length }}</span></a></li>
-            {% endif %}
-            {% if object.relateditems.photos %}
-              <li><a href="#photos"><span class="icon-camera"></span> Photos <span class="secondary badge">{{ object.relateditems.photos|length }}</span></a></li>
-            {% endif %}
-            {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
-              <li><a href="#people"><span class="icon-user"></span> People <span class="secondary badge">
-                {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
-                  {{ apnum|add:mpnum }}
-                {% endwith %}
-              </span></a></li>
-            {% endif %}
-            {% if object.relateditems.objects %}
-              <li><a href="#objects"><span class="icon-vase"></span> Objects <span class="secondary badge">{{ object.relateditems.objects|length }}</span></a></li>
-            {% endif %}
-            {% if object.relateditems.diarypages %}
-              <li><a href="#diary"><span class="icon-sticky-note-o"></span> Excavation Diary Pages <span class="secondary badge">{{ object.relateditems.diarypages|length }}</span></a></li>
-            {% endif %}
-            {% if object.relateditems.drawings %}
-              <li><a href="#drawings"><span class="icon-pencil-square-o"></span> Drawings <span class="secondary badge">{{ object.relateditems.drawings|length }}</span></a></li>
-            {% endif %}
-            {% if object.relateditems.pubdocs %}
-              <li><a href="#published"><span class="icon-book"></span> Published Documents <span class="secondary badge">{{ object.relateditems.pubdocs|length }}</span></a></li>
-            {% endif %}
-            {% if object.relateditems.unpubdocs %}
-              <li><a href="#unpublished"><span class="icon-file-text-o"></span> Unpublished Documents <span class="secondary badge">{{ object.relateditems.unpubdocs|length }}</span></a></li>
-            {% endif %}
-            {% if object.bibreferences %}
-              <li><a href="#biblio"><span class="icon-info-circle"></span> Full Bibliography </a></li>
-            {% endif %}
+        {% with template_name="tms/"|add:type|add:".html" %}
+        {% include template_name %}
+        {% endwith %}
+      </section>
+      {% if object.relateditems.objects %}
+      <section id="featureBlock_objects" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-vase icon-padded"></i> Finds
+            <a name="objects"></a>
+            <span class="badge">{{ object.relateditems.objects|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_objects">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm">
+            {% for item in object.relateditems.objects %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'objects' item.id 'intro' %}"><img src= "{{ item.thumbnail }}"></a>
+                  </div>
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'objects' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-property">ID</span> <span class="item-value">{{item.number}}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
           </ul>
         </div>
-      </nav>
-      <section class="medium-8 columns medium-pull-4">
-        <p><img src="{% static 'images/full-khafre.png' %}" alt="appropriate alt"></p>
-        {% if object.description %}
-        <p>{{ object.description }}</p>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.diarypages %}
+      <section id="featureBlock_diary" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-sticky-note-o icon-padded"></i> Excavation Diary Pages
+            <a name="diary"></a>
+            <span class="badge">{{ object.relateditems.diarypages|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_diary">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm">
+            {% for item in object.relateditems.diarypages %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'diarypages' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'diarypages' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-property">Diary page dates</span> <span class="item-value">{{ item.date }}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.mapsandplans %}
+      <section id="featureBlock_maps" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-map-o icon-padded"></i> Maps &amp; Plans
+            <a name="maps"></a>
+            <span class="badge">{{ object.relateditems.mapsandplans|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_maps">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list item-grid thumbsize-lg">
+            {% for item in object.relateditems.mapsandplans %}
+            <li>
+              <div class="media-object list-item list-item-thumbcaption">
+                <div class="thumbnail">
+                  <a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}"><img src="{{ item.thumbnail }}" class="thumbnail" alt=""></a>
+                </div>
+                <p class="media-object-title"><a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.drawings %}
+      <section id="featureBlock_drawings" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-pencil-square-o icon-padded"></i> Drawings
+            <a name="drawings"></a>
+            <span class="badge">{{ object.relateditems.drawings|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_drawings">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm">
+            {% for item in object.relateditems.drawings|slice:":5" %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'drawings' item.id 'intro' %}"><img src= "{{ item.thumbnail }}"></a>
+                  </div>
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'drawings' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-property">ID</span> <span class="item-value">{{ item.number }}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.pubdocs %}
+      <section id="featureBlock_published" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-book icon-padded"></i> Published Documents
+            <a name="published"></a>
+            <span class="badge">{{ object.relateditems.pubdocs|length}}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_published">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2">
+            {% for item in object.relateditems.pubdocs %}
+            <li>
+              <div class="media-object list-item list-item-document">
+                <div class="media-object-section">
+                  <a class="icon-large icon-file-text-o" href="{% url 'get_type_html' 'pubdocs' item.id 'intro' %}"></a>
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'pubdocs' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                  <ul class="subheader">
+                    <li>Date: {{ item.date }}</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.unpubdocs %}
+      <section id="featureBlock_unpublished" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-file-text-o icon-padded"></i> Unpublished Documents
+            <a name="unpublished"></a>
+            <span class="badge">{{ object.relateditems.unpubdocs|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_unpublished">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm">
+            {% for item in object.relateditems.unpubdocs %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'unpubdocs' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'unpubdocs' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                  <ul class="subheader">
+                    <li>ID: {{ item.number }}</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.bibreferences %}
+      <section id="featureBlock_biblio" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-bookmark icon-padded"></i> Full Bibliography
+            <a name="biblio"></a>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_biblio">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list">
+            <li>
+              <div class="media-object list-item list-item-textblob">
+                <p>
+                  {{ object.bibreferences|linebreaks }}
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+    </section>
+
+    <section class="medium-4 columns">
+      {% if object.relateditems.photos %}
+      <section id="featureBlock_photos" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-camera icon-padded"></i> Photos
+            <a name="photos"></a>
+            <span class="badge">{{ object.relateditems.photos|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_photos">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list item-grid thumbsize-sm">
+            {% for item in object.relateditems.photos|slice:"12" %}
+            <li>
+              <div class="media-object list-item list-item-thumbonly">
+                <div class="media-object-section">
+                  <div class="thumbnail">
+                    <a href="#0" data-open="gallery{{ item.id }}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="#0"></a></p>
+                  <ul class="subheader">
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <div class="feature-block__footer">
+            <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#photos">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.3dmodels %}
+      <section id="featureBlock_models" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-pyramid-3d icon-padded"></i> 3D Models
+            <a name="models"></a>
+            <span class="badge">1</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_models">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list thumbsize-full">
+            <li>
+              <div class="media-object list-item list-item-thumbcaption">
+                <div class="thumbnail">
+                  <a href="#0"><img src="{% static 'images/giza3dvideo.png' %}"></a>
+                </div>
+                <p class="media-object-title"><a href="#0">Caption for this model</a></p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.videos %}
+      <section id="featureBlock_videos" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-video-camera icon-padded"></i> Videos
+            <a name="videos"></a>
+            <span class="badge">{{ object.relateditems.videos|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_videos">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-lg">
+            {% for item in object.relateditems.videos %}
+            <li>
+              <div class="media-object list-item list-item-thumbcaption">
+                <!-- <div class="thumbnail">
+                <a href="#0"><img src="assets/img/video1.png"></a>
+              </div> -->
+              <video width="100%" height="100%" poster="{{ item.thumbnail }}" controls>
+                <source src="{{ item.main }}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                <p class="media-object-title"><a href="{% url 'get_type_html' 'videos' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
+      <section id="featureBlock_people" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-user icon-padded"></i> People
+            <a name="people"></a>
+            <span class="badge">{% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+              {{ apnum|add:mpnum }}
+              {% endwith %}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_people">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            {% if object.relateditems.ancientpeople %}
+            <h4>Ancient People</h4>
+
+            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+              {% for item in object.relateditems.ancientpeople %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'ancientpeople' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                    </div>
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'ancientpeople' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      <li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if object.relateditems.modernpeople %}
+            <h4>Modern People</h4>
+
+            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+              {% for item in object.relateditems.modernpeople %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'modernpeople' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                    </div>
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'modernpeople' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      <li><span class="item-property">Nationality &amp; Dates</span> <span class="item-value">{{item.displaydate}}</span></li>
+                      <li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+        </section>
         {% endif %}
       </section>
     </div>
-    <div class="row">
-      <section class="medium-8 columns">
-        <section class="detailblock">
-          <h3><span class="icon-info-circle"></span> Details<a name="details"></a></h3>
-          {% with template_name="tms/"|add:type|add:".html" %}
-            {% include template_name %}
-          {% endwith %}
-        </section>
-        <section class="detailblock">
-          <h3><span class="icon-vase"></span> Objects <span class="secondary badge">11</span><a name="objects"></a></h3>
-          <div class="items">
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragment of alabaster statue of Khafre</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object2.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragment of alabaster statue of Khafre</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragment of alabaster statue of Khafre</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragments of alabaster royal statues and other miscellaneous stone objects</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object2.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragment of alabaster statue of Khafre</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragment of alabaster statue of Khafre</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object2.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragments of alabaster royal statues and other miscellaneous stone objects</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragment of alabaster statue of Khafre</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object2.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragment of alabaster statue of Khafre</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragments of alabaster royal statues and other miscellaneous stone objects</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/object2.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Fragment of alabaster statue of Khafre</a><br>
-                MFAB_11.1738</p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="detailblock">
-          <h3><span class="icon-sticky-note-o"></span> Excavation Diary Pages <span class="secondary badge">6</span><a name="diary"></a></h3>
-          <div class="items">
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/diary.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Vol.02.p.049</a><br>
-                Diary page dates: 05/02/1910</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/diary.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Vol.03.p.025</a><br>
-                Diary page dates: 05/02/1910</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/diary.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Vol.03.p.053</a><br>
-                Diary page dates: 05/02/1910</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/diary.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Vol.02.p.049</a><br>
-                Diary page dates: 05/02/1910</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/diary.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Vol.03.p.025</a><br>
-                Diary page dates: 05/02/1910</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/diary.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Vol.03.p.025</a><br>
-                Diary page dates: 05/02/1910</p>
-              </div>
-            </div>
-        </section>
-        <section class="detailblock">
-          <h3><span class="icon-pencil-square-o"></span> Drawings <span class="secondary badge">9</span><a name="drawings"></a></h3>
-          <div class="items">
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/drawing1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Plan of cemetery G 7000: near G 7000 X</a><br>
-                HUMFA_EG002028</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/drawing2.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Relief from G 2370, Lepsius 10, G 5560</a><br>
-                HUMFA_EG002028</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/drawing1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">View from Khafre pyramid, looking NE (color plate)</a><br>
-                HUMFA_EG002028</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/drawing1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">View of the Giza Pyramids, from the south</a><br>
-                HUMFA_EG002028</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/drawing2.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Relief from G 2370, Lepsius 10, G 5560</a><br>
-                HUMFA_EG002028</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/drawing1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Relief from Lepsius 53 and G 2370</a><br>
-                HUMFA_EG002028</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/drawing2.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">View from the Khafre Pyramid</a><br>
-                HUMFA_EG002028</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/drawing1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">View of the Giza Pyramids</a><br>
-                HUMFA_EG002028</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/drawing2.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">View of the Giza Pyramids</a><br>
-                HUMFA_EG002028</p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="detailblock">
-          <h3><span class="icon-book"></span> Published Documents <span class="secondary badge">12</span><a name="published"></a></h3>
-          <div class="items">
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Document Name</a><br>
-                Content Category</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Document Name</a><br>
-                Content Category</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Document Name</a><br>
-                Content Category</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Altenmüller, Hartwig. "Funerary Boats and Boat Pits of the Old Kingdom."</a><br>
-                August 2002</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Document Name</a><br>
-                Content Category</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Altenmüller, Hartwig. "Funerary Boats and Boat Pits of the Old Kingdom."</a><br>
-                August 2002</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Document Name</a><br>
-                Content Category</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Altenmüller, Hartwig. "Funerary Boats and Boat Pits of the Old Kingdom."</a><br>
-                August 2002</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Document Name</a><br>
-                Content Category</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Altenmüller, Hartwig. "Funerary Boats and Boat Pits of the Old Kingdom."</a><br>
-                August 2002</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Document Name</a><br>
-                Content Category</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Altenmüller, Hartwig. "Funerary Boats and Boat Pits of the Old Kingdom."</a><br>
-                August 2002</p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="detailblock">
-          <h3><span class="icon-file-text-o"></span> Unpublished Documents <span class="secondary badge">4</span><a name="unpublished"></a></h3>
-          <div class="items">
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">A History of the Giza Necropolis II, Unpublished 1942 Manuscript, Appendix A: Cemetery en Échelon, Page ApxA 033</a><br>
-                Content Category</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Document Name</a><br>
-                Content Category</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Document Name</a><br>
-                Content Category</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><span class="icon-file-text-o"></span></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">A History of the Giza Necropolis II, Unpublished 1942 Manuscript, Appendix A: Cemetery en Échelon, Page ApxA 033</a><br>
-                August 2002</p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="detailblock">
-          <h3><span class="icon-bookmark"></span> Full Bibliography <span class="secondary badge">48</span><a name="biblio"></a></h3>
-          <p>Becker, Jürgen. "Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem." Sokar 8 (1. Halbjahr 2004), pp. 6-17, unnumbered figs.
-          <p>Cwiek, Andrzej. Relief Decoration in the Royal Funerary Complexes of the Old Kingdom: Studies in the Development, Scene Content and Iconography. Warsaw: Institute of Archaeology, Faculty of History, Warsaw University, 2003, pp. 98-103, fig. 18.
-          <p>Edwards, I.E.S. "The Air-Channels of Chephren's Pyramid." In William Kelly Simpson and Whitney M. Davis, eds. Studies in Ancient Egypt, the Aegean, and the Sudan: Essays in Honor of Dows Dunham on the Occasion of his 90th Birthday, June 1, 1980. Boston: Museum of Fine Arts, 1981, pp. 55-57.
-          <p>Flentye, Laurel. "The Mastabas of Ankh-haf (G 7510) and Akhethetep and Meretites (G 7650) in the Eastern Cemetery at Giza: A Reassessment." In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 301, 302, 303.
-          <p>Haase, Michael. "Brennpunkt Giza. Die Schachtsysteme der Cheops-Pyramide." Sokar 5 (2. Halbjahr 2002), pp. 10-11.
-          <p>Hawass, Zahi. "The Discovery of the Osiris Shaft at Giza." In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 379, 381.
-          <p>Hawass, Zahi. "Royal Figures Found in Petrie's So-called Workmen's Barracks at Giza." In Studies in Honor of James F. Romano. Bulletin of the Egyptological Seminar 17 (2007), pp. 97, 98, 100, pl. 1.
-          <p>Hawass, Zahi. "Pyramid Construction. New Evidence Discovered at Giza." In Heike Guksch and Daniel Polz, eds. Stationen. Beiträge zur Kulturgeschichte Ägyptens Rainer Stadelmann gewidmet, Mainz: Philipp von Zabern, 1998, pp. 54, 55.
-
-          <h4>Publications (PDF) in the Giza Archive Library:</h4>
-          <p><a href="#">Becker, Jürgen. "Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem." Sokar 8 (1. Halbjahr 2004), pp. 6-17.</a></p>
-          <p><a href="#">Cwiek, Andrzej. Relief Decoration in the Royal Funerary Complexes of the Old Kingdom: Studies in the Development, Scene Content and Iconography. Warsaw: Institute of Archaeology, Faculty of History, Warsaw University, 2003.</a></p>
-          <p><a href="#">Edwards, I.E.S. "The Air-Channels of Chephren's Pyramid." In William Kelly Simpson and Whitney M. Davis, eds. Studies in Ancient Egypt, the Aegean, and the Sudan: Essays in Honor of Dows Dunham on the Occasion of his 90th Birthday, June 1, 1980. Boston: Museum of Fine Arts, 1981, pp. 55-57.</a></p>
-          <p><a href="#">Lehner, Mark. "Giza. A Contextual Approach to the Pyramids." Archiv für Orientforschung 32 (1985), pp. 136-158.
-          <p><a href="#">Lehner, Mark. "The Development of the Giza Necropolis. The Khufu Project." Mitteilungen des Deutschen Archäologischen Instituts, Abteilung Kairo 41 (1985), pp. 109-143.</a></p>
-          <p><a href="#">Love, Serena. "Stones, Ancestors, and Pyramids: Investigating the Pre-pyramid Landscape of Memphis." In Miroslav Bárta, ed. The Old Kingdom Art and Archaeology. Proceedings of the Conference held in Prague, May 31-June 4, 2004. Prague: Czech Institute of Egyptology, 2006, pp.209-218.</a></p>
-        </section>
-      </section>
-      <section class="medium-4 columns full-layout">
-        <section class="secondary callout">
-          <h3><span class="icon-camera"></span> Photos <span class="secondary badge">248</span><a name="photos"></a></h3>
-          <div class="row small-up-2 medium-up-3 large-up-6">
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto1.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto2.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto3.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto1.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto2.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto3.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto1.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto2.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto3.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto1.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto2.png' %}" class="thumbnail" alt=""></a>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/tinyphoto3.png' %}" class="thumbnail" alt=""></a>
-            </div>
-        </section>
-        <section class="secondary callout">
-          <h3><span class="icon-map-o"></span> Maps &amp; Plans <span class="secondary badge">5</span><a name="maps"></a></h3>
-          <div class="row medium-up-1 large-up-2">
-            <div class="column">
-              <a href="#"><img src="{% static 'images/map1.png' %}" class="thumbnail" alt=""></a>
-              <p><a href="#">Caption for Map 1</a></p>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/map2.png' %}" class="thumbnail" alt=""></a>
-              <p><a href="#">Caption for Map 2</a></p>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/map1.png' %}" class="thumbnail" alt=""></a>
-              <p><a href="#">Caption for Map 3</a></p>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/map2.png' %}" class="thumbnail" alt=""></a>
-              <p><a href="#">Caption for Map 4</a></p>
-            </div>
-            <div class="column">
-              <a href="#"><img src="{% static 'images/map1.png' %}" class="thumbnail" alt=""></a>
-              <p><a href="#">Caption for Map 5</a></p>
-            </div>
-          </div>
-        </section>
-        <section class="secondary callout">
-          <h3><span class="icon-user"></span> People <span class="secondary badge">4</span><a name="people"></a></h3>
-          <div class="items">
-            <h4>Ancient People</h4>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/tinyphoto1.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Khafre</a><br>
-                Tomb Owner<br>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique quia quis voluptatum illo laboriosam unde vel illum, molestiae rerum praesentium.</p>
-              </div>
-            </div>
-            <h4>Modern People</h4>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/tinyphoto2.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">François Auguste Ferdinand Mariette</a><br>
-                Excavator<br>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique quia quis voluptatum illo laboriosam unde vel illum, molestiae rerum praesentium.</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/tinyphoto3.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">(Karl) Richard Lepsius</a><br>
-                Excavator<br>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique quia quis voluptatum illo laboriosam unde vel illum, molestiae rerum praesentium.</p>
-              </div>
-            </div>
-            <div class="media-object">
-              <div class="media-object-section">
-                <div class="thumbnail">
-                  <a href="#"><img src= "{% static 'images/tinyphoto3.png' %}"></a>
-                </div>
-              </div>
-              <div class="media-object-section">
-                <p><a href="#">Selim Hassan (Bey)</a><br>
-                Excavator<br>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique quia quis voluptatum illo laboriosam unde vel illum, molestiae rerum praesentium.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="secondary callout">
-          <h3><span class="icon-icon-pyramid-3d"></span> Giza 3D <span class="secondary badge">1</span><a name="giza3d"></a></h3>
-          <img src="{% static 'images/giza3dvideo.png' %}" alt="appropriate alt">
-          <p><a href="#">Title/caption for 3D Model One</a></p>
-        </section>
-        <section class="secondary callout">
-          <h3><span class="icon-video-camera"></span> Videos <span class="secondary badge">3</span><a name="videos"></a></h3>
-          <div class="row medium-up-1 large-up-2">
-            <div class="column">
-              <img src="{% static 'images/sidevideo.png' %}" class="thumbnail" alt="">
-              <p><a href="#">Video One Name</a></p>
-            </div>
-            <div class="column">
-              <img src="{% static 'images/sidevideo.png' %}" class="thumbnail" alt="">
-              <p><a href="#">Video Two Name</a></p>
-            </div>
-            <div class="column">
-              <img src="{% static 'images/sidevideo.png' %}" class="thumbnail" alt="">
-              <p><a href="#">Khafre Quarry Cemetery, northwest corner of Khafre pyramid</a></p>
-            </div>
-          </div>
-        </section>
-    </div>
-{% endblock %}
+  </div>
+    {% endblock %}

@@ -510,7 +510,7 @@
           {% endif %}
 
           <div class="feature-block__footer">
-            <p class="content-footer-info"><a href="full.html#people">View all {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+            <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#people">View all {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
               {{ apnum|add:mpnum }}
             {% endwith %} People <i class="icon-angle-right"></i></a></p>
           </div>
