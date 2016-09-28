@@ -1,63 +1,136 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags %}
+{% load search_tags %}
 
-{% block body_class %}template-searchresults{% endblock %}
+{% block body_class %}section-search-body{% endblock %}
 
-{% block title %}Search{% endblock %}
+{% block title %}Digital Giza | Search the Archives{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-    <h3>Search Results</h3>
-    {% if hits %}
-        <p>{{ total }} result{{ total|length|pluralize }} for "{{ search_query }}"</p>
-        {% if has_previous %}
-            <a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;page={{ previous_page_number }}&amp;type={{ type }}">Previous</a>
-        {% endif %}
+<div class="page-header header-bg-5" id="content">
+  <div class="row title">
+    <header class="large-12 columns">
+      <h1>Search the Archives <a name="top"></a></h1>
+    </header>
+  </div>
+</div>
 
-        {% if has_next %}
-            <a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;page={{ next_page_number }}&amp;type={{ type }}">Next</a>
-        {% endif %}
-        <ul>
-            {% for result in hits %}
-                <li>
-                    <h4><a href="{% url 'get_type_html' result.type result.id %}">{{ result.source.displaytext }}</a></h4>
-                </li>
-            {% endfor %}
+<div class="row">
+
+  <section class="medium-9 medium-push-3 columns">
+
+    <div class="row">
+      <div class="medium-6 columns">
+        <h3 class="heading-alt m-t-half m-b-1">{{ total }} search result{{ total|length|pluralize }} found.</h3>
+      </div>
+      <!-- <div class="medium-3 columns text-right">
+        <label for="sortResults" class="middle m-r-neg1">Sort by:</label>
+      </div>
+      <div class="medium-3 columns">
+        <select id="sortResults">
+          <option value="">Category</option>
+          <option value="">Name</option>
+          <option value="">Year</option>
+          <option value="">Material</option>
+          <option value="">Findspot</option>
+        </select>
+      </div> -->
+    </div>
+
+    {% for result in hits %}
+      <div class="media-object list-item search-result">
+        <div class="media-object-section">
+          <div {% if result.source.primarydisplay %}class="thumbnail"{% endif %}>
+            <a href="#0">{% if result.source.primarydisplay %}<img src="{{ result.source.primarydisplay.thumbnail }}" alt="">{% endif %}</a>
+          </div>
+        </div>
+        <div class="media-object-section">
+          <p class="media-object-title"><a href="{% url 'get_type_html' result.type result.id 'intro' %}">{{ result.source.displaytext }}</a></p>
+          <ul class="subheader">
+            <li>{{ result.source.number }}</li>
+            <!-- add category -->
+          </ul>
+        </div>
+      </div>
+    {% endfor %}
+  </section>
+  <aside class="medium-3 medium-pull-9 columns">
+
+    <div class="feature-block secondary text-smaller">
+      <h5 class="heading-alt">Search options</h5>
+      <p><a href="{% url 'search' %}">Start a new search</a></p>
+
+      <div class="search-facet-section">
+        <h6 class="search-facet-title">Keyword:</h6>
+        <ul class="search-facet-list">
+          <li class="is-active">
+            {{ search_query }}
+          </li>
         </ul>
-    {% elif search_query and total == 0 %}
-        No results found
-    {% endif %}
+      </div>
+
+      <div class="search-facet-section">
+        <h6 class="search-facet-title">Category:</h6>
+        <ul class="search-facet-list">
+          {% for category in categories %}
+            <li class="search-facet-item is-active"><a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}{% if c != category %}&amp;category={{c}}{% endif %}{% endfor %}">{% with facet=facets|keyvalue:category %}{{ facet.display_text }}{% endwith %}</a></li>
+          {% endfor %}
+          {% for key, facet in facets.items %}
+            {% if key not in categories %}
+              <li class="search-facet-item"><a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;category={{key}}">{{ facet.display_text }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- <div class="search-facet-section">
+        <h6 class="search-facet-title">Material:</h6>
+        <ul class="search-facet-list">
+          <li class="search-facet-item is-active">
+            <a href="#0">limestone</a>
+          </li>
+          <li class="search-facet-item">
+            <a href="#0">alabaster</a>
+          </li>
+          <li class="search-facet-item">
+            <a href="#0">bronze</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="search-facet-section">
+        <h6 class="search-facet-title">Year:</h6>
+        <ul class="search-facet-list">
+          <li class="search-facet-item">
+            <a href="#0">1924</a>
+          </li>
+          <li class="search-facet-item">
+            <a href="#0">1925</a>
+          </li>
+          <li class="search-facet-item">
+            <a href="#0">1926</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="search-facet-section">
+        <h6 class="search-facet-title">Findspot:</h6>
+        <ul class="search-facet-list">
+          <li class="search-facet-item">
+            <a href="#0">Location 1</a>
+          </li>
+          <li class="search-facet-item">
+            <a href="#0">Location 2</a>
+          </li>
+          <li class="search-facet-item">
+            <a href="#0">Location 3</a>
+          </li>
+        </ul>
+      </div> -->
+
     </div>
-    <div class="search_facets col-sm-3 col-md-2 sidebar">
-    {% if facets %}
-    <ul class="nav nav-sidebar">
-        {% if facets.sites %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=sites">{{ facets.sites.display_text }} ({{ facets.sites.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.photos %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=photos">{{ facets.photos.display_text }} ({{ facets.photos.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.objects %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=objects">{{ facets.objects.display_text }} ({{ facets.objects.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.modernpeople %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=modernpeople">{{ facets.modernpeople.display_text }} ({{ facets.modernpeople.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.diarypages %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=diarypages">{{ facets.diarypages.display_text }} ({{ facets.diarypages.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.plansanddrawings %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=plansanddrawings">{{ facets.plansanddrawings.display_text }} ({{ facets.plansanddrawings.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.pubdocs %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=pubdocs">{{ facets.pubdocs.display_text }} ({{ facets.pubdocs.doc_count }})</a></li>
-        {% endif %}
-        {% if facets.unpubdocs %}
-            <li><a href="{% url 'search' %}?q={{ search_query|urlencode }}&amp;type=unpubdocs">{{ facets.unpubdocs.display_text }} ({{ facets.unpubdocs.doc_count }})</a></li>
-        {% endif %}
-    </ul>
-    {% endif %}
-    </div>
-    </div>
+
+  </aside>
+
+</div>
 {% endblock %}

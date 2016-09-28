@@ -15,19 +15,21 @@ def search(request):
 
 def results(request):
     search_query = request.GET.get('q', None)
-    type = request.GET.get('type', '')
+    category = request.GET.getlist('category', [])
+    category = list(map(lambda x: x.encode('utf-8'), category))
+    categorystring = ",".join(category)
     page = int(request.GET.get('page', 1))
     results_from = 0
     # calculate elasticsearch's from, using the page value
     results_from = (page - 1) * RESULTS_SIZE
-    print search_query, type, page, results_from
+    print search_query, category, page, results_from
 
     # check if user is trying to search by specific item number
     number_query = False
     number = None
     parts = search_query.split(':')
     if len(parts) == 2:
-        type = parts[0]
+        categorystring = parts[0]
         number = parts[1]
         number_query = True
 
@@ -43,7 +45,7 @@ def results(request):
     if number_query:
         # user is searching for an exact item using its number
         # such as 'objects:HUMFA_27-5-1'
-        search_results = es.search(index=ES_INDEX, doc_type=type, body={
+        search_results = es.search(index=ES_INDEX, doc_type=categorystring, body={
           "query": {
             "term": {
                 "number": number
@@ -54,7 +56,7 @@ def results(request):
         # user entered a number that only has one result for the given type, redirect to that page
         if results_total == 1:
             source = search_results['hits']['hits'][0].get('_source')
-            return HttpResponseRedirect(reverse(type, args=(source.get('id'),)))
+            return HttpResponseRedirect(reverse(categorystring, args=(source.get('id'),)))
         #elif results_total == 0 and type == 'sites':
         else:
             # we have 0 or more than 1 result, treat it as a normal search result
@@ -65,9 +67,9 @@ def results(request):
     else:
         # this is a normal search, just aggregate by type
         ## ADD aggregations per TYPE
-        search_results = es.search(index=ES_INDEX, doc_type=type, body={
-            "from": results_from,
-            "size": RESULTS_SIZE,
+        print search_query, categorystring
+        # get facets separately (not sure if these two searches can be combined)
+        aggregations = es.search(index=ES_INDEX, body={
             "query": {
                 "match_phrase": {
                    "_all": search_query
@@ -81,7 +83,17 @@ def results(request):
                 }
             }
         })
-        for count in search_results['aggregations']['aggregation']['buckets']:
+
+        search_results = es.search(index=ES_INDEX, doc_type=categorystring, body={
+            "from": results_from,
+            "size": RESULTS_SIZE,
+            "query": {
+                "match_phrase": {
+                   "_all": search_query
+                }
+            }
+        })
+        for count in aggregations['aggregations']['aggregation']['buckets']:
             facets[count['key']] = {
                 'doc_count' : count['doc_count'],
                 'display_text' : CATEGORIES[count['key']]
@@ -108,5 +120,5 @@ def results(request):
         'previous_page_number' : previous_page_number,
         'has_next' : has_next,
         'next_page_number' : next_page_number,
-        'type' : type
+        'categories' : category
     })
