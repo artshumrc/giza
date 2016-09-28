@@ -67,7 +67,7 @@ def process_objects():
 		object['displaytext'] = object['title']
 		prefix_idx = object_number.find('_')
 		object['altnumber'] = object_number[prefix_idx+1:]
-		site['roles'] = []
+		object['roles'] = []
 		return (object, current_id)
 
 	print "Starting Objects..."
@@ -461,8 +461,8 @@ def process_object_related_constituents():
 		constituent_dict = {}
 		role = row[indices['role_index']]
 		# update the set of roles for this object
-		if role not in site['roles']:
-			site['roles'].append(role)
+		if role not in object['roles']:
+			object['roles'].append(role)
 
 		constituent_dict['role'] = row[indices['role_index']]
 		constituent_dict['roleid'] = row[indices['role_id_index']]
@@ -478,20 +478,6 @@ def process_object_related_constituents():
 		if constituent_type not in object['relateditems']:
 			object['relateditems'][constituent_type] = []
 		object['relateditems'][constituent_type].append(constituent_dict)
-
-		# parse out any constituents "Mentioned on this page" (RoleID==48)
-		if constituent_dict['roleid'] == '48':
-			if 'mentioned' not in object:
-				object['mentioned'] = {}
-			if 'people' not in object['mentioned']:
-				object['mentioned']['people'] = []
-			object['mentioned']['people'].append(constituent_dict)
-
-		# parse out any "Author" (RoleID==50)
-		if constituent_dict['roleid'] == '50':
-			if 'author' not in object:
-				object['author'] = []
-			object['author'].append(constituent_dict)
 
 		return(object, current_id)
 
