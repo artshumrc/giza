@@ -29,21 +29,32 @@
 
     <section class="large-8 columns">
       <div class="item__featured-image">
-        {% if object.primarydisplay.main %}<img src="{{ object.primarydisplay.main }}" alt="">{% endif %}
-        <p class="item__featured-image__caption">
-          Caption for this photo.
-        </p>
+        {% if object.primarydisplay.main %}
+          <img src="{{ object.primarydisplay.main }}" alt="">
+          <p class="item__featured-image__caption">
+            Caption for this photo.
+          </p>
+        {% endif %}
       </div>
       <div class="item__overview">
 
-            <ul class="item__featured-properties">
-              <li class="item__property item__property--primary">
-                Site ID: {{ object.number }}
-              </li>
-              <li class="item__property">
-                Site name: {{ object.sitename }}
-              </li>
-            </ul>
+        <ul class="item__featured-properties">
+          <li class="item__property item__property--primary">
+            ID: {{ object.number }}
+          </li>
+          {% if type == 'sites' %}
+            <li class="item__property">
+              Site name: {{ object.sitename }}
+            </li>
+          {% elif type == 'objects' %}
+            <li class="item__property">
+              Department: {{ object.department }}
+            </li>
+            <li class="item__property">
+              Title: {{ object.title }}
+            </li>
+          {% endif %}
+        </ul>
 
             {% if object.description %}
             <div class="item__featured-description">

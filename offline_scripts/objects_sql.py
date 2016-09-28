@@ -5,7 +5,7 @@ SELECT Objects.ObjectID as ID, Objects.ObjectNumber as Number, Objects.ObjectSta
 Objects.ObjectName + ',,' as ObjectOwnerDetails, Departments.Department, ObjContext.Period,
 Objects.Dated as EntryDate, replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.Medium + ',,' as Medium,
 Objects.Dimensions + ',,' as Dimensions, Objects.CreditLine, Objects.Description + ',,' AS Description, Objects.Provenance,
-Objects.PubReferences + ',,' AS PubReferences, Objects.Notes + ',,' AS Notes, Objects.Chat + ',,' as DiaryTranscription,
+Objects.PubReferences + ',,' AS BibReferences, Objects.Notes + ',,' AS Notes, Objects.Chat + ',,' as DiaryTranscription,
 Objects.CuratorialRemarks + ',,' AS Remarks, ObjPkgList.objectnumber as FieldNumber, TextEntries.TextEntry as ProblemsQuestions
 FROM Objects
 LEFT JOIN ObjTitles on Objects.ObjectID=ObjTitles.ObjectID AND ObjTitles.DisplayOrder=1

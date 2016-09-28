@@ -67,6 +67,7 @@ def process_objects():
 		object['displaytext'] = object['title']
 		prefix_idx = object_number.find('_')
 		object['altnumber'] = object_number[prefix_idx+1:]
+		site['roles'] = []
 		return (object, current_id)
 
 	print "Starting Objects..."
@@ -321,7 +322,6 @@ def process_object_flexfields():
 			save(object)
 	print "Finished Objects Flex Fields..."
 
-
 def process_object_related_sites():
 	def get_indices():
 		indices = {
@@ -459,6 +459,11 @@ def process_object_related_constituents():
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 
 		constituent_dict = {}
+		role = row[indices['role_index']]
+		# update the set of roles for this object
+		if role not in site['roles']:
+			site['roles'].append(role)
+
 		constituent_dict['role'] = row[indices['role_index']]
 		constituent_dict['roleid'] = row[indices['role_id_index']]
 		constituent_dict['id'] = constituent_id

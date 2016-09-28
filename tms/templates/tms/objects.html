@@ -1,48 +1,157 @@
-{% extends "base.html" %}
-{% load static wagtailcore_tags %}
-
-{% block body_class %}template-find{% endblock %}
-
-{% block title %}Find{% endblock %}
-
-{% block content %}
- <div class="main">
-        <div class="main_content">
-        {% if object.title %}
-        <p><b>Title: </b>{{ object.title }}</p>
-        {% endif %}
-        {% if object.entrydate or object.fieldnumber %}
-            <div>
-            <span><b>Object register entry:</b></span>
-            {% if object.fieldnumber %}
-            <br/><span>Field number: {{ object.fieldnumber }}</span>
+<div class="feature-block__body">
+  <ul class="feature-block__list multicol-2">
+    {% if object.classificationtext %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Classification</dt>
+          <dd>{{ object.classificationtext }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.provenance %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Findspot</dt>
+          <dd>{{ object.provenance }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.medium %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Material</dt>
+          <dd>{{ object.medium }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.dimensions %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Dimensions</dt>
+          <dd>{{ object.dimensions }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.creditline %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Credit Line</dt>
+          <dd>{{ object.creditline }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.altnums %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Alternate Numbers</dt>
+          {% for altnum in object.altnums %}
+            <dd>{{ altnum }}</dd>
+          {% endfor %}
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.objectownerdetails %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Object Ownership Information</dt>
+          <dd>{{ object.objectownerdetails }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.period %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Period</dt>
+          <dd>{{ object.period }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.entrydate %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Date of Register Entry</dt>
+          <dd>{{ object.entrydate }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% for role in object.roles %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>{{role}}</dt>
+          {% for item in object.relateditems.modernpeople %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}, {{ item.displaydate }}</dd>
             {% endif %}
-            {% if object.entrydate %}
-            <br/><span>Entry date(s): {{ object.entrydate }}</span>
+          {% endfor %}
+          {% for item in object.relateditems.ancientpeople %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}, {{ item.displaydate }}</dd>
             {% endif %}
-            </div>
-        {% endif %}
-        {% if object.objectownerdetails %}
-        <p><b>Object Owner Details: </b>{{ object.objectownerdetails }}</p>
-        {% endif %}
-        {% if object.provenance %}
-        <p><b>Findspot: </b>{{ object.provenance }}</p>
-        {% endif %}
-        {% if object.medium %}
-        <p><b>Medium: </b>{{ object.medium }}</p>
-        {% endif %}
-        {% if object.dimensions %}
-        <p><b>Expedition Measurements: </b>{{ object.dimensions }}</p>
-        {% endif %}
-        {% if object.description %}
-        <p><b>Description: </b>{{ object.description }}</p>
-        {% endif %}
-        {% if object.notes %}
-        <p><b>Notes: </b>{{ object.notes }}</p>
-        {% endif %}
-        {% if object.pubreferences %}
-        <p><b>Selected Published References: </b>{{ object.pubreferences }}</p>
-        {% endif %}
-        </div>
-    </div>
-{% endblock %}
+          {% endfor %}
+        </dl>
+      </div>
+    </li>
+    {% endfor %}
+    {% if object.notes %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Notes</dt>
+          <dd>{{ object.notes }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.remarks %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Remarks</dt>
+          <dd>{{ object.remarks }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.problemsquestions %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Problems/Questions</dt>
+          <dd>{{ object.problemsquestions }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% for key, value in object.flexfields.items %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>{{key}}</dt>
+          {% for flexfield in value %}
+            <dd>{{ flexfield }}</dd>
+          {% endfor %}
+        </dl>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>

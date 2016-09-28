@@ -90,20 +90,31 @@
     </nav>
     <section class="medium-8 columns medium-pull-4">
       <div class="item__featured-image">
-        {% if object.primarydisplay.main %}<img src="{{ object.primarydisplay.main }}" alt="">{% endif %}
-        <p class="item__featured-image__caption">
-          Caption for this photo.
-        </p>
+        {% if object.primarydisplay.main %}
+          <img src="{{ object.primarydisplay.main }}" alt="">
+          <p class="item__featured-image__caption">
+            Caption for this photo.
+          </p>
+        {% endif %}
       </div>
       <div class="item__overview">
 
         <ul class="item__featured-properties">
           <li class="item__property item__property--primary">
-            Site ID: {{ object.number }}
+            ID: {{ object.number }}
           </li>
-          <li class="item__property">
-            Site name: {{ object.sitename }}
-          </li>
+          {% if type == 'sites' %}
+            <li class="item__property">
+              Site name: {{ object.sitename }}
+            </li>
+          {% elif type == 'objects' or type == 'diarypages' %}
+            <li class="item__property">
+              Department: {{ object.department }}
+            </li>
+            <li class="item__property">
+              Title: {{ object.title }}
+            </li>
+          {% endif %}
         </ul>
 
         {% if object.description %}
@@ -130,7 +141,7 @@
           </button>
         </div>
         {% with template_name="tms/"|add:type|add:".html" %}
-        {% include template_name %}
+          {% include template_name %}
         {% endwith %}
       </section>
       {% if object.relateditems.objects %}
