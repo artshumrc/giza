@@ -132,16 +132,18 @@ def results(request):
                 'doc_count' : count['doc_count'],
                 'display_text' : CATEGORIES[count['key']]
                 })
-        print category_facets
         for hit in search_results['hits']['hits']:
             hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
 
         total = search_results['hits']['total']
 
+        num_pages = (total/RESULTS_SIZE) + (total % RESULTS_SIZE > 0)
+        num_pages_range = create_page_ranges(page, num_pages)
+
         if page > 1:
             has_previous = True
             previous_page_number = page - 1
-        if (total / RESULTS_SIZE > page) or (total / RESULTS_SIZE == page and total % RESULTS_SIZE > 0):
+        if page < num_pages:
             has_next = True
             next_page_number = page + 1
 
@@ -155,5 +157,47 @@ def results(request):
         'previous_page_number' : previous_page_number,
         'has_next' : has_next,
         'next_page_number' : next_page_number,
+        'num_pages_range' : num_pages_range,
+        'num_pages' : num_pages,
+        'current_page' : str(page),
         'categories' : category
     })
+
+def create_page_ranges(page, num_pages):
+    # create the range of page numbers and ellipses to show
+    # always show 1. attempt to show two page numbers around the current page
+    num_pages_range = ["1"]
+
+    # check if we need an ellipsis after 1
+    if page - 2 > 2:
+        num_pages_range.append('ellipsis')
+
+    # determine values before
+    if page - 2 <= 1:
+        for i in range(2, page+1):
+            num_pages_range.append(str(i))
+    else:
+        for i in range(page-2, page):
+            num_pages_range.append(str(i))
+
+    # add current page if it's not first or last
+    if page != 1 and page != num_pages and str(page) not in num_pages_range:
+        num_pages_range.append(str(page))
+
+    # determine values after
+    if page + 2 >= num_pages:
+        for i in range(page+1, num_pages):
+            num_pages_range.append(str(i))
+    else:
+        for i in range(page+1, page+3):
+            num_pages_range.append(str(i))
+
+    # check if we need an ellipsis before last page
+    if page + 2 < num_pages - 1:
+        num_pages_range.append('ellipsis')
+
+    # always append last page, check it's not already in there (when there are only a few pages)
+    if str(num_pages) not in num_pages_range:
+        num_pages_range.append(str(num_pages))
+
+    return num_pages_range

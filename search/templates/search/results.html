@@ -37,6 +37,18 @@
       </div> -->
     </div>
 
+    <ul class="pagination text-center" role="navigation" aria-label="Pagination">
+      <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{previous_page_number}}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
+      {% for i in num_pages_range %}
+        {% if i == 'ellipsis' %}
+          <li class="ellipsis"></li>
+        {% else %}
+          <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{i}}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
+        {% endif %}
+      {% endfor %}
+      <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{next_page_number}}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
+    </ul>
+
     {% for result in hits %}
       <div class="media-object list-item search-result">
         <div class="media-object-section">
@@ -53,7 +65,20 @@
         </div>
       </div>
     {% endfor %}
+
+    <ul class="pagination text-center" role="navigation" aria-label="Pagination">
+      <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{previous_page_number}}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
+      {% for i in num_pages_range %}
+        {% if i == 'ellipsis' %}
+          <li class="ellipsis"></li>
+        {% else %}
+          <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{i}}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
+        {% endif %}
+      {% endfor %}
+      <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{next_page_number}}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
+    </ul>
   </section>
+
   <aside class="medium-3 medium-pull-9 columns">
 
     <div class="feature-block secondary text-smaller">
