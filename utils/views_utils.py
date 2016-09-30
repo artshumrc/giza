@@ -17,3 +17,49 @@ CATEGORIES = {
 	'videos'			: 'Videos',
 	'audio'				: 'Audio'
 }
+
+# If these change, modify elasticsearch_setup.sh as necessary
+FACETS_PER_CATEGORY = {
+	'sites' : {
+		'Site Type' : 'sitetype.sitetype.raw'
+	},
+	'objects' : {
+		'Classification' : 'classificationtext.raw',
+		'Findspot' : 'provenance.raw',
+		'Material' : 'medium.raw',
+		'Credit Line' : 'creditline.raw',
+		'Period' : 'period.raw'
+	},
+	'diarypages' : {
+		'Classification' : 'classificationtext.raw',
+		'Credit Line' : 'creditline.raw'
+	},
+	'mapsandplans' : {
+		'Classification' : 'classificationtext.raw',
+		'Credit Line' : 'creditline.raw',
+		'Material' : 'medium.raw'
+	},
+	'drawings' : {
+		'Classification' : 'classificationtext.raw',
+		'Credit Line' : 'creditline.raw',
+		'Material' : 'medium.raw'
+	},
+	'unpubdocs' : {
+		'Classification' : 'classificationtext.raw',
+		'Credit Line' : 'creditline.raw'
+	},
+	'unpubdocs' : {
+		'Classification' : 'classificationtext.raw',
+		'Credit Line' : 'creditline.raw',
+	},
+	'pubdocs' : {},
+	'photos' : {},
+	'ancientpeople' : {},
+	'modernpeople' : {},
+	'institutions' : {},
+	'groups' : {},
+	'animals' : {},
+	'3dmodels' : {},
+	'videos' : {},
+	'audio' : {}
+}

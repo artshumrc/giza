@@ -62,7 +62,8 @@ def process_objects():
 				else:
 					object[key] = row_value
 			else:
-				object[key] = row_value
+				# remove whitespace at end of line if a string
+				object[key] = row_value.rstrip() if type(row_value) is str else row_value 
 		# Add some extra fields not in the TMS data
 		object['displaytext'] = object['title']
 		prefix_idx = object_number.find('_')
@@ -210,8 +211,10 @@ def process_object_altnums():
 		if 'altnums' not in object:
 			object['altnums'] = []
 		altnum = row[indices['altnum_index']]
+		prefix_idx = altnum.find('_')
+		without_prefix = altnum[prefix_idx+1:]
 		description = row[indices['description_index']] if row[indices['description_index']] != "NULL" else ""
-		object['altnums'].append({"altnum" : altnum, "description" : description})
+		object['altnums'].append({"altnum" : altnum, "description" : description, 'without_prefix': without_prefix})
 		return (object, current_id)
 
 	print "Starting Objects AltNums..."

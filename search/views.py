@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailsearch.models import Query
 from utils.elastic_backend import es, ES_INDEX
-from utils.views_utils import CATEGORIES
+from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY
 
 RESULTS_SIZE = 20
 
@@ -35,7 +35,8 @@ def results(request):
 
     # values being passed to template
     hits = []
-    facets = {}
+    category_facets = {}
+    sub_facets = {}
     has_next = False
     has_previous = False
     previous_page_number = 0
@@ -56,7 +57,7 @@ def results(request):
         # user entered a number that only has one result for the given type, redirect to that page
         if results_total == 1:
             source = search_results['hits']['hits'][0].get('_source')
-            return HttpResponseRedirect(reverse(categorystring, args=(source.get('id'),)))
+            return HttpResponseRedirect(reverse('get_type_html', args=(categorystring, source.get('id'), 'intro')))
         #elif results_total == 0 and type == 'sites':
         else:
             # we have 0 or more than 1 result, treat it as a normal search result
@@ -65,11 +66,42 @@ def results(request):
             for hit in search_results['hits']['hits']:
                 hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
     else:
-        # this is a normal search, just aggregate by type
-        ## ADD aggregations per TYPE
-        print search_query, categorystring
+        # this is a normal search, just aggregate by type/category
+        ## Aggregations per type/category if we have categories
+
+        for c in category:
+            aggregations = {}
+            for facet, field in FACETS_PER_CATEGORY[c].items():
+                aggregations[facet] = {
+                    "terms" : {
+                        "field" : field
+                    }
+                }
+            body_query = {
+                "size" : 0,
+                "query": {
+                    "match_phrase": {
+                       "_all": search_query
+                    }
+                },
+                "aggregations": aggregations
+            }
+            facets_for_category = es.search(index=ES_INDEX, doc_type=c, body=body_query)
+            sub_facets[c] = []
+            if 'aggregations' in facets_for_category:
+                for agg_name, value in facets_for_category['aggregations'].items():
+                    facet_array = []
+                    for bucket in value['buckets']:
+                        agg = {
+                        'display_text' : bucket['key'],
+                        'doc_count' : bucket['doc_count']
+                        }
+                        facet_array.append(agg)
+                    sub_facets[c].append({agg_name : facet_array})
+
         # get facets separately (not sure if these two searches can be combined)
         aggregations = es.search(index=ES_INDEX, body={
+            "size" : 0,
             "query": {
                 "match_phrase": {
                    "_all": search_query
@@ -93,12 +125,14 @@ def results(request):
                 }
             }
         })
+        category_facets['types'] = []
         for count in aggregations['aggregations']['aggregation']['buckets']:
-            facets[count['key']] = {
+            category_facets['types'].append({
+                'key' : count['key'],
                 'doc_count' : count['doc_count'],
                 'display_text' : CATEGORIES[count['key']]
-                }
-
+                })
+        print category_facets
         for hit in search_results['hits']['hits']:
             hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
 
@@ -114,7 +148,8 @@ def results(request):
     return render(request, 'search/results.html', {
         'search_query' : search_query,
         'hits' : hits,
-        'facets' : facets,
+        'category_facets' : category_facets,
+        'sub_facets' : sub_facets,
         'total' : total,
         'has_previous' : has_previous,
         'previous_page_number' : previous_page_number,

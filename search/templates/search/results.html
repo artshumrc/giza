@@ -72,62 +72,38 @@
       <div class="search-facet-section">
         <h6 class="search-facet-title">Category:</h6>
         <ul class="search-facet-list">
+          <!-- Display selected categories first -->
           {% for category in categories %}
-            <li class="search-facet-item is-active"><a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}{% if c != category %}&amp;category={{c}}{% endif %}{% endfor %}">{% with facet=facets|keyvalue:category %}{{ facet.display_text }}{% endwith %}</a></li>
+            <li class="search-facet-item is-active"><a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}{% if c != category %}&amp;category={{c}}{% endif %}{% endfor %}">{% with facet=category_facets.types|array_value:category %}{{ facet.display_text }} ({{ facet.doc_count }}){% endwith %}</a></li>
           {% endfor %}
-          {% for key, facet in facets.items %}
-            {% if key not in categories %}
-              <li class="search-facet-item"><a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;category={{key}}">{{ facet.display_text }}</a></li>
-            {% endif %}
+          <!-- Display categories that are still available -->
+          {% for type, value in category_facets.items %}
+            {% for type_facet in value %}
+              {% if type_facet.key not in categories %}
+                <li class="search-facet-item"><a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;category={{type_facet.key}}">{{ type_facet.display_text }} ({{ type_facet.doc_count}})</a></li>
+              {% endif %}
+            {% endfor %}
           {% endfor %}
         </ul>
       </div>
 
-      <!-- <div class="search-facet-section">
-        <h6 class="search-facet-title">Material:</h6>
-        <ul class="search-facet-list">
-          <li class="search-facet-item is-active">
-            <a href="#0">limestone</a>
-          </li>
-          <li class="search-facet-item">
-            <a href="#0">alabaster</a>
-          </li>
-          <li class="search-facet-item">
-            <a href="#0">bronze</a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="search-facet-section">
-        <h6 class="search-facet-title">Year:</h6>
-        <ul class="search-facet-list">
-          <li class="search-facet-item">
-            <a href="#0">1924</a>
-          </li>
-          <li class="search-facet-item">
-            <a href="#0">1925</a>
-          </li>
-          <li class="search-facet-item">
-            <a href="#0">1926</a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="search-facet-section">
-        <h6 class="search-facet-title">Findspot:</h6>
-        <ul class="search-facet-list">
-          <li class="search-facet-item">
-            <a href="#0">Location 1</a>
-          </li>
-          <li class="search-facet-item">
-            <a href="#0">Location 2</a>
-          </li>
-          <li class="search-facet-item">
-            <a href="#0">Location 3</a>
-          </li>
-        </ul>
-      </div> -->
-
+      <!-- Display facets available for each category -->
+      {% for cat, value in sub_facets.items %}
+        {% for sub_cat in value %}
+          {% for key, value in sub_cat.items %}
+           <div class="search-facet-section">
+            <h6 class="search-facet-title">{{key}}:</h6>
+            <ul class="search-facet-list">
+              {% for f in value %}
+              <li class="search-facet-item">
+                <a href="#0">{{f.display_text}} ({{f.doc_count}})</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
     </div>
 
   </aside>
