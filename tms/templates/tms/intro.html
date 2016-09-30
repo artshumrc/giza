@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags %}
+{% load static tms_tags %}
 
 {% block body_class %}section-explore-body header-full mode-intro{% endblock %}
 
@@ -485,7 +486,7 @@
                   <p class="media-object-title"><a href="{% url 'get_type_html' 'ancientpeople' item.id 'intro' %}">{{item.displaytext}}</a></p>
                   <ul class="subheader">
                     <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
-                    <li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li>
+                    <li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>
                   </ul>
                 </div>
               </div>
@@ -511,7 +512,7 @@
                   <ul class="subheader">
                     <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
                     <li><span class="item-property">Nationality &amp; Dates</span> <span class="item-value">{{item.displaydate}}</span></li>
-                    <li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li>
+                    <li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>
                   </ul>
                 </div>
               </div>
