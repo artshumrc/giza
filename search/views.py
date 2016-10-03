@@ -41,6 +41,8 @@ def results(request):
     has_previous = False
     previous_page_number = 0
     next_page_number = 0
+    num_pages_range = []
+    num_pages = 0
     total = 0
 
     if number_query:
@@ -138,7 +140,8 @@ def results(request):
         total = search_results['hits']['total']
 
         num_pages = (total/RESULTS_SIZE) + (total % RESULTS_SIZE > 0)
-        num_pages_range = create_page_ranges(page, num_pages)
+        if num_pages > 0:
+            num_pages_range = create_page_ranges(page, num_pages)
 
         if page > 1:
             has_previous = True

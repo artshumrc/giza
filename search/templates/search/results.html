@@ -37,17 +37,19 @@
       </div> -->
     </div>
 
-    <ul class="pagination text-center" role="navigation" aria-label="Pagination">
-      <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{previous_page_number}}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
-      {% for i in num_pages_range %}
-        {% if i == 'ellipsis' %}
-          <li class="ellipsis"></li>
-        {% else %}
-          <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{i}}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
-        {% endif %}
-      {% endfor %}
-      <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{next_page_number}}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
-    </ul>
+    {% if total > 0 %}
+      <ul class="pagination text-center" role="navigation" aria-label="Pagination">
+        <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{previous_page_number}}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
+        {% for i in num_pages_range %}
+          {% if i == 'ellipsis' %}
+            <li class="ellipsis"></li>
+          {% else %}
+            <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{i}}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
+          {% endif %}
+        {% endfor %}
+        <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{next_page_number}}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
+      </ul>
+    {% endif %}
 
     {% for result in hits %}
       <div class="media-object list-item search-result">
@@ -66,17 +68,19 @@
       </div>
     {% endfor %}
 
-    <ul class="pagination text-center" role="navigation" aria-label="Pagination">
-      <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{previous_page_number}}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
-      {% for i in num_pages_range %}
-        {% if i == 'ellipsis' %}
-          <li class="ellipsis"></li>
-        {% else %}
-          <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{i}}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
-        {% endif %}
-      {% endfor %}
-      <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{next_page_number}}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
-    </ul>
+    {% if total > 0 %}
+      <ul class="pagination text-center" role="navigation" aria-label="Pagination">
+        <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{previous_page_number}}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
+        {% for i in num_pages_range %}
+          {% if i == 'ellipsis' %}
+            <li class="ellipsis"></li>
+          {% else %}
+            <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{i}}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
+          {% endif %}
+        {% endfor %}
+        <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;page={{next_page_number}}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
+      </ul>
+    {% endif %}
   </section>
 
   <aside class="medium-3 medium-pull-9 columns">
@@ -94,23 +98,25 @@
         </ul>
       </div>
 
-      <div class="search-facet-section">
-        <h6 class="search-facet-title">Category:</h6>
-        <ul class="search-facet-list">
-          <!-- Display selected categories first -->
-          {% for category in categories %}
-            <li class="search-facet-item is-active"><a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}{% if c != category %}&amp;category={{c}}{% endif %}{% endfor %}">{% with facet=category_facets.types|array_value:category %}{{ facet.display_text }} ({{ facet.doc_count }}){% endwith %}</a></li>
-          {% endfor %}
-          <!-- Display categories that are still available -->
-          {% for type, value in category_facets.items %}
-            {% for type_facet in value %}
-              {% if type_facet.key not in categories %}
-                <li class="search-facet-item"><a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;category={{type_facet.key}}">{{ type_facet.display_text }} ({{ type_facet.doc_count}})</a></li>
-              {% endif %}
+      {% if total > 0 %}
+        <div class="search-facet-section">
+          <h6 class="search-facet-title">Category:</h6>
+          <ul class="search-facet-list">
+            <!-- Display selected categories first -->
+            {% for category in categories %}
+              <li class="search-facet-item is-active"><a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}{% if c != category %}&amp;category={{c}}{% endif %}{% endfor %}">{% with facet=category_facets.types|array_value:category %}{{ facet.display_text }} ({{ facet.doc_count }}){% endwith %}</a></li>
             {% endfor %}
-          {% endfor %}
-        </ul>
-      </div>
+            <!-- Display categories that are still available -->
+            {% for type, value in category_facets.items %}
+              {% for type_facet in value %}
+                {% if type_facet.key not in categories %}
+                  <li class="search-facet-item"><a href="{% url 'results' %}?q={{search_query}}{% for c in categories %}&amp;category={{c}}{% endfor %}&amp;category={{type_facet.key}}">{{ type_facet.display_text }} ({{ type_facet.doc_count}})</a></li>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
 
       <!-- Display facets available for each category -->
       {% for cat, value in sub_facets.items %}
