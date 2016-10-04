@@ -14,20 +14,31 @@ def search(request):
     return render(request, 'search/search.html')
 
 def results(request):
-    search_query = request.GET.get('q', None)
-    category = request.GET.getlist('category', [])
-    category = list(map(lambda x: x.encode('utf-8'), category))
-    categorystring = ",".join(category)
+    search_term = request.GET.get('q', None).encode('utf-8')
+    current_categories = request.GET.getlist('category', [])
+    current_categories = list(map(lambda x: x.encode('utf-8'), current_categories))
+    current_subfacets = {}
+    # check if there are subfacets for each category
+    for c in current_categories:
+        subcats = request.GET.getlist(c+'_facet', [])
+        if subcats: current_subfacets[c] = {}
+        for sc in subcats:
+            parts = sc.split('_')
+            subfacet = parts[0]
+            term = parts[1]
+            current_subfacets[c][subfacet] = term
+
     page = int(request.GET.get('page', 1))
     results_from = 0
     # calculate elasticsearch's from, using the page value
     results_from = (page - 1) * RESULTS_SIZE
-    print search_query, category, page, results_from
+    #print search_term, current_categories, current_subfacets, page, results_from
 
     # check if user is trying to search by specific item number
     number_query = False
     number = None
-    parts = search_query.split(':')
+    parts = search_term.split(':')
+    categorystring = ""
     if len(parts) == 2:
         categorystring = parts[0]
         number = parts[1]
@@ -35,7 +46,7 @@ def results(request):
 
     # values being passed to template
     hits = []
-    category_facets = {}
+    all_categories = {}
     sub_facets = {}
     has_next = False
     has_previous = False
@@ -68,45 +79,51 @@ def results(request):
             for hit in search_results['hits']['hits']:
                 hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
     else:
-        # this is a normal search, just aggregate by type/category
-        ## Aggregations per type/category if we have categories
+        # this is a normal search
+        base_query = build_es_query(search_term, current_categories, current_subfacets)
 
-        for c in category:
-            aggregations = {}
-            for facet, field in FACETS_PER_CATEGORY[c].items():
-                aggregations[facet] = {
-                    "terms" : {
-                        "field" : field
-                    }
-                }
-            body_query = {
-                "size" : 0,
-                "query": {
-                    "match_phrase": {
-                       "_all": search_query
+        ## create the aggregations query for ES
+        aggregations = {}
+        for c in current_categories:
+            aggregations[c+'.aggs'] = {
+                "filter" : {
+                    "type" : {
+                        "value" : c
                     }
                 },
-                "aggregations": aggregations
+                "aggregations" : { facet:{"terms" : {"field": field}} for facet, field in FACETS_PER_CATEGORY[c].items() }
             }
-            facets_for_category = es.search(index=ES_INDEX, doc_type=c, body=body_query)
-            sub_facets[c] = []
-            if 'aggregations' in facets_for_category:
-                for agg_name, value in facets_for_category['aggregations'].items():
-                    facet_array = []
-                    for bucket in value['buckets']:
-                        agg = {
-                        'display_text' : bucket['key'],
-                        'doc_count' : bucket['doc_count']
-                        }
-                        facet_array.append(agg)
-                    sub_facets[c].append({agg_name : facet_array})
+        body_query = {
+            "size" : 0,
+            "query": base_query,
+            "aggregations": aggregations
+        }
 
-        # get facets separately (not sure if these two searches can be combined)
+        facets_for_category = es.search(index=ES_INDEX, body=body_query)
+
+        # build out the subfacets for display in template
+        if 'aggregations' in facets_for_category:
+            for agg_type, results in facets_for_category['aggregations'].items():
+                cat_name = agg_type.split('.')[0]
+                sub_facets[cat_name] = []
+                for agg_name, value in results.items():
+                    facet_array = []
+                    if type(value) == type(dict()) and 'buckets' in value:
+                        for bucket in value['buckets']:
+                            agg = {
+                            'display_text' : bucket['key'],
+                            'doc_count' : bucket['doc_count']
+                            }
+                            facet_array.append(agg)
+                        sub_facets[cat_name].append({agg_name : facet_array})
+
+        # get category facets (not sure if this can be combined with the phrase search)
+        # this search does not care if certain types have already been selected (unlike subfacets)
         aggregations = es.search(index=ES_INDEX, body={
             "size" : 0,
             "query": {
                 "match_phrase": {
-                   "_all": search_query
+                   "_all": search_term
                 }
             },
             "aggregations": {
@@ -118,18 +135,14 @@ def results(request):
             }
         })
 
-        search_results = es.search(index=ES_INDEX, doc_type=categorystring, body={
+        search_results = es.search(index=ES_INDEX, body={
             "from": results_from,
             "size": RESULTS_SIZE,
-            "query": {
-                "match_phrase": {
-                   "_all": search_query
-                }
-            }
+            "query": base_query
         })
-        category_facets['types'] = []
+        all_categories['types'] = []
         for count in aggregations['aggregations']['aggregation']['buckets']:
-            category_facets['types'].append({
+            all_categories['types'].append({
                 'key' : count['key'],
                 'doc_count' : count['doc_count'],
                 'display_text' : CATEGORIES[count['key']]
@@ -150,11 +163,19 @@ def results(request):
             has_next = True
             next_page_number = page + 1
 
+    # combine the current_subfacets into strings for quick comparison in template
+    subfacet_strings = []
+    for category, subfacets in current_subfacets.items():
+        for k,v in subfacets.items():
+            subfacet_strings.append("%s_%s_%s" % (category, k, v))
+
     return render(request, 'search/results.html', {
-        'search_query' : search_query,
+        'search_term' : search_term,
         'hits' : hits,
-        'category_facets' : category_facets,
+        'all_categories' : all_categories,
         'sub_facets' : sub_facets,
+        'current_subfacets' : current_subfacets,
+        'subfacet_strings' : subfacet_strings,
         'total' : total,
         'has_previous' : has_previous,
         'previous_page_number' : previous_page_number,
@@ -163,8 +184,53 @@ def results(request):
         'num_pages_range' : num_pages_range,
         'num_pages' : num_pages,
         'current_page' : str(page),
-        'categories' : category
+        'current_categories' : current_categories
     })
+
+def build_es_query(search_term, current_categories, current_subfacets):
+    if len(current_subfacets.keys()) == 0:
+        filter = {
+            "bool" : {
+                "should" : list(map(lambda x: {"type" : {"value" : x}}, current_categories))
+            }
+        }
+    else:
+        # build out the 'must' bool query
+        must = []
+        for k,v in current_subfacets.items():
+            must.append({"type" : {"value" : k}})
+            for name, value in v.items():
+                must.append({"term": {FACETS_PER_CATEGORY[k][name] : value}})
+
+        # build out the 'should' bool query, that uses 'must'
+        should = []
+        should.append({
+            "bool" : {
+                "must" : must
+            }
+        })
+        for c in current_categories:
+            if c not in current_subfacets:
+                should.append({"type" : {"value" : c}})
+
+        # set the 'filter'
+        filter = {
+            "bool" : {
+                "should" : should
+            }
+        }
+
+    q = {
+        "filtered": {
+            "query": {
+                "match_phrase": {
+                   "_all": search_term
+                }
+            },
+            "filter" : filter
+        }
+    }
+    return q
 
 def create_page_ranges(page, num_pages):
     # create the range of page numbers and ellipses to show
