@@ -47,12 +47,12 @@
           <dt>{{role}}</dt>
           {% for item in object.relateditems.modernpeople %}
             {% if item.role == role %}
-            <dd>{{ item.displaytext }}, {{ item.displaydate }}</dd>
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
             {% endif %}
           {% endfor %}
           {% for item in object.relateditems.ancientpeople %}
             {% if item.role == role %}
-            <dd>{{ item.displaytext }}, {{ item.displaydate }}</dd>
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
             {% endif %}
           {% endfor %}
         </dl>
