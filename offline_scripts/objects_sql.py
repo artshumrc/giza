@@ -74,11 +74,11 @@ SELECT ConXrefs.ID as ID, Roles.Role, Roles.RoleID, ConXrefDetails.ConstituentID
 Constituents.DisplayName, Constituents.DisplayDate, Objects.ClassificationID, Constituents.Remarks,
 MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM ConXrefs
-LEFT JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
-LEFT JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID
-LEFT JOIN Roles on ConXrefs.RoleID=Roles.RoleID
-LEFT JOIN Objects on ConXrefs.ID=Objects.ObjectID
-LEFT JOIN MediaXrefs on Constituents.ConstituentID=MediaXrefs.ID
+INNER JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
+INNER JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID
+INNER JOIN Roles on ConXrefs.RoleID=Roles.RoleID
+INNER JOIN Objects on ConXrefs.ID=Objects.ObjectID
+LEFT JOIN MediaXrefs on Constituents.ConstituentID=MediaXrefs.ID AND MediaXrefs.TableID=23 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths on MediaRenditions.ThumbPathID=MediaPaths.PathID
@@ -86,8 +86,6 @@ WHERE ConXrefs.TableID=108
 AND Constituents.Active=1
 AND ConXrefDetails.Unmasked=1
 AND Objects.PublicAccess=1
-AND MediaXrefs.TableID=23
-AND MediaXrefs.PrimaryDisplay=1
 ORDER BY ConXrefs.ID
 """
 
