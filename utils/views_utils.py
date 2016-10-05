@@ -48,10 +48,6 @@ FACETS_PER_CATEGORY = {
 		'Classification' : 'classificationtext.raw',
 		'Credit Line' : 'creditline.raw'
 	},
-	'unpubdocs' : {
-		'Classification' : 'classificationtext.raw',
-		'Credit Line' : 'creditline.raw',
-	},
 	'pubdocs' : {},
 	'photos' : {},
 	'ancientpeople' : {},
