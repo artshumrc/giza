@@ -19,12 +19,16 @@
       </div>
     </li>
     {% endfor %}
-    {% for altnum in object.altnums %}
+    {% for altnumtype in object.altnum_types %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
-          {% if altnum.description %}<dt>{{ altnum.description }}</dt>{% endif %}
-          <dd>{{ altnum.altnum|default:"" }}</dd>
+          {% if altnumtype %}<dt>{{ altnumtype }}</dt>{% endif %}
+          {% for altnum in object.altnums %}
+            {% if altnum.description == altnumtype %}
+              <dd>{{ altnum.altnum|default:"" }}</dd>
+            {% endif %}
+          {% endfor %}
         </dl>
       </div>
     </li>

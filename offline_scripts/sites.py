@@ -216,8 +216,14 @@ def process_site_altnums():
 
 		if 'altnums' not in site:
 			site['altnums'] = []
+		if 'altnum_types' not in site:
+			site['altnum_types'] = []
+
 		altnum = row[indices['altnum_index']]
 		description = row[indices['description_index']] if row[indices['description_index']] != "NULL" else ""
+		if description not in site['altnum_types']:
+			site['altnum_types'].append(description)
+
 		site['altnums'].append({"altnum" : altnum, "description" : description})
 		return (site, current_id)
 

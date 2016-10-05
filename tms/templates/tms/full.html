@@ -501,9 +501,11 @@
               <li>
                 <div class="media-object list-item list-item-thumbnail">
                   <div class="media-object-section">
+                    {% if item.thumbnail %}
                     <div class="thumbnail">
                       <a href="{% url 'get_type_html' 'ancientpeople' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
                     </div>
+                    {% endif %}
                   </div>
                   <div class="media-object-section">
                     <p class="media-object-title"><a href="{% url 'get_type_html' 'ancientpeople' item.id 'intro' %}">{{item.displaytext}}</a></p>
@@ -526,9 +528,11 @@
               <li>
                 <div class="media-object list-item list-item-thumbnail">
                   <div class="media-object-section">
+                    {% if item.thumbnail %}
                     <div class="thumbnail">
                       <a href="{% url 'get_type_html' 'modernpeople' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
                     </div>
+                    {% endif %}
                   </div>
                   <div class="media-object-section">
                     <p class="media-object-title"><a href="{% url 'get_type_html' 'modernpeople' item.id 'intro' %}">{{item.displaytext}}</a></p>

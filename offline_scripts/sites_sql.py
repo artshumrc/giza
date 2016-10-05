@@ -63,6 +63,7 @@ FROM ConXrefs
 INNER JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
 INNER JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID
 INNER JOIN Roles on ConXrefs.RoleID=Roles.RoleID
+INNER JOIN Sites on ConXrefs.ID=Sites.SiteID AND Sites.IsPublic=1
 LEFT JOIN MediaXrefs on Constituents.ConstituentID=MediaXrefs.ID AND MediaXrefs.TableID=23 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
@@ -93,6 +94,7 @@ AND MediaMaster.PublicAccess=1
 AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
 AND MediaXrefs.TableID=143
 AND MediaTypeID=4
+AND Sites.IsPublic=1
 ORDER BY SiteID
 """
 
@@ -103,6 +105,7 @@ MediaRenditions.MediaTypeID, MediaMaster.Description, MediaMaster.PublicCaption,
 ThumbPath.Path as ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path as MainPathName, MediaFiles.FileName as MainFileName
 FROM MediaXrefs
+INNER JOIN Sites on MediaXrefs.ID=Sites.SiteID AND Sites.IsPublic=1
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaFiles on MediaRenditions.RenditionID=MediaFiles.RenditionID
