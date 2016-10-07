@@ -21,7 +21,7 @@
 
     <div class="row">
       <div class="medium-6 columns">
-        <h3 class="heading-alt m-t-half m-b-1">{{ total }} search result{{ total|length|pluralize }} found.</h3>
+        <h3 class="heading-alt m-t-half m-b-1">{{ total }} search result{{ total|pluralize }} found.</h3>
       </div>
       <!-- <div class="medium-3 columns text-right">
         <label for="sortResults" class="middle m-r-neg1">Sort by:</label>
@@ -102,14 +102,12 @@
         <div class="search-facet-section">
           <h6 class="search-facet-title">Category:</h6>
           <ul class="search-facet-list">
-            <!-- Display selected categories first -->
-            {% if current_category %}
-              <li class="search-facet-item is-active"><a href="{% url 'results' %}?{% build_search_params search_term '' current_subfacets '' '' page %}">{% with facet=all_categories.types|array_value:current_category %}{{ facet.display_text }} ({{ facet.doc_count }}){% endwith %}</a></li>
-            {% endif %}
-            <!-- Display categories that are still available -->
+            <!-- Display category facets -->
             {% for type, value in all_categories.items %}
               {% for type_facet in value %}
-                {% if type_facet.key != current_category %}
+              {% if type_facet.key == current_category %}
+                <li class="search-facet-item is-active"><a href="{% url 'results' %}?{% build_search_params search_term '' current_subfacets '' '' page %}">{% with facet=all_categories.types|array_value:current_category %}{{ facet.display_text }} ({{ facet.doc_count }}){% endwith %}</a></li>
+              {% else %}
                   <li class="search-facet-item"><a href="{% url 'results' %}?{% build_search_params search_term type_facet.key current_subfacets '' '' page %}">{{ type_facet.display_text }} ({{ type_facet.doc_count}})</a></li>
                 {% endif %}
               {% endfor %}

@@ -82,8 +82,8 @@ def results(request):
     else:
         # this is a normal search
         base_query = build_es_query(search_term, current_category, current_subfacets)
-        bool_filter = build_bool(current_category, current_subfacets)
-        subfacet_aggs = build_subfacet_aggs(current_category, current_subfacets)
+        bool_filter = build_bool(current_category, current_subfacets, '')
+        subfacet_aggs = build_subfacet_aggs(current_category, current_subfacets, bool_filter)
 
         body_query = {
             "size" : 0,
@@ -185,7 +185,7 @@ def recurse_aggs(agg_name, facets, sub_facets):
             recurse_aggs(agg_name, value, sub_facets)
         return sub_facets
 
-def build_subfacet_aggs(current_category, current_subfacets):
+def build_subfacet_aggs(current_category, current_subfacets, bool_filter):
     if not current_category:
         return {}
     if current_category not in current_subfacets:
@@ -195,33 +195,35 @@ def build_subfacet_aggs(current_category, current_subfacets):
     aggs_for_selected = {}
     aggs_for_unselected = {}
     should = []
-    # aggregations for a facet that has been selected by the user should NOT be affected by any filters
+    # aggregations for a facet that has been selected by the user will only be affected by other selected facets
     for name, term_agg in FACETS_PER_CATEGORY[current_category].items():
         if name in current_subfacets[current_category]:
-            aggs_for_selected[name] = term_agg
+            bool_filter_for_facet = build_bool(current_category, current_subfacets, name)
+            filter_name = name + "_selected_filter"
+            aggregations[filter_name] = {
+                "filter" : {
+                    "bool" : bool_filter_for_facet
+                },
+                "aggregations": {
+                    name : term_agg
+                }
+            }
         else:
+            # other aggregations will be filtered by the selected facets
             aggs_for_unselected[name] = term_agg
 
     filter_name = "_".join(current_subfacets[current_category].keys()) + "_filter"
-    for facet_name, facet_values in current_subfacets[current_category].items():
-        for value in facet_values:
-            field_name = list(find_key('field', FACETS_PER_CATEGORY[current_category][facet_name]))[0]
-            should.append({"term": {field_name : value}})
-    # other aggregations should be filtered by the selected facets
 
-    aggregations = aggs_for_selected
     aggregations[filter_name] = {
         "filter" : {
-            "bool" : {
-                "should" : should
-            }
+            "bool" : bool_filter
         },
         "aggregations": aggs_for_unselected
     }
 
     return aggregations
 
-def build_bool(current_category, current_subfacets):
+def build_bool(current_category, current_subfacets, facet_name_ignore):
     # strucure should be at the top level a must bool
     # each facet type is a should bool with all selected values in the array
     # the should bool is an item in the must bool array
@@ -236,6 +238,8 @@ def build_bool(current_category, current_subfacets):
         })
         if current_category in current_subfacets:
             for facet_name, facet_values in current_subfacets[current_category].items():
+                if facet_name == facet_name_ignore:
+                    continue
                 should = []
                 for value in facet_values:
                     field_name = list(find_key('field', FACETS_PER_CATEGORY[current_category][facet_name]))[0]
