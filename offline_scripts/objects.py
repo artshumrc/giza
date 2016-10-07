@@ -63,12 +63,13 @@ def process_objects():
 					object[key] = row_value
 			else:
 				# remove whitespace at end of line if a string
-				object[key] = row_value.rstrip() if type(row_value) is str else row_value 
+				object[key] = row_value.rstrip() if type(row_value) is str else row_value
 		# Add some extra fields not in the TMS data
 		object['displaytext'] = object['title']
 		prefix_idx = object_number.find('_')
 		object['altnumber'] = object_number[prefix_idx+1:]
 		object['roles'] = []
+		object['hasphoto'] = "no"
 		return (object, current_id)
 
 	print "Starting Objects..."
@@ -735,6 +736,9 @@ def process_object_related_media():
 
 		if media_type not in object['relateditems']:
 			object['relateditems'][media_type] = []
+
+		if media_type == 'photos':
+			object['hasphoto'] = "yes"
 		# add primary photo as a top level item as well
 		if row[indices['primary_display_index']] == '1':
 			object['primarydisplay'] = {

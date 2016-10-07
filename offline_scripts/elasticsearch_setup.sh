@@ -34,6 +34,20 @@ curl -XPUT 'http://localhost:9200/giza' -d '
             }
           }
         },
+        "sitedates": {
+          "type" : "nested",
+          "properties" : {
+            "date" : {
+              "type" : "string",
+              "fields": {
+                "raw" : {
+                  "type" : "string",
+                  "index" : "not_analyzed"
+                }
+              }
+            }
+          }
+        },
         "sitetype": {
           "properties": {
             "sitetype": {
@@ -47,6 +61,32 @@ curl -XPUT 'http://localhost:9200/giza' -d '
             },
             "sitetypeid": {
               "type": "long"
+            }
+          }
+        },
+        "relateditems": {
+          "properties": {
+            "modernpeople": {
+              "properties": {
+                "displayname": {
+                  "type": "string",
+                  "fields" : {
+                    "raw" : {
+                      "type" : "string",
+                      "index" : "not_analyzed"
+                    }
+                  }
+                },
+                "role": {
+                  "type": "string",
+                  "fields" : {
+                    "raw" : {
+                      "type" : "string",
+                      "index" : "not_analyzed"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -102,7 +142,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
             }
           }
         },
-        "creditline": {
+        "department": {
           "type" : "string",
           "fields": {
             "raw" : {
@@ -121,7 +161,13 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           }
         },
         "entrydate": {
-          "type": "string"
+          "type": "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
         }
       }
     },

@@ -21,32 +21,120 @@ CATEGORIES = {
 # If these change, modify elasticsearch_setup.sh as necessary
 FACETS_PER_CATEGORY = {
 	'sites' : {
-		'Site Type' : 'sitetype.sitetype.raw'
+		'Site Type' : {
+	    	"terms": {
+				'field' : 'sitetype.sitetype.raw'
+			}
+		},
+		'Site Name' : {
+	    	"terms": {
+				'field' : 'sitename.raw'
+			}
+		},
+		'Site Date' : {
+	    	"terms": {
+				'field' : 'sitedates.date.raw'
+			}
+		},
+		'Has Tomb Owner' : {
+	    	"terms": {
+				'field' : 'tombowner'
+			}
+		},
+		"Excavator": {
+         "filter": {
+            "term": {
+               "relateditems.modernpeople.role.raw" : "Excavator"
+            }
+         },
+         "aggregations": {
+            "Excavator": {
+               "terms": {
+                  "field": "relateditems.modernpeople.displayname.raw"
+               }
+            }
+         }
+      }
 	},
 	'objects' : {
-		'Classification' : 'classificationtext.raw',
-		'Findspot' : 'provenance.raw',
-		'Material' : 'medium.raw',
-		'Credit Line' : 'creditline.raw',
-		'Period' : 'period.raw'
+		'Classification' : {
+	    	"terms": {
+	        	"field": 'classificationtext.raw'
+			}
+		},
+		'Findspot' : {
+	    	"terms": {
+	        	"field": "provenance.raw"
+	     	}
+		},
+		'Material' : {
+	    	"terms": {
+	        	"field": 'medium.raw'
+			}
+		},
+		'Owning Institution' : {
+	    	"terms": {
+	        	"field": 'department.raw'
+			}
+		},
+		'Period' : {
+	    	"terms": {
+	        	"field": 'period.raw'
+			}
+		},
+		'Date' : {
+	    	"terms": {
+	        	"field": 'entrydate.raw'
+			}
+		},
+		'Has Related Photo' : {
+	    	"terms": {
+				'field' : 'hasphoto'
+			}
+		}
 	},
 	'diarypages' : {
-		'Classification' : 'classificationtext.raw',
-		'Credit Line' : 'creditline.raw'
+		'Classification' : {
+	    	"terms": {
+	        	"field": 'classificationtext.raw'
+			}
+		},
+		'Owning Institution' : {
+	    	"terms": {
+	        	"field": 'department.raw'
+			}
+		}
 	},
 	'mapsandplans' : {
-		'Classification' : 'classificationtext.raw',
-		'Credit Line' : 'creditline.raw',
-		'Material' : 'medium.raw'
+		'Owning Institution' : {
+	    	"terms": {
+	        	"field": 'department.raw'
+			}
+		},
+		'Material' : {
+	    	"terms": {
+	        	"field": 'medium.raw'
+			}
+		}
 	},
 	'drawings' : {
-		'Classification' : 'classificationtext.raw',
-		'Credit Line' : 'creditline.raw',
-		'Material' : 'medium.raw'
+		'Owning Institution' : {
+	    	"terms": {
+	        	"field": 'department.raw'
+			}
+		},
+		'Material' : {
+	    	"terms": {
+	        	"field": 'medium.raw'
+			}
+		}
 	},
 	'unpubdocs' : {
-		'Classification' : 'classificationtext.raw',
-		'Credit Line' : 'creditline.raw'
+		'Owning Institution' : {
+	    	"terms": {
+	        	"field": 'department.raw'
+			}
+		}
 	},
 	'pubdocs' : {},
 	'photos' : {},

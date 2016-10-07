@@ -39,15 +39,15 @@
 
     {% if total > 0 %}
       <ul class="pagination text-center" role="navigation" aria-label="Pagination">
-        <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?{% build_search_params search_term current_categories '' '' current_subfacets '' '' previous_page_number %}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
+        <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?{% build_search_params search_term current_category current_subfacets '' '' previous_page_number %}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
         {% for i in num_pages_range %}
           {% if i == 'ellipsis' %}
             <li class="ellipsis"></li>
           {% else %}
-            <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?{% build_search_params search_term current_categories '' '' current_subfacets '' '' i %}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
+            <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?{% build_search_params search_term current_category current_subfacets '' '' i %}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
           {% endif %}
         {% endfor %}
-        <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?{% build_search_params search_term current_categories '' '' current_subfacets '' '' next_page_number %}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
+        <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?{% build_search_params search_term current_category current_subfacets '' '' next_page_number %}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
       </ul>
     {% endif %}
 
@@ -70,15 +70,15 @@
 
     {% if total > 0 %}
       <ul class="pagination text-center" role="navigation" aria-label="Pagination">
-        <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?q={{search_term}}{% for c in current_categories %}&amp;category={{c}}{% endfor %}&amp;page={{previous_page_number}}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
+        <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?{% build_search_params search_term current_category current_subfacets '' '' previous_page_number %}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
         {% for i in num_pages_range %}
           {% if i == 'ellipsis' %}
             <li class="ellipsis"></li>
           {% else %}
-            <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?q={{search_term}}{% for c in current_categories %}&amp;category={{c}}{% endfor %}&amp;page={{i}}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
+            <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?{% build_search_params search_term current_category current_subfacets '' '' i %}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
           {% endif %}
         {% endfor %}
-        <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?q={{search_term}}{% for c in current_categories %}&amp;category={{c}}{% endfor %}&amp;page={{next_page_number}}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
+        <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?{% build_search_params search_term current_category current_subfacets '' '' next_page_number %}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
       </ul>
     {% endif %}
   </section>
@@ -103,14 +103,14 @@
           <h6 class="search-facet-title">Category:</h6>
           <ul class="search-facet-list">
             <!-- Display selected categories first -->
-            {% for category in current_categories %}
-              <li class="search-facet-item is-active"><a href="{% url 'results' %}?{% build_search_params search_term current_categories category '' current_subfacets '' '' page %}">{% with facet=all_categories.types|array_value:category %}{{ facet.display_text }} ({{ facet.doc_count }}){% endwith %}</a></li>
-            {% endfor %}
+            {% if current_category %}
+              <li class="search-facet-item is-active"><a href="{% url 'results' %}?{% build_search_params search_term '' current_subfacets '' '' page %}">{% with facet=all_categories.types|array_value:current_category %}{{ facet.display_text }} ({{ facet.doc_count }}){% endwith %}</a></li>
+            {% endif %}
             <!-- Display categories that are still available -->
             {% for type, value in all_categories.items %}
               {% for type_facet in value %}
-                {% if type_facet.key not in current_categories %}
-                  <li class="search-facet-item"><a href="{% url 'results' %}?{% build_search_params search_term current_categories '' type_facet.key current_subfacets '' '' page %}">{{ type_facet.display_text }} ({{ type_facet.doc_count}})</a></li>
+                {% if type_facet.key != current_category %}
+                  <li class="search-facet-item"><a href="{% url 'results' %}?{% build_search_params search_term type_facet.key current_subfacets '' '' page %}">{{ type_facet.display_text }} ({{ type_facet.doc_count}})</a></li>
                 {% endif %}
               {% endfor %}
             {% endfor %}
@@ -118,7 +118,7 @@
         </div>
       {% endif %}
 
-      <!-- Display facets available for each category -->
+      <!-- Display facets when a category is selected -->
       {% for cat_name, cat_facets in sub_facets.items %}
         {% for facet_type in cat_facets %}
           {% for facet_title, facet_values in facet_type.items %}
@@ -130,11 +130,11 @@
                     {% with sf_combined=cat_name|add:'_'|add:facet_title|add:'_'|add:f.display_text %}
                      {% if sf_combined in subfacet_strings %}
                      <li class="search-facet-item is-active">
-                         <a href="{% url 'results' %}?{% build_search_params search_term current_categories '' '' current_subfacets sf_combined '' page %}">{{f.display_text}} ({{f.doc_count}})</a>
+                         <a href="{% url 'results' %}?{% build_search_params search_term current_category current_subfacets sf_combined '' page %}">{{f.display_text}} ({{f.doc_count}})</a>
                      </li>
                      {% else %}
                       <li class="search-facet-item">
-                          <a href="{% url 'results' %}?{% build_search_params search_term current_categories '' '' current_subfacets '' sf_combined page %}">{{f.display_text}} ({{f.doc_count}})</a>
+                          <a href="{% url 'results' %}?{% build_search_params search_term current_category current_subfacets '' sf_combined page %}">{{f.display_text}} ({{f.doc_count}})</a>
                       </li>
                       {% endif %}
                     {% endwith %}
