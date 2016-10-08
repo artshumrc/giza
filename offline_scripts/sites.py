@@ -73,7 +73,7 @@ def process_sites():
 			else:
 				# no special processing - just add it to the JSON
 				site[key] = row_value
-		display_text = (site['sitename'] + " : " if site['sitename'] else "") + (site['number'] if site['number'] else "")
+		display_text = site['number']
 		site['displaytext'] = display_text
 		site['tombowner'] = "no"
 		site['roles'] = []

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}section-about-body{% endblock %}
+
+{% block title %}Digital Giza | Archaeology at Giza{% endblock %}
+
+{% block content %}
+<div class="page-header header-bg-4" id="content">
+        <div class="row title">
+          <header class="large-12 columns">
+            <h1>Archaeology at Giza <a name="top"></a></h1>
+          </header>
+        </div>
+      </div>
+
+        <div class="row">
+          <section class="medium-8 columns">
+            <p>A long history of construction, use, and reuse is part of what makes Giza so fascinating, complex, and valuable as a resource for understanding ancient Egypt. Famous in both ancient times and modern, the site has been the focus of exploration and excavation, from the time of medieval travelers to Napoleon Bonaparte’s famous 1798 Egyptian expedition, to modern scientific archaeology of the 20th century and now into the 21st. Aside from some early clearance work in the first half of the 1800s by the Frenchman Auguste Mariette, director of the first national service to monitor and safeguard Egyptian antiquities, the earliest “modern” scientific investigation at Giza took place in 1842–43. At this time a Prussian expedition led by Karl Richard Lepsius (1810–1884) cleared and numbered several private tombs, entered the Great Pyramid, and drew maps and plans of the site. In 1880 the British archaeologist W. M. F. Petrie set out for Giza, where he was able to record the most accurate measurements of the Great Pyramid and other monuments produced up to that time. He also investigated a few isolated private tombs in the Western Cemetery.</p>
+            <p>In the early 1900s, the Giza Plateau was divided into three sections, with excavation rights granted to archaeologists from three nations: American George Reisner, of Harvard University and the Museum of Fine Arts, Boston; Germans Georg Steindorff and Hermann Junker, of the Universities of Leipzig and Vienna, respectively; and Italian Ernesto Schiaparelli, director of the Egyptian Museum of Turin. These excavations, along with work by Selim Hassan and other Egyptian archaeologists beginning in the 1920s, produced the majority of data about Giza available today. The artifacts found by these expeditions, along with the photographs and records they created, are now scattered in collections across the globe in Cairo, Berlin, Hildesheim, Leipzig, Vienna, Turin, Philadelphia, Berkeley, and Boston, to name just a few places. More recent work at Giza has been conducted by a joint Cairo University-Brown University team, led by Tohfa Handoussa and Edward Brovarski; an Egyptian team, led by Zahi Hawass; and by the Ancient Egypt Research Associates (AERA), led by Mark Lehner. These excavations have revealed and explored many important tombs, as well as the town of the workers who built the pyramids.</p>
+
+            <p><em>Suggested reading:</em><br>
+              Manuelian, Peter Der. “Excavating the Old Kingdom. The Giza Necropolis and Other Mastaba Fields.” In <em>Egyptian Art in the Age of the Pyramids</em>, pp. 138–153. New York: The Metropolitan Museum of Art, 1999.</p>
+
+              <p>Peter Der Manuelian, <em>Digital Giza. Visualizing the Pyramids.</em> Cambridge and London: Harvard University Press, 2017.</p>
+
+              <p>Markowitz, Yvonne J. “Excavating Giza.” In Markowitz, Yvonne J., Joyce L. Haynes and Rita E. Freed. <em>Egypt in the Age of the Pyramids: Highlights from the Harvard University-Museum of Fine Arts, Boston Expedition.</em> Boston: Museum of Fine Arts, 2002, pp. 33-45.</p>
+
+          </section>
+          <aside class="medium-4 columns">
+            <div class="thumbnail"><img src="{% static 'images/contact.png' %}" alt="appropriate alt"></div>
+          </aside>
+        </div>
+{% endblock %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags %}
 
-{% block body_class %}section-explore-body header-full{% endblock %}
+{% block body_class %}section-explore-body header-full mode-full{% endblock %}
 
 {% block title %}Digital Giza | {{ object.displaytext }}{% endblock %}
 
@@ -10,30 +10,36 @@
   <div class="row title">
     <header class="large-12 columns">
       <h1>{{ object.displaytext }}<a name="top"></a></h1>
+      {% if type == 'sites' %}<h3 class="page-header__meta">{{ object.sitename }}</h3>{% endif %}
     </header>
   </div>
 </div>
 
 
 <div class="row content-start">
-  <nav class="medium-4 columns medium-push-8">
-    <div class="title-bar" data-responsive-toggle="jumpmenu" data-hide-for="medium">
-      <button class="menu-icon" type="button" data-toggle></button>
-      <div class="title-bar-title">Jump to...</div>
-    </div>
+  <section class="large-8 columns content-col-primary">
 
-    <div class="feature-block secondary" id="jumpmenu">
-      <div class="feature-block__body">
+    <div class="row page-navigation-container">
+      <div class="large-4 columns large-push-8">
+        <div class="page-navigation">
 
-        <div class="view-mode-toggle">
-          <h5 class="heading-em">Show:</h5>
-          <div class="button-group">
-            <a class="secondary button" href="{% url 'get_type_html' type object.id 'intro' %}">Intro View</a>
-            <a class="primary button">Full View</a>
+          <div class="title-bar" data-responsive-toggle="jumpmenu" data-hide-for="medium">
+            <button class="icon-bars icon-padded title-bar-title" type="button" data-toggle>Jump to...</button>
           </div>
-        </div>
 
-        <h5 class="heading-em">Jump to:</h5>
+          <div class="feature-block secondary" id="jumpmenu">
+            <div class="feature-block__body">
+
+              <div class="view-mode-toggle">
+                <h5 class="heading-em">Show:</h5>
+                <div class="button-group">
+                  <a class="secondary button" href="{% url 'get_type_html' type object.id 'intro' %}">Intro View</a>
+                  <a class="primary button">Full View</a>
+                </div>
+              </div>
+
+              <h5 class="heading-em">Jump to:</h5>
+
         <ul class="vertical menu">
           <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
           {% if object.relateditems.objects %}
@@ -87,8 +93,11 @@
           {% endif %}
         </ul>
       </div>
-    </nav>
-    <section class="medium-8 columns medium-pull-4">
+    </div>
+  </div>
+</div>
+</div>
+
       <div class="item__featured-image">
         {% if object.primarydisplay.main %}
           <img src="{{ object.primarydisplay.main }}" alt="">
@@ -97,17 +106,22 @@
           </p>
         {% endif %}
       </div>
+
+      {% if object.diarytranscription %}
+      <div class="item__overview text-alt">
+            <h5>Diary Transcription:</h5>
+            {{ object.diarytranscription|linebreaks }}
+          </div>
+      {% elif object.description %}
       <div class="item__overview">
 
-        <ul class="item__featured-properties">
+        <!-- <ul class="item__featured-properties">
+          {% if type != "sites" %}
           <li class="item__property item__property--primary">
             ID: {{ object.number }}
           </li>
-          {% if type == 'sites' %}
-            <li class="item__property">
-              Site name: {{ object.sitename }}
-            </li>
-          {% elif type == 'objects' or type == 'diarypages' or type == 'mapsandplans' or type == 'drawings' or  type == 'unpubdocs' %}
+          {% endif %}
+          {% if type == 'objects' or type == 'diarypages' or type == 'mapsandplans' or type == 'drawings' or  type == 'unpubdocs' %}
             <li class="item__property">
               Department: {{ object.department }}
             </li>
@@ -116,21 +130,15 @@
               Title: {{ object.title }}
             </li>
           {% endif %}
-        </ul>
+        </ul> -->
 
-        {% if object.description %}
-        <div class="item__featured-description">
           <p class="lead text-alt">
             {{ object.description }}
           </p>
-        </div>
-        {% endif %}
-      </div>
-    </section>
-  </div>
 
-  <div class="row">
-    <section class="medium-8 columns">
+      </div>
+      {% endif %}
+
       <section id="featureBlock_details" class="feature-block collapsible" data-toggler=".is-collapsed">
         <div class="feature-block__header">
           <h3 class="feature-block__title">
@@ -378,7 +386,7 @@
       {% endif %}
     </section>
 
-    <section class="medium-4 columns">
+    <section class="large-4 columns content-col-secondary">
       {% if object.relateditems.photos %}
       <section id="featureBlock_photos" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
         <div class="feature-block__header">
