@@ -139,15 +139,15 @@
         <section class="large-6 columns">
           <div class="row">
             <div class="medium-4 columns">
-              <h6><a class="heading-link" href="gizaintro.html">Explore</a></h6>
+              <h6><a class="heading-link" href="{% url 'explore' 'gizaintro' %}">Explore</a></h6>
               <ul class="footer-menu-list">
-                <li><a href="gizaintro.html">Introduction to Giza</a></li>
-                <li><a href="archaeology.html">Archaeology at Giza</a></li>
-                <li><a href="commontopics.html">Common Topics</a></li>
+                <li><a href="{% url 'explore' 'gizaintro' %}">Introduction to Giza</a></li>
+                <li><a href="{% url 'explore' 'archaeology' %}">Archaeology at Giza</a></li>
+                <li><a href="{% url 'explore' 'commontopics' %}">Common Topics</a></li>
                 <li><a href="#0">Giza Maps &amp; Plans</a></li>
                 <li><a href="#0">Digital Giza Library</a></li>
-                <li><a href="videos.html">Videos</a></li>
-                <li><a href="faq.html">Glossary &amp; FAQs</a></li>
+                <li><a href="{% url 'explore' 'explorevideos' %}">Videos</a></li>
+                <li><a href="% url 'explore' 'faq' %}">Glossary &amp; FAQs</a></li>
               </ul>
             </div>
             <div class="medium-4 columns">
@@ -161,8 +161,8 @@
                     <li><a href="#0">Khufu Pyramid Temple</a></li>
                     <li><a href="#0">Khufu Valley Temple</a></li>
                     <li><a href="#0">Khafre Pyramid Complex</a></li>
-                    <li><a href="intro.html">Khafre Pyramid Temple</a></li>
-                    <li><a href="full.html">Khafre Valley Temple</a></li>
+                    <li><a href="#0">Khafre Pyramid Temple</a></li>
+                    <li><a href="#0">Khafre Valley Temple</a></li>
                     <li><a href="#0">Sphinx</a></li>
                     <li><a href="#0">Sphinx Temple</a></li>
                     <li><a href="#0">Menkaure Pyramid Complex</a></li>
@@ -177,13 +177,13 @@
                 </li>
             </div>
             <div class="medium-4 columns">
-              <h6><a class="heading-link" href="mygiza.html">My Giza</a></h6>
+              <h6><a class="heading-link" href="#0">My Giza</a></h6>
               <ul class="footer-menu-list">
-                <li><a href="#0">MY Bookshelf</a></li>
-                <li><a href="#0">MY Photo Albums</a></li>
-                <li><a href="#0">MY Documents</a></li>
-                <li><a href="#0">MY Object Collections</a></li>
-                <li><a href="#0">MY Archives</a></li>
+                <li><a href="#0">My Bookshelf</a></li>
+                <li><a href="#0">My Photo Albums</a></li>
+                <li><a href="#0">My Documents</a></li>
+                <li><a href="#0">My Object Collections</a></li>
+                <li><a href="#0">My Archives</a></li>
                 <li><a href="#0">Register for MY Giza</a></li>
               </ul>
             </div>
@@ -193,21 +193,21 @@
         <section class="large-6 columns">
           <div class="row">
             <div class="medium-4 columns">
-              <h6><a class="heading-link" href="about.html">About the Project</a></h6>
+              <h6><a class="heading-link" href="{% url 'about' 'about' %}">About the Project</a></h6>
               <ul class="footer-menu-list">
-                <li><a href="about.html">What is the Giza Project?</a></li>
-                <li><a href="gizacard.html">The GizaCARD</a></li>
-                <li><a href="resources.html">Resources</a></li>
-                <li><a href="news.html">News</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="{% url 'about' 'about' %}">What is the Giza Project?</a></li>
+                <li><a href="% url 'about' 'gizacard' %}">The GizaCARD</a></li>
+                <li><a href="{% url 'about' 'resources' %}">Resources</a></li>
+                <li><a href="{% url 'about' 'news' %}">News</a></li>
+                <li><a href="{% url 'about' 'blog' %}">Blog</a></li>
+                <li><a href="{% url 'about' 'contact' %}">Contact</a></li>
               </ul>
             </div>
             <div class="medium-4 columns">
-              <h6><a class="heading-link" href="donate.html">Donate</a></h6>
+              <h6><a class="heading-link" href="{% url 'donate' 'donate' %}">Donate</a></h6>
             </div>
             <div class="medium-4 columns">
-              <h6><a class="heading-link" href="search.html">Search</a></h6>
+              <h6><a class="heading-link" href="{% url 'search' %}">Search</a></h6>
             </div>
           </div>
         </section>
