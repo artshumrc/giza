@@ -71,7 +71,7 @@
             </div>
             <div class="feature-block__body">
               <ul class="feature-block__list thumbsize-sm">
-                {% for item in object.relateditems.sites %}
+                {% for item in object.relateditems.sites|slice:":5" %}
                 <li>
                   <div class="media-object list-item list-item-thumbnail">
                     <div class="media-object-section">
@@ -275,7 +275,7 @@
             </div>
             <div class="feature-block__body">
               <ul class="feature-block__list item-grid thumbsize-sm">
-                {% for item in object.relateditems.photos|slice:"12" %}
+                {% for item in object.relateditems.photos|slice:":12" %}
                 <li>
                   <div class="media-object list-item list-item-thumbonly">
                     <div class="media-object-section">
@@ -432,7 +432,7 @@
             </div>
             <div class="feature-block__body">
               <ul class="feature-block__list multicol-2 thumbsize-lg">
-                {% for item in object.relateditems.videos|slice:"3" %}
+                {% for item in object.relateditems.videos|slice:":3" %}
                 <li>
                   <div class="media-object list-item list-item-thumbcaption">
                     <!-- <div class="thumbnail">
@@ -513,7 +513,7 @@
           <h4>Ancient People</h4>
 
           <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
-            {% for item in object.relateditems.ancientpeople|slice:"3" %}
+            {% for item in object.relateditems.ancientpeople|slice:":3" %}
             <li>
               <div class="media-object list-item list-item-thumbnail">
                 <div class="media-object-section">
@@ -540,7 +540,7 @@
           <h4>Modern People</h4>
 
           <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
-            {% for item in object.relateditems.modernpeople|slice:"2" %}
+            {% for item in object.relateditems.modernpeople|slice:":2" %}
             <li>
               <div class="media-object list-item list-item-thumbnail">
                 <div class="media-object-section">
@@ -587,7 +587,7 @@
           </div>
           <div class="feature-block__body">
             <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
-              {% for item in object.relateditems.institutions|slice:"2" %}
+              {% for item in object.relateditems.institutions|slice:":2" %}
               <li>
                 <div class="media-object list-item list-item-thumbnail">
                   <div class="media-object-section">
@@ -630,7 +630,7 @@
           </div>
           <div class="feature-block__body">
             <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
-              {% for item in object.relateditems.groups|slice:"2" %}
+              {% for item in object.relateditems.groups|slice:":2" %}
               <li>
                 <div class="media-object list-item list-item-thumbnail">
                   <div class="media-object-section">
@@ -673,7 +673,7 @@
           </div>
           <div class="feature-block__body">
             <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
-              {% for item in object.relateditems.animals|slice:"2" %}
+              {% for item in object.relateditems.animals|slice:":2" %}
               <li>
                 <div class="media-object list-item list-item-thumbnail">
                   <div class="media-object-section">
@@ -711,7 +711,7 @@
 
 <!-- Modal -->
 
-{% for item in object.relateditems.photos|slice:"12" %}
+{% for item in object.relateditems.photos|slice:":12" %}
 <div class="large reveal modal-inverse photo-gallery-modal" id="gallery{{ item.id }}" data-reveal>
 
   <h2>{{ item.displaytext }}</h2>

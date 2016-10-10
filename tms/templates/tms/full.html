@@ -318,7 +318,7 @@
         </div>
         <div class="feature-block__body">
           <ul class="feature-block__list multicol-2 thumbsize-sm">
-            {% for item in object.relateditems.drawings|slice:":5" %}
+            {% for item in object.relateditems.drawings %}
             <li>
               <div class="media-object list-item list-item-thumbnail">
                 <div class="media-object-section">
@@ -455,7 +455,7 @@
         </div>
         <div class="feature-block__body">
           <ul class="feature-block__list item-grid thumbsize-sm">
-            {% for item in object.relateditems.photos|slice:"12" %}
+            {% for item in object.relateditems.photos|slice:":12" %}
             <li>
               <div class="media-object list-item list-item-thumbonly">
                 <div class="media-object-section">

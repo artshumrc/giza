@@ -31,7 +31,7 @@ JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
 JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1
 JOIN Objects on ConXrefs.ID=Objects.ObjectID
 JOIN ObjTitles ON Objects.ObjectID=ObjTitles.ObjectID
-JOIN MediaXrefs on Constituents.ConstituentID=MediaXrefs.ID
+JOIN MediaXrefs on Objects.ObjectID=MediaXrefs.ID
 JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 JOIN MediaPaths on MediaRenditions.ThumbPathID=MediaPaths.PathID
@@ -51,7 +51,7 @@ FROM ConXrefs
 LEFT JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
 LEFT JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1
 LEFT JOIN Sites on ConXrefs.ID=Sites.SiteID
-LEFT JOIN MediaXrefs on Constituents.ConstituentID=MediaXrefs.ID
+LEFT JOIN MediaXrefs on Sites.SiteID=MediaXrefs.ID
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths on MediaRenditions.ThumbPathID=MediaPaths.PathID
