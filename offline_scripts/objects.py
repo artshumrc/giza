@@ -69,7 +69,7 @@ def process_objects():
 		prefix_idx = object_number.find('_')
 		object['altnumber'] = object_number[prefix_idx+1:]
 		object['roles'] = []
-		object['hasphoto'] = "no"
+		object['hasphoto'] = "No"
 		return (object, current_id)
 
 	print "Starting Objects..."
@@ -366,7 +366,7 @@ def process_object_related_sites():
 		site_dict['id'] = site_id
 		site_dict['sitename'] = site_name
 		site_dict['sitenumber'] = site_number
-		site_dict['displaytext'] = "%s, %s" % (site_name, site_number)
+		site_dict['displaytext'] = site_number
 		site_dict['thumbnail'] = thumbnail_url
 
 		if 'sites' not in object['relateditems']:
@@ -456,7 +456,7 @@ def process_object_related_constituents():
 
 		constituent_id = row[indices['constituent_id_index']]
 		display_name = row[indices['display_name_index']]
-		description = row[indices['remarks_index']]
+		description = row[indices['remarks_index']] if row[indices['remarks_index']] != "NULL" else ""
 		display_date = ""
 		if row[indices['display_date_index']] != "NULL":
 			display_date = row[indices['display_date_index']]
@@ -613,6 +613,7 @@ def process_object_related_unpublished():
 			'unpublished_title_index' : columns.index('UnpublishedTitle'),
 			'classification_id_index' : columns.index('ClassificationID'),
 			'object_date_index' : columns.index('ObjectDate'),
+			'object_number_index' : columns.index('ObjectNumber'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
 			'thumb_file_index' : columns.index('ThumbFileName')
 		}
@@ -638,6 +639,7 @@ def process_object_related_unpublished():
 
 		unpublished_id = row[indices['unpublished_id_index']]
 		unpublished_title = row[indices['unpublished_title_index']]
+		number = row[indices['object_number_index']]
 		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 
@@ -648,6 +650,7 @@ def process_object_related_unpublished():
 			'text' : unpublished_title,
 			'displaytext' : unpublished_title,
 			'date' : date,
+			'number' : number,
 			'thumbnail' : thumbnail_url})
 		return(object, current_id)
 
@@ -738,7 +741,7 @@ def process_object_related_media():
 			object['relateditems'][media_type] = []
 
 		if media_type == 'photos':
-			object['hasphoto'] = "yes"
+			object['hasphoto'] = "Yes"
 		# add primary photo as a top level item as well
 		if row[indices['primary_display_index']] == '1':
 			object['primarydisplay'] = {

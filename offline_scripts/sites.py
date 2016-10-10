@@ -75,7 +75,7 @@ def process_sites():
 				site[key] = row_value
 		display_text = site['number']
 		site['displaytext'] = display_text
-		site['tombowner'] = "no"
+		site['tombowner'] = "No"
 		site['roles'] = []
 		return (site, current_id)
 
@@ -419,7 +419,7 @@ def process_site_related_constituents():
 		site['relateditems'][constituent_type].append(constituent_dict)
 
 		if role == 'Tomb Owner':
-			site['tombowner'] = "yes"
+			site['tombowner'] = "Yes"
 		return(site, current_id)
 
 	print "Starting Sites Related Constituents..."

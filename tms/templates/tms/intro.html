@@ -57,6 +57,47 @@
       <div class="row">
         <div class="medium-6 columns">
 
+          {% if object.relateditems.sites %}
+          <section id="featureBlock_tombs" class="feature-block " data-toggler=".is-collapsed">
+            <div class="feature-block__header">
+              <h3 class="feature-block__title">
+                <i class="icon-map-marker icon-padded"></i> Tombs and Monuments
+                <a name="tombs"></a>
+                <span class="badge">{{ object.relateditems.sites|length }}</span>
+              </h3>
+              <button class="toggler" data-toggle="featureBlock_tombs">
+                <span class="sr-only">Collapse or Expand</span>
+              </button>
+            </div>
+            <div class="feature-block__body">
+              <ul class="feature-block__list thumbsize-sm">
+                {% for item in object.relateditems.sites %}
+                <li>
+                  <div class="media-object list-item list-item-thumbnail">
+                    <div class="media-object-section">
+                      {% if item.thumbnail %}
+                      <div class="thumbnail">
+                        <a href="{% url 'get_type_html' type item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                      </div>
+                      {% endif %}
+                    </div>
+                    <div class="media-object-section">
+                      <p class="media-object-title"><a href="{% url 'get_type_html' type item.id 'intro' %}">{{item.displaytext}}</a></p>
+                      <ul class="subheader">
+                        <li><span class="item-property">Site Name</span> <span class="item-value">{{item.sitename}}</span></li>
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+              <div class="feature-block__footer">
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#tombs">View all {{ object.relateditems.sites|length }} Tombs and Monuments <i class="icon-angle-right"></i></a></p>
+              </div>
+            </div>
+          </section>
+          {% endif %}
+
           {% if object.relateditems.objects %}
           <section id="featureBlock_objects" class="feature-block " data-toggler=".is-collapsed">
             <div class="feature-block__header">
@@ -75,9 +116,11 @@
                 <li>
                   <div class="media-object list-item list-item-thumbnail">
                     <div class="media-object-section">
+                      {% if item.thumbnail %}
                       <div class="thumbnail">
                         <a href="{% url 'get_type_html' 'objects' item.id 'intro' %}"><img src= "{{ item.thumbnail }}"></a>
                       </div>
+                      {% endif %}
                     </div>
                     <div class="media-object-section">
                       <p class="media-object-title"><a href="{% url 'get_type_html' 'objects' item.id 'intro' %}">{{item.displaytext}}</a></p>
@@ -91,7 +134,7 @@
               </ul>
 
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#objects">View all {{ object.relateditems.objects|length }} Finds <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#objects">View all {{ object.relateditems.objects|length }} Finds <i class="icon-angle-right"></i></a></p>
               </div>
             </div>
           </section>
@@ -115,9 +158,11 @@
                 <li>
                   <div class="media-object list-item list-item-thumbnail">
                     <div class="media-object-section">
+                      {% if item.thumbnail %}
                       <div class="thumbnail">
                         <a href="{% url 'get_type_html' 'diarypages' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
                       </div>
+                      {% endif %}
                     </div>
                     <div class="media-object-section">
                       <p class="media-object-title"><a href="{% url 'get_type_html' 'diarypages' item.id 'intro' %}">{{ item.displaytext }}</a></p>
@@ -131,7 +176,7 @@
               </ul>
 
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#diary">View all {{ object.relateditems.diarypages|length }} Excavation Diary Pages <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#diary">View all {{ object.relateditems.diarypages|length }} Excavation Diary Pages <i class="icon-angle-right"></i></a></p>
               </div>
             </div>
           </section>
@@ -154,9 +199,11 @@
                 {% for item in object.relateditems.mapsandplans|slice:"2" %}
                 <li>
                   <div class="media-object list-item list-item-thumbcaption">
+                    {% if item.thumbnail %}
                     <div class="thumbnail">
                       <a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}"><img src="{{ item.thumbnail }}" class="thumbnail" alt=""></a>
                     </div>
+                    {% endif %}
                     <p class="media-object-title"><a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}">{{ item.displaytext }}</a></p>
                   </div>
                 </li>
@@ -164,7 +211,7 @@
               </ul>
 
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#maps">View all {{ object.relateditems.mapsandplans|length }} Maps &amp; Plans <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#maps">View all {{ object.relateditems.mapsandplans|length }} Maps &amp; Plans <i class="icon-angle-right"></i></a></p>
               </div>
             </div>
           </section>
@@ -188,9 +235,11 @@
                 <li>
                   <div class="media-object list-item list-item-thumbnail">
                     <div class="media-object-section">
+                      {% if item.thumbnail %}
                       <div class="thumbnail">
                         <a href="{% url 'get_type_html' 'drawings' item.id 'intro' %}"><img src= "{{ item.thumbnail }}"></a>
                       </div>
+                      {% endif %}
                     </div>
                     <div class="media-object-section">
                       <p class="media-object-title"><a href="{% url 'get_type_html' 'drawings' item.id 'intro' %}">{{ item.displaytext }}</a></p>
@@ -204,7 +253,7 @@
               </ul>
 
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#drawings">View all {{ object.relateditems.drawings|length }} Drawings <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#drawings">View all {{ object.relateditems.drawings|length }} Drawings <i class="icon-angle-right"></i></a></p>
               </div>
             </div>
           </section>
@@ -245,7 +294,7 @@
               </ul>
 
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#photos">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#photos">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
               </div>
             </div>
           </section>
@@ -314,7 +363,7 @@
               </ul>
 
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#published">View all {{ object.relateditems.pubdocs|length}} Published Documents <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#published">View all {{ object.relateditems.pubdocs|length}} Published Documents <i class="icon-angle-right"></i></a></p>
               </div>
             </div>
           </section>
@@ -338,9 +387,11 @@
                 <li>
                   <div class="media-object list-item list-item-thumbnail">
                     <div class="media-object-section">
+                      {% if item.thumbnail %}
                       <div class="thumbnail">
                         <a href="{% url 'get_type_html' 'unpubdocs' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
                       </div>
+                      {% endif%}
                     </div>
                     <div class="media-object-section">
                       <p class="media-object-title"><a href="{% url 'get_type_html' 'unpubdocs' item.id 'intro' %}">{{ item.displaytext }}</a></p>
@@ -354,7 +405,7 @@
               </ul>
 
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#unpublished">View all {{ object.relateditems.unpubdocs|length }} Unpublished Documents <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#unpublished">View all {{ object.relateditems.unpubdocs|length }} Unpublished Documents <i class="icon-angle-right"></i></a></p>
               </div>
             </div>
           </section>
@@ -387,7 +438,7 @@
                     <!-- <div class="thumbnail">
                       <a href="#0"><img src="assets/img/video1.png"></a>
                     </div> -->
-                    <video width="100%" height="100%" poster="{{ item.thumbnail }}" controls>
+                    <video width="100%" height="100%" {% if item.thumbnail %}poster="{{ item.thumbnail }}"{% endif %} controls>
                       <source src="{{ item.main }}" type="video/mp4">
                       Your browser does not support the video tag.
                     </video>
@@ -398,7 +449,7 @@
               </ul>
 
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#videos">View all {{ object.relateditems.videos|length }} Videos <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#videos">View all {{ object.relateditems.videos|length }} Videos <i class="icon-angle-right"></i></a></p>
               </div>
             </div>
           </section>
@@ -514,12 +565,141 @@
           {% endif %}
 
           <div class="feature-block__footer">
-            <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'full' %}#people">View all {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+            <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#people">View all {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
               {{ apnum|add:mpnum }}
             {% endwith %} People <i class="icon-angle-right"></i></a></p>
           </div>
         </div>
       </section>
+        {% endif %}
+
+        {% if object.relateditems.institutions %}
+        <section id="featureBlock_institutions" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+          <div class="feature-block__header">
+            <h3 class="feature-block__title">
+              <i class="icon-university icon-padded"></i> Institutions
+              <a name="institutions"></a>
+              <span class="badge">{{ object.relateditems.institutions|length }}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_institutions">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+              {% for item in object.relateditems.institutions|slice:"2" %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'institutions' item.id 'intro' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'institutions' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li> {% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+
+            <div class="feature-block__footer">
+              <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#institutions">View all {{ object.relateditems.institutions|length }} Institutions <i class="icon-angle-right"></i></a></p>
+            </div>
+          </div>
+        </section>
+        {% endif %}
+
+        {% if object.relateditems.groups %}
+        <section id="featureBlock_groups" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+          <div class="feature-block__header">
+            <h3 class="feature-block__title">
+              <i class="icon-users icon-padded"></i> Groups
+              <a name="groups"></a>
+              <span class="badge">{{ object.relateditems.groups|length }}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_groups">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+              {% for item in object.relateditems.groups|slice:"2" %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'groups' item.id 'intro' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'groups' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li> {% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+
+            <div class="feature-block__footer">
+              <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#groups">View all {{ object.relateditems.groups|length }} Groups <i class="icon-angle-right"></i></a></p>
+            </div>
+          </div>
+        </section>
+        {% endif %}
+
+        {% if object.relateditems.animals %}
+        <section id="featureBlock_animals" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+          <div class="feature-block__header">
+            <h3 class="feature-block__title">
+              <i class="icon-users icon-padded"></i> Animals
+              <a name="animals"></a>
+              <span class="badge">{{ object.relateditems.animals|length }}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_animals">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+              {% for item in object.relateditems.animals|slice:"2" %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'animals' item.id 'intro' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'animals' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li> {% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+
+            <div class="feature-block__footer">
+              <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#animals">View all {{ object.relateditems.animals|length }} Animals <i class="icon-angle-right"></i></a></p>
+            </div>
+          </div>
+        </section>
         {% endif %}
       </div>
     </div>

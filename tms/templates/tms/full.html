@@ -40,72 +40,75 @@
 
               <h5 class="heading-em">Jump to:</h5>
 
-        <ul class="vertical menu">
-          <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
-          {% if object.relateditems.objects %}
-          <li><a href="#objects"><span class="icon-vase icon-fw"></span> Finds <span class="badge">{{ object.relateditems.objects|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.diarypages %}
-          <li><a href="#diary"><span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages <span class="badge">{{ object.relateditems.diarypages|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.mapsandplans %}
-          <li><a href="#maps"><span class="icon-map-o icon-fw"></span> Maps &amp; Plans <span class="badge">{{ object.relateditems.mapsandplans|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.drawings %}
-          <li><a href="#drawings"><span class="icon-pencil-square-o icon-fw"></span> Drawings <span class="badge">{{ object.relateditems.drawings|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.photos %}
-          <li><a href="#photos"><span class="icon-camera icon-fw"></span> Photos <span class="badge">{{ object.relateditems.photos|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.giza3d %}
-          <li><a href="#models"><span class="icon-icon-pyramid-3d icon-fw"></span> 3D Models <span class="badge">{{ object.relateditems.giza3d|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.videos %}
-          <li><a href="#videos"><span class="icon-video-camera icon-fw"></span> Videos <span class="badge">{{ object.relateditems.videos|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.audio %}
-          <li><a href="#videos"><span class="icon-volume-up icon-fw"></span> Audio <span class="badge">{{ object.relateditems.audio|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
-          <li><a href="#people"><span class="icon-user icon-fw"></span> People <span class="badge">
-            {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
-            {{ apnum|add:mpnum }}
-            {% endwith %}
-          </span></a></li>
-          {% endif %}
-          {% if object.relateditems.institutions %}
-          <li><a href="#institutions"><span class="icon-university icon-fw"></span> Institutions <span class="badge">{{ object.relateditems.institutions|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.groups %}
-          <li><a href="#groups"><span class="icon-users icon-fw"></span> Groups <span class="badge">{{ object.relateditems.groups|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.animals %}
-          <li><a href="#animals"><span class="icon-users icon-fw"></span> Animals <span class="badge">{{ object.relateditems.animals|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.pubdocs %}
-          <li><a href="#published"><span class="icon-book icon-fw"></span> Published Documents <span class="badge">{{ object.relateditems.pubdocs|length }}</span></a></li>
-          {% endif %}
-          {% if object.relateditems.unpubdocs %}
-          <li><a href="#unpublished"><span class="icon-file-text-o icon-fw"></span> Unpublished Documents <span class="badge">{{ object.relateditems.unpubdocs|length }}</span></a></li>
-          {% endif %}
-          {% if object.bibreferences %}
-          <li><a href="#biblio"><span class="icon-info-circle icon-fw"></span> Full Bibliography </a></li>
-          {% endif %}
-        </ul>
+              <ul class="vertical menu">
+                <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
+                {% if object.relateditems.sites %}
+                <li><a href="#tombs"><span class="icon-map-marker icon-fw"></span> Tombs and Monuments <span class="badge">{{ object.relateditems.sites|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.objects %}
+                <li><a href="#objects"><span class="icon-vase icon-fw"></span> Finds <span class="badge">{{ object.relateditems.objects|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.diarypages %}
+                <li><a href="#diary"><span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages <span class="badge">{{ object.relateditems.diarypages|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.mapsandplans %}
+                <li><a href="#maps"><span class="icon-map-o icon-fw"></span> Maps &amp; Plans <span class="badge">{{ object.relateditems.mapsandplans|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.drawings %}
+                <li><a href="#drawings"><span class="icon-pencil-square-o icon-fw"></span> Drawings <span class="badge">{{ object.relateditems.drawings|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.photos %}
+                <li><a href="#photos"><span class="icon-camera icon-fw"></span> Photos <span class="badge">{{ object.relateditems.photos|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.giza3d %}
+                <li><a href="#models"><span class="icon-icon-pyramid-3d icon-fw"></span> 3D Models <span class="badge">{{ object.relateditems.giza3d|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.videos %}
+                <li><a href="#videos"><span class="icon-video-camera icon-fw"></span> Videos <span class="badge">{{ object.relateditems.videos|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.audio %}
+                <li><a href="#videos"><span class="icon-volume-up icon-fw"></span> Audio <span class="badge">{{ object.relateditems.audio|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
+                <li><a href="#people"><span class="icon-user icon-fw"></span> People <span class="badge">
+                  {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+                  {{ apnum|add:mpnum }}
+                  {% endwith %}
+                </span></a></li>
+                {% endif %}
+                {% if object.relateditems.institutions %}
+                <li><a href="#institutions"><span class="icon-university icon-fw"></span> Institutions <span class="badge">{{ object.relateditems.institutions|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.groups %}
+                <li><a href="#groups"><span class="icon-users icon-fw"></span> Groups <span class="badge">{{ object.relateditems.groups|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.animals %}
+                <li><a href="#animals"><span class="icon-users icon-fw"></span> Animals <span class="badge">{{ object.relateditems.animals|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.pubdocs %}
+                <li><a href="#published"><span class="icon-book icon-fw"></span> Published Documents <span class="badge">{{ object.relateditems.pubdocs|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.unpubdocs %}
+                <li><a href="#unpublished"><span class="icon-file-text-o icon-fw"></span> Unpublished Documents <span class="badge">{{ object.relateditems.unpubdocs|length }}</span></a></li>
+                {% endif %}
+                {% if object.bibreferences %}
+                <li><a href="#biblio"><span class="icon-info-circle icon-fw"></span> Full Bibliography </a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-</div>
 
-      <div class="item__featured-image">
-        {% if object.primarydisplay.main %}
-          <img src="{{ object.primarydisplay.main }}" alt="">
-          <p class="item__featured-image__caption">
-            Caption for this photo.
-          </p>
-        {% endif %}
-      </div>
+    <div class="item__featured-image">
+      {% if object.primarydisplay.main %}
+      <img src="{{ object.primarydisplay.main }}" alt="">
+      <p class="item__featured-image__caption">
+        Caption for this photo.
+      </p>
+      {% endif %}
+    </div>
 
       {% if object.diarytranscription %}
       <div class="item__overview text-alt">
@@ -153,6 +156,47 @@
           {% include template_name %}
         {% endwith %}
       </section>
+
+      {% if object.relateditems.sites %}
+      <section id="featureBlock_tombs" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-map-marker icon-padded"></i> Tombs and Monuments
+            <a name="tombs"></a>
+            <span class="badge">{{ object.relateditems.sites|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_tombs">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm">
+            {% for item in object.relateditems.sites %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'sites' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'sites' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-property">Site Name</span> <span class="item-value">{{item.sitename}}</span></li>
+                    <!-- <li><span class="item-property">Description</span> <span class="item-value">Etiam porta sem malesuada magna mollis euismod. Sed posuere consectetur est at lobortis.</span></li> -->
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+
+        </div>
+      </section>
+      {% endif %}
+
       {% if object.relateditems.objects %}
       <section id="featureBlock_objects" class="feature-block collapsible" data-toggler=".is-collapsed">
         <div class="feature-block__header">
@@ -171,9 +215,11 @@
             <li>
               <div class="media-object list-item list-item-thumbnail">
                 <div class="media-object-section">
+                  {% if item.thumbnail %}
                   <div class="thumbnail">
                     <a href="{% url 'get_type_html' 'objects' item.id 'intro' %}"><img src= "{{ item.thumbnail }}"></a>
                   </div>
+                  {% endif %}
                 </div>
                 <div class="media-object-section">
                   <p class="media-object-title"><a href="{% url 'get_type_html' 'objects' item.id 'intro' %}">{{item.displaytext}}</a></p>
@@ -207,9 +253,11 @@
             <li>
               <div class="media-object list-item list-item-thumbnail">
                 <div class="media-object-section">
+                  {% if item.thumbnail %}
                   <div class="thumbnail">
                     <a href="{% url 'get_type_html' 'diarypages' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
                   </div>
+                  {% endif %}
                 </div>
                 <div class="media-object-section">
                   <p class="media-object-title"><a href="{% url 'get_type_html' 'diarypages' item.id 'intro' %}">{{ item.displaytext }}</a></p>
@@ -242,9 +290,11 @@
             {% for item in object.relateditems.mapsandplans %}
             <li>
               <div class="media-object list-item list-item-thumbcaption">
+                {% if item.thumbnail %}
                 <div class="thumbnail">
                   <a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}"><img src="{{ item.thumbnail }}" class="thumbnail" alt=""></a>
                 </div>
+                {% endif %}
                 <p class="media-object-title"><a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}">{{ item.displaytext }}</a></p>
               </div>
             </li>
@@ -272,9 +322,11 @@
             <li>
               <div class="media-object list-item list-item-thumbnail">
                 <div class="media-object-section">
+                  {% if item.thumbnail %}
                   <div class="thumbnail">
                     <a href="{% url 'get_type_html' 'drawings' item.id 'intro' %}"><img src= "{{ item.thumbnail }}"></a>
                   </div>
+                  {% endif %}
                 </div>
                 <div class="media-object-section">
                   <p class="media-object-title"><a href="{% url 'get_type_html' 'drawings' item.id 'intro' %}">{{ item.displaytext }}</a></p>
@@ -342,9 +394,11 @@
             <li>
               <div class="media-object list-item list-item-thumbnail">
                 <div class="media-object-section">
+                  {% if item.thumbnail %}
                   <div class="thumbnail">
                     <a href="{% url 'get_type_html' 'unpubdocs' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
                   </div>
+                  {% endif %}
                 </div>
                 <div class="media-object-section">
                   <p class="media-object-title"><a href="{% url 'get_type_html' 'unpubdocs' item.id 'intro' %}">{{ item.displaytext }}</a></p>
@@ -473,7 +527,7 @@
                 <!-- <div class="thumbnail">
                 <a href="#0"><img src="assets/img/video1.png"></a>
               </div> -->
-              <video width="100%" height="100%" poster="{{ item.thumbnail }}" controls>
+              <video width="100%" height="100%" {% if item.thumbnail %}poster="{{ item.thumbnail }}"{% endif %} controls>
                 <source src="{{ item.main }}" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
@@ -519,7 +573,7 @@
                     <p class="media-object-title"><a href="{% url 'get_type_html' 'ancientpeople' item.id 'intro' %}">{{item.displaytext}}</a></p>
                     <ul class="subheader">
                       <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
-                      <li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li>{% endif %}
                     </ul>
                   </div>
                 </div>
@@ -547,7 +601,7 @@
                     <ul class="subheader">
                       <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
                       <li><span class="item-property">Nationality &amp; Dates</span> <span class="item-value">{{item.displaydate}}</span></li>
-                      <li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li>{% endif %}
                     </ul>
                   </div>
                 </div>
@@ -558,7 +612,125 @@
           </div>
         </section>
         {% endif %}
+
+        {% if object.relateditems.institutions %}
+        <section id="featureBlock_institutions" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+          <div class="feature-block__header">
+            <h3 class="feature-block__title">
+              <i class="icon-university icon-padded"></i> Institutions
+              <a name="institutions"></a>
+              <span class="badge">{{ object.relateditems.institutions|length }}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_institutions">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+              {% for item in object.relateditems.institutions %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'institutions' item.id 'intro' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'institutions' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li> {% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+
+          </div>
+        </section>
+        {% endif %}
+
+        {% if object.relateditems.groups %}
+        <section id="featureBlock_groups" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+          <div class="feature-block__header">
+            <h3 class="feature-block__title">
+              <i class="icon-users icon-padded"></i> Groups
+              <a name="groups"></a>
+              <span class="badge">{{ object.relateditems.groups|length }}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_groups">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+              {% for item in object.relateditems.groups %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'groups' item.id 'intro' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'groups' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li>{% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </section>
+        {% endif %}
+
+        {% if object.relateditems.animals %}
+        <section id="featureBlock_animals" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+          <div class="feature-block__header">
+            <h3 class="feature-block__title">
+              <i class="icon-paw icon-padded"></i> Animals
+              <a name="animals"></a>
+              <span class="badge">{{ object.relateditems.animals|length }}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_animals">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+              {% for item in object.relateditems.groups %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'animals' item.id 'intro' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'animals' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li>{% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </section>
+        {% endif %}
+
       </section>
     </div>
-  </div>
     {% endblock %}

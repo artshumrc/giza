@@ -112,7 +112,7 @@ ORDER BY Objects.ObjectID
 """
 
 RELATED_UNPUBLISHED = """
-SELECT Associations.ID1 as ID, Associations.ID2 as UnpublishedID,
+SELECT Associations.ID1 as ID, Associations.ID2 as UnpublishedID, Objects.ObjectNumber,
 replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS UnpublishedTitle, Objects.ClassificationID, Objects.Dated as ObjectDate,
 MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM Associations

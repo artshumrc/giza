@@ -1,5 +1,15 @@
 <div class="feature-block__body">
   <ul class="feature-block__list multicol-2">
+    {% if object.number %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>ID</dt>
+          <dd>{{ object.number }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
     {% if object.classificationtext %}
     <li>
       <div class="media-object list-item list-item-textinfo">
@@ -54,9 +64,9 @@
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
-          <dt>Alternate Numbers</dt>
           {% for altnum in object.altnums %}
-            <dd>{{ altnum }}</dd>
+          <dt>{{altnum.description}}</dt>
+            <dd>{{ altnum.altnum }}</dd>
           {% endfor %}
         </dl>
       </div>
@@ -103,6 +113,21 @@
             {% endif %}
           {% endfor %}
           {% for item in object.relateditems.ancientpeople %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.institutions %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.groups %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.animals %}
             {% if item.role == role %}
             <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
             {% endif %}
