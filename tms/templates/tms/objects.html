@@ -60,18 +60,16 @@
       </div>
     </li>
     {% endif %}
-    {% if object.altnums %}
+    {% for altnum in object.altnums %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
-          {% for altnum in object.altnums %}
           <dt>{{altnum.description}}</dt>
             <dd>{{ altnum.altnum }}</dd>
-          {% endfor %}
         </dl>
       </div>
     </li>
-    {% endif %}
+    {% endfor %}
     {% if object.objectownerdetails %}
     <li>
       <div class="media-object list-item list-item-textinfo">
@@ -172,7 +170,9 @@
         <dl class="dl-slim">
           <dt>{{key}}</dt>
           {% for flexfield in value %}
-            <dd>{{ flexfield }}</dd>
+            {% for fieldname, fieldvalue in flexfield.items %}
+              <dd>{{ fieldname }} : {{fieldvalue}}</dd>
+            {% endfor %}
           {% endfor %}
         </dl>
       </div>

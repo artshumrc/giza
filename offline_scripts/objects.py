@@ -260,7 +260,8 @@ def process_object_flexfields():
 			'object_id_index' : columns.index('ObjectID'),
 			'classification_id_index' : columns.index('ClassificationID'),
 			'group_name_index' : columns.index('GroupName'),
-			'field_name_index' : columns.index('UserFieldName')
+			'field_name_index' : columns.index('UserFieldName'),
+			'field_value_index' : columns.index('UserFieldValue')
 		}
 		return indices
 
@@ -288,7 +289,8 @@ def process_object_flexfields():
 			object['flexfields'][groupname] = []
 
 		fieldname = row[indices['field_name_index']]
-		object['flexfields'][groupname].append(fieldname)
+		fieldvalue = row[indices['field_value_index']]
+		object['flexfields'][groupname].append({fieldname : fieldvalue})
 		return (object, current_id)
 
 	print "Starting Objects Flex Fields..."
