@@ -65,6 +65,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           }
         },
         "relateditems": {
+          "include_in_all" : false,
           "properties": {
             "modernpeople": {
               "properties": {
@@ -94,6 +95,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "objects" : {
       "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -173,6 +178,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "unpubdocs" : {
       "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -181,7 +190,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "string",
           "index":"not_analyzed"
         },
-        "classificationtext": {
+        "department": {
           "type" : "string",
           "fields": {
             "raw" : {
@@ -197,6 +206,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "diarypages" : {
       "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -206,6 +219,15 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "index":"not_analyzed"
         },
         "classificationtext": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "department": {
           "type" : "string",
           "fields": {
             "raw" : {
@@ -221,6 +243,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "mapsandplans" : {
       "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -229,7 +255,16 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "string",
           "index":"not_analyzed"
         },
-        "classificationtext": {
+        "department": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "medium": {
           "type" : "string",
           "fields": {
             "raw" : {
@@ -245,6 +280,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "drawings" : {
       "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -253,7 +292,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "string",
           "index":"not_analyzed"
         },
-        "classificationtext": {
+        "department": {
           "type" : "string",
           "fields": {
             "raw" : {
@@ -278,6 +317,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "3dmodels" : {
       "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -286,7 +329,100 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "string",
           "index":"not_analyzed"
         },
-        "classificationtext": {
+        "entrydate": {
+          "type": "string"
+        },
+        "department": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        }
+      }
+    },
+    "videos" : {
+      "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
+        "number": {
+          "type" : "string",
+          "index":"not_analyzed"
+        },
+        "altnumber": {
+          "type" : "string",
+          "index":"not_analyzed"
+        },
+        "entrydate": {
+          "type": "string"
+        },
+        "department": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        }
+      }
+    },
+    "audio" : {
+      "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
+        "number": {
+          "type" : "string",
+          "index":"not_analyzed"
+        },
+        "altnumber": {
+          "type" : "string",
+          "index":"not_analyzed"
+        },
+        "entrydate": {
+          "type": "string"
+        },
+        "department": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        }
+      }
+    },
+    "ancientpeople" : {
+      "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
+        "gender": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        }
+      }
+    },
+    "modernpeople" : {
+      "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
+        "gender": {
           "type" : "string",
           "fields": {
             "raw" : {
@@ -295,8 +431,31 @@ curl -XPUT 'http://localhost:9200/giza' -d '
             }
           }
         },
-        "entrydate": {
-          "type": "string"
+        "institution": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "nationality": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "begindate": {
+          "type" : "string",
+          "index":"not_analyzed"
+        },
+        "enddate": {
+          "type" : "string",
+          "index":"not_analyzed"
         }
       }
     }
