@@ -1,7 +1,8 @@
 # Object display data
 CONSTITUENTS = """
 SELECT DISTINCT Constituents.ConstituentID as ID, Constituents.DisplayName, Constituents.DisplayDate,
-Constituents.ConstituentTypeID, ConTypes.ConstituentType, Constituents.Remarks, Terms.Term as Gender
+Constituents.ConstituentTypeID, ConTypes.ConstituentType, Constituents.Remarks, Terms.Term as Gender,
+Constituents.Institution, Constituents.Nationality, Constituents.BeginDate, Constituents.EndDate
 FROM Constituents
 LEFT JOIN ConXrefDetails on Constituents.ConstituentID=ConXrefDetails.ConstituentID AND ConXrefDetails.UnMasked=1
 LEFT JOIN ConTypes on Constituents.ConstituentTypeID=ConTypes.ConstituentTypeID
@@ -9,6 +10,7 @@ LEFT JOIN ThesXrefs on Constituents.ConstituentID=ThesXrefs.ID AND ThesXrefs.The
 LEFT JOIN ThesXrefTypes on ThesXrefs.ThesXrefTypeID=ThesXrefTypes.ThesXrefTypeID
 LEFT JOIN gizaCARDTMSThes.dbo.Terms Terms on ThesXrefs.TermID=Terms.TermID
 WHERE Constituents.PublicAccess=1
+AND Constituents.ConstituentTypeID>0
 ORDER BY Constituents.ConstituentID
 """
 
@@ -18,6 +20,7 @@ SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConAltNames.D
 FROM Constituents
 LEFT JOIN ConAltNames on Constituents.ConstituentID=ConAltNames.ConstituentID
 WHERE Constituents.PublicAccess=1
+AND Constituents.ConstituentTypeID>0
 ORDER BY Constituents.ConstituentID
 """
 
@@ -28,7 +31,7 @@ Objects.ClassificationID, Objects.Dated as ObjectDate,
 MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM ConXrefs
 JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
-JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1
+JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0
 JOIN Objects on ConXrefs.ID=Objects.ObjectID
 JOIN ObjTitles ON Objects.ObjectID=ObjTitles.ObjectID
 JOIN MediaXrefs on Objects.ObjectID=MediaXrefs.ID
@@ -49,7 +52,7 @@ SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConXrefs.ID a
 MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM ConXrefs
 LEFT JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
-LEFT JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1
+LEFT JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0
 LEFT JOIN Sites on ConXrefs.ID=Sites.SiteID
 LEFT JOIN MediaXrefs on Sites.SiteID=MediaXrefs.ID
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
@@ -77,6 +80,7 @@ JOIN MediaFiles on MediaRenditions.RenditionID=MediaFiles.RenditionID
 JOIN MediaPaths AS MainPath on MediaFiles.PathID=MainPath.PathID
 WHERE MediaXrefs.PrimaryDisplay=1
 AND Constituents.PublicAccess=1
+AND Constituents.ConstituentTypeID>0
 AND MediaMaster.PublicAccess=1
 AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
 AND MediaXrefs.TableID=143
@@ -91,7 +95,7 @@ MediaRenditions.MediaTypeID, MediaMaster.Description, MediaMaster.PublicCaption,
 ThumbPath.Path as ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path as MainPathName, MediaFiles.FileName as MainFileName
 FROM MediaXrefs
-JOIN Constituents on MediaXrefs.ID=Constituents.ConstituentID AND Constituents.PublicAccess=1
+JOIN Constituents on MediaXrefs.ID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN Objects on MediaXrefs.ID=Objects.ObjectID
