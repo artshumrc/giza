@@ -256,9 +256,27 @@ def build_bool(current_category, current_subfacets, facet_name_ignore):
 
 def build_es_query(search_term, current_category, current_subfacets):
     q = {
-        "match_phrase": {
-           "_all": search_term
-        }
+        "bool" : {
+         "should" : [
+            {
+               "match" : {
+                  "displaytext" : {
+                     "query" : search_term,
+                     "operator" : "and",
+                     "boost" : 2
+                  }
+               }
+            },
+            {
+                "match" : {
+                   "_all" : {
+                    "query" : search_term,
+                    "operator" : "and"
+                   }
+                }
+            }
+         ]
+      }
     }
     return q
 

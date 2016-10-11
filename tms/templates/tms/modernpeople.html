@@ -10,6 +10,16 @@
       </div>
     </li>
     {% endif %}
+    {% if object.institution %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Institution</dt>
+          <dd>{{ object.institution }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
     {% if object.displaydate %}
     <li>
       <div class="media-object list-item list-item-textinfo">

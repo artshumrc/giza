@@ -138,8 +138,31 @@ FACETS_PER_CATEGORY = {
 	},
 	'pubdocs' : {},
 	'photos' : {},
-	'ancientpeople' : {},
-	'modernpeople' : {},
+	'ancientpeople' : {
+		'Gender' : {
+			'terms' : {
+				'field' : 'gender.raw'
+			}
+		}
+	},
+	'modernpeople' : {
+		'Gender' : {
+			'terms' : {
+				'field' : 'gender.raw'
+			}
+		},
+		'Nationality' : {
+			'terms' : {
+				'field' : 'nationality.raw'
+			}
+		},
+		'Institution' : {
+			'terms' : {
+				'field' : 'institution.raw'
+			}
+		}
+	},
+	'plansanddrawings' : {},
 	'institutions' : {},
 	'groups' : {},
 	'animals' : {},
