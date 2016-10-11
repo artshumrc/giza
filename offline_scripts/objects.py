@@ -739,6 +739,11 @@ def process_object_related_media():
 			if not row[indices['main_file_index']].endswith('mp4'):
 				return(site, current_id)
 
+		# same with bmp files
+		if media_type_key == 1:
+			if not row[indices['main_file_index']].endswith('bmp'):
+				return(site, current_id)
+
 		if media_type not in object['relateditems']:
 			object['relateditems'][media_type] = []
 
