@@ -592,11 +592,6 @@ def process_site_related_media():
 			if not row[indices['main_file_index']].endswith('mp4'):
 				return(site, current_id)
 
-		# ignore bmp files
-		if media_type_key == 1:
-			if row[indices['main_file_index']].endswith('bmp'):
-				return(site, current_id)
-
 		if media_type not in site['relateditems']:
 			site['relateditems'][media_type] = []
 		# add primary photo as a top level item as well
