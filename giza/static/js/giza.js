@@ -78,3 +78,15 @@ $(function() {
   });
 
 });
+
+// Dynamically adjust right-column margin on feature full view
+
+var fnAdjustRightColMargin = function() {
+  var menu = $('#jumpmenu');
+  var col = $('.header-full.mode-full .content-col-secondary');
+  var offset = Foundation.Box.GetDimensions(menu)['height'];
+  offset = (offset + 50);
+  col.css('margin-top', offset);
+}
+
+fnAdjustRightColMargin();

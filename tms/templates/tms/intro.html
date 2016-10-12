@@ -70,7 +70,7 @@
               </button>
             </div>
             <div class="feature-block__body">
-              <ul class="feature-block__list thumbsize-sm">
+              <ul class="feature-block__list thumbsize-sm thumbs-square">
                 {% for item in object.relateditems.sites|slice:":5" %}
                 <li>
                   <div class="media-object list-item list-item-thumbnail">
@@ -111,7 +111,7 @@
               </button>
             </div>
             <div class="feature-block__body">
-              <ul class="feature-block__list thumbsize-sm">
+              <ul class="feature-block__list thumbsize-sm thumbs-square">
                 {% for item in object.relateditems.objects|slice:":5" %}
                 <li>
                   <div class="media-object list-item list-item-thumbnail">
@@ -153,7 +153,7 @@
               </button>
             </div>
             <div class="feature-block__body">
-              <ul class="feature-block__list thumbsize-sm">
+              <ul class="feature-block__list thumbsize-sm thumbs-square">
                 {% for item in object.relateditems.diarypages|slice:":5" %}
                 <li>
                   <div class="media-object list-item list-item-thumbnail">
@@ -195,7 +195,7 @@
               </button>
             </div>
             <div class="feature-block__body">
-              <ul class="feature-block__list item-grid thumbsize-lg">
+              <ul class="feature-block__list item-grid thumbsize-lg thumbs-square">
                 {% for item in object.relateditems.mapsandplans|slice:"2" %}
                 <li>
                   <div class="media-object list-item list-item-thumbcaption">
@@ -230,7 +230,7 @@
               </button>
             </div>
             <div class="feature-block__body">
-              <ul class="feature-block__list thumbsize-sm">
+              <ul class="feature-block__list thumbsize-sm thumbs-square">
                 {% for item in object.relateditems.drawings|slice:":5" %}
                 <li>
                   <div class="media-object list-item list-item-thumbnail">
@@ -274,7 +274,7 @@
               </button>
             </div>
             <div class="feature-block__body">
-              <ul class="feature-block__list item-grid thumbsize-sm">
+              <ul class="feature-block__list item-grid thumbsize-sm thumbs-square">
                 {% for item in object.relateditems.photos|slice:":12" %}
                 <li>
                   <div class="media-object list-item list-item-thumbonly">
@@ -382,7 +382,7 @@
               </button>
             </div>
             <div class="feature-block__body">
-              <ul class="feature-block__list thumbsize-sm">
+              <ul class="feature-block__list thumbsize-sm thumbs-square">
                 {% for item in object.relateditems.unpubdocs|slice:":5" %}
                 <li>
                   <div class="media-object list-item list-item-thumbnail">
@@ -512,7 +512,7 @@
           {% if object.relateditems.ancientpeople %}
           <h4>Ancient People</h4>
 
-          <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+          <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
             {% for item in object.relateditems.ancientpeople|slice:":3" %}
             <li>
               <div class="media-object list-item list-item-thumbnail">
@@ -539,7 +539,7 @@
           {% if object.relateditems.modernpeople %}
           <h4>Modern People</h4>
 
-          <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+          <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
             {% for item in object.relateditems.modernpeople|slice:":2" %}
             <li>
               <div class="media-object list-item list-item-thumbnail">
@@ -586,7 +586,7 @@
             </button>
           </div>
           <div class="feature-block__body">
-            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
               {% for item in object.relateditems.institutions|slice:":2" %}
               <li>
                 <div class="media-object list-item list-item-thumbnail">
@@ -629,7 +629,7 @@
             </button>
           </div>
           <div class="feature-block__body">
-            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
               {% for item in object.relateditems.groups|slice:":2" %}
               <li>
                 <div class="media-object list-item list-item-thumbnail">
@@ -672,7 +672,7 @@
             </button>
           </div>
           <div class="feature-block__body">
-            <ul class="feature-block__list thumbsize-sm no-labels first-property-bold">
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
               {% for item in object.relateditems.animals|slice:":2" %}
               <li>
                 <div class="media-object list-item list-item-thumbnail">
@@ -712,7 +712,7 @@
 <!-- Modal -->
 
 {% for item in object.relateditems.photos|slice:":12" %}
-<div class="large reveal modal-inverse photo-gallery-modal" id="gallery{{ item.id }}" data-reveal>
+<div class="large reveal modal-inverse photo-gallery-modal" id="gallery{{ item.id }}" data-reveal dava-v-offset="65">
 
   <h2>{{ item.displaytext }}</h2>
 
