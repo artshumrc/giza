@@ -101,14 +101,16 @@
       </div>
     </div>
 
-    <div class="item__featured-image">
-      {% if object.primarydisplay.main %}
-      <img src="{{ object.primarydisplay.main }}" alt="">
-      <p class="item__featured-image__caption">
-        Caption for this photo.
-      </p>
-      {% endif %}
-    </div>
+    {% if object.primarydisplay.main %}
+      <div class="item__featured-image">
+        <img src="{{ object.primarydisplay.main }}" alt="">
+        {% if object.primarydisplay.displaytext %}
+        <p class="item__featured-image__caption">
+          {{ object.primarydisplay.displaytext }}
+        </p>
+        {% endif %}
+      </div>
+    {% endif %}
 
       {% if object.diarytranscription %}
       <div class="item__overview text-alt">

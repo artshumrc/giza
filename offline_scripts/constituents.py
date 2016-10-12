@@ -466,6 +466,7 @@ def process_constituents_related_media():
 		media_master_id = row[indices['media_master_id_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
+		display_text = row[indices['caption_index']]
 
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
 		# so, make sure we are only using videos that are mp4s
@@ -479,11 +480,12 @@ def process_constituents_related_media():
 		if row[indices['primary_display_index']] == '1':
 			constituent['primarydisplay'] = {
 			'thumbnail' : thumbnail_url,
-			'main' : main_url
+			'main' : main_url,
+			'displaytext' : display_text
 			}
 		constituent['relateditems'][media_type].append({
 			'id' : media_master_id,
-			'displaytext' : row[indices['caption_index']],
+			'displaytext' : display_text,
 			'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
 			'thumbnail' : thumbnail_url,
 			'main' : main_url

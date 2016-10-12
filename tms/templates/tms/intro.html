@@ -37,14 +37,16 @@
             </div>
           </div>
 
-      <div class="item__featured-image">
-        {% if object.primarydisplay.main %}
-          <img src="{{ object.primarydisplay.main }}" alt="">
-          <p class="item__featured-image__caption">
-            Caption for this photo.
-          </p>
-        {% endif %}
-      </div>
+      {% if object.primarydisplay.main %}
+        <div class="item__featured-image">
+            <img src="{{ object.primarydisplay.main }}" alt="">
+            {% if object.primarydisplay.displaytext %}
+            <p class="item__featured-image__caption">
+              {{ object.primarydisplay.displaytext }}
+            </p>
+            {% endif %}
+        </div>
+      {% endif %}
 
       {% if object.description %}
       <div class="item__overview">
@@ -91,9 +93,11 @@
                 </li>
                 {% endfor %}
               </ul>
+              {% if object.relateditems.sites|length > 5 %}
               <div class="feature-block__footer">
                 <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#tombs">View all {{ object.relateditems.sites|length }} Tombs and Monuments <i class="icon-angle-right"></i></a></p>
               </div>
+              {% endif %}
             </div>
           </section>
           {% endif %}
@@ -132,10 +136,11 @@
                 </li>
                 {% endfor %}
               </ul>
-
+              {% if object.rleateditems.objects|length > 5 %}
               <div class="feature-block__footer">
                 <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#objects">View all {{ object.relateditems.objects|length }} Finds <i class="icon-angle-right"></i></a></p>
               </div>
+              {% endif %}
             </div>
           </section>
           {% endif %}
@@ -174,10 +179,11 @@
                 </li>
                 {% endfor %}
               </ul>
-
+              {% if object.relateditems.diarypages|length > 5 %}
               <div class="feature-block__footer">
                 <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#diary">View all {{ object.relateditems.diarypages|length }} Excavation Diary Pages <i class="icon-angle-right"></i></a></p>
               </div>
+              {% endif %}
             </div>
           </section>
           {% endif %}
@@ -209,10 +215,11 @@
                 </li>
                 {% endfor %}
               </ul>
-
+              {% if object.relateditems.mapsandplans|length > 2 %}
               <div class="feature-block__footer">
                 <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#maps">View all {{ object.relateditems.mapsandplans|length }} Maps &amp; Plans <i class="icon-angle-right"></i></a></p>
               </div>
+              {% endif %}
             </div>
           </section>
           {% endif %}
@@ -251,10 +258,11 @@
                 </li>
                 {% endfor %}
               </ul>
-
+              {% if object.relateditems.drawings|length > 5 %}
               <div class="feature-block__footer">
                 <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#drawings">View all {{ object.relateditems.drawings|length }} Drawings <i class="icon-angle-right"></i></a></p>
               </div>
+              {% endif %}
             </div>
           </section>
           {% endif %}
@@ -292,10 +300,11 @@
                 </li>
                 {% endfor %}
               </ul>
-
+              {% if object.relateditems.photos|length > 12 %}
               <div class="feature-block__footer">
                 <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#photos">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
               </div>
+              {% endif %}
             </div>
           </section>
           {% endif %}
@@ -361,10 +370,11 @@
                 </li>
                 {% endfor %}
               </ul>
-
+              {% if object.relateditems.pubdocs|length > 5%}
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#published">View all {{ object.relateditems.pubdocs|length}} Published Documents <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#published">View all {{ object.relateditems.pubdocs|length }} Published Documents <i class="icon-angle-right"></i></a></p>
               </div>
+              {% endif %}
             </div>
           </section>
           {% endif %}
@@ -403,10 +413,11 @@
                 </li>
                 {% endfor %}
               </ul>
-
+              {% if object.relateditems.unpubdocs|length > 5 %}
               <div class="feature-block__footer">
                 <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#unpublished">View all {{ object.relateditems.unpubdocs|length }} Unpublished Documents <i class="icon-angle-right"></i></a></p>
               </div>
+              {% endif %}
             </div>
           </section>
           {% endif %}
@@ -447,10 +458,11 @@
                 </li>
                 {% endfor %}
               </ul>
-
+              {% if object.relateditems.videos|length > 3 %}
               <div class="feature-block__footer">
                 <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#videos">View all {{ object.relateditems.videos|length }} Videos <i class="icon-angle-right"></i></a></p>
               </div>
+              {% endif %}
             </div>
           </section>
           {% endif %}
@@ -563,12 +575,15 @@
             {% endfor %}
           </ul>
           {% endif %}
-
+          {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+          {% if apnum|add:mpnum > 5 %}
           <div class="feature-block__footer">
-            <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#people">View all {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+            <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#people">View all
               {{ apnum|add:mpnum }}
-            {% endwith %} People <i class="icon-angle-right"></i></a></p>
+             People <i class="icon-angle-right"></i></a></p>
           </div>
+          {% endif %}
+          {% endwith %}
         </div>
       </section>
         {% endif %}
@@ -608,10 +623,11 @@
               </li>
               {% endfor %}
             </ul>
-
+            {% if object.relateditems.institutions|length > 2 %}
             <div class="feature-block__footer">
               <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#institutions">View all {{ object.relateditems.institutions|length }} Institutions <i class="icon-angle-right"></i></a></p>
             </div>
+            {% endif %}
           </div>
         </section>
         {% endif %}
@@ -651,10 +667,11 @@
               </li>
               {% endfor %}
             </ul>
-
+            {% if object.relateditems.groups|length > 2 %}
             <div class="feature-block__footer">
               <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#groups">View all {{ object.relateditems.groups|length }} Groups <i class="icon-angle-right"></i></a></p>
             </div>
+            {% endif %}
           </div>
         </section>
         {% endif %}
@@ -694,10 +711,11 @@
               </li>
               {% endfor %}
             </ul>
-
+            {% if object.relateditems.animals|length > 2 %}
             <div class="feature-block__footer">
               <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#animals">View all {{ object.relateditems.animals|length }} Animals <i class="icon-angle-right"></i></a></p>
             </div>
+            {% endif %}
           </div>
         </section>
         {% endif %}
