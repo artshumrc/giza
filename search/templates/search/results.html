@@ -54,9 +54,11 @@
     {% for result in hits %}
       <div class="media-object list-item search-result">
         <div class="media-object-section">
-          <div {% if result.source.primarydisplay %}class="thumbnail"{% endif %}>
-            <a href="{% url 'get_type_html' result.type result.id 'intro' %}">{% if result.source.primarydisplay %}<img src="{{ result.source.primarydisplay.thumbnail }}" alt="">{% endif %}</a>
-          </div>
+          {% if result.source.primarydisplay.thumbnail %}
+            <div class="thumbnail">
+              <a href="{% url 'get_type_html' result.type result.id 'intro' %}">{% if result.source.primarydisplay %}<img src="{{ result.source.primarydisplay.thumbnail }}" alt="">{% endif %}</a>
+            </div>
+          {% endif %}
         </div>
         <div class="media-object-section">
           <p class="media-object-title"><a href="{% url 'get_type_html' result.type result.id 'intro' %}">{{ result.source.displaytext }}</a></p>

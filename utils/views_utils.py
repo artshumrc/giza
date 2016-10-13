@@ -160,6 +160,16 @@ FACETS_PER_CATEGORY = {
 			'terms' : {
 				'field' : 'institution.raw'
 			}
+		},
+		'Year of Birth' : {
+			'terms' : {
+				'field' : 'begindate'
+			}
+		},
+		'Year of Death' : {
+			'terms' : {
+				'field' : 'enddate'
+			}
 		}
 	},
 	'plansanddrawings' : {},

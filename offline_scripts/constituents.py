@@ -45,6 +45,10 @@ def process_constituents():
 			else:
 				row_value = row_value.replace(',,','')
 
+			if key in ['begindate', 'enddate']:
+				if row_value == 0:
+					row_value = None
+
 			constituent[key] = row_value
 
 		display_text = constituent['displayname']
