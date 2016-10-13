@@ -58,8 +58,17 @@ FACETS_PER_CATEGORY = {
 	},
 	'objects' : {
 		'Classification' : {
-	    	"terms": {
-	        	"field": 'classificationtext.raw'
+			"filter": {
+				"type": {
+				   "value": "objects"
+				}
+			},
+			"aggregations": {
+				"Classification": {
+			    	"terms": {
+			        	"field": 'classificationtext.raw'
+					}
+				}
 			}
 		},
 		'Findspot' : {
@@ -67,14 +76,32 @@ FACETS_PER_CATEGORY = {
 	        	"field": "provenance.raw"
 	     	}
 		},
-		'Material' : {
-	    	"terms": {
-	        	"field": 'medium.raw'
+		"Material": {
+			"filter": {
+				"type": {
+				   "value": "objects"
+				}
+			},
+			"aggregations": {
+				"Material": {
+				   "terms": {
+				      "field": "medium.raw"
+				   }
+				}
 			}
-		},
+	  	},
 		'Owning Institution' : {
-	    	"terms": {
-	        	"field": 'department.raw'
+			"filter": {
+				"type": {
+				   "value": "objects"
+				}
+			},
+			"aggregations": {
+				'Owning Institution' : {
+			    	"terms": {
+			        	"field": 'department.raw'
+					}
+				}
 			}
 		},
 		'Period' : {
@@ -95,44 +122,107 @@ FACETS_PER_CATEGORY = {
 	},
 	'diarypages' : {
 		'Classification' : {
-	    	"terms": {
-	        	"field": 'classificationtext.raw'
+			"filter": {
+				"type": {
+				   "value": "diarypages"
+				}
+			},
+			"aggregations": {
+				"Classification": {
+			    	"terms": {
+			        	"field": 'classificationtext.raw'
+					}
+				}
 			}
 		},
 		'Owning Institution' : {
-	    	"terms": {
-	        	"field": 'department.raw'
+			"filter": {
+				"type": {
+				   "value": "diarypages"
+				}
+			},
+			"aggregations": {
+				'Owning Institution' : {
+			    	"terms": {
+			        	"field": 'department.raw'
+					}
+				}
 			}
 		}
 	},
 	'mapsandplans' : {
 		'Owning Institution' : {
-	    	"terms": {
-	        	"field": 'department.raw'
+			"filter": {
+				"type": {
+				   "value": "mapsandplans"
+				}
+			},
+			"aggregations": {
+				'Owning Institution' : {
+			    	"terms": {
+			        	"field": 'department.raw'
+					}
+				}
 			}
 		},
-		'Material' : {
-	    	"terms": {
-	        	"field": 'medium.raw'
+		"Material": {
+			"filter": {
+				"type": {
+				   "value": "mapsandpalsn"
+				}
+			},
+			"aggregations": {
+				"Material": {
+				   "terms": {
+				      "field": "medium.raw"
+				   }
+				}
 			}
-		}
+	  	}
 	},
 	'drawings' : {
 		'Owning Institution' : {
-	    	"terms": {
-	        	"field": 'department.raw'
+			"filter": {
+				"type": {
+				   "value": "drawings"
+				}
+			},
+			"aggregations": {
+				'Owning Institution' : {
+			    	"terms": {
+			        	"field": 'department.raw'
+					}
+				}
 			}
 		},
-		'Material' : {
-	    	"terms": {
-	        	"field": 'medium.raw'
+		"Material": {
+			"filter": {
+				"type": {
+				   "value": "drawings"
+				}
+			},
+			"aggregations": {
+				"Material": {
+				   "terms": {
+				      "field": "medium.raw"
+				   }
+				}
 			}
-		}
+	  	}
 	},
 	'unpubdocs' : {
 		'Owning Institution' : {
-	    	"terms": {
-	        	"field": 'department.raw'
+			"filter": {
+				"type": {
+				   "value": "unpubdocs"
+				}
+			},
+			"aggregations": {
+				'Owning Institution' : {
+			    	"terms": {
+			        	"field": 'department.raw'
+					}
+				}
 			}
 		}
 	},
@@ -140,15 +230,33 @@ FACETS_PER_CATEGORY = {
 	'photos' : {},
 	'ancientpeople' : {
 		'Gender' : {
-			'terms' : {
-				'field' : 'gender.raw'
+			"filter": {
+				"type": {
+				   "value": "ancientpeople"
+				}
+			},
+			"aggregations": {
+				'Gender' : {
+					'terms' : {
+						'field' : 'gender.raw'
+					}
+				}
 			}
 		}
 	},
 	'modernpeople' : {
 		'Gender' : {
-			'terms' : {
-				'field' : 'gender.raw'
+			"filter": {
+				"type": {
+				   "value": "modernpeople"
+				}
+			},
+			"aggregations": {
+				'Gender' : {
+					'terms' : {
+						'field' : 'gender.raw'
+					}
+				}
 			}
 		},
 		'Nationality' : {
