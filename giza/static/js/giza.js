@@ -83,10 +83,12 @@ $(function() {
 
 var fnAdjustRightColMargin = function() {
   var menu = $('#jumpmenu');
-  var col = $('.header-full.mode-full .content-col-secondary');
-  var offset = Foundation.Box.GetDimensions(menu)['height'];
-  offset = (offset + 50);
-  col.css('margin-top', offset);
+  if (menu.length > 0) {
+    var col = $('.header-full.mode-full .content-col-secondary');
+    var offset = Foundation.Box.GetDimensions(menu)['height'];
+    offset = (offset + 50);
+    col.css('margin-top', offset);
+  }
 }
 
 fnAdjustRightColMargin();
