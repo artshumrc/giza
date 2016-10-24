@@ -207,7 +207,7 @@
                   <div class="media-object list-item list-item-thumbcaption">
                     {% if item.thumbnail %}
                     <div class="thumbnail">
-                      <a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}"><img src="{{ item.thumbnail }}" class="thumbnail" alt=""></a>
+                      <a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}"><img src="{{ item.thumbnail }}" alt=""></a>
                     </div>
                     {% endif %}
                     <p class="media-object-title"><a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}">{{ item.displaytext }}</a></p>
