@@ -53,7 +53,7 @@ AND MediaXrefs.PrimaryDisplay=1
 ORDER BY Sites.SiteID
 """
 
-# Related Constituents (Modern and Ancient) for all Sites
+# Related Constituents for all Sites
 # Also grab the primary thumbnail photo for each Constituent
 RELATED_CONSTITUENTS = """
 SELECT ConXrefs.ID as SiteID, Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,

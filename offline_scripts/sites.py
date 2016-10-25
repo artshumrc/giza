@@ -403,7 +403,7 @@ def process_site_related_constituents():
 		if role not in site['roles']:
 			site['roles'].append(role)
 
-		description = row[indices['remarks_index']]
+		description = row[indices['remarks_index']] if row[indices['remarks_index']] != "NULL" else ""
 		constituent_dict['role'] = role
 		constituent_dict['id'] = constituent_id
 		constituent_dict['displayname'] = display_name
