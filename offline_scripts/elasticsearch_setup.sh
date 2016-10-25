@@ -458,6 +458,59 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "index":"not_analyzed"
         }
       }
+    },
+    "pubdocs" : {
+      "properties": {
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
+        "format": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "language": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "yearpublished": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "journal": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "series": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -226,7 +226,66 @@ FACETS_PER_CATEGORY = {
 			}
 		}
 	},
-	'pubdocs' : {},
+	'pubdocs' : {
+		'Format' : {
+			'terms' : {
+				'field' : 'format.raw'
+			}
+		},
+		'Language' : {
+			'terms' : {
+				'field' : 'language.raw'
+			}
+		},
+		'Year Published' : {
+			'terms' : {
+				'field' : 'yearpublished.raw'
+			}
+		},
+		"Author": {
+	         "filter": {
+	            "term": {
+	               "relateditems.modernpeople.role.raw" : "Author"
+	            }
+	         },
+	         "aggregations": {
+	            "Author": {
+	               "terms": {
+	                  "field": "relateditems.modernpeople.displayname.raw"
+	               }
+	            }
+	         }
+      	},
+	  	"Publisher": {
+	         "filter": {
+	            "term": {
+	               "relateditems.modernpeople.role.raw" : "Publisher"
+	            }
+	         },
+	         "aggregations": {
+	            "Publisher": {
+	               "terms": {
+	                  "field": "relateditems.modernpeople.displayname.raw"
+	               }
+	            }
+	         }
+      	},
+		'Number of Pages' : {
+			'terms' : {
+				'field' : 'numofpages'
+			}
+		},
+		'Journal' : {
+			'terms' : {
+				'field' : 'journal.raw'
+			}
+		},
+		'Series' : {
+			'terms' : {
+				'field' : 'series.raw'
+			}
+		}
+	},
 	'photos' : {},
 	'ancientpeople' : {
 		'Gender' : {
