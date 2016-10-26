@@ -549,7 +549,7 @@
                   <p class="media-object-title"><a href="{% url 'get_type_html' 'ancientpeople' item.id 'intro' %}">{{item.displaytext}}</a></p>
                   <ul class="subheader">
                     <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
-                    <li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>
+                    {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>{% endif %}
                   </ul>
                 </div>
               </div>
@@ -577,7 +577,7 @@
                   <ul class="subheader">
                     <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
                     <li><span class="item-property">Nationality &amp; Dates</span> <span class="item-value">{{item.displaydate}}</span></li>
-                    <li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>
+                    {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>{% endif %}
                   </ul>
                 </div>
               </div>
@@ -626,7 +626,7 @@
                     <p class="media-object-title"><a href="{% url 'get_type_html' 'institutions' item.id 'intro' %}">{{ item.displaytext }}</a></p>
                     <ul class="subheader">
                       <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
-                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li> {% endif %}
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li> {% endif %}
                     </ul>
                   </div>
                 </div>
@@ -670,7 +670,7 @@
                     <p class="media-object-title"><a href="{% url 'get_type_html' 'groups' item.id 'intro' %}">{{ item.displaytext }}</a></p>
                     <ul class="subheader">
                       <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
-                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li> {% endif %}
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li> {% endif %}
                     </ul>
                   </div>
                 </div>
@@ -714,7 +714,7 @@
                     <p class="media-object-title"><a href="{% url 'get_type_html' 'animals' item.id 'intro' %}">{{ item.displaytext }}</a></p>
                     <ul class="subheader">
                       <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
-                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value">{{item.description}}</span></li> {% endif %}
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li> {% endif %}
                     </ul>
                   </div>
                 </div>

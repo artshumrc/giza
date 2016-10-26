@@ -51,7 +51,7 @@ $(function() {
 
   minimized_elements.each(function(){
     var t = $(this).text(),
-    max_length = 76;
+    max_length = 200;
 
     if(t.length < max_length) return;
 
