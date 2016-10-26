@@ -78,7 +78,13 @@ CLASSIFICATIONS = {
 	135 : "objects",
 	136 : "unpubdocs",
 	139 : "mapsandplans",
-	140 : "drawings"
+	140 : "drawings",
+	141 : "3dmodels",
+	142 : "3dmodels",
+	143 : "3dmodels",
+	144 : "3dmodels",
+	145 : "3dmodels",
+	146 : "3dmodels"
 }
 
 CONSTITUENTTYPES = {
