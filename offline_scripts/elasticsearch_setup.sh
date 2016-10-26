@@ -463,7 +463,31 @@ curl -XPUT 'http://localhost:9200/giza' -d '
       "properties": {
         "relateditems" : {
           "type" : "nested",
-          "include_in_all" : false
+          "include_in_all" : false,
+          "properties": {
+            "modernpeople": {
+              "properties": {
+                "displayname": {
+                  "type": "string",
+                  "fields" : {
+                    "raw" : {
+                      "type" : "string",
+                      "index" : "not_analyzed"
+                    }
+                  }
+                },
+                "role": {
+                  "type": "string",
+                  "fields" : {
+                    "raw" : {
+                      "type" : "string",
+                      "index" : "not_analyzed"
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
         "format": {
           "type" : "string",

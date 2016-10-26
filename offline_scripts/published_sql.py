@@ -41,7 +41,7 @@ RELATED_CONSTITUENTS = """
 SELECT ReferenceMaster.ReferenceID, Constituents.ConstituentID,
 MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName,
 Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
-Constituents.DisplayName, Constituents.DisplayDate, Constituents.Remarks
+Constituents.DisplayName, Constituents.DisplayDate, Constituents.Remarks, Constituents.AlphaSort
 from ReferenceMaster
 INNER JOIN ConXrefs on ReferenceMaster.ReferenceID=ConXrefs.ID AND ConXrefs.TableID=143
 INNER JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1

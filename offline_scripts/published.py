@@ -263,6 +263,7 @@ def process_pub_related_constituents():
 			'constituent_id_index' : columns.index('ConstituentID'),
 			'constituent_type_id_index' : columns.index('ConstituentTypeID'),
 			'display_name_index' : columns.index('DisplayName'),
+			'alpha_sort_index' : columns.index('AlphaSort'),
 			'display_date_index' : columns.index('DisplayDate'),
 			'remarks_index' : columns.index('Remarks'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
@@ -293,12 +294,18 @@ def process_pub_related_constituents():
 		if row[indices['display_date_index']] != "NULL":
 			display_date = row[indices['display_date_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		alpha_sort = row[indices['alpha_sort_index']]
 
 		constituent_dict = {}
 		role = row[indices['role_index']]
 		# update the set of roles for this pub
 		if role not in pub['roles']:
 			pub['roles'].append(role)
+
+		if role == "Author":
+			if "author" not in pub:
+				pub["author"] = []
+			pub["author"].append(alpha_sort)
 
 		description = row[indices['remarks_index']] if row[indices['remarks_index']] != "NULL" else ""
 		constituent_dict['role'] = role
