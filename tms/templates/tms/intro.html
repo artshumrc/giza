@@ -48,12 +48,22 @@
         </div>
       {% endif %}
 
-      {% if object.description %}
-      <div class="item__overview">
-        <p class="lead text-alt">
-          {{ object.description }}
-        </p>
-      </div>
+      {% if object.type in 'modernpeople ancientpeople' %}
+        {% if object.remarks %}
+        <div class="item__overview">
+          <p class="lead text-alt">
+            {{ object.remarks }}
+          </p>
+        </div>
+        {% endif %}
+      {% else %}
+        {% if object.description %}
+        <div class="item__overview">
+          <p class="lead text-alt">
+            {{ object.description }}
+          </p>
+        </div>
+        {% endif %}
       {% endif %}
 
       <div class="row">
