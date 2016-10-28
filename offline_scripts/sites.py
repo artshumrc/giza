@@ -401,7 +401,11 @@ def process_site_related_constituents():
 		role = row[indices['role_index']]
 		# update the set of roles for this site
 		if role not in site['roles']:
-			site['roles'].append(role)
+			# make sure Tomb Owner is first
+			if role == "Tomb Owner":
+				site['roles'].insert(0, role)
+			else:
+				site['roles'].append(role)
 
 		description = row[indices['remarks_index']] if row[indices['remarks_index']] != "NULL" else ""
 		constituent_dict['role'] = role
