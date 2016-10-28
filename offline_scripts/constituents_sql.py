@@ -16,11 +16,12 @@ ORDER BY Constituents.ConstituentID
 
 # Get Alternate Names for Constituents
 ALT_NAMES = """
-SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConAltNames.DisplayName
+SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConAltNames.DisplayName, ConAltNames.NameType
 FROM Constituents
 LEFT JOIN ConAltNames on Constituents.ConstituentID=ConAltNames.ConstituentID
 WHERE Constituents.PublicAccess=1
 AND Constituents.ConstituentTypeID>0
+AND NameType != 'Primary Name'
 ORDER BY Constituents.ConstituentID
 """
 

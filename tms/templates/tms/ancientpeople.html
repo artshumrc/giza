@@ -26,7 +26,7 @@
         <dl class="dl-slim">
           <dt>Also Known As</dt>
           {% for name in object.altnames %}
-          <dd>{{ name }}</dd>
+          <dd>{{ name.type }} : {{ name.name }}</dd>
           {% endfor %}
         </dl>
       </div>

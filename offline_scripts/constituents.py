@@ -98,7 +98,8 @@ def process_constituents_altnames():
 		indices = {
 			'constituent_id_index' : columns.index('ConstituentID'),
 			'type_id_index' : columns.index('ConstituentTypeID'),
-			'altname_index' : columns.index('DisplayName')
+			'altname_index' : columns.index('DisplayName'),
+			'name_type_index' : columns.index('NameType')
 		}
 		return indices
 
@@ -122,7 +123,11 @@ def process_constituents_altnames():
 		if 'altnames' not in constituent:
 			constituent['altnames'] = []
 		altname = row[indices['altname_index']]
-		constituent['altnames'].append(altname)
+		name_type = row[indices['name_type_index']]
+		constituent['altnames'].append({
+			'name' : altname,
+			'type' : name_type
+		})
 		return (constituent, current_id)
 
 	print "Starting Constituents AltNames..."
