@@ -42,14 +42,12 @@ FROM Sites
 LEFT JOIN SiteObjXrefs ON Sites.SiteID=SiteObjXrefs.SiteID
 LEFT JOIN Objects ON SiteObjXrefs.ObjectID=Objects.ObjectID
 LEFT JOIN ObjTitles ON SiteObjXrefs.ObjectID=ObjTitles.ObjectID
-LEFT JOIN MediaXrefs on Objects.ObjectID=MediaXrefs.ID
+LEFT JOIN MediaXrefs on Objects.ObjectID=MediaXrefs.ID AND MediaXrefs.TableID=108 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths on MediaRenditions.ThumbPathID=MediaPaths.PathID
 WHERE Sites.IsPublic = 1
 AND Objects.PublicAccess = 1
-AND MediaXrefs.TableID=108
-AND MediaXrefs.PrimaryDisplay=1
 ORDER BY Sites.SiteID
 """
 
@@ -83,16 +81,13 @@ MainPath.Path as MainPathName, MediaFiles.FileName as MainFileName
 FROM Sites
 JOIN RefXRefs on Sites.SiteID=RefXRefs.ID
 JOIN ReferenceMaster on RefXRefs.ReferenceID=ReferenceMaster.ReferenceID
-JOIN MediaXrefs on ReferenceMaster.ReferenceID=MediaXrefs.ID
-JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
+JOIN MediaXrefs on ReferenceMaster.ReferenceID=MediaXrefs.ID AND MediaXrefs.PrimaryDisplay=1 AND MediaXrefs.TableID=143
+JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 JOIN MediaRenditions on MediaXrefs.MediaMasterID=MediaRenditions.MediaMasterID
 JOIN MediaFiles on MediaRenditions.RenditionID=MediaFiles.RenditionID
 LEFT JOIN MediaPaths AS ThumbPath on MediaRenditions.ThumbPathID=ThumbPath.PathID
 LEFT JOIN MediaPaths AS MainPath on MediaFiles.PathID=MainPath.PathID
-WHERE MediaXrefs.PrimaryDisplay=1
-AND MediaMaster.PublicAccess=1
-AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
-AND MediaXrefs.TableID=143
+WHERE MediaRenditions.PrimaryFileID=MediaFiles.FileID
 AND MediaTypeID=4
 AND Sites.IsPublic=1
 ORDER BY SiteID
@@ -106,13 +101,12 @@ ThumbPath.Path as ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path as MainPathName, MediaFiles.FileName as MainFileName
 FROM MediaXrefs
 INNER JOIN Sites on MediaXrefs.ID=Sites.SiteID AND Sites.IsPublic=1
-LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
+LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaFiles on MediaRenditions.RenditionID=MediaFiles.RenditionID
 LEFT JOIN MediaPaths AS ThumbPath on MediaRenditions.ThumbPathID=ThumbPath.PathID
 LEFT JOIN MediaPaths AS MainPath on MediaFiles.PathID=MainPath.PathID
 WHERE MediaXrefs.TableID=189
-AND MediaMaster.PublicAccess=1
 AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
 ORDER BY MediaXrefs.ID
 """
