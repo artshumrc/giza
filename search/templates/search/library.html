@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}section-explore-body{% endblock %}
+
+{% block title %}Digital Giza | Digital Giza Library{% endblock %}
+
+{% block content %}
+<div class="page-header header-bg-4" id="content">
+  <div class="row title">
+    <header class="large-12 columns">
+      <h1>Digital Giza Library <a name="top"></a></h1>
+    </header>
+  </div>
+</div>
+
+<div class="row">
+
+  <aside class="medium-4 columns medium-push-8" data-sticky-container>
+    <div class="sticky sticky-sidebar" data-sticky data-margin-top="4.6" data-top-anchor="page-content-main" data-btm-anchor="page-content-main:bottom">
+      <div class="feature-block secondary">
+        <h5><span class="icon-list icon-padded"></span> Navigate</h5>
+
+        <div>
+          <label><h6 class="heading-em">Sort by:</h6>
+            <select onchange="goToPage({% url 'library' %}+'?sort='+this.value);">
+              <option {% if sort == 'name'%}selected{% endif %} value="name">Author</option>
+              <option {% if sort == 'format'%}selected{% endif %} value="format">Format</option>
+              <!-- <option {% if sort == 'title'%}selected{% endif %} value="title">Title</option> -->
+              <option {% if sort == 'yearpublished'%}selected{% endif %} value="yearpublished">Year Published</option>
+            </select>
+          </label>
+        </div>
+
+        {% if sort == 'name' %}
+        <h6 class="heading-em">Jump to:</h6>
+        <ul class="menu menu-pagination">
+          {% for result in results %}
+            {% for letter in result.keys %}
+            <li><a href="#alpha-{{letter}}">{{letter|upper}}</a></li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+
+      <div class="feature-block secondary">
+        <h5><span class="icon-info-circle icon-padded"></span> Contributions</h5>
+
+        <p class="text-smaller">
+          In an effort to provide a comprehensive online library for the Digital Giza Project, authors are encouraged to <a href="{% url 'about' 'contact' %}">contact the Giza Project staff</a> if they have Giza-related publications already converted to electronic form (PDF) that they would like to post here.
+        </p>
+
+    </div>
+  </aside>
+
+  <section class="medium-8 columns medium-pull-4" id="page-content-main">
+
+    <p class="lead text-alt">
+      A complete list of downloadable (PDF) Giza publications.
+    </p>
+
+    {% for result in results %}
+      {% for letter, sources in result.items %}
+        <h3 id="alpha-{{letter}}">{{letter|upper}}</h3>
+        {% for source in sources %}
+          <h6 class="heading-alt">{{ source.name }}</h6>
+
+          <ul class="no-bullet">
+            {% for doc in source.docs %}
+            <li>
+              <div class="library-item">
+                <div class="row">
+                  <div class="library-item__primary medium-9 columns">
+                    {% if doc.url %}<a href="{{doc.url}}">{% endif %}
+                      {{ doc.displaytext|safe }}
+                    {% if doc.url %}</a>{% endif %}
+                  </div>
+                  <div class="library-item__secondary medium-3 columns">
+                    <span class="library-item__format">{{ doc.format }}</span>
+                    <span class="library-item__filesize"></span>
+                  </div>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% endfor %}
+        <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+      {% endfor %}
+    {% endfor %}
+
+  </section>
+
+</div>
+{% endblock %}

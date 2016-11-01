@@ -3,6 +3,7 @@ import codecs
 import elasticsearch_connection
 import getpass
 import json
+import operator
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import published_sql
@@ -43,6 +44,7 @@ def process_pubs():
 		display_text = pub['title']
 		pub['displaytext'] = display_text
 		pub['roles'] = []
+		pub["authors"] = []
 		return (pub, current_id)
 
 	print "Starting Pub Docs..."
@@ -303,9 +305,7 @@ def process_pub_related_constituents():
 			pub['roles'].append(role)
 
 		if role == "Author":
-			if "author" not in pub:
-				pub["author"] = []
-			pub["author"].append(alpha_sort)
+			pub["authors"].append(alpha_sort)
 
 		description = row[indices['remarks_index']] if row[indices['remarks_index']] != "NULL" else ""
 		constituent_dict['role'] = role
@@ -432,6 +432,77 @@ def process_pub_related_media():
 
 	print "Finished Pub Docs Related Media..."
 
+# this groups published documents by author, for use on the Digital Giza Library page
+def create_library():
+	print "Creating Digital Library..."
+
+	author_ids = []
+	size = 20
+	results_from = 0
+	es = elasticsearch_connection.get_connection()
+	es_index = elasticsearch_connection.ELASTICSEARCH_INDEX
+
+	# delete library
+	results = es.search(index=es_index, doc_type='library', body={
+		"size" : 500,
+		"fields" : ["_id", "name"],
+		"query": {
+			"match_all" : {}
+		}
+	})['hits']['hits']
+	for r in results:
+		elasticsearch_connection.delete(r['_id'], 'library')
+
+	total = es.search(index=es_index, doc_type='pubdocs', body={
+		"size" : 0,
+		"query": {
+			"match_all" : {}
+		}
+	})['hits']['total']
+
+	while results_from < total:
+		results = es.search(index=es_index, doc_type='pubdocs', body={
+			"size" : size,
+			"from" : results_from,
+			"query": {
+				"match_all" : {}
+			}
+		})
+		for r in results['hits']['hits']:
+			result = r['_source']
+			if 'pdf' not in result or result['pdf'] == '':
+				continue
+			authors = result['authors']
+
+			# if this doc has no authors, set the author to 'No Author' and proceed
+			if len(authors) == 0:
+				authors.append('No Author')
+
+			for author in authors:
+				author_id = author.replace(' ', '')
+				# see if this author already exists
+				if author_id in author_ids:
+					author_data = elasticsearch_connection.get_item(author_id, 'library')
+				else:
+					author_ids.append(author_id)
+					author_data = {}
+					author_data['name'] = author
+					author_data['docs'] = []
+
+				author_data['docs'].append({
+					'displaytext' : result['boilertext'],
+					'format' : result['format'],
+					# add file size
+					'url' : result['pdf']
+				})
+				author_data['docs'].sort(key=operator.itemgetter('displaytext'))
+
+				data = json.dumps(author_data)
+				elasticsearch_connection.add_or_update_item(author_id, data, 'library')
+
+		results_from = results_from + size
+	print "Finished Digital Library..."
+
 def save(pub):
 	if pub and 'id' in pub:
 		elasticsearch_connection.add_or_update_item(pub['id'], json.dumps(pub), 'pubdocs')
@@ -456,3 +527,4 @@ if __name__ == "__main__":
 	process_pub_related_objects()
 	process_pub_related_constituents()
 	process_pub_related_media()
+	create_library()

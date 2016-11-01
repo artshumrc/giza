@@ -13,6 +13,79 @@ RESULTS_SIZE = 20
 def search(request):
     return render(request, 'search/search.html')
 
+# get all pubdocs with pdfs for Digital Giza Library
+def library(request):
+    sort = request.GET.get('sort', 'name').encode('utf-8')
+    if sort == 'name':
+        results = es.search(index=ES_INDEX, doc_type='library', body={
+            "size": 500,
+            "sort": sort,
+            "query": {
+                "match_all" : {}
+            }
+        })['hits']['hits']
+        current_letter = 'a'
+        hits = []
+        letter_docs = {}
+        letter_docs[current_letter] = []
+        for r in results:
+            source = r['_source']
+            if source['name'].encode('utf-8').lower().startswith(current_letter):
+                letter_docs[current_letter].append(source)
+            else:
+                hits.append(letter_docs)
+                current_letter = source['name'].encode('utf-8').lower()[0]
+                letter_docs = {}
+                letter_docs[current_letter] = []
+                letter_docs[current_letter].append(source)
+        hits.append(letter_docs)
+    else:
+        # year, format - TODO: title
+        results = es.search(index=ES_INDEX, doc_type='pubdocs', body={
+           "size": 0,
+           "query": {
+                "match_all": {}
+           },
+           "aggs": {
+              "by_sort": {
+                 "terms": {
+                    "field": sort+".raw",
+                    "order": {
+                       "_term": "asc"
+                    },
+                    "size": 500
+                 },
+                 "aggs": {
+                    "by_top_hit": {
+                       "top_hits": {
+                          "size": 100
+                       }
+                    }
+                 }
+              }
+           }
+        })['aggregations']['by_sort']['buckets']
+        hits = []
+        for r in results:
+            sort_docs = {}
+            key = r['key']
+            sort_docs[key] = []
+            docs = []
+            sort_docs[key].append({'docs' : docs})
+            for h in r['by_top_hit']['hits']['hits']:
+                if ('pdf' in h['_source'] and h['_source']['pdf'] != ''):
+                    docs.append({
+                    'url' : h['_source']['pdf'],
+                    'displaytext' : h['_source']['boilertext'],
+                    'format' : h['_source']['format']
+                    })
+            if len(docs) > 0:
+                hits.append(sort_docs)
+    return render(request, 'search/library.html', {
+        'results' : hits,
+        'sort' : sort
+    })
+
 def results(request):
     search_term = request.GET.get('q', None).encode('utf-8')
     current_category = request.GET.get('category', '').encode('utf-8')

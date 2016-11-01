@@ -5,6 +5,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
       "analyzer": {
         "default": {
           "type" : "standard"
+        },
+        "case_insensitive_sort": {
+          "tokenizer": "keyword",
+          "filter":  [ "lowercase" ]
         }
       }
     }
@@ -531,6 +535,56 @@ curl -XPUT 'http://localhost:9200/giza' -d '
             "raw" : {
               "type" : "string",
               "index":"not_analyzed"
+            }
+          }
+        },
+        "title": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "authors": {
+          "type" : "string",
+          "index" : "not_analyzed",
+          "include_in_all" : false
+        }
+      }
+    },
+    "library" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "analyzer": "case_insensitive_sort",
+          "include_in_all" : false
+        },
+        "docs" : {
+          "type" : "nested",
+          "index" : "no",
+          "include_in_all" : false,
+          "properties" : {
+            "displaytext" : {
+              "index" : "no",
+              "type" : "string",
+              "include_in_all" : false
+            },
+            "format" : {
+              "index" : "no",
+              "type" : "string",
+              "include_in_all" : false
+            },
+            "size" : {
+              "index" : "no",
+              "type" : "string",
+              "include_in_all" : false
+            },
+            "url" : {
+              "index" : "no",
+              "type" : "string",
+              "include_in_all" : false
             }
           }
         }

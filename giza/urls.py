@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', 'tms.views.about', name="about"),
     url(r'^(?P<page_name>donate)/$', 'tms.views.donate', name="donate"),
     url(r'^(?P<page_name>archaeology|commontopics|explorevideos|faq|gizaintro)/$', 'tms.views.explore', name="explore"),
+    url(r'^library/$', 'search.views.library', name="library"),
 
     url(r'^django-admin/', include(admin.site.urls)),
 

@@ -79,6 +79,10 @@ $(function() {
 
 });
 
+var goToPage = function(url) {
+  window.location = url;
+}
+
 // Dynamically adjust right-column margin on feature full view
 
 var fnAdjustRightColMargin = function() {

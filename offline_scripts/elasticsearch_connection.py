@@ -23,21 +23,7 @@ def item_exists(item_id, source):
         return False
     return es.exists(index=ELASTICSEARCH_INDEX, doc_type=source, id=item_id)
 
-def get_all_item_ids_with_type(source):
-    results = es.search(index=ELASTICSEARCH_INDEX, doc_type=source, fields="[]")
-    ids = []
-    for r in results["hits"]["hits"]:
-        ids.append(str(r["_id"]))
-    return ids
-
-def get_all_item_ids():
-    results = es.search(index=ELASTICSEARCH_INDEX, fields="[]")
-    ids = []
-    for r in results["hits"]["hits"]:
-        ids.append(str(r["_id"]))
-    return ids
-
-def get_item_title(item_id, source):
-    return es.get(index=ELASTICSEARCH_INDEX, doc_type=source, id=item_id)["_source"]["label"]
+def delete(item_id, source):
+    return es.delete(index=ELASTICSEARCH_INDEX, doc_type=source, id=item_id)
 
 es = get_connection()

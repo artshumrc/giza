@@ -17,7 +17,6 @@ def explore(request, page_name):
 	return static_pages(request, page_name)
 
 def static_pages(request, page_name):
-	print "in static pages"
 	template = 'tms/%s.html' % page_name
 	try:
 		return render(request, template)
@@ -26,11 +25,11 @@ def static_pages(request, page_name):
 
 def get_type_html(request, type, id, view):
 	# get site in elasticsearch and render or return 404
-	#try:
+	# try:
 		type_object = models.get_item(id, type)
 		return render(request, 'tms/'+view+'.html', {'object': type_object, 'type': type})
-	#except:
-	#	raise Http404("There was an error getting this item")
+	# except:
+	# 	raise Http404("There was an error getting this item")
 
 def get_type_json(request, type, id):
 	try:
