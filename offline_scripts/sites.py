@@ -3,6 +3,7 @@ import codecs
 import elasticsearch_connection
 import getpass
 import json
+import operator
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import sites_sql
@@ -319,6 +320,8 @@ def process_site_related_objects():
 			'number' : object_number,
 			'date' : date,
 			'thumbnail' : thumbnail_url})
+		# keep the related items sorted
+		site['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
 		return (site, current_id)
 
 	print "Starting Sites Related Objects..."
@@ -421,6 +424,8 @@ def process_site_related_constituents():
 		if constituent_type not in site['relateditems']:
 			site['relateditems'][constituent_type] = []
 		site['relateditems'][constituent_type].append(constituent_dict)
+		# keep the related items sorted
+		site['relateditems'][constituent_type].sort(key=operator.itemgetter('displaytext'))
 
 		if role == 'Tomb Owner':
 			site['tombowner'] = "Yes"
@@ -511,6 +516,8 @@ def process_site_related_published():
 			'date' : date,
 			'url' : main_url,
 			'thumbnail' : thumbnail_url})
+		# keep the related items sorted
+		site['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))			
 		return(site, current_id)
 
 	print "Starting Sites Related Published..."

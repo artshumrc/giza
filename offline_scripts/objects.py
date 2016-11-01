@@ -3,7 +3,7 @@ import codecs
 import elasticsearch_connection
 import getpass
 import json
-import pyodbc
+import operator
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import objects_sql
@@ -374,6 +374,8 @@ def process_object_related_sites():
 		if 'sites' not in object['relateditems']:
 			object['relateditems']['sites'] = []
 		object['relateditems']['sites'].append(site_dict)
+		# keep the related items sorted
+		site['relateditems']['sites'].sort(key=operator.itemgetter('displaytext'))
 
 		# for unpubdocs, add sites for "Mentioned on this page"
 		if classification == "unpubdocs":
@@ -484,6 +486,8 @@ def process_object_related_constituents():
 		if constituent_type not in object['relateditems']:
 			object['relateditems'][constituent_type] = []
 		object['relateditems'][constituent_type].append(constituent_dict)
+		# keep the related items sorted
+		site['relateditems'][constituent_type].sort(key=operator.itemgetter('displaytext'))
 
 		return(object, current_id)
 
@@ -569,6 +573,9 @@ def process_object_related_published():
 			'displaytext' : boiler_text,
 			'date' : date,
 			'url' : main_url})
+		# keep the related items sorted
+		site['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))
+
 		return(object, current_id)
 
 	print "Starting Objects Related Published..."
@@ -654,6 +661,9 @@ def process_object_related_unpublished():
 			'date' : date,
 			'number' : number,
 			'thumbnail' : thumbnail_url})
+		# keep the related items sorted
+		site['relateditems']['unpubdocs'].sort(key=operator.itemgetter('displaytext'))
+
 		return(object, current_id)
 
 	print "Starting Objects Related Unpublished..."
@@ -808,6 +818,7 @@ def save(object):
 
 if __name__ == "__main__":
 	try:
+		import pyodbc
 		dsn = 'gizadatasource'
 		user = 'RC\\rsinghal'
 		password = getpass.getpass()

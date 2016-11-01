@@ -126,6 +126,8 @@ def process_pub_related_sites():
 		if 'sites' not in pub['relateditems']:
 			pub['relateditems']['sites'] = []
 		pub['relateditems']['sites'].append(site_dict)
+		# keep the related items sorted
+		site['relateditems']['sites'].sort(key=operator.itemgetter('displaytext'))
 
 		return(pub, current_id)
 
@@ -219,6 +221,9 @@ def process_pub_related_objects():
 			'number' : object_number,
 			'date' : date,
 			'thumbnail' : thumbnail_url})
+		# keep the related items sorted
+		site['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
+
 		return (pub, current_id)
 
 	print "Starting Pub Docs Related Objects..."
@@ -321,6 +326,8 @@ def process_pub_related_constituents():
 		if constituent_type not in pub['relateditems']:
 			pub['relateditems'][constituent_type] = []
 		pub['relateditems'][constituent_type].append(constituent_dict)
+		# keep the related items sorted
+		site['relateditems'][constituent_type].sort(key=operator.itemgetter('displaytext'))
 
 		return(pub, current_id)
 

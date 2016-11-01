@@ -3,6 +3,7 @@ import codecs
 import elasticsearch_connection
 import getpass
 import json
+import operator
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import constituents_sql
@@ -224,6 +225,9 @@ def process_constituents_related_objects():
 			'number' : object_number,
 			'date' : date,
 			'thumbnail' : thumbnail_url})
+		# keep the related items sorted
+		site['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
+
 		return (constituent, current_id)
 
 	print "Starting Constituents Related Objects..."
@@ -309,6 +313,9 @@ def process_constituents_related_sites():
 		if 'sites' not in constituent['relateditems']:
 			constituent['relateditems']['sites'] = []
 		constituent['relateditems']['sites'].append(site_dict)
+		# keep the related items sorted
+		site['relateditems']['sites'].sort(key=operator.itemgetter('displaytext'))
+
 		return(constituent, current_id)
 
 	print "Starting Constituents Related Sites..."
@@ -395,6 +402,8 @@ def process_constituents_related_published():
 			'displaytext' : title,
 			'date' : date,
 			'url' : main_url})
+		# keep the related items sorted
+		site['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))
 		return(constituent, current_id)
 
 	print "Starting Constituents Related Published..."
