@@ -127,7 +127,7 @@ def process_pub_related_sites():
 			pub['relateditems']['sites'] = []
 		pub['relateditems']['sites'].append(site_dict)
 		# keep the related items sorted
-		site['relateditems']['sites'].sort(key=operator.itemgetter('displaytext'))
+		pub['relateditems']['sites'].sort(key=operator.itemgetter('displaytext'))
 
 		return(pub, current_id)
 
@@ -222,7 +222,7 @@ def process_pub_related_objects():
 			'date' : date,
 			'thumbnail' : thumbnail_url})
 		# keep the related items sorted
-		site['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
+		pub['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
 
 		return (pub, current_id)
 
@@ -327,7 +327,7 @@ def process_pub_related_constituents():
 			pub['relateditems'][constituent_type] = []
 		pub['relateditems'][constituent_type].append(constituent_dict)
 		# keep the related items sorted
-		site['relateditems'][constituent_type].sort(key=operator.itemgetter('displaytext'))
+		pub['relateditems'][constituent_type].sort(key=operator.itemgetter('displaytext'))
 
 		return(pub, current_id)
 

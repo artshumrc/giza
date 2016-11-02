@@ -226,7 +226,7 @@ def process_constituents_related_objects():
 			'date' : date,
 			'thumbnail' : thumbnail_url})
 		# keep the related items sorted
-		site['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
+		constituent['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
 
 		return (constituent, current_id)
 
@@ -314,7 +314,7 @@ def process_constituents_related_sites():
 			constituent['relateditems']['sites'] = []
 		constituent['relateditems']['sites'].append(site_dict)
 		# keep the related items sorted
-		site['relateditems']['sites'].sort(key=operator.itemgetter('displaytext'))
+		constituent['relateditems']['sites'].sort(key=operator.itemgetter('displaytext'))
 
 		return(constituent, current_id)
 
@@ -403,7 +403,7 @@ def process_constituents_related_published():
 			'date' : date,
 			'url' : main_url})
 		# keep the related items sorted
-		site['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))
+		constituent['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))
 		return(constituent, current_id)
 
 	print "Starting Constituents Related Published..."

@@ -375,7 +375,7 @@ def process_object_related_sites():
 			object['relateditems']['sites'] = []
 		object['relateditems']['sites'].append(site_dict)
 		# keep the related items sorted
-		site['relateditems']['sites'].sort(key=operator.itemgetter('displaytext'))
+		object['relateditems']['sites'].sort(key=operator.itemgetter('displaytext'))
 
 		# for unpubdocs, add sites for "Mentioned on this page"
 		if classification == "unpubdocs":
@@ -487,7 +487,7 @@ def process_object_related_constituents():
 			object['relateditems'][constituent_type] = []
 		object['relateditems'][constituent_type].append(constituent_dict)
 		# keep the related items sorted
-		site['relateditems'][constituent_type].sort(key=operator.itemgetter('displaytext'))
+		object['relateditems'][constituent_type].sort(key=operator.itemgetter('displaytext'))
 
 		return(object, current_id)
 
@@ -574,7 +574,7 @@ def process_object_related_published():
 			'date' : date,
 			'url' : main_url})
 		# keep the related items sorted
-		site['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))
+		object['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))
 
 		return(object, current_id)
 
@@ -662,7 +662,7 @@ def process_object_related_unpublished():
 			'number' : number,
 			'thumbnail' : thumbnail_url})
 		# keep the related items sorted
-		site['relateditems']['unpubdocs'].sort(key=operator.itemgetter('displaytext'))
+		object['relateditems']['unpubdocs'].sort(key=operator.itemgetter('displaytext'))
 
 		return(object, current_id)
 
