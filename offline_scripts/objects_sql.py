@@ -58,13 +58,12 @@ Sites.SiteName, Sites.SiteNumber, Objects.ClassificationID,
 MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM Objects
 JOIN SiteObjXrefs ON Objects.ObjectID=SiteObjXrefs.ObjectID
-JOIN Sites ON SiteObjXrefs.SiteID=Sites.SiteID
+JOIN Sites ON SiteObjXrefs.SiteID=Sites.SiteID AND Sites.IsPublic = 1
 LEFT JOIN MediaXrefs on Sites.SiteID=MediaXrefs.ID AND MediaXrefs.TableID=189 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths on MediaRenditions.ThumbPathID=MediaPaths.PathID
-WHERE Sites.IsPublic = 1
-AND Objects.PublicAccess = 1
+WHERE Objects.PublicAccess = 1
 ORDER BY Objects.ObjectID
 """
 
@@ -74,18 +73,15 @@ SELECT ConXrefs.ID as ID, Roles.Role, Roles.RoleID, ConXrefDetails.ConstituentID
 Constituents.DisplayName, Constituents.DisplayDate, Objects.ClassificationID, Constituents.Remarks,
 MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM ConXrefs
-INNER JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID
-INNER JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID
+INNER JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
+INNER JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.Active=1
 INNER JOIN Roles on ConXrefs.RoleID=Roles.RoleID
-INNER JOIN Objects on ConXrefs.ID=Objects.ObjectID
+INNER JOIN Objects on ConXrefs.ID=Objects.ObjectID AND Objects.PublicAccess=1
 LEFT JOIN MediaXrefs on Constituents.ConstituentID=MediaXrefs.ID AND MediaXrefs.TableID=23 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths on MediaRenditions.ThumbPathID=MediaPaths.PathID
 WHERE ConXrefs.TableID=108
-AND Constituents.Active=1
-AND ConXrefDetails.Unmasked=1
-AND Objects.PublicAccess=1
 ORDER BY ConXrefs.ID
 """
 
@@ -114,14 +110,13 @@ replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS UnpublishedTit
 MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM Associations
 LEFT JOIN ObjTitles on Associations.ID2=ObjTitles.ObjectID
-LEFT JOIN Objects on Associations.ID1=Objects.ObjectID
+LEFT JOIN Objects on Associations.ID1=Objects.ObjectID AND Objects.PublicAccess=1
 LEFT JOIN MediaXrefs on Associations.ID2=MediaXrefs.ID AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths on MediaRenditions.ThumbPathID=MediaPaths.PathID
 WHERE Associations.TableID=108
 AND RelationshipID=6
-AND Objects.PublicAccess=1
 ORDER BY ID1
 """
 
