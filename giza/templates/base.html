@@ -109,10 +109,10 @@
               <li {% if request.resolver_match.url_name == 'donate' %}class="active"{% endif %}><a href="{% url 'donate' 'donate' %}">Donate</a></li>
               <li><button class="icon-search button" type="button" data-toggle="search-dropdown"> <span class="hide-for-medium">Search</span></button>
                     <div class="dropdown-pane left" id="search-dropdown" data-dropdown data-auto-focus="true">
-                  <form action="{% url 'results' %}">
+                  <form id="search-form" action="{% url 'results' %}">
                     <input type="text" id="inputSimpleSearch" name="q" placeholder="Enter search keywords">
                         <!-- this should be a <button> in real life -->
-                        <a class="button primary">Search</a>
+                        <a class="button primary" onclick="document.getElementById('search-form').submit();">Search</a>
                   </form>
                   <small class="middle"><a href="{% url 'search' %}">Advanced Search</a></small>
                 </div>
