@@ -358,7 +358,7 @@ def process_constituents_related_sites():
 def process_constituents_related_published():
 	def get_indices():
 		indices = {
-			'constituent_id_index' : columns.index('ID'),
+			'constituent_id_index' : columns.index('ConstituentID'),
 			'type_id_index' : columns.index('ConstituentTypeID'),
 			'reference_id_index' : columns.index('ReferenceID'),
 			'title_index' : columns.index('Title'),
