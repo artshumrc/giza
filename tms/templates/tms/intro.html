@@ -89,12 +89,12 @@
                     <div class="media-object-section">
                       {% if item.thumbnail %}
                       <div class="thumbnail">
-                        <a href="{% url 'get_type_html' type item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                        <a href="{% url 'get_type_html' 'sites' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
                       </div>
                       {% endif %}
                     </div>
                     <div class="media-object-section">
-                      <p class="media-object-title"><a href="{% url 'get_type_html' type item.id 'intro' %}">{{item.displaytext}}</a></p>
+                      <p class="media-object-title"><a href="{% url 'get_type_html' 'sites' item.id 'intro' %}">{{item.displaytext}}</a></p>
                       <ul class="subheader">
                         <li><span class="item-property">Site Name</span> <span class="item-value">{{item.sitename}}</span></li>
                       </ul>
