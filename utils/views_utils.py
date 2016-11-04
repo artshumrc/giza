@@ -1,5 +1,5 @@
 CATEGORIES = {
-	'sites' 			: 'Sites',
+	'sites' 			: 'Tombs and Monuments',
 	'objects' 			: 'Objects',
 	'diarypages' 		: 'Diary Pages',
 	'plansanddrawings' 	: 'Plans and Drawings', # being phased out
