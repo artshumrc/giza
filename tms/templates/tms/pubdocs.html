@@ -55,7 +55,7 @@
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Citation Text</dt>
-          <dd>{{ object.boilertext }}</dd>
+          <dd>{{ object.boilertext|safe }}</dd>
         </dl>
       </div>
     </li>
@@ -94,5 +94,14 @@
       </div>
     </li>
     {% endfor %}
+    {% if object.pdf %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dd><a href="{{ object.pdf }}">Download PDF</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
   </ul>
 </div>
