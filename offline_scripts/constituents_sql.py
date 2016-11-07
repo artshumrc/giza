@@ -34,7 +34,7 @@ FROM ConXrefs
 JOIN ConXrefDetails on ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
 JOIN Constituents on ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0 AND Constituents.Active=1
 JOIN Objects on ConXrefs.ID=Objects.ObjectID
-JOIN ObjTitles ON Objects.ObjectID=ObjTitles.ObjectID
+JOIN ObjTitles ON Objects.ObjectID=ObjTitles.ObjectID AND ObjTitles.DisplayOrder=1
 LEFT JOIN MediaXrefs on Objects.ObjectID=MediaXrefs.ID AND MediaXrefs.TableID=23 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID

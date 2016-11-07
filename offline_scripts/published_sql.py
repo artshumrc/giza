@@ -29,7 +29,7 @@ MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM ReferenceMaster
 JOIN RefXRefs on ReferenceMaster.ReferenceID=RefXRefs.ReferenceID AND RefXRefs.TableID=108
 JOIN Objects on Objects.ObjectID=RefXRefs.ID AND Objects.PublicAccess=1
-JOIN ObjTitles ON Objects.ObjectID=ObjTitles.ObjectID
+JOIN ObjTitles ON Objects.ObjectID=ObjTitles.ObjectID AND ObjTitles.DisplayOrder=1
 LEFT JOIN MediaXrefs on Objects.ObjectID=MediaXrefs.ID AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID

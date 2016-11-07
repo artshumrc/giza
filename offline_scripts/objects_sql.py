@@ -6,10 +6,9 @@ Objects.ObjectName + ',,' as ObjectOwnerDetails, Departments.Department, ObjCont
 Objects.Dated as EntryDate, replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.Medium + ',,' as Medium,
 Objects.Dimensions + ',,' as Dimensions, Objects.CreditLine, Objects.Description + ',,' AS Description, Objects.Provenance,
 Objects.PubReferences + ',,' AS BibReferences, Objects.Notes + ',,' AS Notes, Objects.Chat + ',,' as DiaryTranscription,
-Objects.CuratorialRemarks + ',,' AS Remarks, ObjPkgList.objectnumber as FieldNumber, TextEntries.TextEntry as ProblemsQuestions
+Objects.CuratorialRemarks + ',,' AS Remarks, TextEntries.TextEntry as ProblemsQuestions
 FROM Objects
 LEFT JOIN ObjTitles on Objects.ObjectID=ObjTitles.ObjectID AND ObjTitles.DisplayOrder=1
-LEFT JOIN ObjPkgList on Objects.ObjectID=ObjPkgList.ObjectID
 LEFT JOIN Classifications on Objects.ClassificationID=Classifications.ClassificationID
 LEFT JOIN Departments on Objects.DepartmentID=Departments.DepartmentID
 LEFT JOIN ObjContext on Objects.ObjectID=ObjContext.ObjectID

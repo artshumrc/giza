@@ -41,7 +41,7 @@ MediaPaths.Path as ThumbPathName, MediaRenditions.ThumbFileName
 FROM Sites
 JOIN SiteObjXrefs ON Sites.SiteID=SiteObjXrefs.SiteID
 JOIN Objects ON SiteObjXrefs.ObjectID=Objects.ObjectID AND Objects.PublicAccess=1
-LEFT JOIN ObjTitles ON SiteObjXrefs.ObjectID=ObjTitles.ObjectID
+LEFT JOIN ObjTitles ON SiteObjXrefs.ObjectID=ObjTitles.ObjectID AND ObjTitles.DisplayOrder=1
 LEFT JOIN MediaXrefs on Objects.ObjectID=MediaXrefs.ID AND MediaXrefs.TableID=108 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster on MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions on MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
