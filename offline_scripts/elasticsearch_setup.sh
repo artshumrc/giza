@@ -107,7 +107,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "string",
           "index":"not_analyzed"
         },
-        "altnumber": {
+        "allnumbers": {
           "type" : "string",
           "index":"not_analyzed"
         },

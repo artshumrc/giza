@@ -67,7 +67,7 @@ def process_objects():
 		# Add some extra fields not in the TMS data
 		object['displaytext'] = object['title']
 		prefix_idx = object_number.find('_')
-		object['altnumber'] = object_number[prefix_idx+1:]
+		object['allnumbers'] = [object_number, object_number[prefix_idx+1:]]
 		object['roles'] = []
 		object['hasphoto'] = "No"
 		return (object, current_id)
@@ -216,6 +216,7 @@ def process_object_altnums():
 		without_prefix = altnum[prefix_idx+1:]
 		description = row[indices['description_index']] if row[indices['description_index']] != "NULL" else ""
 		object['altnums'].append({"altnum" : altnum, "description" : description, 'without_prefix': without_prefix})
+		object['allnumbers'].extend((altnum, without_prefix))
 		return (object, current_id)
 
 	print "Starting Objects AltNums..."
@@ -832,7 +833,7 @@ if __name__ == "__main__":
 
 	## process_objects MUST go first.  Other methods can go in any order
 	process_objects()
-	process_object_geocodes()
+	#process_object_geocodes()
 	process_object_altnums()
 	process_object_flexfields()
 	process_object_related_sites()

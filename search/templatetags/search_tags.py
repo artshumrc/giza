@@ -12,9 +12,9 @@ def array_value(array, key):
             return a
 
 @register.simple_tag
-def build_search_params(search_term, current_category, current_subfacets, sf_to_remove, sf_to_add, page):
-    # always add search term
-    url = "q=%s" % search_term
+def build_search_params(search_params, current_category, current_subfacets, sf_to_remove, sf_to_add, page):
+    url = ""
+    url = "&amp;".join(map(lambda x: "%s=%s" % (x[0], x[2]), search_params))
 
     # add any chosen categories, unless we have one to remove
     if current_category:

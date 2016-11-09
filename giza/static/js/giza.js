@@ -83,6 +83,13 @@ var goToPage = function(url) {
   window.location = url;
 }
 
+// on Advanced Search page, switch between search fields for different categories
+$('fieldset#category-radio-selector input').click(function() {
+  $('.category-section').hide();
+  var section_id = $(this).attr('data-for-id');
+  $('#'+section_id).show();
+});
+
 // Dynamically adjust right-column margin on feature full view
 
 var fnAdjustRightColMargin = function() {

@@ -18,6 +18,16 @@ CATEGORIES = {
 	'audio'				: 'Audio'
 }
 
+FIELDS_PER_CATEGORY = {
+	'objects' : {
+		'title' : 'Title',
+		'allnumbers' : 'ID',
+		'medium' : 'Material',
+		'provenance' : 'Findspot',
+		'entrydate' : 'Date of register entry'
+	}
+}
+
 # If these change, modify elasticsearch_setup.sh as necessary
 FACETS_PER_CATEGORY = {
 	'sites' : {

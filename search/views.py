@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailsearch.models import Query
 from utils.elastic_backend import es, ES_INDEX
-from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY
+from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGORY
 
 RESULTS_SIZE = 20
 
@@ -87,11 +87,12 @@ def library(request):
     })
 
 def results(request):
-    search_term = request.GET.get('q', None).encode('utf-8')
+    search_term = request.GET.get('q', '').encode('utf-8')
     current_category = request.GET.get('category', '').encode('utf-8')
     current_subfacets = {}
-    # check if there are subfacets for the currently selected category
+    fields = {}
     if current_category:
+        # check if there are subfacets for the currently selected category
         subcats = request.GET.getlist(current_category+'_facet', [])
         if subcats: current_subfacets[current_category] = {}
         for sc in subcats:
@@ -102,11 +103,18 @@ def results(request):
                 current_subfacets[current_category][subfacet] = []
             current_subfacets[current_category][subfacet].append(term)
 
+        # check if we have a field-specific search
+        for key in request.GET:
+            if key.startswith(current_category) and not key.endswith('_facet'):
+                field_value = request.GET.get(key, '').encode('utf-8')
+                parts = key.split('_')
+                field = parts[1]
+                fields[field] = field_value
+
     page = int(request.GET.get('page', 1))
     results_from = 0
     # calculate elasticsearch's from, using the page value
     results_from = (page - 1) * RESULTS_SIZE
-    #print search_term, current_category, current_subfacets, page, results_from
 
     # check if user is trying to search by specific item number
     number_query = False
@@ -154,7 +162,7 @@ def results(request):
                 hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
     else:
         # this is a normal search
-        base_query = build_es_query(search_term, current_category, current_subfacets)
+        base_query = build_es_query(search_term, current_category, current_subfacets, fields)
         bool_filter = build_bool(current_category, current_subfacets, '')
         subfacet_aggs = build_subfacet_aggs(current_category, current_subfacets, bool_filter)
 
@@ -216,8 +224,16 @@ def results(request):
             for value in facet_values:
                 subfacet_strings.append("%s_%s_%s" % (current_category, facet_name, value))
 
+    search_params = []
+    if search_term:
+        search_params.append(('q', 'Keyword', search_term))
+    if current_category:
+        for k, v in fields.items():
+            if v:
+                search_params.append((current_category+'_'+k, FIELDS_PER_CATEGORY[current_category][k], v))
+
     return render(request, 'search/results.html', {
-        'search_term' : search_term,
+        'search_params' : search_params,
         'hits' : hits,
         'all_categories' : all_categories,
         'sub_facets' : sub_facets,
@@ -327,30 +343,45 @@ def build_bool(current_category, current_subfacets, facet_name_ignore):
     }
     return bool_filter
 
-def build_es_query(search_term, current_category, current_subfacets):
-    q = {
-        "bool" : {
-         "should" : [
-            {
-               "match" : {
-                  "displaytext" : {
-                     "query" : search_term,
-                     "operator" : "and",
-                     "boost" : 2
-                  }
-               }
-            },
-            {
-                "match" : {
-                   "_all" : {
-                    "query" : search_term,
-                    "operator" : "and"
-                   }
-                }
+def build_es_query(search_term, current_category, current_subfacets, fields):
+    if fields:
+        must = []
+        for k,v in fields.items():
+            if v:
+                must.append({"term": {k : v}})
+        q = {
+            "bool" : {
+                "must" : must
             }
-         ]
-      }
-    }
+        }
+    elif search_term == '':
+        q = {
+            "match_all" : {}
+        }
+    else:
+        q = {
+            "bool" : {
+             "should" : [
+                {
+                   "match" : {
+                      "displaytext" : {
+                         "query" : search_term,
+                         "operator" : "and",
+                         "boost" : 2
+                      }
+                   }
+                },
+                {
+                    "match" : {
+                       "_all" : {
+                        "query" : search_term,
+                        "operator" : "and"
+                       }
+                    }
+                }
+             ]
+          }
+        }
     return q
 
 def find_key(key, value):

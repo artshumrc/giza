@@ -18,54 +18,83 @@
   <div class="large-12 columns">
     <h3>Advanced Search</h3>
     <p>Narrow your search results using the advanced search fields below. You can select a specific category to search within at the right.</p>
-    <p class="text-smaller">Need help with abbreviations? Check out our <a href="faq.html#abbr">list of abbreviations on the FAQ page.</a></p>
+    <p class="text-smaller">Need help with abbreviations? Check out our <a href="{% url 'explore' 'faq' %}#abbr">list of abbreviations on the FAQ page.</a></p>
 
     <hr>
   </div>
 </div>
 
-<div class="row">
-  <form action="{% url 'results' %}">
-    <section class="medium-8 columns">
-      <label>Object title or name:
-        <input type="text" placeholder="Example: 'royal statue' or 'Khafre'">
-      </label>
-      <label>Object or ID number:
-        <input type="text" placeholder="Example: 'HUMFA_14-11-206'">
-      </label>
-      <label>Material:
-        <input type="text" placeholder="Example: 'alabaster'">
-      </label>
-      <label>Findspot:
-        <input type="text" placeholder="Example: 'G 2110'">
-      </label>
-      <label>Date of register entry:
-        <input type="text" placeholder="Example: 05/23/1924">
-      </label>
-      <label>MET (Multilingual Egyptological Thesaurus) search: <span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="The &quot;Multilingual Egyptological Thesaurus&quot; (MET) allows users to search any image on the website using keywords and descriptions of the image itself. The MET applies to two-dimensional wall scene photos, as well as three-dimensional object photos. Start typing your search term to get a menu of available options."></span>
-        <input type="text" placeholder="Start typing to filter the available MET terms">
-      </label>
-      <p class="show-for-small-only text-smaller" style="margin-top: -0.75em;">
-        <span class="icon-info-circle has-tip right" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="The &quot;Multilingual Egyptological Thesaurus&quot; (MET) allows users to search any image on the website using keywords and descriptions of the image itself. The MET applies to two-dimensional wall scene photos, as well as three-dimensional object photos. Start typing your search term to get a menu of available options."> What is MET?</span>
-      </p>
-      <!-- This should be a <button> in real life -->
-      <a class="button primary" href="searchresults.html">Search</a>
-    </section>
-    <fieldset class="medium-4 columns">
+<form id="advanced-search-form" action="{% url 'results' %}">
+  <div class="row">
+    <fieldset class="medium-4 medium-push-8 columns" id="category-radio-selector">
       <legend>Search within the selected category:</legend>
       <div class="feature-block secondary">
-        <input id="objects" value="objects" type="checkbox" name="category"><label for="objects">Objects</label><br>
-        <input id="videos" type="checkbox" name="category"><label for="videos">Videos</label><br>
-        <input id="diarypages" value="diarypages" type="checkbox" name="category"><label for="diarypages">Excavation Diaries</label><br>
-        <input id="mapsandplans" value="mapsandplans" type="checkbox" name="category"><label for="mapsandplans">Maps &amp; Plans, Drawings</label><br>
-        <input id="modernpeople" value="modernpeople" type="checkbox" name="category"><label for="modernpeople">Modern People</label><br>
-        <input id="ancientpeople" value="ancientpeople" type="checkbox" name="category"><label for="ancientpeople">Ancient People</label><br>
-        <input id="sites" value="sites" type="checkbox" name="category"><label for="sites">Tombs and Monuments</label><br>
-        <input id="photos" value="photos" type="checkbox" name="category"><label for="photos">Photos</label><br>
-        <input id="pubdocs" value="pubdocs" type="checkbox" name="category"><label for="pubdocs">Published Documentation</label><br>
-        <input id="unpubdocs" value="unpubdocs" type="checkbox" name="category"><label for="unpubdocs">Unpublished Documentation</label>
+        <input id="objects" data-for-id="section-objects" value="objects" type="radio" name="category" checked><label for="objects">Objects</label><br>
+        <!-- <input id="videos" data-for-id="section-videos" value="videos" type="radio" name="category"><label for="videos">Videos</label><br>
+        <input id="diarypages" data-for-id="section-diarypages" value="diarypages" type="radio" name="category"><label for="diarypages">Excavation Diaries</label><br>
+        <input id="mapsandplans" data-for-id="section-mapsandplans" value="mapsandplans" type="radio" name="category"><label for="mapsandplans">Maps &amp; Plans</label><br>
+        <input id="drawings" data-for-id="section-drawings" value="drawings" type="radio" name="category"><label for="drawings">Drawings</label><br> -->
+        <!-- <input id="ancientpeople" value="ancientpeople" type="radio" name="category"><label for="ancientpeople">Ancient People</label><br>
+        <input id="modernpeople" value="modernpeople" type="radio" name="category"><label for="modernpeople">Modern People</label><br> -->
+        <input id="sites" data-for-id="section-sites" value="sites" type="radio" name="category"><label for="sites">Tombs and Monuments</label><br>
+        <!-- <input id="photos" data-for-id="section-photos" value="photos" type="radio" name="category"><label for="photos">Photos</label><br>
+        <input id="pubdocs" data-for-id="section-pubdocs" value="pubdocs" type="radio" name="category"><label for="pubdocs">Published Documentation</label><br>
+        <input id="unpubdocs" data-for-id="section-unpubdocs" value="unpubdocs" type="radio" name="category"><label for="unpubdocs">Unpublished Documentation</label> -->
       </div>
     </fieldset>
-  </form>
-</div>
+
+    <section id="section-objects" class="medium-8 medium-pull-4 columns category-section">
+      <!-- <label>All Fields:
+        <input name="q" type="text" placeholder="Example: 'Sphinx'">
+      </label> -->
+        <label>Object title or name:
+          <input name="objects_title" type="text" placeholder="Example: 'royal statue' or 'Khafre'">
+        </label>
+        <label>Object or ID number:
+          <input name="objects_allnumbers" type="text" placeholder="Example: 'HUMFA_14-11-206'">
+        </label>
+        <label>Material:
+          <input name="objects_medium" type="text" placeholder="Example: 'alabaster'">
+        </label>
+        <label>Findspot:
+          <input name="objects_provenance" type="text" placeholder="Example: 'G 2110'">
+        </label>
+        <label>Date of register entry:
+          <input name="objects_entrydate" type="text" placeholder="Example: 05/23/1924">
+        </label>
+        <!-- <label>MET (Multilingual Egyptological Thesaurus) search: <span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="The &quot;Multilingual Egyptological Thesaurus&quot; (MET) allows users to search any image on the website using keywords and descriptions of the image itself. The MET applies to two-dimensional wall scene photos, as well as three-dimensional object photos. Start typing your search term to get a menu of available options."></span>
+          <input type="text" placeholder="Start typing to filter the available MET terms">
+        </label>
+        <p class="show-for-small-only text-smaller" style="margin-top: -0.75em;">
+          <span id="tooltipMetMobile" class="icon-info-circle has-tip right" data-tooltip aria-haspopup="true" data-disable-hover="false" data-position-class="right" data-template-classes="narrow" tabindex="2" title="The &quot;Multilingual Egyptological Thesaurus&quot; (MET) allows users to search any image on the website using keywords and descriptions of the image itself. The MET applies to two-dimensional wall scene photos, as well as three-dimensional object photos. Start typing your search term to get a menu of available options."> What is MET?</span>
+        </p> -->
+    </section>
+
+    <section id="section-sites" style="display: none;" id="section-objects" class="medium-8 medium-pull-4 columns category-section">
+      <!-- <label>All Fields:
+        <input name="q" type="text" placeholder="Example: 'Sphinx'">
+      </label> -->
+        <label>Tomb/Monument number:
+          <input name="sites_number" type="text" placeholder="Example: 'G 7000 X'">
+        </label>
+        <label>Tomb/Monument name:
+          <input name="sites_sitename" type="text" placeholder="Example: 'Eastern Cemetery'">
+        </label>
+        <label>Site Dates:
+          <input name="sites_sitedates" type="text" placeholder="Example: 'Khufu to Shepseskaf'">
+        </label>
+        <label>People:
+          <input name="sites_people" type="text" placeholder="Example: 'George Reisner'">
+        </label>
+    </section>
+  </div>
+
+  <div class="row">
+    <div class="large-12 columns">
+      <!-- This should be a <button> in real life -->
+      <a class="button primary" onclick="document.getElementById('advanced-search-form').submit();">Search</a>
+    </div>
+  </div>
+
+</form>
 {% endblock %}
