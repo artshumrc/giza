@@ -11,11 +11,9 @@ from utils import get_media_url, process_cursor_row
 
 #SAMPLE_SITES = ('1175', '670', '671', '672', '1509', '677', '2080', '2796', '2028', '2035', '2245', '2043', '3461', '3412')
 
-CURSOR = None
-
 # First update each Site with the latest data
 # This is the basic information/metadata that comprises a Site
-def process_sites():
+def process_sites(CURSOR):
 	def get_indices():
 		site_id_index = columns.index('ID')
 		return site_id_index
@@ -117,7 +115,7 @@ def process_sites():
 
 	print "Finished Sites..."
 
-def process_site_dates():
+def process_site_dates(CURSOR):
 	def get_indices():
 		indices = {
 			'site_id_index' : columns.index('SiteID'),
@@ -189,7 +187,7 @@ def process_site_dates():
 	print "Finished Sites Dates..."
 
 # Update relevant sites with alternate numbers
-def process_site_altnums():
+def process_site_altnums(CURSOR):
 	def get_indices():
 		indices = {
 			'site_id_index' : columns.index('SiteID'),
@@ -264,7 +262,7 @@ def process_site_altnums():
 	print "Finished Sites AltNums..."
 
 # Update all related items from the Objects table
-def process_site_related_objects():
+def process_site_related_objects(CURSOR):
 	def get_indices():
 		indices = {
 			'site_id_index' : columns.index('SiteID'),
@@ -360,7 +358,7 @@ def process_site_related_objects():
 	print "Finished Sites Related Objects..."
 
 # Next, update site with all related Constituents
-def process_site_related_constituents():
+def process_site_related_constituents(CURSOR):
 	def get_indices():
 		indices = {
 			'site_id_index' : columns.index('SiteID'),
@@ -468,7 +466,7 @@ def process_site_related_constituents():
 	print "Finished Sites Related Constituents..."
 
 # Next, update site with all related Published Documents
-def process_site_related_published():
+def process_site_related_published(CURSOR):
 	def get_indices():
 		indices = {
 			'site_id_index' : columns.index('SiteID'),
@@ -517,7 +515,7 @@ def process_site_related_published():
 			'url' : main_url,
 			'thumbnail' : thumbnail_url})
 		# keep the related items sorted
-		site['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))			
+		site['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))
 		return(site, current_id)
 
 	print "Starting Sites Related Published..."
@@ -557,7 +555,7 @@ def process_site_related_published():
 	print "Finished Sites Related Published..."
 
 # Update site with all related media
-def process_site_related_media():
+def process_site_related_media(CURSOR):
 	def get_indices():
 		indices = {
 			'site_id_index' : columns.index('SiteID'),
@@ -662,25 +660,29 @@ def save(site):
 	if site and 'id' in site:
 		elasticsearch_connection.add_or_update_item(site['id'], json.dumps(site), 'sites')
 
-if __name__ == "__main__":
-	try:
-		import pyodbc
-		dsn = 'gizadatasource'
-		user = 'RC\\rsinghal'
-		password = getpass.getpass()
-		database = 'gizacardtms'
+def main(CURSOR=None):
+	if not CURSOR:
+		try:
+			import pyodbc
+			dsn = 'gizadatasource'
+			user = 'RC\\rsinghal'
+			password = getpass.getpass()
+			database = 'gizacardtms'
 
-		connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
-		connection = pyodbc.connect(connection_string)
-		CURSOR = connection.cursor()
-	except:
-		print "Could not connect to gizacardtms, defaulting to CSV files"
+			connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
+			connection = pyodbc.connect(connection_string)
+			CURSOR = connection.cursor()
+		except:
+			print "Could not connect to gizacardtms, defaulting to CSV files"
 
 	## process_sites MUST go first.  The other methods can go in any order
-	process_sites()
-	process_site_dates()
-	process_site_altnums()
-	process_site_related_objects()
-	process_site_related_constituents()
-	process_site_related_published()
-	process_site_related_media()
+	process_sites(CURSOR)
+	process_site_dates(CURSOR)
+	process_site_altnums(CURSOR)
+	process_site_related_objects(CURSOR)
+	process_site_related_constituents(CURSOR)
+	process_site_related_published(CURSOR)
+	process_site_related_media(CURSOR)
+
+if __name__ == "__main__":
+	main()

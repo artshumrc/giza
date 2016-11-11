@@ -11,11 +11,9 @@ from utils import get_media_url, process_cursor_row
 
 # SAMPLE_OBJECTS = ('61198', '15332', '15059', '52264', '50823', '35634', '5614', '46942', '48325', '3461', '25389', '25501')
 
-CURSOR = None
-
 # First update each Object with the latest data
 # This is the basic information/metadata that comprises a Object
-def process_objects():
+def process_objects(CURSOR):
 	def get_indices():
 		indices = {
 			'id_index' : columns.index('ID'),
@@ -109,7 +107,7 @@ def process_objects():
 
 	print "Finished Objects..."
 
-def process_object_geocodes():
+def process_object_geocodes(CURSOR):
 	def get_indices():
 		indices = {
 			'id_index' : columns.index('ID'),
@@ -183,7 +181,7 @@ def process_object_geocodes():
 	print "Finished Objects Geocodes..."
 
 # Update relevant objects with alternate numbers
-def process_object_altnums():
+def process_object_altnums(CURSOR):
 	def get_indices():
 		indices = {
 			'object_id_index' : columns.index('ObjectID'),
@@ -255,7 +253,7 @@ def process_object_altnums():
 	print "Finished Objects AltNums..."
 
 # Update relevant objects with alternate numbers
-def process_object_flexfields():
+def process_object_flexfields(CURSOR):
 	def get_indices():
 		indices = {
 			'object_id_index' : columns.index('ObjectID'),
@@ -329,7 +327,7 @@ def process_object_flexfields():
 			save(object)
 	print "Finished Objects Flex Fields..."
 
-def process_object_related_sites():
+def process_object_related_sites(CURSOR):
 	def get_indices():
 		indices = {
 			'id_index' : columns.index('ID'),
@@ -424,7 +422,7 @@ def process_object_related_sites():
 
 	print "Finished Objects Related Sites..."
 
-def process_object_related_constituents():
+def process_object_related_constituents(CURSOR):
 	def get_indices():
 		indices = {
 			'id_index' : columns.index('ID'),
@@ -528,7 +526,7 @@ def process_object_related_constituents():
 
 	print "Finished Objects Related Constituents..."
 
-def process_object_related_published():
+def process_object_related_published(CURSOR):
 	def get_indices():
 		indices = {
 			'id_index' : columns.index('ID'),
@@ -615,7 +613,7 @@ def process_object_related_published():
 
 	print "Finished Objects Related Published..."
 
-def process_object_related_unpublished():
+def process_object_related_unpublished(CURSOR):
 	def get_indices():
 		indices = {
 			'id_index' : columns.index('ID'),
@@ -703,7 +701,7 @@ def process_object_related_unpublished():
 
 	print "Finished Objects Related Unpublished..."
 
-def process_object_related_media():
+def process_object_related_media(CURSOR):
 	def get_indices():
 		indices = {
 			'id_index' : columns.index('ID'),
@@ -817,27 +815,31 @@ def save(object):
 			return
 		elasticsearch_connection.add_or_update_item(object['id'], json.dumps(object), object['classification'])
 
-if __name__ == "__main__":
-	try:
-		import pyodbc
-		dsn = 'gizadatasource'
-		user = 'RC\\rsinghal'
-		password = getpass.getpass()
-		database = 'gizacardtms'
+def main(CURSOR=None):
+	if not CURSOR:
+		try:
+			import pyodbc
+			dsn = 'gizadatasource'
+			user = 'RC\\rsinghal'
+			password = getpass.getpass()
+			database = 'gizacardtms'
 
-		connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
-		connection = pyodbc.connect(connection_string)
-		CURSOR = connection.cursor()
-	except:
-		print "Could not connect to gizacardtms, defaulting to CSV files"
+			connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
+			connection = pyodbc.connect(connection_string)
+			CURSOR = connection.cursor()
+		except:
+			print "Could not connect to gizacardtms, defaulting to CSV files"
 
 	## process_objects MUST go first.  Other methods can go in any order
-	process_objects()
-	#process_object_geocodes()
-	process_object_altnums()
-	process_object_flexfields()
-	process_object_related_sites()
-	process_object_related_constituents()
-	process_object_related_published()
-	process_object_related_unpublished()
-	process_object_related_media()
+	process_objects(CURSOR)
+	#process_object_geocodes(CURSOR)
+	process_object_altnums(CURSOR)
+	process_object_flexfields(CURSOR)
+	process_object_related_sites(CURSOR)
+	process_object_related_constituents(CURSOR)
+	process_object_related_published(CURSOR)
+	process_object_related_unpublished(CURSOR)
+	process_object_related_media(CURSOR)
+
+if __name__ == "__main__":
+	main()

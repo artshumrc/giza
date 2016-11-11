@@ -16,6 +16,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
   "mappings": {
     "sites" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -99,6 +104,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "objects" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
@@ -182,6 +192,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "unpubdocs" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
@@ -210,6 +225,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "diarypages" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
@@ -247,6 +267,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "mapsandplans" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
@@ -284,6 +309,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "drawings" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
@@ -321,6 +351,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "3dmodels" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
@@ -349,6 +384,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "videos" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
@@ -377,6 +417,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "audio" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
@@ -405,6 +450,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "ancientpeople" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
@@ -422,6 +472,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "modernpeople" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
@@ -465,6 +520,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
     },
     "pubdocs" : {
       "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false,

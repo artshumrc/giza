@@ -9,11 +9,9 @@ from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import constituents_sql
 from utils import get_media_url, process_cursor_row
 
-CURSOR = None
-
 # First update each Constituent with the latest data
 # This is the basic information/metadata that comprises a Constituent
-def process_constituents():
+def process_constituents(CURSOR):
 	def get_indices():
 		indices = {
 			'constituent_id_index' : columns.index('ID'),
@@ -94,7 +92,7 @@ def process_constituents():
 	print "Finished Constituents..."
 
 # Update relevant constituents with alternate names
-def process_constituents_altnames():
+def process_constituents_altnames(CURSOR):
 	def get_indices():
 		indices = {
 			'constituent_id_index' : columns.index('ConstituentID'),
@@ -167,7 +165,7 @@ def process_constituents_altnames():
 	print "Finished Constituents AltNames..."
 
 # Update all related items from the Objects table
-def process_constituents_related_objects():
+def process_constituents_related_objects(CURSOR):
 	def get_indices():
 		indices = {
 			'constituent_id_index' : columns.index('ConstituentID'),
@@ -266,7 +264,7 @@ def process_constituents_related_objects():
 	print "Finished Constituents Related Objects..."
 
 # Next, update constituent with all related Sites
-def process_constituents_related_sites():
+def process_constituents_related_sites(CURSOR):
 	def get_indices():
 		indices = {
 			'constituent_id_index' : columns.index('ConstituentID'),
@@ -355,7 +353,7 @@ def process_constituents_related_sites():
 	print "Finished Constituents Related Sites..."
 
 # Next, update constituent with all related Published Documents
-def process_constituents_related_published():
+def process_constituents_related_published(CURSOR):
 	def get_indices():
 		indices = {
 			'constituent_id_index' : columns.index('ConstituentID'),
@@ -443,7 +441,7 @@ def process_constituents_related_published():
 	print "Finished Constituents Related Published..."
 
 # Update constituent with all related media
-def process_constituents_related_media():
+def process_constituents_related_media(CURSOR):
 	def get_indices():
 		indices = {
 			'constituent_id_index' : columns.index('ID'),
@@ -553,24 +551,28 @@ def save(constituent):
 			return
 		elasticsearch_connection.add_or_update_item(constituent['id'], json.dumps(constituent), constituent['type'])
 
-if __name__ == "__main__":
-	try:
-		import pyodbc
-		dsn = 'gizadatasource'
-		user = 'RC\\rsinghal'
-		password = getpass.getpass()
-		database = 'gizacardtms'
+def main(CURSOR=None):
+	if not CURSOR:
+		try:
+			import pyodbc
+			dsn = 'gizadatasource'
+			user = 'RC\\rsinghal'
+			password = getpass.getpass()
+			database = 'gizacardtms'
 
-		connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
-		connection = pyodbc.connect(connection_string)
-		CURSOR = connection.cursor()
-	except:
-		print "Could not connect to gizacardtms, defaulting to CSV files"
+			connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
+			connection = pyodbc.connect(connection_string)
+			CURSOR = connection.cursor()
+		except:
+			print "Could not connect to gizacardtms, defaulting to CSV files"
 
 	## process_constituents MUST go first.  The other methods can go in any order
-	process_constituents()
-	process_constituents_altnames()
-	process_constituents_related_objects()
-	process_constituents_related_sites()
-	process_constituents_related_published()
-	process_constituents_related_media()
+	process_constituents(CURSOR)
+	process_constituents_altnames(CURSOR)
+	process_constituents_related_objects(CURSOR)
+	process_constituents_related_sites(CURSOR)
+	process_constituents_related_published(CURSOR)
+	process_constituents_related_media(CURSOR)
+
+if __name__ == "__main__":
+	main()

@@ -9,11 +9,9 @@ from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import published_sql
 from utils import get_media_url, process_cursor_row
 
-CURSOR = None
-
 # First update each Published doc with the latest data
 # This is the basic information/metadata that comprises a Pubished document
-def process_pubs():
+def process_pubs(CURSOR):
 	def get_indices():
 		pub_id_index = columns.index('ID')
 		return pub_id_index
@@ -84,7 +82,7 @@ def process_pubs():
 
 	print "Finished Pub Docs..."
 
-def process_pub_related_sites():
+def process_pub_related_sites(CURSOR):
 	def get_indices():
 		indices = {
 			'id_index' : columns.index('ReferenceID'),
@@ -168,7 +166,7 @@ def process_pub_related_sites():
 	print "Finished Pub Docs Related Sites..."
 
 # Update all related items from the Objects table
-def process_pub_related_objects():
+def process_pub_related_objects(CURSOR):
 	def get_indices():
 		indices = {
 			'pub_id_index' : columns.index('ReferenceID'),
@@ -262,7 +260,7 @@ def process_pub_related_objects():
 	print "Finished Pub Docs Related Objects..."
 
 # Next, update pub with all related Constituents
-def process_pub_related_constituents():
+def process_pub_related_constituents(CURSOR):
 	def get_indices():
 		indices = {
 			'pub_id_index' : columns.index('ReferenceID'),
@@ -368,7 +366,7 @@ def process_pub_related_constituents():
 	print "Finished Pub Docs Related Constituents..."
 
 # Update site with all related media
-def process_pub_related_media():
+def process_pub_related_media(CURSOR):
 	def get_indices():
 		indices = {
 			'pub_id_index' : columns.index('ReferenceID'),
@@ -514,24 +512,28 @@ def save(pub):
 	if pub and 'id' in pub:
 		elasticsearch_connection.add_or_update_item(pub['id'], json.dumps(pub), 'pubdocs')
 
-if __name__ == "__main__":
-	try:
-		import pyodbc
-		dsn = 'gizadatasource'
-		user = 'RC\\rsinghal'
-		password = getpass.getpass()
-		database = 'gizacardtms'
+def main(CURSOR=None):
+	if not CURSOR:
+		try:
+			import pyodbc
+			dsn = 'gizadatasource'
+			user = 'RC\\rsinghal'
+			password = getpass.getpass()
+			database = 'gizacardtms'
 
-		connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
-		connection = pyodbc.connect(connection_string)
-		CURSOR = connection.cursor()
-	except:
-		print "Could not connect to gizacardtms, defaulting to CSV files"
+			connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
+			connection = pyodbc.connect(connection_string)
+			CURSOR = connection.cursor()
+		except:
+			print "Could not connect to gizacardtms, defaulting to CSV files"
 
 	## process_pubs MUST go first.  The other methods can go in any order
-	process_pubs()
-	process_pub_related_sites()
-	process_pub_related_objects()
-	process_pub_related_constituents()
-	process_pub_related_media()
+	process_pubs(CURSOR)
+	process_pub_related_sites(CURSOR)
+	process_pub_related_objects(CURSOR)
+	process_pub_related_constituents(CURSOR)
+	process_pub_related_media(CURSOR)
 	create_library()
+
+if __name__ == "__main__":
+	main()
