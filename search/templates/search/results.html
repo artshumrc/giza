@@ -23,18 +23,19 @@
       <div class="medium-6 columns">
         <h3 class="heading-alt m-t-half m-b-1">{{ total }} search result{{ total|pluralize }} found.</h3>
       </div>
-      <!-- <div class="medium-3 columns text-right">
+      <div class="medium-3 columns text-right">
         <label for="sortResults" class="middle m-r-neg1">Sort by:</label>
       </div>
       <div class="medium-3 columns">
         <select id="sortResults">
-          <option value="">Category</option>
-          <option value="">Name</option>
-          <option value="">Year</option>
+          <option value="_score">Relevance</option>
+          <option value="category">Category</option>
+          <option value="displaytext">Name</option>
+          <!-- <option value="">Year</option>
           <option value="">Material</option>
-          <option value="">Findspot</option>
+          <option value="">Findspot</option> -->
         </select>
-      </div> -->
+      </div>
     </div>
 
     {% if total > 0 %}
@@ -68,7 +69,7 @@
             {% else %}
             <li>{{ result.source.number }}</li>
             {% endif %}
-            <!-- add category -->
+            <li>{{ CATEGORIES|keyvalue:result.type }}</li>
           </ul>
         </div>
       </div>
@@ -130,29 +131,26 @@
           {% for facet_title, facet_values in facet_type.items %}
             {% if facet_values %}
               <div class="search-facet-section">
-                <!-- <fieldset>
-                  <legend class="search-facet-title">{{facet_title}}:</legend> -->
-                  <h6 class="search-facet-title">{{facet_title}}:</h6>
+                <fieldset>
+                  <legend class="search-facet-title">{{facet_title}}:</legend>
                   <ul class="search-facet-list">
                     {% for f in facet_values %}
                       {% if f.display_text %} <!-- in case a facet value is an empty string -->
                         {% with sf_combined=cat_name|add:'_'|add:facet_title|add:'_'|add:f.display_text %}
                          {% if sf_combined in subfacet_strings %}
                          <li class="search-facet-item is-active">
-                           <!-- <input type="checkbox" id="{{facet_title}}_{{display_text}}" checked onclick="goToPage('{% url 'results' %}?{% build_search_params search_params current_category current_subfacets sf_combined '' page %}');"><label for="{{facet_title}}_{{display_text}}">{{f.display_text}} ({{f.doc_count}})</label> -->
-                           <a href="{% url 'results' %}?{% build_search_params search_params current_category current_subfacets sf_combined '' page %}">{{f.display_text}} ({{f.doc_count}})</a>
+                           <input type="checkbox" id="{{facet_title}}_{{display_text}}" checked onclick="goToPage('{% url 'results' %}?{% build_search_params search_params current_category current_subfacets sf_combined '' page %}');"><label for="{{facet_title}}_{{display_text}}">{{f.display_text}} ({{f.doc_count}})</label>
                          </li>
                          {% else %}
                           <li class="search-facet-item">
-                            <!-- <input type="checkbox" id="{{facet_title}}_{{display_text}}" onclick="goToPage('{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' sf_combined page %}');"><label for="{{facet_title}}_{{display_text}}">{{f.display_text}} ({{f.doc_count}})</label> -->
-                              <a href="{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' sf_combined page %}">{{f.display_text}} ({{f.doc_count}})</a>
+                            <input type="checkbox" id="{{facet_title}}_{{display_text}}" onclick="goToPage('{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' sf_combined page %}');"><label for="{{facet_title}}_{{display_text}}">{{f.display_text}} ({{f.doc_count}})</label>
                           </li>
                           {% endif %}
                         {% endwith %}
                       {% endif %}
                     {% endfor %}
                   </ul>
-                <!-- </fieldset> -->
+                </fieldset>
               </div>
             {% endif %}
           {% endfor %}
