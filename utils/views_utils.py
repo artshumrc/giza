@@ -25,6 +25,12 @@ FIELDS_PER_CATEGORY = {
 		'medium' : 'Material',
 		'provenance' : 'Findspot',
 		'entrydate' : 'Date of register entry'
+	},
+	'sites' : {
+		'number' : 'Tomb/Monument number',
+		'sitename' : 'Tomb/Monument name',
+		'sitedates' : 'Site Dates',
+		'people' : 'People'
 	}
 }
 

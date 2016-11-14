@@ -76,6 +76,7 @@ def process_sites(CURSOR):
 		site['displaytext'] = display_text
 		site['tombowner'] = "No"
 		site['roles'] = []
+		site['people'] = []
 		return (site, current_id)
 
 	print "Starting Sites..."
@@ -419,6 +420,11 @@ def process_site_related_constituents(CURSOR):
 
 		constituent_type_key = int(row[indices['constituent_type_id_index']])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
+
+		# add to array of people for easier searching
+		if (constituent_type_key in [1,3]):
+			site['people'].append(display_name)
+
 		if constituent_type not in site['relateditems']:
 			site['relateditems'][constituent_type] = []
 		site['relateditems'][constituent_type].append(constituent_dict)

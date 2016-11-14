@@ -8,7 +8,15 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         },
         "case_insensitive_sort": {
           "tokenizer": "keyword",
-          "filter":  [ "lowercase" ]
+          "char_filter" : [ "html_strip" ],
+          "filter":  [ "lowercase", "punctuation_filter", "trim" ]
+        }
+      },
+      "filter": {
+        "punctuation_filter": {
+          "type": "pattern_replace",
+          "pattern": "\"",
+          "replacement": ""
         }
       }
     }
@@ -19,6 +27,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         "displaytext": {
           "type" : "string",
           "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
+        "people": {
+          "type" : "string",
           "include_in_all" : false
         },
         "number": {
@@ -262,6 +274,15 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         },
         "entrydate": {
           "type": "string"
+        }
+      }
+    },
+    "plansanddrawings" : {
+      "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
         }
       }
     },
@@ -515,6 +536,45 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         "enddate": {
           "type" : "string",
           "index":"not_analyzed"
+        }
+      }
+    },
+    "institutions" : {
+      "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        }
+      }
+    },
+    "groups" : {
+      "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        }
+      }
+    },
+    "animals" : {
+      "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
         }
       }
     },

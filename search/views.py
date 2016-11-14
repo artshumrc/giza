@@ -88,6 +88,7 @@ def library(request):
 
 def results(request):
     search_term = request.GET.get('q', '').encode('utf-8')
+    sort = request.GET.get('sort', '_score').encode('utf-8')
     current_category = request.GET.get('category', '').encode('utf-8')
     current_subfacets = {}
     fields = {}
@@ -172,7 +173,8 @@ def results(request):
             "aggregations" : subfacet_aggs,
             "post_filter" : {
                 "bool" : bool_filter
-            }
+            },
+            "sort" : sort
         }
         facets_for_category = es.search(index=ES_INDEX, body=body_query)
 
@@ -192,7 +194,8 @@ def results(request):
             },
             "post_filter" : {
                 "bool" : bool_filter
-            }
+            },
+            "sort" : sort
         })
         all_categories['types'] = []
         for count in search_results['aggregations']['aggregation']['buckets']:
@@ -236,6 +239,7 @@ def results(request):
         'search_params' : search_params,
         'hits' : hits,
         'all_categories' : all_categories,
+        'CATEGORIES' : CATEGORIES,
         'sub_facets' : sub_facets,
         'current_subfacets' : current_subfacets,
         'subfacet_strings' : subfacet_strings,
