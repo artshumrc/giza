@@ -49,26 +49,6 @@ def process_sites(CURSOR):
 				if 'sitetype' not in site:
 					site['sitetype'] = {}
 				site['sitetype'][key] = row_value
-			elif 'sitedates' in key:
-				# there can be multiple sitedates
-				# create an array that contains all sitedate objects
-				if 'sitedates' not in site:
-					site['sitedates'] = []
-				# key looks like 'SiteDates_EventType_DateText'
-				# row data looks like 'PorterMoss Date_Dynasty 5-6'
-				# split on _ (and ignore first value in key)
-				keys = key.split('_')[1:]
-				if len(keys) > 2:
-					print "too many items after splitting"
-				values = row_value.split('_')
-				if len(values) > 2:
-					print "too many items after splitting"
-				date = {}
-				for i, k in enumerate(keys):
-					if values[i]:
-						date[k.lower()] = values[i]
-				if date:
-					site['sitedates'].append(date)
 			else:
 				# no special processing - just add it to the JSON
 				site[key] = row_value
@@ -77,6 +57,7 @@ def process_sites(CURSOR):
 		site['tombowner'] = "No"
 		site['roles'] = []
 		site['people'] = []
+		site['datevalues'] = []
 		return (site, current_id)
 
 	print "Starting Sites..."
@@ -150,6 +131,7 @@ def process_site_dates(CURSOR):
 				'type' : event_type,
 				'date' : date_text
 			})
+			site['datevalues'].append(date_text)
 		return (site, current_id)
 
 	print "Starting Sites Dates..."

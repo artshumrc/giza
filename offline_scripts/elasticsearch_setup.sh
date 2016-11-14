@@ -33,6 +33,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "string",
           "include_in_all" : false
         },
+        "datevalues": {
+          "type" : "string",
+          "include_in_all" : false
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"

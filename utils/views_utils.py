@@ -29,7 +29,7 @@ FIELDS_PER_CATEGORY = {
 	'sites' : {
 		'number' : 'Tomb/Monument number',
 		'sitename' : 'Tomb/Monument name',
-		'sitedates' : 'Site Dates',
+		'datevalues' : 'Site Dates',
 		'people' : 'People'
 	}
 }

@@ -352,7 +352,14 @@ def build_es_query(search_term, current_category, current_subfacets, fields):
         must = []
         for k,v in fields.items():
             if v:
-                must.append({"term": {k : v}})
+                must.append({
+                    "match" : {
+                        k : {
+                            "query" : v,
+                            "operator" : "and"
+                        }
+                    }
+                })
         q = {
             "bool" : {
                 "must" : must
