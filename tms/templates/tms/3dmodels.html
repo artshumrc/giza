@@ -1,0 +1,45 @@
+<div class="feature-block__body">
+  <ul class="feature-block__list multicol-2">
+    {% if object.number %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>ID</dt>
+          <dd>{{ object.number }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.creditline %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Department</dt>
+          <dd>{{ object.department }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.classificationtext %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Classification</dt>
+          <dd>{{ object.classificationtext }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.creditline %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Credit Line</dt>
+          <dd>{{ object.creditline }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+
+  </ul>
+</div>

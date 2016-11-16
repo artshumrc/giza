@@ -39,7 +39,11 @@
 
       {% if object.primarydisplay.main %}
         <div class="item__featured-image">
+          {% if type == '3dmodels' %}
+          <img src="{{ object.primarydisplay.thumbnail }}" alt="">
+          {% else %}
             <img src="{{ object.primarydisplay.main }}" alt="">
+          {% endif %}
             {% if object.primarydisplay.displaytext %}
             <p class="item__featured-image__caption">
               {{ object.primarydisplay.displaytext }}
@@ -48,7 +52,7 @@
         </div>
       {% endif %}
 
-      {% if object.type in 'modernpeople ancientpeople' %}
+      {% if type in 'modernpeople ancientpeople' %}
         {% if object.remarks %}
         <div class="item__overview">
           <p class="lead text-alt">
@@ -325,7 +329,7 @@
               <h3 class="feature-block__title">
                 <i class="icon-pyramid-3d icon-padded"></i> 3D Models
                 <a name="models"></a>
-                <span class="badge">1</span>
+                <span class="badge">{{ object.relateditems.3dmodels|length }}</span>
               </h3>
               <button class="toggler" data-toggle="featureBlock_models">
                 <span class="sr-only">Collapse or Expand</span>
@@ -333,19 +337,23 @@
             </div>
             <div class="feature-block__body">
               <ul class="feature-block__list thumbsize-full">
+                {% for item in object.relateditems.3dmodels|slice:":2" %}
                 <li>
                   <div class="media-object list-item list-item-thumbcaption">
                     <div class="thumbnail">
-                      <a href="#0"><img src="{% static 'images/giza3dvideo.png' %}"></a>
+                      <a href="#0"><img src="{{ item.thumbnail }}"></a>
                     </div>
-                    <p class="media-object-title"><a href="#0">Caption for this model</a></p>
+                    <p class="media-object-title"><a href="#0">{{ item.displaytext }}</a></p>
                   </div>
                 </li>
+                {% endfor %}
               </ul>
 
+              {% if object.relateditems.3dmodels|length > 2 %}
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="full.html#models">View all 1 3D Models <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="full.html#models">View all {{ object.relateditems.3dmodels|length }} 3D Models <i class="icon-angle-right"></i></a></p>
               </div>
+              {% endif %}
             </div>
           </section>
           {% endif %}
