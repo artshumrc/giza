@@ -163,7 +163,7 @@ def results(request):
                 hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
     else:
         # this is a normal search
-        base_query = build_es_query(search_term, current_category, current_subfacets, fields)
+        base_query = build_es_query(search_term, fields)
         bool_filter = build_bool(current_category, current_subfacets, '')
         subfacet_aggs = build_subfacet_aggs(current_category, current_subfacets, bool_filter)
 
@@ -178,7 +178,10 @@ def results(request):
         }
         facets_for_category = es.search(index=ES_INDEX, body=body_query)
 
-        rec = recurse_aggs('', facets_for_category, [])
+        facet_names = []
+        for facet_name in current_subfacets[current_category].keys():
+            facet_names.append(facet_name)
+        rec = recurse_aggs('', facets_for_category, [], facet_names)
         sub_facets[current_category] = rec
 
         search_results = es.search(index=ES_INDEX, body={
@@ -254,7 +257,7 @@ def results(request):
         'current_category' : current_category
     })
 
-def recurse_aggs(agg_name, facets, sub_facets):
+def recurse_aggs(agg_name, facets, sub_facets, facet_names):
     if type(facets) != type(dict()):
         return sub_facets
 
@@ -267,15 +270,18 @@ def recurse_aggs(agg_name, facets, sub_facets):
                 'doc_count' : bucket['doc_count']
                 }
                 facet_array.append(agg)
-            sub_facets.append({agg_name : facet_array})
+            if agg_name in facet_names:
+                sub_facets.insert(0, {agg_name : facet_array})
+            else:
+                sub_facets.append({agg_name : facet_array})
             return sub_facets
         else:
             for agg_name, value in facets.items():
-                recurse_aggs(agg_name, value, sub_facets)
+                recurse_aggs(agg_name, value, sub_facets, facet_names)
             return sub_facets
     else:
         for agg_name, value in facets['aggregations'].items():
-            recurse_aggs(agg_name, value, sub_facets)
+            recurse_aggs(agg_name, value, sub_facets, facet_names)
         return sub_facets
 
 def build_subfacet_aggs(current_category, current_subfacets, bool_filter):
@@ -347,7 +353,7 @@ def build_bool(current_category, current_subfacets, facet_name_ignore):
     }
     return bool_filter
 
-def build_es_query(search_term, current_category, current_subfacets, fields):
+def build_es_query(search_term, fields):
     if fields:
         must = []
         for k,v in fields.items():
