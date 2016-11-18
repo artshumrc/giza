@@ -179,8 +179,9 @@ def results(request):
         facets_for_category = es.search(index=ES_INDEX, body=body_query)
 
         facet_names = []
-        for facet_name in current_subfacets[current_category].keys():
-            facet_names.append(facet_name)
+        if current_subfacets:
+            for facet_name in current_subfacets[current_category].keys():
+                facet_names.append(facet_name)
         rec = recurse_aggs('', facets_for_category, [], facet_names)
         sub_facets[current_category] = rec
 

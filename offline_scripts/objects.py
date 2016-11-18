@@ -761,13 +761,14 @@ def process_object_related_media(CURSOR):
 			'main' : main_url,
 			'displaytext' : display_text
 			}
-		object['relateditems'][media_type].append({
-			'id' : media_master_id,
-			'displaytext' : display_text,
-			'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
-			'thumbnail' : thumbnail_url,
-			'main' : main_url
-			})
+		if not (classification == '3dmodels' and media_type == '3dmodels'):
+			object['relateditems'][media_type].append({
+				'id' : media_master_id,
+				'displaytext' : display_text,
+				'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
+				'thumbnail' : thumbnail_url,
+				'main' : main_url
+				})
 		return(object, current_id)
 
 	print "Starting Objects Related Media..."

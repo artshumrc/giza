@@ -40,7 +40,7 @@
       {% if object.primarydisplay.main %}
         <div class="item__featured-image">
           {% if type == '3dmodels' %}
-          <img src="{{ object.primarydisplay.thumbnail }}" alt="">
+          <iframe allowfullscreen height="730px" width="100%" src="{{ object.primarydisplay.main }}"></iframe>
           {% else %}
             <img src="{{ object.primarydisplay.main }}" alt="">
           {% endif %}
@@ -341,9 +341,9 @@
                 <li>
                   <div class="media-object list-item list-item-thumbcaption">
                     <div class="thumbnail">
-                      <a href="#0"><img src="{{ item.thumbnail }}"></a>
+                      <a href="{% url 'get_type_html' '3dmodels' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
                     </div>
-                    <p class="media-object-title"><a href="#0">{{ item.displaytext }}</a></p>
+                    <p class="media-object-title"><a href="{% url 'get_type_html' '3dmodels' item.id 'intro' %}">{{ item.displaytext }}</a></p>
                   </div>
                 </li>
                 {% endfor %}
