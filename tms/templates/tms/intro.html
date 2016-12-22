@@ -41,6 +41,8 @@
         <div class="item__featured-image">
           {% if type == '3dmodels' %}
           <iframe allowfullscreen height="500px" width="100%" src="{{ object.primarydisplay.main }}"></iframe>
+          {% elif type == 'pubdocs' and object.pdf %}
+            <a href="{{ object.pdf }}"><img src="{{ object.primarydisplay.main }}" alt=""></a>
           {% else %}
             <img src="{{ object.primarydisplay.main }}" alt="">
           {% endif %}
