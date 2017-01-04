@@ -307,18 +307,18 @@
                         <a href="#0" data-open="gallery{{ item.id }}"><img src="{{ item.thumbnail }}"></a>
                       </div>
                     </div>
-                    <div class="media-object-section">
+                    <!-- <div class="media-object-section">
                       <p class="media-object-title"><a href="#0"></a></p>
                       <ul class="subheader">
                       </ul>
-                    </div>
+                    </div> -->
                   </div>
                 </li>
                 {% endfor %}
               </ul>
               {% if object.relateditems.photos|length > 12 %}
               <div class="feature-block__footer">
-                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'full' %}#photos">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
+                <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'allphotos' %}">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
               </div>
               {% endif %}
             </div>
