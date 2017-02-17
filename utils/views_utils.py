@@ -15,7 +15,9 @@ CATEGORIES = {
 	'animals'			: 'Animals',
 	'3dmodels'			: '3D Models',
 	'videos'			: 'Videos',
-	'audio'				: 'Audio'
+	'audio'				: 'Audio',
+	'microfilm'			: 'Microfilm',
+	'document'			: 'Document'
 }
 
 FIELDS_PER_CATEGORY = {
@@ -166,6 +168,7 @@ FACETS_PER_CATEGORY = {
 			}
 		}
 	},
+	'plansanddrawings' : {}, # being phased out
 	'mapsandplans' : {
 		'Owning Institution' : {
 			"filter": {
@@ -184,7 +187,7 @@ FACETS_PER_CATEGORY = {
 		"Material": {
 			"filter": {
 				"type": {
-				   "value": "mapsandpalsn"
+				   "value": "mapsandplans"
 				}
 			},
 			"aggregations": {
@@ -302,7 +305,46 @@ FACETS_PER_CATEGORY = {
 			}
 		}
 	},
-	'photos' : {},
+	'photos' : {
+		'Owning Institution' : {
+			"filter": {
+				"type": {
+				   "value": "photos"
+				}
+			},
+			"aggregations": {
+				'Owning Institution' : {
+			    	"terms": {
+			        	"field": 'department.raw'
+					}
+				}
+			}
+		},
+		'Media View' : {
+	    	"terms": {
+				'field' : 'mediaview.raw'
+			}
+		},
+		'Date' : {
+	    	"terms": {
+				'field' : 'date.raw'
+			}
+		},
+		"Photographer": {
+         "filter": {
+            "term": {
+               "relateditems.modernpeople.role.raw" : "Photographer"
+            }
+         },
+         "aggregations": {
+            "Photographer": {
+               "terms": {
+                  "field": "relateditems.modernpeople.displayname.raw"
+               }
+            }
+         }
+      }
+	},
 	'ancientpeople' : {
 		'Gender' : {
 			"filter": {
@@ -355,11 +397,52 @@ FACETS_PER_CATEGORY = {
 			}
 		}
 	},
-	'plansanddrawings' : {},
 	'institutions' : {},
 	'groups' : {},
 	'animals' : {},
 	'3dmodels' : {},
-	'videos' : {},
-	'audio' : {}
+	'videos' : {
+		'Owning Institution' : {
+			"filter": {
+				"type": {
+				   "value": "videos"
+				}
+			},
+			"aggregations": {
+				'Owning Institution' : {
+			    	"terms": {
+			        	"field": 'department.raw'
+					}
+				}
+			}
+		},
+		'Media View' : {
+	    	"terms": {
+				'field' : 'mediaview.raw'
+			}
+		}
+	},
+	'audio' : {
+		'Owning Institution' : {
+			"filter": {
+				"type": {
+				   "value": "audio"
+				}
+			},
+			"aggregations": {
+				'Owning Institution' : {
+			    	"terms": {
+			        	"field": 'department.raw'
+					}
+				}
+			}
+		},
+		'Media View' : {
+	    	"terms": {
+				'field' : 'mediaview.raw'
+			}
+		}
+	},
+	'microfilm' : {},
+	'document' : {}
 }

@@ -1,5 +1,6 @@
-import getpass 
+import getpass
 import constituents
+import media
 import objects
 import published
 import sites
@@ -23,3 +24,4 @@ if __name__ == "__main__":
     objects.main(CURSOR)
     constituents.main(CURSOR)
     published.main(CURSOR)
+    media.main(CURSOR)

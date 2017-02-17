@@ -162,6 +162,11 @@
         <iframe allowfullscreen height="500px" width="100%" src="{{ object.primarydisplay.main }}"></iframe>
         {% elif type == 'pubdocs' and object.pdf %}
           <a href="{{ object.pdf }}"><img src="{{ object.primarydisplay.main }}" alt=""></a>
+        {% elif type == 'videos' %}
+          <video width="100%" height="100%" {% if object.primarydisplay.thumbnail %}poster="{{ object.primarydisplay.thumbnail }}"{% endif %} controls>
+            <source src="{{ object.primarydisplay.main }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
         {% else %}
           <img src="{{ object.primarydisplay.main }}" alt="">
         {% endif %}
@@ -595,7 +600,7 @@
                 <source src="{{ item.main }}" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
-                <p class="media-object-title"><!--<a href="{% url 'get_type_html' 'videos' item.id 'intro' %}"> -->{{ item.displaytext }}<!--</a>--></p>
+                <p class="media-object-title"><a href="{% url 'get_type_html' 'videos' item.id 'intro' %}">{{ item.displaytext }}</a></p>
               </div>
             </li>
             {% endfor %}

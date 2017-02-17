@@ -407,6 +407,73 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         }
       }
     },
+    "photos" : {
+      "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
+        "department": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "mediaview": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "date": {
+          "type": "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "relateditems": {
+          "include_in_all" : false,
+          "properties": {
+            "modernpeople": {
+              "properties": {
+                "displayname": {
+                  "type": "string",
+                  "fields" : {
+                    "raw" : {
+                      "type" : "string",
+                      "index" : "not_analyzed"
+                    }
+                  }
+                },
+                "role": {
+                  "type": "string",
+                  "fields" : {
+                    "raw" : {
+                      "type" : "string",
+                      "index" : "not_analyzed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "videos" : {
       "properties": {
         "displaytext": {
@@ -418,16 +485,14 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "nested",
           "include_in_all" : false
         },
-        "number": {
+        "mediaview": {
           "type" : "string",
-          "index":"not_analyzed"
-        },
-        "altnumber": {
-          "type" : "string",
-          "index":"not_analyzed"
-        },
-        "entrydate": {
-          "type": "string"
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
         },
         "department": {
           "type" : "string",
@@ -451,16 +516,76 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "nested",
           "include_in_all" : false
         },
-        "number": {
+        "mediaview": {
           "type" : "string",
-          "index":"not_analyzed"
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
         },
-        "altnumber": {
+        "department": {
           "type" : "string",
-          "index":"not_analyzed"
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        }
+      }
+    },
+    "microfilm" : {
+      "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
         },
-        "entrydate": {
-          "type": "string"
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
+        "mediaview": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        },
+        "department": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
+        }
+      }
+    },
+    "document" : {
+      "properties": {
+        "displaytext": {
+          "type" : "string",
+          "analyzer" : "case_insensitive_sort",
+          "include_in_all" : false
+        },
+        "relateditems" : {
+          "type" : "nested",
+          "include_in_all" : false
+        },
+        "mediaview": {
+          "type" : "string",
+          "fields": {
+            "raw" : {
+              "type" : "string",
+              "index":"not_analyzed"
+            }
+          }
         },
         "department": {
           "type" : "string",
