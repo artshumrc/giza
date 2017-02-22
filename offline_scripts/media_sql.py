@@ -18,10 +18,16 @@ ORDER BY MediaMaster.MediaMasterID
 """
 
 MET = """
+SELECT DISTINCT CN, t.*
+FROM gizaCARDTMSThes.dbo.TermMaster tm
+JOIN gizaCARDTMSThes.dbo.Terms t on tm.TermMasterID=t.TermMasterID
+WHERE CN LIKE 'AUT.AAA.AAK%'
+ORDER BY CN
+
 SELECT MediaMaster.MediaMasterID,
 MediaRenditions.MediaTypeID, ThesXrefTypes.ThesXrefType, Terms.TermMasterID, Terms.Term, TermMaster.*
 FROM MediaMaster
-LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
+LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
 JOIN ThesXrefs on MediaMaster.MediaMasterID=ThesXrefs.ID AND ThesXrefs.TableID=318
 LEFT JOIN ThesXrefTypes on ThesXrefs.ThesXrefTypeID=ThesXrefTypes.ThesXrefTypeID
 LEFT JOIN gizaCARDTMSThes.dbo.Terms Terms on ThesXrefs.TermID=Terms.TermID

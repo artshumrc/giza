@@ -1,39 +1,35 @@
-from django.conf.urls import include, url
-from django.conf import settings
+"""giza URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/1.10/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.conf.urls import url, include
+    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
+"""
+from django.conf.urls import url
 from django.contrib import admin
-
-from wagtail.wagtailadmin import urls as wagtailadmin_urls
-from wagtail.wagtaildocs import urls as wagtaildocs_urls
-from wagtail.wagtailcore import urls as wagtail_urls
-
+from tms import views as tms_views
+from search import views as search_views
 
 urlpatterns = [
-    url(r'^$', 'tms.views.index', name="index"),
-    url(r'^(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', 'tms.views.about', name="about"),
-    url(r'^(?P<page_name>donate)/$', 'tms.views.donate', name="donate"),
-    url(r'^(?P<page_name>archaeology|commontopics|explorevideos|faq|gizaintro)/$', 'tms.views.explore', name="explore"),
-    url(r'^library/$', 'search.views.library', name="library"),
+    url(r'^$', tms_views.index, name="index"),
+    url(r'^(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', tms_views.about, name="about"),
+    url(r'^(?P<page_name>donate)/$', tms_views.donate, name="donate"),
+    url(r'^(?P<page_name>archaeology|commontopics|explorevideos|faq|gizaintro)/$', tms_views.explore, name="explore"),
+    url(r'^library/$', search_views.library, name="library"),
 
-    url(r'^django-admin/', include(admin.site.urls)),
+    url(r'^search/$', search_views.search, name='search'),
+    url(r'^search-results/$', search_views.results, name='results'),
 
-    url(r'^admin/', include(wagtailadmin_urls)),
-    url(r'^documents/', include(wagtaildocs_urls)),
+    url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html, name='get_type_html'),
+    url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)\.json$', tms_views.get_type_json, name='get_type_json'),
 
-    url(r'^search/$', 'search.views.search', name='search'),
-    url(r'^search-results/$', 'search.views.results', name='results'),
-
-    url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', 'tms.views.get_type_html', name='get_type_html'),
-    url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)\.json$', 'tms.views.get_type_json', name='get_type_json'),
-
-    url(r'', include(wagtail_urls)),
+    url(r'^admin/', admin.site.urls),
 ]
-
-
-if settings.DEBUG:
-    from django.conf.urls.static import static
-    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-    from django.views.generic import TemplateView
-
-    # Serve static and media files from development server
-    urlpatterns += staticfiles_urlpatterns()
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

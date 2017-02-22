@@ -3,7 +3,7 @@ from django.utils.six.moves.urllib.parse import urlparse
 
 from elasticsearch import Elasticsearch
 
-ES_BACKEND = getattr(settings, 'WAGTAILSEARCH_BACKENDS').get('default')
+ES_BACKEND = getattr(settings, 'SEARCH_BACKENDS').get('default')
 
 ES_HOSTS = ES_BACKEND.pop('HOSTS', None)
 ES_URLS = ES_BACKEND.pop('URLS', ['localhost:9200'])
@@ -31,7 +31,7 @@ if ES_HOSTS is None:
 
 ES_INDEX = ES_BACKEND.pop('INDEX', 'giza')
 ES_TIMEOUT = ES_BACKEND.pop('TIMEOUT', 5)
-	
+
 es = Elasticsearch(
         hosts=ES_HOSTS,
         timeout=ES_TIMEOUT)

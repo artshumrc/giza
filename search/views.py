@@ -3,8 +3,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
-from wagtail.wagtailcore.models import Page
-from wagtail.wagtailsearch.models import Query
 from utils.elastic_backend import es, ES_INDEX
 from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGORY
 
