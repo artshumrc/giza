@@ -6,6 +6,7 @@ ReferenceMaster.Journal, ReferenceMaster.Series
 FROM ReferenceMaster
 LEFT JOIN Languages ON ReferenceMaster.LanguageID=Languages.LanguageID
 LEFT JOIN RefFormats ON ReferenceMaster.FormatID=RefFormats.FormatID
+WHERE ReferenceMaster.PublicAccess=1
 ORDER BY ReferenceMaster.ReferenceID
 """
 
@@ -19,6 +20,7 @@ LEFT JOIN MediaXrefs ON Sites.SiteID=MediaXrefs.ID AND MediaXrefs.PrimaryDisplay
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 LEFT JOIN MediaRenditions ON MediaXrefs.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths AS ThumbPath ON MediaRenditions.ThumbPathID=ThumbPath.PathID
+WHERE ReferenceMaster.PublicAccess=1
 ORDER BY ReferenceMaster.ReferenceID
 """
 
@@ -34,6 +36,7 @@ LEFT JOIN MediaXrefs ON Objects.ObjectID=MediaXrefs.ID AND MediaXrefs.PrimaryDis
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
+WHERE ReferenceMaster.PublicAccess=1
 ORDER BY ReferenceMaster.ReferenceID
 """
 
@@ -51,6 +54,7 @@ LEFT JOIN MediaXrefs ON Constituents.ConstituentID=MediaXrefs.ID AND MediaXrefs.
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
+WHERE ReferenceMaster.PublicAccess=1
 ORDER BY ReferenceMaster.ReferenceID
 """
 
@@ -66,5 +70,6 @@ LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID AND M
 LEFT JOIN MediaPaths AS ThumbPath ON MediaRenditions.ThumbPathID=ThumbPath.PathID
 LEFT JOIN MediaPaths AS MainPath ON MediaFiles.PathID=MainPath.PathID
 WHERE MediaFiles.FileName IS NOT NULL
+AND ReferenceMaster.PublicAccess=1
 ORDER BY ReferenceMaster.ReferenceID
 """

@@ -10,6 +10,16 @@
       </div>
     </li>
     {% endif %}
+    {% if object.department %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Department</dt>
+          <dd>{{ object.department }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
     {% if object.dimensions %}
     <li>
       <div class="media-object list-item list-item-textinfo">

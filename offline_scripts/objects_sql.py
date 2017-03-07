@@ -91,7 +91,7 @@ Objects.ClassificationID, ReferenceMaster.DisplayDate,
 MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
 FROM Objects
 JOIN RefXRefs ON Objects.ObjectID=RefXRefs.ID
-JOIN ReferenceMaster ON RefXrefs.ReferenceID=ReferenceMaster.ReferenceID
+JOIN ReferenceMaster ON RefXrefs.ReferenceID=ReferenceMaster.ReferenceID AND ReferenceMaster.PublicAccess=1
 JOIN MediaXrefs ON ReferenceMaster.ReferenceID=MediaXrefs.ID AND MediaXrefs.TableID=143 AND MediaXrefs.PrimaryDisplay=1
 JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 JOIN MediaRenditions ON MediaXrefs.MediaMasterID=MediaRenditions.MediaMasterID

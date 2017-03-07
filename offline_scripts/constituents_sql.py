@@ -33,7 +33,7 @@ MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName
 FROM ConXrefs
 JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
 JOIN Constituents ON ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0 AND Constituents.Active=1
-JOIN Objects ON ConXrefs.ID=Objects.ObjectID
+JOIN Objects ON ConXrefs.ID=Objects.ObjectID AND Objects.PublicAccess=1
 JOIN ObjTitles ON Objects.ObjectID=ObjTitles.ObjectID AND ObjTitles.DisplayOrder=1
 LEFT JOIN MediaXrefs ON Objects.ObjectID=MediaXrefs.ID AND MediaXrefs.TableID=23 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
@@ -50,7 +50,7 @@ MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName
 FROM ConXrefs
 JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
 JOIN Constituents ON ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0 AND Constituents.Active=1
-JOIN Sites ON ConXrefs.ID=Sites.SiteID
+JOIN Sites ON ConXrefs.ID=Sites.SiteID AND Sites.IsPublic=1
 LEFT JOIN MediaXrefs ON Sites.SiteID=MediaXrefs.ID AND MediaXrefs.TableID=23 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
@@ -66,7 +66,7 @@ MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
 FROM ConXrefs
 JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
 JOIN Constituents ON ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0
-JOIN ReferenceMaster ON ConXrefs.ID=ReferenceMaster.ReferenceID
+JOIN ReferenceMaster ON ConXrefs.ID=ReferenceMaster.ReferenceID AND ReferenceMaster.PublicAccess=1
 LEFT JOIN MediaXrefs ON ReferenceMaster.ReferenceID=MediaXrefs.ID AND MediaXrefs.TableID=143 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 LEFT JOIN MediaRenditions ON MediaXrefs.MediaMasterID=MediaRenditions.MediaMasterID
@@ -88,7 +88,7 @@ FROM MediaXrefs
 JOIN Constituents ON MediaXrefs.ID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
-LEFT JOIN Objects ON MediaXrefs.ID=Objects.ObjectID
+LEFT JOIN Objects ON MediaXrefs.ID=Objects.ObjectID AND Objects.PublicAccess=1
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 LEFT JOIN MediaPaths AS ThumbPath ON MediaRenditions.ThumbPathID=ThumbPath.PathID
 LEFT JOIN MediaPaths AS MainPath ON MediaFiles.PathID=MainPath.PathID

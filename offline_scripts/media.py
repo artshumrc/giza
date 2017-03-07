@@ -20,6 +20,7 @@ def process_media(CURSOR):
 			'media_view_index' : columns.index('MediaView'),
 			'caption_index' : columns.index('PublicCaption'),
 			'remarks_index' : columns.index('Remarks'),
+			'department_index' : columns.index('Department'),
 			'date_index' : columns.index('DateOfCapture'),
 			'problems_index' : columns.index('ProblemsQuestions'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
@@ -33,6 +34,10 @@ def process_media(CURSOR):
 		id = row[indices['id_index']]
 		media_type_key = int(row[indices['media_type_id_index']])
 		media_type = MEDIATYPES.get(media_type_key)
+
+		# for now, ignore Microfilm and Document media types
+		if (media_type_key in [4,5]):
+			return (media, current_id)
 
 		if id != current_id:
 			save(media)
@@ -48,6 +53,7 @@ def process_media(CURSOR):
 		media['subjects'] = subjects
 		media['displaytext'] = subjects
 		media['remarks'] = "" if row[indices['remarks_index']].lower() == "null" else row[indices['remarks_index']]
+		media['department'] = "" if row[indices['department_index']].lower() == "null" else row[indices['department_index']]
 		media['date'] = "" if row[indices['date_index']].lower() == "null" else row[indices['date_index']]
 		media['problemsquestions'] = "" if row[indices['problems_index']].lower() == "null" else row[indices['problems_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])

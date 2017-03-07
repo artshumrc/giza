@@ -2,10 +2,12 @@
 MEDIA = """
 SELECT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID, MediaRenditions.PrimaryFileID,
 MediaMaster.Description, MediaMaster.MediaView, MediaMaster.PublicCaption, MediaRenditions.Remarks,
+Departments.Department,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName,
 Date.TextEntry AS DateOfCapture, Problems.TextEntry AS ProblemsQuestions
 FROM MediaMaster
+LEFT JOIN Departments ON MediaMaster.DepartmentID=Departments.DepartmentID
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 LEFT JOIN MediaPaths AS ThumbPath ON MediaRenditions.ThumbPathID=ThumbPath.PathID
@@ -100,7 +102,7 @@ MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
 FROM MediaMaster
 JOIN MediaRenditions AS MasterRenditions ON MediaMaster.MediaMasterID=MasterRenditions.MediaMasterID
 JOIN RefXRefs ON MediaMaster.MediaMasterID=RefXRefs.ID
-JOIN ReferenceMaster ON RefXRefs.ReferenceID=ReferenceMaster.ReferenceID
+JOIN ReferenceMaster ON RefXRefs.ReferenceID=ReferenceMaster.ReferenceID AND ReferenceMaster.PublicAccess=1
 LEFT JOIN MediaXrefs ON ReferenceMaster.ReferenceID=MediaXrefs.ID AND MediaXrefs.PrimaryDisplay=1 AND MediaXrefs.TableID=143
 LEFT JOIN MediaRenditions ON MediaXrefs.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
