@@ -96,6 +96,7 @@
       <h5 class="heading-alt">Search options</h5>
       <p><a href="{% url 'search' %}">Start a new search</a></p>
 
+      {% if search_params %}
       <div class="search-facet-section">
         {% for param in search_params %}
           <h6 class="search-facet-title">{{ param.1 }}:</h6>
@@ -106,6 +107,7 @@
           </ul>
         {% endfor %}
       </div>
+      {% endif %}
 
       {% if total > 0 %}
         <div class="search-facet-section">

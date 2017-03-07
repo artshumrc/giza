@@ -190,7 +190,9 @@ def results(request):
             "aggregations": {
                 "aggregation": {
                     "terms": {
-                        "field": "_type"
+                        "field": "_type",
+                        "exclude": "library", # ignore special type, library, which is used for the Digital Giza Library page
+                        "size" : 50 # make sure to get all categories (rather than just 10)
                     }
                 }
             },
