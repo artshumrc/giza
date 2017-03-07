@@ -121,6 +121,10 @@ def process_media_related_sites(CURSOR):
 		media_type_key = int(row[indices['media_type_id_index']])
 		media_type = MEDIATYPES.get(media_type_key)
 
+		# for now, ignore Microfilm and Document media types
+		if (media_type_key in [4,5]):
+			return (media, current_id)
+
 		if id != current_id:
 			save(media)
 			current_id = id
@@ -209,6 +213,10 @@ def process_media_related_objects(CURSOR):
 		id = row[indices['media_id_index']]
 		media_type_key = int(row[indices['media_type_id_index']])
 		media_type = MEDIATYPES.get(media_type_key)
+
+		# for now, ignore Microfilm and Document media types
+		if (media_type_key in [4,5]):
+			return (media, current_id)
 
 		if id != current_id:
 			save(media)
@@ -307,6 +315,10 @@ def process_media_related_constituents(CURSOR):
 		id = row[indices['id_index']]
 		media_type_key = int(row[indices['media_type_id_index']])
 		media_type = MEDIATYPES.get(media_type_key)
+
+		# for now, ignore Microfilm and Document media types
+		if (media_type_key in [4,5]):
+			return (media, current_id)
 
 		if id != current_id:
 			save(media)
@@ -411,6 +423,10 @@ def process_media_related_published(CURSOR):
 		id = row[indices['id_index']]
 		media_type_key = int(row[indices['media_type_id_index']])
 		media_type = MEDIATYPES.get(media_type_key)
+
+		# for now, ignore Microfilm and Document media types
+		if (media_type_key in [4,5]):
+			return (media, current_id)
 
 		if id != current_id:
 			save(media)
