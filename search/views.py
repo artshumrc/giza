@@ -143,7 +143,7 @@ def results(request):
         search_results = es.search(index=ES_INDEX, doc_type=categorystring, body={
           "query": {
             "term": {
-                "number": number
+                "allnumbers": number
             }
           }
         })
