@@ -93,7 +93,8 @@ ORDER BY SiteID
 # Related Media for all Sites
 RELATED_MEDIA = """
 SELECT MediaXrefs.ID AS SiteID, MediaMaster.MediaMasterID, MediaXrefs.PrimaryDisplay,
-MediaRenditions.MediaTypeID, MediaMaster.Description, MediaMaster.PublicCaption,
+MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, MediaMaster.Description,
+MediaMaster.MediaView, MediaMaster.PublicCaption,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
 FROM MediaXrefs

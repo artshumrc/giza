@@ -122,7 +122,8 @@ ORDER BY ID1
 # Related Media for all Objects
 RELATED_MEDIA = """
 SELECT MediaXrefs.ID AS ID, MediaMaster.MediaMasterID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
-MediaRenditions.MediaTypeID, MediaMaster.Description, MediaMaster.PublicCaption,
+MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, MediaMaster.Description,
+MediaMaster.MediaView, MediaMaster.PublicCaption,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
 FROM MediaXrefs

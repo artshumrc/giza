@@ -758,9 +758,15 @@
 {% for item in object.relateditems.photos|slice:":12" %}
 <div class="large reveal modal-inverse photo-gallery-modal" id="gallery{{ item.id }}" data-reveal dava-v-offset="65">
 
-  <h2>{{ item.displaytext }}</h2>
-
-  <!-- <p>item.displaytext</p> -->
+  {% if item.number %}
+    <p><b>ID:</b> <a href="{% url 'get_type_html' 'photos' item.id 'full' %}">{{ item.number }}</a></p>
+  {% endif %}
+  {% if item.displaytext %}
+    <p><b>Subjects:</b> {{ item.displaytext }}</p>
+  {% endif %}
+  {% if item.description %}
+    <p><b>Description:</b> {{ item.description }}</p>
+  {% endif %}
 
   <div class="modal-img-container">
     <img src="{{ item.main }}" alt="{{ item.displaytext }}">

@@ -15,6 +15,7 @@ def process_media(CURSOR):
 	def get_indices():
 		indices = {
 			'id_index' : columns.index('MediaMasterID'),
+			'rendition_number_index' : columns.index('RenditionNumber'),
 			'media_type_id_index' : columns.index('MediaTypeID'),
 			'description_index' : columns.index('Description'),
 			'media_view_index' : columns.index('MediaView'),
@@ -46,10 +47,12 @@ def process_media(CURSOR):
 
 		media['id'] = id
 		media['mediatype'] = media_type
+		media['number'] = "" if row[indices['rendition_number_index']].lower() == "null" else row[indices['rendition_number_index']]
 		media['description'] = "" if row[indices['description_index']].lower() == "null" else row[indices['description_index']]
-		subjects = "" if row[indices['media_view_index']].lower() == "null" else row[indices['media_view_index']]
-		subjects = subjects + "" if row[indices['caption_index']].lower() == "null" else row[indices['caption_index']]
-		media['mediaview'] = "" if row[indices['media_view_index']].lower() == "null" else row[indices['media_view_index']]
+		mediaview = "" if row[indices['media_view_index']].lower() == "null" else row[indices['media_view_index']]
+		caption = "" if row[indices['caption_index']].lower() == "null" else row[indices['caption_index']]
+		subjects = ": ".join([mediaview, caption])
+		media['mediaview'] = mediaview
 		media['subjects'] = subjects
 		media['displaytext'] = subjects
 		media['remarks'] = "" if row[indices['remarks_index']].lower() == "null" else row[indices['remarks_index']]
@@ -371,20 +374,21 @@ def process_media_related_constituents(CURSOR):
 
 	print "Starting Media Related Constituents..."
 	if CURSOR:
-		sql_command = media_sql.RELATED_CONSTITUENTS
-		CURSOR.execute(sql_command)
-		columns = [column[0] for column in CURSOR.description]
-		indices = get_indices()
+		# because this database can't be simple, we need to do two different queries to get related constituents
+		for sql_command in [media_sql.RELATED_CONSTITUENTS_1, media_sql.RELATED_CONSTITUENTS_2]:
+			CURSOR.execute(sql_command)
+			columns = [column[0] for column in CURSOR.description]
+			indices = get_indices()
 
-		media = {}
-		current_id = '-1'
-		cursor_row = CURSOR.fetchone()
-		while cursor_row is not None:
-			row = process_cursor_row(cursor_row)
-			(media, current_id) = process_media_row(media, current_id)
+			media = {}
+			current_id = '-1'
 			cursor_row = CURSOR.fetchone()
-   		# save last media to elasticsearch
-		save(media)
+			while cursor_row is not None:
+				row = process_cursor_row(cursor_row)
+				(media, current_id) = process_media_row(media, current_id)
+				cursor_row = CURSOR.fetchone()
+	   		# save last media to elasticsearch
+			save(media)
 	else:
 		with open('../data/media_constituents_related.csv', 'rb') as csvfile:
 			# Get the query headers to use as keys in the JSON

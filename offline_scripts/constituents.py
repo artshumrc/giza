@@ -449,8 +449,10 @@ def process_constituents_related_media(CURSOR):
 			'media_master_id_index' : columns.index('MediaMasterID'),
 			'primary_display_index' : columns.index('PrimaryDisplay'),
 			'media_type_id_index' : columns.index('MediaTypeID'),
+			'rendition_number_index' : columns.index('RenditionNumber'),
 			'description_index' : columns.index('Description'),
 			'caption_index' : columns.index('PublicCaption'),
+			'media_view_index' : columns.index('MediaView'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
 			'thumb_file_index' : columns.index('ThumbFileName'),
 			'main_path_index' : columns.index('MainPathName'),
@@ -479,10 +481,14 @@ def process_constituents_related_media(CURSOR):
 
 		media_type_key = int(row[indices['media_type_id_index']])
 		media_type = MEDIATYPES.get(media_type_key)
+		number = "" if row[indices['rendition_number_index']].lower() == "null" else row[indices['rendition_number_index']]
 		media_master_id = row[indices['media_master_id_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
-		display_text = row[indices['caption_index']]
+		description = "" if row[indices['description_index']].lower() == "null" else row[indices['description_index']]
+		mediaview = "" if row[indices['media_view_index']].lower() == "null" else row[indices['media_view_index']]
+		caption = "" if row[indices['caption_index']].lower() == "null" else row[indices['caption_index']]
+		display_text = ": ".join([mediaview, caption])
 
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
 		# so, make sure we are only using videos that are mp4s
@@ -497,14 +503,18 @@ def process_constituents_related_media(CURSOR):
 			constituent['primarydisplay'] = {
 			'thumbnail' : thumbnail_url,
 			'main' : main_url,
-			'displaytext' : display_text
+			'displaytext' : display_text,
+			'number' : number,
+			'description' : description
 			}
 		constituent['relateditems'][media_type].append({
 			'id' : media_master_id,
 			'displaytext' : display_text,
 			'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
 			'thumbnail' : thumbnail_url,
-			'main' : main_url
+			'main' : main_url,
+			'number' : number,
+			'description' : description
 			})
 		return(constituent, current_id)
 

@@ -81,7 +81,8 @@ ORDER BY Constituents.ConstituentID
 # Related Media for all Constituents
 RELATED_MEDIA = """
 SELECT MediaXrefs.ID AS ID, Constituents.ConstituentTypeID,  MediaMaster.MediaMasterID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
-MediaRenditions.MediaTypeID, MediaMaster.Description, MediaMaster.PublicCaption,
+MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, MediaMaster.Description,
+MediaMaster.MediaView, MediaMaster.PublicCaption,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
 FROM MediaXrefs

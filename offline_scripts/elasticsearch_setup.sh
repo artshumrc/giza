@@ -418,6 +418,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "nested",
           "include_in_all" : false
         },
+        "number": {
+          "type" : "string",
+          "index":"not_analyzed"
+        },
         "department": {
           "type" : "string",
           "fields": {
