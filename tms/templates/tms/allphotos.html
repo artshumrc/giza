@@ -10,7 +10,7 @@
     <div class="row title">
       <header class="large-8 columns">
         <h1>{{ object.displaytext }}<a name="top"></a></h1>
-        <h3 class="page-header__meta"><a href="javascript:history.back()"><i class="icon-angle-left"></i> Back</a></h3>
+        <!-- <h3 class="page-header__meta"><a href="javascript:history.back()"><i class="icon-angle-left"></i> Back</a></h3> -->
       </header>
     </div>
   </div>
@@ -32,24 +32,33 @@
           </button>
         </div>
         <div class="feature-block__body">
-          <ul class="feature-block__list item-grid thumbsize-md thumbs-square">
-            {% for item in object.relateditems.photos %}
-            <li>
-              <div class="media-object list-item list-item-thumbonly">
-                <div class="media-object-section">
-                  <div class="thumbnail">
-                    <a href="#0" data-open="gallery{{ item.id }}"><img src="{{ item.thumbnail }}"></a>
-                  </div>
+          <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+            <div class="slides"></div>
+            <div class="title"></div>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+        </div>
+
+        <ul id="links" class="feature-block__list item-grid thumbsize-md thumbs-square">
+          {% for item in object.relateditems.photos %}
+          <li>
+            <div class="media-object list-item list-item-thumbonly">
+              <div class="media-object-section">
+                <div class="thumbnail">
+                  <a href="{{ item.main }}" title="{{ item.displaytext }}" data-title="<p><b>ID:</b> <a href=&quot;{% url 'get_type_html' 'photos' item.id 'full' %}&quot;>{{ item.number }}</a></p>
+                      <p><b>Subjects:</b> {{ item.displaytext }}</p>
+                      <p><b>Description:</b> {{ item.description }}</p>">
+                      <img src="{{ item.thumbnail }}" alt="{{ item.displaytext }}">
+                  </a>
                 </div>
-                <!-- <div class="media-object-section">
-                  <p class="media-object-title"><a href="#0"></a></p>
-                  <ul class="subheader">
-                  </ul>
-                </div> -->
               </div>
+            </div>
             </li>
             {% endfor %}
-          </ul>
+        </ul>
         </div>
       </section>
     </section>
@@ -58,32 +67,19 @@
 
       <!-- END MAIN CONTENT ROWS -->
 
-<!-- Modal -->
+{% endblock %}
 
-{% for item in object.relateditems.photos %}
-<div class="large reveal modal-inverse photo-gallery-modal" id="gallery{{ item.id }}" data-reveal dava-v-offset="65">
-
-  {% if item.number %}
-    <p><b>ID:</b> <a href="{% url 'get_type_html' 'photos' item.id 'full' %}">{{ item.number }}</a></p>
-  {% endif %}
-  {% if item.displaytext %}
-    <p><b>Subjects:</b> {{ item.displaytext }}</p>
-  {% endif %}
-  {% if item.description %}
-    <p><b>Description:</b> {{ item.description }}</p>
-  {% endif %}
-
-  <div class="modal-img-container">
-    <img src="{{ item.main }}" alt="{{ item.displaytext }}">
-  </div>
-
-
-  <button class="close-button" data-close aria-label="Close modal" type="button">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-{% endfor %}
-
-<!-- /Modal -->
-
+{% block extra_js %}
+<script>
+$('#links').click(function(event) {
+  var target = event.target;
+  if (!$(target).is('img')) {
+    target = $(target).find('img')[0];
+  }
+  var link = target.src ? target.parentNode : target,
+  options = {index: link, event: event, titleElement: 'div.title'},
+  links = $(this).find('a');
+  blueimp.Gallery(links, options);
+});
+</script>
 {% endblock %}
