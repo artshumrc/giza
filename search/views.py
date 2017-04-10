@@ -84,6 +84,24 @@ def library(request):
         'sort' : sort
     })
 
+# get virtual Giza tour videos
+def videos(request):
+    results = es.search(index=ES_INDEX, doc_type='videos', body={
+        "size": 500,
+        "query": {
+            "wildcard" : {
+                "number" : "GPH_3DP*"
+            }
+        },
+        "sort" : "displaytext"
+    })['hits']['hits']
+    hits = []
+    for r in results:
+        hits.append(r['_source'])
+    return render(request, 'search/explorevideos.html', {
+        'results' : hits
+    })
+
 def results(request):
     search_term = request.GET.get('q', '').encode('utf-8')
     sort = request.GET.get('sort', '_score').encode('utf-8')

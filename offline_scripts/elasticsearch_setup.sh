@@ -485,6 +485,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "analyzer" : "case_insensitive_sort",
           "include_in_all" : false
         },
+        "number": {
+          "type" : "string",
+          "index":"not_analyzed"
+        },
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false

@@ -22,8 +22,9 @@ urlpatterns = [
     url(r'^$', tms_views.index, name="index"),
     url(r'^(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', tms_views.about, name="about"),
     url(r'^(?P<page_name>donate)/$', tms_views.donate, name="donate"),
-    url(r'^(?P<page_name>archaeology|commontopics|explorevideos|faq|gizaintro)/$', tms_views.explore, name="explore"),
+    url(r'^(?P<page_name>archaeology|commontopics|faq|gizaintro)/$', tms_views.explore, name="explore"),
     url(r'^library/$', search_views.library, name="library"),
+    url(r'^explorevideos/$', search_views.videos, name="explorevideos"),
 
     url(r'^search/$', search_views.search, name='search'),
     url(r'^search-results/$', search_views.results, name='results'),
