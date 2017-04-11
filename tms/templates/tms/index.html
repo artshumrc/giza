@@ -9,10 +9,14 @@
 <div class="home-hero-container">
         <div class="row row-padded">
 
-            <div class="video-bg-home"
-                data-vide-bg="http://gizamedia.rc.fas.harvard.edu/images/website/GizaHome_web"
-                data-vide-options="posterType: jpg, loop: true, position: 0% -5%">
-
+            <div class="video-bg-home">
+                <div style="position: absolute; z-index: -1; top: 0px; left: 0px; bottom: 0px; right: 0px; overflow: hidden; -webkit-background-size: cover; background-size: cover; background-color: transparent; background-image: none; background-position: 0% -5%; background-repeat: no-repeat no-repeat;">
+                  <video autoplay loop muted style="margin: auto; position: absolute; z-index: -1; top: -5%; left: 0%; visibility: visible; opacity: 1; width: 1172px; height: auto;">
+                    <source src="http://gizamedia.rc.fas.harvard.edu/images/website/GizaHome_web.webm" type="video/webm">
+                    <source src="http://gizamedia.rc.fas.harvard.edu/images/website/GizaHome_web.ogv" type="video/ogg">
+                    <source src="http://gizamedia.rc.fas.harvard.edu/images/website/GizaHome_web.mp4" type="video/mp4">
+                  </video>
+                </div>
                 <div class="home-hero-title">
                     <h1><span class="title-text-alt">Welcome to the</span> Giza Plateau</h1>
                 </div>
