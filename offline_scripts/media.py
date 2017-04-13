@@ -47,7 +47,10 @@ def process_media(CURSOR):
 
 		media['id'] = id
 		media['mediatype'] = media_type
-		media['number'] = "" if row[indices['rendition_number_index']].lower() == "null" else row[indices['rendition_number_index']]
+		number = "" if row[indices['rendition_number_index']].lower() == "null" else row[indices['rendition_number_index']]
+		media['number'] = number
+		prefix_idx = number.find('_')
+		media['allnumbers'] = list(set([number, number[number.find('_')+1:], number[number.find('_')+1:number.rfind('_')], "".join(number.split()), "".join(number.split('_'))]))
 		media['description'] = "" if row[indices['description_index']].lower() == "null" else row[indices['description_index']]
 		mediaview = "" if row[indices['media_view_index']].lower() == "null" else row[indices['media_view_index']]
 		caption = "" if row[indices['caption_index']].lower() == "null" else row[indices['caption_index']]

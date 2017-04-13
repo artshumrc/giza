@@ -160,7 +160,7 @@ def results(request):
         # such as 'objects:HUMFA_27-5-1'
         search_results = es.search(index=ES_INDEX, doc_type=categorystring, body={
           "query": {
-            "term": {
+            "match": {
                 "allnumbers": number
             }
           }

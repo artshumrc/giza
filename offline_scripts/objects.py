@@ -26,7 +26,7 @@ def process_objects(CURSOR):
 		id = row[indices['id_index']]
 		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
-		object_number = row[indices['object_number_index']]
+		number = row[indices['object_number_index']]
 
 		#if id not in SAMPLE_OBJECTS:
 		#	return (object, current_id)
@@ -54,8 +54,8 @@ def process_objects(CURSOR):
 			if 'title' in key:
 				object_title = row_value
 				if classification == "diarypages" and object_title is None:
-					idx = object_number.find('_')
-					object_title = object_number[idx+1:]
+					idx = number.find('_')
+					object_title = number[idx+1:]
 					object[key] = object_title
 				else:
 					object[key] = row_value
@@ -64,8 +64,8 @@ def process_objects(CURSOR):
 				object[key] = row_value.rstrip() if type(row_value) is str else row_value
 		# Add some extra fields not in the TMS data
 		object['displaytext'] = object['title']
-		prefix_idx = object_number.find('_')
-		object['allnumbers'] = [object_number, object_number[prefix_idx+1:]]
+		prefix_idx = number.find('_')
+		object['allnumbers'] = list(set([number, number[prefix_idx+1:], "".join(number.split())]))
 		object['roles'] = []
 		object['hasphoto'] = "No"
 		return (object, current_id)

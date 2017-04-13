@@ -10,6 +10,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "tokenizer": "keyword",
           "char_filter" : [ "html_strip" ],
           "filter":  [ "lowercase", "punctuation_filter", "trim" ]
+        },
+        "lowercase_keyword": {
+          "tokenizer":"keyword",
+          "filter":"lowercase"
         }
       },
       "filter": {
@@ -36,6 +40,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         "datevalues": {
           "type" : "string",
           "include_in_all" : false
+        },
+        "allnumbers": {
+          "type" : "string",
+          "analyzer":"lowercase_keyword"
         },
         "number": {
           "type" : "string",
@@ -135,7 +143,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         },
         "allnumbers": {
           "type" : "string",
-          "index":"not_analyzed"
+          "analyzer":"lowercase_keyword"
         },
         "altnums" : {
           "type" : "nested",
@@ -217,6 +225,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "nested",
           "include_in_all" : false
         },
+        "allnumbers": {
+          "type" : "string",
+          "analyzer":"lowercase_keyword"
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -249,6 +261,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
+        },
+        "allnumbers": {
+          "type" : "string",
+          "analyzer":"lowercase_keyword"
         },
         "number": {
           "type" : "string",
@@ -301,6 +317,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "nested",
           "include_in_all" : false
         },
+        "allnumbers": {
+          "type" : "string",
+          "analyzer":"lowercase_keyword"
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -342,6 +362,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
+        },
+        "allnumbers": {
+          "type" : "string",
+          "analyzer":"lowercase_keyword"
         },
         "number": {
           "type" : "string",
@@ -385,6 +409,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "type" : "nested",
           "include_in_all" : false
         },
+        "allnumbers": {
+          "type" : "string",
+          "analyzer":"lowercase_keyword"
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -417,6 +445,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
+        },
+        "allnumbers": {
+          "type" : "string",
+          "analyzer":"lowercase_keyword"
         },
         "number": {
           "type" : "string",
@@ -485,6 +517,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
           "analyzer" : "case_insensitive_sort",
           "include_in_all" : false
         },
+        "allnumbers": {
+          "type" : "string",
+          "analyzer":"lowercase_keyword"
+        },
         "number": {
           "type" : "string",
           "index":"not_analyzed"
@@ -523,6 +559,14 @@ curl -XPUT 'http://localhost:9200/giza' -d '
         "relateditems" : {
           "type" : "nested",
           "include_in_all" : false
+        },
+        "allnumbers": {
+          "type" : "string",
+          "analyzer":"lowercase_keyword"
+        },
+        "number": {
+          "type" : "string",
+          "index":"not_analyzed"
         },
         "mediaview": {
           "type" : "string",

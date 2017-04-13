@@ -52,8 +52,10 @@ def process_sites(CURSOR):
 			else:
 				# no special processing - just add it to the JSON
 				site[key] = row_value
-		display_text = site['number']
-		site['displaytext'] = display_text
+		number = site['number']
+		prefix_idx = number.find('_')
+		site['allnumbers'] = list(set([number, number[prefix_idx+1:], "".join(number.split())]))
+		site['displaytext'] = number
 		site['tombowner'] = "No"
 		site['roles'] = []
 		site['people'] = []

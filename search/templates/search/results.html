@@ -64,12 +64,12 @@
         <div class="media-object-section">
           <p class="media-object-title"><a href="{% url 'get_type_html' result.type result.id 'intro' %}">{{ result.source.displaytext }}</a></p>
           <ul class="subheader">
+            <li><b>{{ CATEGORIES|keyvalue:result.type }}</b></li>
             {% if result.type == 'sites' %}
             <li>{{ result.source.sitename }}</li>
             {% else %}
             <li>{{ result.source.number }}</li>
             {% endif %}
-            <li>{{ CATEGORIES|keyvalue:result.type }}</li>
           </ul>
         </div>
       </div>
