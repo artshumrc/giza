@@ -389,7 +389,7 @@ def process_constituents_related_published(CURSOR):
 		reference_id = row[indices['reference_id_index']]
 		title = row[indices['title_index']]
 		boiler_text = row[indices['boiler_text_index']]
-		date = row[indices['date_index']]
+		date = "" if row[indices['date_index']].lower() == "null" else row[indices['date_index']]
 		main_url = get_media_url(row[indices['path_index']], row[indices['file_index']])
 
 		if "pubdocs" not in constituent['relateditems']:

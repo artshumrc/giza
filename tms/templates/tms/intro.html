@@ -388,9 +388,11 @@
                     </div>
                     <div class="media-object-section">
                       <p class="media-object-title"><a href="{% url 'get_type_html' 'pubdocs' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                      {% if item.date %}
                       <ul class="subheader">
                         <li>Date: {{ item.date }}</li>
                       </ul>
+                      {% endif %}
                     </div>
                   </div>
                 </li>
