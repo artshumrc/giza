@@ -1,7 +1,9 @@
 def get_media_url(path, filename):
 	idx = path.find('images')
 	if idx == -1:
-		return ""
+		idx = path.find('documents')
+		if idx == -1:
+			return ""
 	if filename.endswith('bmp'):
 		return ""
 	path = path[idx:].replace('\\','/')
