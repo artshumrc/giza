@@ -4,6 +4,7 @@ import elasticsearch_connection
 import getpass
 import json
 import operator
+import time
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import published_sql
@@ -456,6 +457,7 @@ def process_pub_related_media(CURSOR):
 # this groups published documents by author, for use on the Digital Giza Library page
 def create_library():
 	print "Creating Digital Library..."
+	time.sleep(3) # for some reason the library isn't always fully populated. see if a time delay helps
 
 	author_ids = []
 	size = 20
