@@ -1,5 +1,5 @@
 PUBLISHED = """
-SELECT ReferenceMaster.ReferenceID AS ID, ReferenceMaster.Title,
+SELECT ReferenceMaster.ReferenceID AS ID, ReferenceMaster.Title, ReferenceMaster.Notes,
 ReferenceMaster.BoilerText, ReferenceMaster.DisplayDate, ReferenceMaster.YearPublished,
 RefFormats.Format, Languages.Language, ReferenceMaster.NumOfPages,
 ReferenceMaster.Journal, ReferenceMaster.Series
