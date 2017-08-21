@@ -4577,7 +4577,8 @@ select, input, textarea {
     font-weight: normal;
     text-transform: uppercase;
     font-size: 15px;
-    font-family: Montserrat, “Helvetica Neue”, Helvetica, Arial, sans-serif; }
+    font-family: Montserrat, “Helvetica Neue”, Helvetica, Arial, sans-serif; 
+    color: white }
   .nav-menu-primary li .icon-home .hide-for-medium {
     display: inline-block;
     margin-left: 0.2em; }
