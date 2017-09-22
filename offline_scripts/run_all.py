@@ -4,6 +4,7 @@ import media
 import objects
 import published
 import sites
+import sys
 
 CURSOR = None
 if __name__ == "__main__":
@@ -11,7 +12,10 @@ if __name__ == "__main__":
     	import pyodbc
     	dsn = 'gizadatasource'
     	user = 'RC\\rsinghal'
-    	password = getpass.getpass()
+        if len(sys.argv) == 2:
+            password = sys.argv[1]
+        else:
+            password = getpass.getpass()
     	database = 'gizacardtms'
 
     	connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
