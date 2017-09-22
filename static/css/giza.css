@@ -3288,7 +3288,7 @@ table.hover tr:nth-of-type(even):hover {
   .top-bar ul {
     background-color: #312E2B; }
   .top-bar input {
-    max-width: 100px;
+    max-width: 108px;
     margin-right: 4px;
     display: inline-block;}
   .top-bar .input-group-field {
@@ -4574,7 +4574,7 @@ select, input, textarea {
     display: block;
     height: 55px;
     padding-top: 17px;
-    font-weight: normal;
+    font-weight: bold;
     text-transform: uppercase;
     font-size: 15px;
     font-family: Montserrat, “Helvetica Neue”, Helvetica, Arial, sans-serif; 
@@ -4595,7 +4595,8 @@ select, input, textarea {
       .nav-menu-primary li.active > a {
         border-left: 0;
         border-bottom: solid 5px #A51C30;
-        padding-left: 1rem; } }
+        padding-left: 1rem; 
+        /*background-color: #A51C30*/ } }
   .nav-menu-primary li .is-dropdown-submenu {
     width: 330px;
     top: 91% !important;
