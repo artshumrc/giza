@@ -41,12 +41,12 @@ ORDER BY Objects.ObjectID
 # Flex Fields (i.e. user defined fields) for Objects with Classification `Human Remains`
 FLEXFIELDS = """
 SELECT Objects.ObjectID, Objects.ClassificationID, UserFieldGroups.GroupName, UserFields.UserFieldName,
-UserFieldValueAuthority.UserFieldValue
+UserFieldXrefs.FieldValue
 FROM UserFieldXrefs
 JOIN UserFields ON UserFieldXrefs.UserFieldID=UserFields.UserFieldID
-JOIN UserFieldValueAuthority ON UserFields.UserFieldID=UserFieldValueAuthority.UserFieldID AND UserFieldValueAuthority.UserFieldValue != '(not assigned)'
 JOIN UserFieldGroups ON UserFieldXrefs.UserFieldGroupID=UserFieldGroups.UserFieldGroupID
 JOIN Objects ON UserFieldXrefs.ID=Objects.ObjectID AND Objects.ClassificationID=83
+WHERE UserFieldXrefs.FieldValue != '(not assigned)'
 ORDER BY Objects.ObjectID
 """
 

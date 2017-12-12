@@ -260,7 +260,7 @@ def process_object_flexfields(CURSOR):
 			'classification_id_index' : columns.index('ClassificationID'),
 			'group_name_index' : columns.index('GroupName'),
 			'field_name_index' : columns.index('UserFieldName'),
-			'field_value_index' : columns.index('UserFieldValue')
+			'field_value_index' : columns.index('FieldValue')
 		}
 		return indices
 
