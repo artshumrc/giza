@@ -123,17 +123,17 @@ def process_site_dates(CURSOR):
 				print "%s could not be found!" % site_id
 				return (site, current_id)
 
-			if 'sitedates' not in site:
-				site['sitedates'] = []
+		if 'sitedates' not in site:
+			site['sitedates'] = []
 
-			event_type = row[indices['event_type_index']]
-			date_text = row[indices['date_text_index']]
+		event_type = row[indices['event_type_index']]
+		date_text = row[indices['date_text_index']]
 
-			site['sitedates'].append({
-				'type' : event_type,
-				'date' : date_text
-			})
-			site['datevalues'].append(date_text)
+		site['sitedates'].append({
+			'type' : event_type,
+			'date' : date_text
+		})
+		site['datevalues'].append(date_text)
 		return (site, current_id)
 
 	print "Starting Sites Dates..."
