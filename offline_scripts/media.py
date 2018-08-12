@@ -393,7 +393,23 @@ def process_media_related_constituents(CURSOR):
 	   		# save last media to elasticsearch
 			save(media)
 	else:
-		with open('../data/media_constituents_related.csv', 'rb') as csvfile:
+		with open('../data/media_constituents_related_1.csv', 'rb') as csvfile:
+			# Get the query headers to use as keys in the JSON
+			headers = next(csvfile)
+			if headers.startswith(codecs.BOM_UTF8):
+				headers = headers[3:]
+			headers = headers.replace('\r\n','')
+			columns = headers.split(',')
+			indices = get_indices()
+
+			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
+			media = {}
+			current_id = '-1'
+			for row in rows:
+				(media, current_id) = process_media_row(media, current_id)
+			# save last media to elasticsearch
+			save(media)
+		with open('../data/media_constituents_related_2.csv', 'rb') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			if headers.startswith(codecs.BOM_UTF8):
