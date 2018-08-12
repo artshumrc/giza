@@ -372,11 +372,13 @@
 1244,Mersu-'ankh,Hassan No.
 1244,9,Abou-Ghazi No (ASAE 58 [1964])
 1244,S 145 (Hassan),Other No
-1246,8,Abou-Ghazi No (ASAE 58 [1964])
+1245,Meruka (2),Other No
+1246,Merouka,Hassan No.
 1246,Meruka,Hassan No.
 1246,Meruka (1),Hassan No.
-1247,Mes-sa,Hassan No.
+1246,8,Abou-Ghazi No (ASAE 58 [1964])
 1247,82,Abou-Ghazi No (ASAE 58 [1964])
+1247,Mes-sa,Hassan No.
 1250,G 4851,Reisner No
 1251,Nary,Hassan No.
 1251,83,Abou-Ghazi No (ASAE 58 [1964])
@@ -401,6 +403,7 @@
 1265,10,Abou-Ghazi No (ASAE 58 [1964])
 1265,Nefer-went,Hassan No.
 1265,Neferwent,Hassan No.
+1265,Wentou-nefer,Hassan No.
 1266,Nekhetka,Hassan No.
 1266,Nekhet-ka,Hassan No.
 1266,136,Abou-Ghazi No (ASAE 58 [1964])
@@ -749,81 +752,84 @@
 1826,Ankhemsaf,Hassan No.
 1826,'Ankh-em-sa-ef,Hassan No.
 1826,100,Abou-Ghazi No (ASAE 58 [1964])
-1828,99,Abou-Ghazi No (ASAE 58 [1964])
+1827,Ankhmare (2),Other No
 1828,Prince 'Ankh-ma-Ra',Hassan No.
 1828,Ankhmare (1),Hassan No.
-1829,Lepsius 87,Lepsius No
+1828,99,Abou-Ghazi No (ASAE 58 [1964])
 1829,LG 87,Lepsius No
 1829,L.87,Lepsius No
+1829,Lepsius 87,Lepsius No
+1830,Lepsius 88,Lepsius No
 1830,L.88,Lepsius No
 1830,LG 88,Lepsius No
-1830,Lepsius 88,Lepsius No
-1831,Lepsius 89,Lepsius No
-1831,Sekhem-ka-Ra',Hassan No.
 1831,LG 89,Lepsius No
 1831,L.89,Lepsius No
 1831,75,Abou-Ghazi No (ASAE 58 [1964])
+1831,Lepsius 89,Lepsius No
+1831,Sekhem-ka-Ra',Hassan No.
+1832,Debehen,Hassan No.
+1832,Lepsius 90,Lepsius No
 1832,77,Abou-Ghazi No (ASAE 58 [1964])
 1832,L.90,Lepsius No
 1832,LG 90,Lepsius No
 1832,Tomb of Hammed es-Samaan,Other No
-1832,Debehen,Hassan No.
-1832,Lepsius 90,Lepsius No
-1833,Lepsius 91,Lepsius No
-1833,Ny-kaw-her,Hassan No.
 1833,LG 91,Lepsius No
 1833,L.91,Lepsius No
 1833,73,Abou-Ghazi No (ASAE 58 [1964])
-1834,130,Abou-Ghazi No (ASAE 58 [1964])
-1834,L.92,Lepsius No
-1834,LG 92,Lepsius No
+1833,Lepsius 91,Lepsius No
+1833,Ny-kaw-her,Hassan No.
 1834,Prince Iwn-Mn.w,Hassan No.
 1834,Lepsius 92,Lepsius No
 1834,Iwn-Mn.w,Hassan No.
-1835,Lepsius 93,Lepsius No
+1834,130,Abou-Ghazi No (ASAE 58 [1964])
+1834,L.92,Lepsius No
+1834,LG 92,Lepsius No
 1835,LG 93,Lepsius No
 1835,L.93,Lepsius No
+1835,Lepsius 93,Lepsius No
+1836,Lepsius 94,Lepsius No
+1836,Ra'-wer III,Hassan No.
 1836,L.94,Lepsius No
 1836,LG 94,Lepsius No
 1836,87,Abou-Ghazi No (ASAE 58 [1964])
-1836,Lepsius 94,Lepsius No
-1836,Ra'-wer III,Hassan No.
-1837,Werkhww,Hassan No.
-1837,Lepsius 95,Hassan No.
 1837,81,Abou-Ghazi No (ASAE 58 [1964])
 1837,LG 95,Lepsius No
 1837,L.95,Lepsius No
+1837,Werkhww,Hassan No.
+1837,Lepsius 95,Hassan No.
+1838,Lepsius 96,Lepsius No
+1838,Ka-meni,Hassan No.
 1838,L.96,Lepsius No
 1838,LG 96,Lepsius No
 1838,62,Abou-Ghazi No (ASAE 58 [1964])
-1838,Lepsius 96,Lepsius No
-1838,Ka-meni,Hassan No.
-1839,Nefer,Hassan No.
-1839,Lepsius 99,Lepsius No
 1839,51,Abou-Ghazi No (ASAE 58 [1964])
 1839,LG 99,Lepsius No
 1839,L.99,Lepsius No
+1839,Nefer,Hassan No.
+1839,Lepsius 99,Lepsius No
+1840,Lepsius 100,Lepsius No
+1840,Khentkaus [I],Hassan No.
+1840,Pyramid Complex of Queen Khent-kawes,Hassan No.
+1840,Khentkaus Pyramid,NULL
 1840,L.100,Lepsius No
 1840,LG 100,Lepsius No
 1840,66,Abou-Ghazi No (ASAE 58 [1964])
 1840,67,Abou-Ghazi No (ASAE 58 [1964])
 1840,68,Abou-Ghazi No (ASAE 58 [1964])
 1840,69,Abou-Ghazi No (ASAE 58 [1964])
-1840,Lepsius 100,Lepsius No
-1840,Khentkaus [I],Hassan No.
-1840,Pyramid Complex of Queen Khent-kawes,Hassan No.
+1841,31,Abou-Ghazi No (ASAE 58 [1964])
 1841,Family Tomb of Ka-em-nefert,Hassan No.
 1841,Kaemnefret Complex,Hassan No.
-1841,31,Abou-Ghazi No (ASAE 58 [1964])
-1845,3,Abou-Ghazi No (ASAE 58 [1964])
+1843,Akhethetep (2),Other No
 1845,Akhethetep (1),Hassan No.
 1845,Akhet-hetep,Hassan No.
+1845,3,Abou-Ghazi No (ASAE 58 [1964])
+1848,44,Abou-Ghazi No (ASAE 58 [1964])
 1848,'Ankh-ha-f Kar,Hassan No.
 1848,Ankh-haf Qar,Hassan No.
-1848,44,Abou-Ghazi No (ASAE 58 [1964])
-1849,80,Abou-Ghazi No (ASAE 58 [1964])
 1849,Ankhtef,Hassan No.
 1849,'Ankh-tef,Hassan No.
+1849,80,Abou-Ghazi No (ASAE 58 [1964])
 1852,Itj,Junker No
 1852,Ankhuza,Other No
 1853,142,Abou-Ghazi No (ASAE 58 [1964])
@@ -946,6 +952,7 @@
 1926,Galarza Tomb,Other No
 1928,107,Abou-Ghazi No (ASAE 58 [1964])
 1928,Khent,Hassan No.
+1930,Khenu (3),Other No
 1931,Khenw,Hassan No.
 1931,Khenu (1),Hassan No.
 1931,25,Abou-Ghazi No (ASAE 58 [1964])
@@ -990,6 +997,7 @@
 1948,109,Abou-Ghazi No (ASAE 58 [1964])
 1948,Senebuka,Hassan No.
 1948,Senebw-Ka,Hassan No.
+1950,ABC 410,CBE (Brovarski) No.
 1952,Mastaba of Neferihy,Other No
 1952,Neferihy,NULL
 1953,Seshemnefer (1),Hassan No.
@@ -1042,6 +1050,8 @@
 1980,88,Abou-Ghazi No (ASAE 58 [1964])
 1980,Swf,Hassan No.
 1980,Suf,Hassan No.
+1982,Tepaseneb,Other No
+1982,ABC 350,CBE (Brovarski) No.
 1983,Teti,Hassan No.
 1983,Ity,Hassan No.
 1983,119,Abou-Ghazi No (ASAE 58 [1964])
@@ -1100,21 +1110,23 @@
 2008,Rock Tomb No. 5,Hassan No.
 2008,Name Unknown (PM G-1),Other No
 2008,125,Abou-Ghazi No (ASAE 58 [1964])
-2010,6,Abou-Ghazi No (ASAE 58 [1964])
-2010,Weser,Hassan No.
+2009,User (1),Other No
 2010,User (2),Hassan No.
-2011,Washduau,Hassan No.
-2011,Wash-Dwaw,Hassan No.
+2010,Weser,Hassan No.
+2010,6,Abou-Ghazi No (ASAE 58 [1964])
 2011,156,Abou-Ghazi No (ASAE 58 [1964])
-2013,19,Abou-Ghazi No (ASAE 58 [1964])
-2013,Wash-Ptah,Hassan No.
+2011,Wash-Dwaw,Hassan No.
+2011,Washduau,Hassan No.
+2012,Washptah (3),Other No
 2013,Washptah (2),Hassan No.
-2014,Washptah (1),Hassan No.
-2014,Wash-Ptah,Hassan No.
+2013,Wash-Ptah,Hassan No.
+2013,19,Abou-Ghazi No (ASAE 58 [1964])
 2014,45,Abou-Ghazi No (ASAE 58 [1964])
-2017,20,Abou-Ghazi No (ASAE 58 [1964])
-2017,Wep-em-nefert Wep,Hassan No.
+2014,Wash-Ptah,Hassan No.
+2014,Washptah (1),Hassan No.
 2017,Wepemnefret Wep,Hassan No.
+2017,Wep-em-nefert Wep,Hassan No.
+2017,20,Abou-Ghazi No (ASAE 58 [1964])
 2019,G 7810 X,Alternate Reisner No
 2021,Wetetj-hetep,Hassan No.
 2021,Weteth-hetep,Hassan No.
@@ -1213,6 +1225,7 @@
 2238,L.102,Lepsius No
 2238,LG 102,Lepsius No
 2241,Iunes,Hassan No.
+2242,Kai (2),Other No
 2244,Nisukedu,Junker No
 2246,Khakauptah,Other No
 2247,S 2530/2531,Junker No
@@ -1683,6 +1696,7 @@
 3464,Mastaba of Shaft 322,Hassan No.
 3464,Tomb of Shaft 322,Other No
 3464,18,Abou-Ghazi No (ASAE 58 [1964])
+3466,Minnefer Complex,CBE (Brovarski) No.
 3658,G 5332 X,Alternate Reisner No
 3659,G 5332 Y,Alternate Reisner No
 3797,S 372/374,Junker No
@@ -2213,6 +2227,7 @@
 5091,LG 105,Lepsius No
 5092,LG 106,Lepsius No
 5092,L. 106,Lepsius No
+5093,ABC-105,NULL
 5095,G 1903 X/2091 X,Roth No.
 5095,G 1903 X,Smith No.
 5095,G 2091 X,Reisner No.
@@ -2227,3 +2242,33 @@
 5116,Nazlet el-Seman,NULL
 5116,Nazlet el-Samman,NULL
 5116,Nezlet el-Samman,NULL
+5125,Farouk Guest-house,NULL
+5131,KKT,AERA (Lehner) No.
+5131,Khentkaus Pyramid Town,NULL
+5135,Khentkawes Valley Complex,AERA (Lehner) No.
+5135,KKT-E,AERA (Lehner) No.
+5135,LBB,Alternate AERA (Lehner) No.
+5135,Lower Buried Building,Alternate AERA (Lehner) No.
+5136,Khentkawes Town Amelia's Interface,AERA (Lehner) No.
+5136,Interface,Alternate AERA (Lehner) No.
+5169,"ABC 121-122, 186-188",CBE (Brovarski) No.
+5201,ABC 41/84,CBE (Brovarski) No.
+5201,ABC 76/77,CBE (Brovarski) No.
+5202,ABC 78/79/80,CBE (Brovarski) No.
+5203,ABC 92/93/94,CBE (Brovarski) No.
+5203,ABC 93/94,CBE (Brovarski) No.
+5208,ABC 106/107,CBE (Brovarski) No.
+5215,ABC 90,CBE (Brovarski) No.
+5215,ABC 96,CBE (Brovarski) No.
+5215,ABC 102-103,CBE (Brovarski) No.
+5240,Hetepu: Ipu,CBE (Brovarski) No.
+5254,Minnefer Complex,CBE (Brovarski) No.
+5254,Anonymous Chapel,CBE (Brovarski) No.
+5257,ABC 311-314,CBE (Brovarski) No.
+5258,ABC 308-310,CBE (Brovarski) No.
+5263,Barrel Vaulted Mastaba,CBE (Brovarski) No.
+5267,ABC 700 Mastaba Complex,CBE (Brovarski) No.
+5268,ABC 719-723,CBE (Brovarski) No.
+5268,ABC 700 Mastaba Complex,CBE (Brovarski) No.
+5269,ABC 416,CBE (Brovarski) No.
+5270,Locus H 36/37,CBE (Brovarski) No.
