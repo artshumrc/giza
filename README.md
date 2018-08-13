@@ -17,7 +17,6 @@ JSON API for the Giza Archives Project TMS Database
 7. `cd giza`
 8. `pip install -r requirements.txt`
 9. `offline_scripts/elasticsearch_setup.sh`
-10. `python offline_scripts/sites.py`
-11. `python offline_scripts/objects.py`
-12. `python manage.py runserver`
-13. View http://localhost:8000 or http://localhost:8000/sites/1175 in your browser
+10. `python offline_scripts/run_all.py`
+11. `python manage.py runserver`
+12. View http://localhost:8000 or http://localhost:8000/sites/1175 in your browser
