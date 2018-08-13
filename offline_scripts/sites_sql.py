@@ -54,7 +54,7 @@ ORDER BY Sites.SiteID
 # Also grab the primary thumbnail photo for each Constituent
 RELATED_CONSTITUENTS = """
 SELECT ConXrefs.ID AS SiteID, Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
-Constituents.DisplayName, Constituents.DisplayDate, Constituents.Remarks,
+Constituents.DisplayName, Constituents.DisplayDate, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName
 FROM ConXrefs
 INNER JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
@@ -93,7 +93,7 @@ ORDER BY SiteID
 # Related Media for all Sites
 RELATED_MEDIA = """
 SELECT MediaXrefs.ID AS SiteID, MediaMaster.MediaMasterID, MediaXrefs.PrimaryDisplay,
-MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, MediaMaster.Description,
+MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description,
 MediaMaster.MediaView, MediaMaster.PublicCaption,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
