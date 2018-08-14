@@ -26,7 +26,7 @@ ORDER BY ReferenceMaster.ReferenceID
 
 RELATED_OBJECTS = """
 SELECT ReferenceMaster.ReferenceID, RefXrefs.ID AS ObjectID,
-ObjTitles.Title, Objects.ObjectNumber, Objects.ClassificationID, Objects.Dated AS ObjectDate,
+replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber, Objects.ClassificationID, Objects.Dated AS ObjectDate,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName
 FROM ReferenceMaster
 JOIN RefXRefs ON ReferenceMaster.ReferenceID=RefXRefs.ReferenceID AND RefXRefs.TableID=108
@@ -44,7 +44,7 @@ RELATED_CONSTITUENTS = """
 SELECT ReferenceMaster.ReferenceID, Constituents.ConstituentID,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
 Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
-Constituents.DisplayName, Constituents.DisplayDate, Constituents.Remarks, Constituents.AlphaSort
+Constituents.DisplayName, Constituents.DisplayDate, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks, Constituents.AlphaSort
 from ReferenceMaster
 INNER JOIN ConXrefs ON ReferenceMaster.ReferenceID=ConXrefs.ID AND ConXrefs.TableID=143
 INNER JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
