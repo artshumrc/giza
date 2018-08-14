@@ -1,7 +1,7 @@
 # Object display data
 CONSTITUENTS = """
 SELECT DISTINCT Constituents.ConstituentID AS ID, Constituents.DisplayName, Constituents.DisplayDate,
-Constituents.ConstituentTypeID, ConTypes.ConstituentType, Constituents.Remarks, Terms.Term AS Gender,
+Constituents.ConstituentTypeID, ConTypes.ConstituentType, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks, Terms.Term AS Gender,
 Constituents.Institution, Constituents.Nationality, Constituents.BeginDate, Constituents.EndDate
 FROM Constituents
 LEFT JOIN ConXrefDetails ON Constituents.ConstituentID=ConXrefDetails.ConstituentID AND ConXrefDetails.UnMasked=1
@@ -27,7 +27,7 @@ ORDER BY Constituents.ConstituentID
 
 # Related Objects for all Constituents
 RELATED_OBJECTS = """
-SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConXrefs.ID AS ObjectID, ObjTitles.Title, Objects.ObjectNumber,
+SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConXrefs.ID AS ObjectID, replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber,
 Objects.ClassificationID, Objects.Dated AS ObjectDate,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName
 FROM ConXrefs
@@ -81,8 +81,8 @@ ORDER BY Constituents.ConstituentID
 # Related Media for all Constituents
 RELATED_MEDIA = """
 SELECT MediaXrefs.ID AS ID, Constituents.ConstituentTypeID,  MediaMaster.MediaMasterID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
-MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, MediaMaster.Description,
-MediaMaster.MediaView, MediaMaster.PublicCaption,
+MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description,
+MediaMaster.MediaView, replace(replace(MediaMaster.PublicCaption, char(10), ''), char(13), ' ') AS PublicCaption,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
 FROM MediaXrefs
