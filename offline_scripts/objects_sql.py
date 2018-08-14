@@ -69,7 +69,7 @@ ORDER BY Objects.ObjectID
 # Related Constituents (Modern and Ancient) for all Objects
 RELATED_CONSTITUENTS = """
 SELECT ConXrefs.ID AS ID, Roles.Role, Roles.RoleID, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
-Constituents.DisplayName, Constituents.DisplayDate, Objects.ClassificationID, Constituents.Remarks,
+Constituents.DisplayName, Constituents.DisplayDate, Objects.ClassificationID, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName
 FROM ConXrefs
 INNER JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
