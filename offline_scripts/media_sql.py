@@ -1,11 +1,13 @@
 # Site display data
 MEDIA = """
 SELECT MediaMaster.MediaMasterID, MediaRenditions.RenditionNumber, MediaRenditions.MediaTypeID, MediaRenditions.PrimaryFileID,
-MediaMaster.Description, MediaMaster.MediaView, MediaMaster.PublicCaption, MediaRenditions.Remarks,
+replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description, MediaMaster.MediaView,
+replace(replace(MediaMaster.PublicCaption, char(10), ''), char(13), ' ') AS PublicCaption,
+replace(replace(MediaRenditions.Remarks, char(10), ''), char(13), ' ') AS Remarks,
 Departments.Department,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
 MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName,
-Date.TextEntry AS DateOfCapture, Problems.TextEntry AS ProblemsQuestions
+replace(replace(Date.TextEntry, char(10), ''), char(13), ' ') AS DateOfCapture, replace(replace(Problems.TextEntry, char(10), ''), char(13), ' ') AS ProblemsQuestions
 FROM MediaMaster
 LEFT JOIN Departments ON MediaMaster.DepartmentID=Departments.DepartmentID
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
@@ -58,7 +60,7 @@ ORDER BY MediaMaster.MediaMasterID
 
 RELATED_OBJECTS = """
 SELECT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID, MediaXrefs.ID AS ObjectID, Objects.ClassificationID,
-ObjTitles.Title, Objects.ObjectNumber, Objects.Dated AS ObjectDate,
+replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber, Objects.Dated AS ObjectDate,
 ThumbPath.Path AS ThumbPathName, ObjectRenditions.ThumbFileName
 FROM MediaMaster
 JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
@@ -77,7 +79,7 @@ ORDER BY MediaMaster.MediaMasterID
 RELATED_CONSTITUENTS_1 = """
 SELECT DISTINCT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID, MediaXrefs.ID AS ConstituentID, Constituents.ConstituentTypeID,
 Roles.Role, Roles.RoleID,
-Constituents.DisplayName, Constituents.DisplayDate, Constituents.Remarks,
+Constituents.DisplayName, Constituents.DisplayDate, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName
 FROM MediaMaster
 JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
@@ -98,7 +100,7 @@ ORDER BY MediaMaster.MediaMasterID
 RELATED_CONSTITUENTS_2 = """
 SELECT DISTINCT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID, Constituents.ConstituentID, Constituents.ConstituentTypeID,
 Roles.Role, Roles.RoleID,
-Constituents.DisplayName, Constituents.DisplayDate, Constituents.Remarks,
+Constituents.DisplayName, Constituents.DisplayDate, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName
 FROM MediaMaster
 JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
