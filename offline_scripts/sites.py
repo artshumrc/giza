@@ -661,19 +661,19 @@ def save(site):
 		elasticsearch_connection.add_or_update_item(site['id'], json.dumps(site), 'sites')
 
 def main(CURSOR=None):
-	if not CURSOR:
-		try:
-			import pyodbc
-			dsn = 'gizadatasource'
-			user = 'RC\\rsinghal'
-			password = getpass.getpass()
-			database = 'gizacardtms'
+	# if not CURSOR:
+	# 	try:
+	# 		import pyodbc
+	# 		dsn = 'gizadatasource'
+	# 		user = 'RC\\rsinghal'
+	# 		password = getpass.getpass()
+	# 		database = 'gizacardtms'
 
-			connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
-			connection = pyodbc.connect(connection_string)
-			CURSOR = connection.cursor()
-		except:
-			print "Could not connect to gizacardtms, defaulting to CSV files"
+	# 		connection_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
+	# 		connection = pyodbc.connect(connection_string)
+	# 		CURSOR = connection.cursor()
+	# 	except:
+	# 		print "Could not connect to gizacardtms, defaulting to CSV files"
 
 	## process_sites MUST go first.  The other methods can go in any order
 	process_sites(CURSOR)
