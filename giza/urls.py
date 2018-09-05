@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^search/$', search_views.search, name='search'),
     url(r'^search-results/$', search_views.results, name='results'),
 
-    url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html, name='get_type_html'),
+    url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>full|allphotos)?/$', tms_views.get_type_html, name='get_type_html'),
     url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)\.json$', tms_views.get_type_json, name='get_type_json'),
 
     url(r'^admin/', admin.site.urls),
