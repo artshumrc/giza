@@ -1,0 +1,14 @@
+Software Update Notes:
+
+Django version 1.11:
+- Last version to support Python 2
+- update urlib (reinstall requests): 
+-- pip uninstall requests
+-- pip install requests
+- update Django: 
+-- pip install -U Django
+
+Elasticsearch version 5.6.0 (latest version of 5):
+- ES version 6+ doesn't allow more than one type
+- Make sure to have a 64-bit JRE or JDK installed 
+- Delete all nodes in "data" folder for previously installed version of elasticsearch (e.g. elasticsearch-1.7.5/data)
