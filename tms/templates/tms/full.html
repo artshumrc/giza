@@ -535,7 +535,7 @@
           </ul>
 
           <div class="feature-block__footer">
-            <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'allphotos' %}">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
+            <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'allphotos' %}">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
           </div>
         </div>
       </section>
