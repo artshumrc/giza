@@ -18,7 +18,6 @@ from utils import get_media_url, process_cursor_row
 # This is the basic information/metadata that comprises a Site
 def process_sites(CURSOR):
 	def get_indices():
-		print(columns)
 		site_id_index = columns.index('ID')
 		return site_id_index
 
