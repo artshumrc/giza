@@ -30,14 +30,6 @@
           <div class="feature-block secondary" id="jumpmenu">
             <div class="feature-block__body">
 
-              <div class="view-mode-toggle">
-                <h5 class="heading-em">Show:</h5>
-                <div class="button-group">
-                  <a class="secondary button" href="{% url 'get_type_html' type object.id 'intro' %}">Intro View</a>
-                  <a class="primary button">Full View</a>
-                </div>
-              </div>
-
               <h5 class="heading-em">Jump to:</h5>
 
               <ul class="vertical menu show-for-small-only">
@@ -245,12 +237,12 @@
                 <div class="media-object-section">
                   {% if item.thumbnail %}
                   <div class="thumbnail">
-                    <a href="{% url 'get_type_html' 'sites' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                    <a href="{% url 'get_type_html' 'sites' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
                   </div>
                   {% endif %}
                 </div>
                 <div class="media-object-section">
-                  <p class="media-object-title"><a href="{% url 'get_type_html' 'sites' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'sites' item.id 'full' %}">{{item.displaytext}}</a></p>
                   <ul class="subheader">
                     <li><span class="item-property">Site Name</span> <span class="item-value">{{item.sitename}}</span></li>
                   </ul>
@@ -284,12 +276,12 @@
                 <div class="media-object-section">
                   {% if item.thumbnail %}
                   <div class="thumbnail">
-                    <a href="{% url 'get_type_html' 'objects' item.id 'intro' %}"><img src= "{{ item.thumbnail }}"></a>
+                    <a href="{% url 'get_type_html' 'objects' item.id 'full' %}"><img src= "{{ item.thumbnail }}"></a>
                   </div>
                   {% endif %}
                 </div>
                 <div class="media-object-section">
-                  <p class="media-object-title"><a href="{% url 'get_type_html' 'objects' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'objects' item.id 'full' %}">{{item.displaytext}}</a></p>
                   <ul class="subheader">
                     <li><span class="item-value">{{item.number}}</span></li>
                   </ul>
@@ -322,12 +314,12 @@
                 <div class="media-object-section">
                   {% if item.thumbnail %}
                   <div class="thumbnail">
-                    <a href="{% url 'get_type_html' 'diarypages' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                    <a href="{% url 'get_type_html' 'diarypages' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
                   </div>
                   {% endif %}
                 </div>
                 <div class="media-object-section">
-                  <p class="media-object-title"><a href="{% url 'get_type_html' 'diarypages' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'diarypages' item.id 'full' %}">{{ item.displaytext }}</a></p>
                   <ul class="subheader">
                     <li><span class="item-property">Diary page dates</span> <span class="item-value">{{ item.date }}</span></li>
                   </ul>
@@ -359,10 +351,10 @@
               <div class="media-object list-item list-item-thumbcaption">
                 {% if item.thumbnail %}
                 <div class="thumbnail">
-                  <a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}"><img src="{{ item.thumbnail }}" alt=""></a>
+                  <a href="{% url 'get_type_html' 'mapsandplans' item.id 'full' %}"><img src="{{ item.thumbnail }}" alt=""></a>
                 </div>
                 {% endif %}
-                <p class="media-object-title"><a href="{% url 'get_type_html' 'mapsandplans' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                <p class="media-object-title"><a href="{% url 'get_type_html' 'mapsandplans' item.id 'full' %}">{{ item.displaytext }}</a></p>
               </div>
             </li>
             {% endfor %}
@@ -391,12 +383,12 @@
                 <div class="media-object-section">
                   {% if item.thumbnail %}
                   <div class="thumbnail">
-                    <a href="{% url 'get_type_html' 'drawings' item.id 'intro' %}"><img src= "{{ item.thumbnail }}"></a>
+                    <a href="{% url 'get_type_html' 'drawings' item.id 'full' %}"><img src= "{{ item.thumbnail }}"></a>
                   </div>
                   {% endif %}
                 </div>
                 <div class="media-object-section">
-                  <p class="media-object-title"><a href="{% url 'get_type_html' 'drawings' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'drawings' item.id 'full' %}">{{ item.displaytext }}</a></p>
                   <ul class="subheader">
                     <li><span class="item-property">ID</span> <span class="item-value">{{ item.number }}</span></li>
                   </ul>
@@ -427,10 +419,10 @@
             <li>
               <div class="media-object list-item list-item-document">
                 <div class="media-object-section">
-                  <a class="icon-large icon-file-text-o" href="{% url 'get_type_html' 'pubdocs' item.id 'intro' %}"></a>
+                  <a class="icon-large icon-file-text-o" href="{% url 'get_type_html' 'pubdocs' item.id 'full' %}"></a>
                 </div>
                 <div class="media-object-section">
-                  <p class="media-object-title"><a href="{% url 'get_type_html' 'pubdocs' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'pubdocs' item.id 'full' %}">{{ item.displaytext }}</a></p>
                   {% if item.date %}
                   <ul class="subheader">
                     <li>Date: {{ item.date }}</li>
@@ -465,12 +457,12 @@
                 <div class="media-object-section">
                   {% if item.thumbnail %}
                   <div class="thumbnail">
-                    <a href="{% url 'get_type_html' 'unpubdocs' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                    <a href="{% url 'get_type_html' 'unpubdocs' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
                   </div>
                   {% endif %}
                 </div>
                 <div class="media-object-section">
-                  <p class="media-object-title"><a href="{% url 'get_type_html' 'unpubdocs' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'unpubdocs' item.id 'full' %}">{{ item.displaytext }}</a></p>
                   <ul class="subheader">
                     <li>ID: {{ item.number }}</li>
                   </ul>
@@ -543,7 +535,7 @@
           </ul>
 
           <div class="feature-block__footer">
-            <p class="content-footer-info"><a href="{% url 'get_type_html' 'sites' object.id 'allphotos' %}">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
+            <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'allphotos' %}">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
           </div>
         </div>
       </section>
@@ -567,9 +559,9 @@
             <li>
               <div class="media-object list-item list-item-thumbcaption">
                 <div class="thumbnail">
-                  <a href="{% url 'get_type_html' '3dmodels' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                  <a href="{% url 'get_type_html' '3dmodels' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
                 </div>
-                <p class="media-object-title"><a href="{% url 'get_type_html' '3dmodels' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                <p class="media-object-title"><a href="{% url 'get_type_html' '3dmodels' item.id 'full' %}">{{ item.displaytext }}</a></p>
               </div>
             </li>
             {% endfor %}
@@ -602,7 +594,7 @@
                 <source src="{{ item.main }}" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
-                <p class="media-object-title"><a href="{% url 'get_type_html' 'videos' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                <p class="media-object-title"><a href="{% url 'get_type_html' 'videos' item.id 'full' %}">{{ item.displaytext }}</a></p>
               </div>
             </li>
             {% endfor %}
@@ -636,12 +628,12 @@
                   <div class="media-object-section">
                     {% if item.thumbnail %}
                     <div class="thumbnail">
-                      <a href="{% url 'get_type_html' 'ancientpeople' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                      <a href="{% url 'get_type_html' 'ancientpeople' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
                     </div>
                     {% endif %}
                   </div>
                   <div class="media-object-section">
-                    <p class="media-object-title"><a href="{% url 'get_type_html' 'ancientpeople' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'ancientpeople' item.id 'full' %}">{{item.displaytext}}</a></p>
                     <ul class="subheader">
                       <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
                       {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>{% endif %}
@@ -663,12 +655,12 @@
                   <div class="media-object-section">
                     {% if item.thumbnail %}
                     <div class="thumbnail">
-                      <a href="{% url 'get_type_html' 'modernpeople' item.id 'intro' %}"><img src="{{ item.thumbnail }}"></a>
+                      <a href="{% url 'get_type_html' 'modernpeople' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
                     </div>
                     {% endif %}
                   </div>
                   <div class="media-object-section">
-                    <p class="media-object-title"><a href="{% url 'get_type_html' 'modernpeople' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'modernpeople' item.id 'full' %}">{{item.displaytext}}</a></p>
                     <ul class="subheader">
                       <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
                       <li><span class="item-property">Nationality &amp; Dates</span> <span class="item-value">{{item.displaydate}}</span></li>
@@ -704,12 +696,12 @@
                   <div class="media-object-section">
                     {% if item.thumbnail %}
                     <div class="thumbnail">
-                      <a href="{% url 'get_type_html' 'institutions' item.id 'intro' %}"><img src="{{item.thumbnail}}"></a>
+                      <a href="{% url 'get_type_html' 'institutions' item.id 'full' %}"><img src="{{item.thumbnail}}"></a>
                     </div>
                     {% endif %}
                   </div>
                   <div class="media-object-section">
-                    <p class="media-object-title"><a href="{% url 'get_type_html' 'institutions' item.id 'intro' %}">{{ item.displaytext }}</a></p>
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'institutions' item.id 'full' %}">{{ item.displaytext }}</a></p>
                     <ul class="subheader">
                       <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
                       {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li> {% endif %}
@@ -744,12 +736,12 @@
                   <div class="media-object-section">
                     {% if item.thumbnail %}
                     <div class="thumbnail">
-                      <a href="{% url 'get_type_html' 'groups' item.id 'intro' %}"><img src="{{item.thumbnail}}"></a>
+                      <a href="{% url 'get_type_html' 'groups' item.id 'full' %}"><img src="{{item.thumbnail}}"></a>
                     </div>
                     {% endif %}
                   </div>
                   <div class="media-object-section">
-                    <p class="media-object-title"><a href="{% url 'get_type_html' 'groups' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'groups' item.id 'full' %}">{{item.displaytext}}</a></p>
                     <ul class="subheader">
                       <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
                       {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>{% endif %}
@@ -783,12 +775,12 @@
                   <div class="media-object-section">
                     {% if item.thumbnail %}
                     <div class="thumbnail">
-                      <a href="{% url 'get_type_html' 'animals' item.id 'intro' %}"><img src="{{item.thumbnail}}"></a>
+                      <a href="{% url 'get_type_html' 'animals' item.id 'full' %}"><img src="{{item.thumbnail}}"></a>
                     </div>
                     {% endif %}
                   </div>
                   <div class="media-object-section">
-                    <p class="media-object-title"><a href="{% url 'get_type_html' 'animals' item.id 'intro' %}">{{item.displaytext}}</a></p>
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'animals' item.id 'full' %}">{{item.displaytext}}</a></p>
                     <ul class="subheader">
                       <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
                       {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>{% endif %}

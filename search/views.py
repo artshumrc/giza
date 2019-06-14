@@ -169,7 +169,7 @@ def results(request):
         # user entered a number that only has one result for the given type, redirect to that page
         if results_total == 1:
             source = search_results['hits']['hits'][0].get('_source')
-            return HttpResponseRedirect(reverse('get_type_html', args=(categorystring, source.get('id'), 'intro')))
+            return HttpResponseRedirect(reverse('get_type_html', args=(categorystring, source.get('id'), 'full')))
         #elif results_total == 0 and type == 'sites':
         else:
             # we have 0 or more than 1 result, treat it as a normal search result
