@@ -14,7 +14,7 @@ def array_value(array, key):
 @register.simple_tag
 def build_search_params(search_params, current_category, current_subfacets, sf_to_remove, sf_to_add, page):
     url = ""
-    url = "&amp;".join(map(lambda x: "%s=%s" % (x[0], x[2]), search_params))
+    url = "&amp;".join(["%s=%s" % (x[0], x[2]) for x in search_params])
 
     # add any chosen categories, unless we have one to remove
     if current_category:
@@ -28,7 +28,7 @@ def build_search_params(search_params, current_category, current_subfacets, sf_t
     # add any chosen subfacets, unless we have one to remove
     if current_category and current_category in current_subfacets:
         param = "&amp;%s_facet=" % current_category
-        for k, facet_values in current_subfacets[current_category].items():
+        for k, facet_values in list(current_subfacets[current_category].items()):
             for v in facet_values:
                 if len(sf_remove_parts) == 3 and sf_remove_parts[0] == current_category and sf_remove_parts[1] == k and sf_remove_parts[2] == v:
                     pass

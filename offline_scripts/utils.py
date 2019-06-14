@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 from builtins import str
 def get_media_url(path, filename):
 	idx = path.find('images')

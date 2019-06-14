@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 # Site display data
 MEDIA = """
 SELECT MediaMaster.MediaMasterID, MediaRenditions.RenditionNumber, MediaRenditions.MediaTypeID, MediaRenditions.PrimaryFileID,

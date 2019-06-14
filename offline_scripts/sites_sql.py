@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 # Site display data
 SITES = """
 SELECT Sites.SiteID AS ID, SiteName, SiteNumber AS Number, SiteSortNumber, HistoricalNotes,
