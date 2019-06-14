@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 CLASSIFICATIONS = {
 	0 : "objects",
 	1 : "unpubdocs",

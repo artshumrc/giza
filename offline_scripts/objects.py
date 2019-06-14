@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import unicode_literals
+from builtins import next
 import csv
 import codecs
 import elasticsearch_connection
@@ -70,7 +73,7 @@ def process_objects(CURSOR):
 		object['hasphoto'] = "No"
 		return (object, current_id)
 
-	print "Starting Objects..."
+	print("Starting Objects...")
 	if CURSOR:
 		sql_command = objects_sql.OBJECTS
 		CURSOR.execute(sql_command)
@@ -84,16 +87,15 @@ def process_objects(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(object, current_id) = process_object_row(object, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(object)
 
 	else:
-		with open('../data/objects.csv', 'rb') as csvfile:
+		with open('../data/objects.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -105,7 +107,7 @@ def process_objects(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 
-	print "Finished Objects..."
+	print("Finished Objects...")
 
 def process_object_geocodes(CURSOR):
 	def get_indices():
@@ -132,7 +134,7 @@ def process_object_geocodes(CURSOR):
 			if elasticsearch_connection.item_exists(id, classification):
 				object = elasticsearch_connection.get_item(id, classification)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return(object, current_id)
 
 		geocode_dict = {}
@@ -144,12 +146,12 @@ def process_object_geocodes(CURSOR):
 
 		return(object, current_id)
 
-	print "Starting Objects Geocodes..."
+	print("Starting Objects Geocodes...")
 	if CURSOR:
 		sql_command = objects_sql.GEOCODES
 		CURSOR.execute(sql_command)
 		columns = [column[0] for column in CURSOR.description]
-	 	indices = get_indices()
+		indices = get_indices()
 
 		object = {}
 		current_id = '-1'
@@ -158,15 +160,14 @@ def process_object_geocodes(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(object, current_id) = process_object_row(object, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_geocodes.csv', 'rb') as csvfile:
+		with open('../data/objects_geocodes.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -178,7 +179,7 @@ def process_object_geocodes(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 
-	print "Finished Objects Geocodes..."
+	print("Finished Objects Geocodes...")
 
 # Update relevant objects with alternate numbers
 def process_object_altnums(CURSOR):
@@ -204,7 +205,7 @@ def process_object_altnums(CURSOR):
 			if elasticsearch_connection.item_exists(object_id, classification):
 				object = elasticsearch_connection.get_item(object_id, classification)
 			else:
-				print "%s could not be found!" % object_id
+				print("%s could not be found!" % object_id)
 				return (object, current_id)
 
 		if 'altnums' not in object:
@@ -217,7 +218,7 @@ def process_object_altnums(CURSOR):
 		object['allnumbers'].extend((altnum, without_prefix))
 		return (object, current_id)
 
-	print "Starting Objects AltNums..."
+	print("Starting Objects AltNums...")
 	if CURSOR:
 		sql_command = objects_sql.ALTNUMS
 		CURSOR.execute(sql_command)
@@ -231,15 +232,14 @@ def process_object_altnums(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(object, current_id) = process_object_row(object, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_altnums.csv', 'rb') as csvfile:
+		with open('../data/objects_altnums.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -250,7 +250,7 @@ def process_object_altnums(CURSOR):
 				(object, current_id) = process_object_row(object, current_id)
 			# save last object to elasticsearch
 			save(object)
-	print "Finished Objects AltNums..."
+	print("Finished Objects AltNums...")
 
 # Update relevant objects with alternate numbers
 def process_object_flexfields(CURSOR):
@@ -277,7 +277,7 @@ def process_object_flexfields(CURSOR):
 			if elasticsearch_connection.item_exists(object_id, classification):
 				object = elasticsearch_connection.get_item(object_id, classification)
 			else:
-				print "%s could not be found!" % object_id
+				print("%s could not be found!" % object_id)
 				return (object, current_id)
 
 		if 'flexfields' not in object:
@@ -292,7 +292,7 @@ def process_object_flexfields(CURSOR):
 		object['flexfields'][groupname].append({fieldname : fieldvalue})
 		return (object, current_id)
 
-	print "Starting Objects Flex Fields..."
+	print("Starting Objects Flex Fields...")
 	if CURSOR:
 		sql_command = objects_sql.FLEXFIELDS
 		CURSOR.execute(sql_command)
@@ -306,15 +306,14 @@ def process_object_flexfields(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(object, current_id) = process_object_row(object, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_flexfields.csv', 'rb') as csvfile:
+		with open('../data/objects_flexfields.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -325,7 +324,7 @@ def process_object_flexfields(CURSOR):
 				(object, current_id) = process_object_row(object, current_id)
 			# save last object to elasticsearch
 			save(object)
-	print "Finished Objects Flex Fields..."
+	print("Finished Objects Flex Fields...")
 
 def process_object_related_sites(CURSOR):
 	def get_indices():
@@ -353,7 +352,7 @@ def process_object_related_sites(CURSOR):
 			if elasticsearch_connection.item_exists(id, classification):
 				object = elasticsearch_connection.get_item(id, classification)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return(object, current_id)
 		if 'relateditems' not in object:
 			object['relateditems'] = {}
@@ -386,7 +385,7 @@ def process_object_related_sites(CURSOR):
 
 		return(object, current_id)
 
-	print "Starting Objects Related Sites..."
+	print("Starting Objects Related Sites...")
 	if CURSOR:
 		sql_command = objects_sql.RELATED_SITES
 		CURSOR.execute(sql_command)
@@ -400,15 +399,14 @@ def process_object_related_sites(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(object, current_id) = process_object_row(object, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_sites_related.csv', 'rb') as csvfile:
+		with open('../data/objects_sites_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -420,7 +418,7 @@ def process_object_related_sites(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 
-	print "Finished Objects Related Sites..."
+	print("Finished Objects Related Sites...")
 
 def process_object_related_constituents(CURSOR):
 	def get_indices():
@@ -452,7 +450,7 @@ def process_object_related_constituents(CURSOR):
 			if elasticsearch_connection.item_exists(id, classification):
 				object = elasticsearch_connection.get_item(id, classification)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return(object, current_id)
 		if 'relateditems' not in object:
 			object['relateditems'] = {}
@@ -490,7 +488,7 @@ def process_object_related_constituents(CURSOR):
 
 		return(object, current_id)
 
-	print "Starting Objects Related Constituents..."
+	print("Starting Objects Related Constituents...")
 	if CURSOR:
 		sql_command = objects_sql.RELATED_CONSTITUENTS
 		CURSOR.execute(sql_command)
@@ -504,15 +502,14 @@ def process_object_related_constituents(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(object, current_id) = process_object_row(object, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_constituents_related.csv', 'rb') as csvfile:
+		with open('../data/objects_constituents_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -524,7 +521,7 @@ def process_object_related_constituents(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 
-	print "Finished Objects Related Constituents..."
+	print("Finished Objects Related Constituents...")
 
 def process_object_related_published(CURSOR):
 	def get_indices():
@@ -553,7 +550,7 @@ def process_object_related_published(CURSOR):
 			if elasticsearch_connection.item_exists(id, classification):
 				object = elasticsearch_connection.get_item(id, classification)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return(object, current_id)
 		if 'relateditems' not in object:
 			object['relateditems'] = {}
@@ -577,7 +574,7 @@ def process_object_related_published(CURSOR):
 
 		return(object, current_id)
 
-	print "Starting Objects Related Published..."
+	print("Starting Objects Related Published...")
 	if CURSOR:
 		sql_command = objects_sql.RELATED_PUBLISHED
 		CURSOR.execute(sql_command)
@@ -591,15 +588,14 @@ def process_object_related_published(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(object, current_id) = process_object_row(object, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_published_related.csv', 'rb') as csvfile:
+		with open('../data/objects_published_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -611,7 +607,7 @@ def process_object_related_published(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 
-	print "Finished Objects Related Published..."
+	print("Finished Objects Related Published...")
 
 def process_object_related_unpublished(CURSOR):
 	def get_indices():
@@ -640,7 +636,7 @@ def process_object_related_unpublished(CURSOR):
 			if elasticsearch_connection.item_exists(id, classification):
 				object = elasticsearch_connection.get_item(id, classification)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return(object, current_id)
 		if 'relateditems' not in object:
 			object['relateditems'] = {}
@@ -665,7 +661,7 @@ def process_object_related_unpublished(CURSOR):
 
 		return(object, current_id)
 
-	print "Starting Objects Related Unpublished..."
+	print("Starting Objects Related Unpublished...")
 	if CURSOR:
 		sql_command = objects_sql.RELATED_UNPUBLISHED
 		CURSOR.execute(sql_command)
@@ -679,15 +675,14 @@ def process_object_related_unpublished(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(object, current_id) = process_object_row(object, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_unpublished_related.csv', 'rb') as csvfile:
+		with open('../data/objects_unpublished_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -699,7 +694,7 @@ def process_object_related_unpublished(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 
-	print "Finished Objects Related Unpublished..."
+	print("Finished Objects Related Unpublished...")
 
 def process_object_related_media(CURSOR):
 	def get_indices():
@@ -733,7 +728,7 @@ def process_object_related_media(CURSOR):
 			if elasticsearch_connection.item_exists(id, classification):
 				object = elasticsearch_connection.get_item(id, classification)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return(object, current_id)
 		if 'relateditems' not in object:
 			object['relateditems'] = {}
@@ -780,7 +775,7 @@ def process_object_related_media(CURSOR):
 				})
 		return(object, current_id)
 
-	print "Starting Objects Related Media..."
+	print("Starting Objects Related Media...")
 	if CURSOR:
 		sql_command = objects_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
@@ -794,15 +789,14 @@ def process_object_related_media(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(object, current_id) = process_object_row(object, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_media_related.csv', 'rb') as csvfile:
+		with open('../data/objects_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -814,14 +808,14 @@ def process_object_related_media(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 
-	print "Finished Objects Related Media..."
+	print("Finished Objects Related Media...")
 
 def save(object):
 	if object and 'id' in object:
 		if not object['classification']:
 			# ignore for now, but this should send an email notification that there is missing data
 			# so that the classifications.py file can be updated
-			print "%s is missing a classification, ignoring for now" % (object['id'])
+			print("%s is missing a classification, ignoring for now" % (object['id']))
 			return
 		elasticsearch_connection.add_or_update_item(object['id'], json.dumps(object), object['classification'])
 
@@ -838,7 +832,7 @@ def main(CURSOR=None):
 			connection = pyodbc.connect(connection_string)
 			CURSOR = connection.cursor()
 		except:
-			print "Could not connect to gizacardtms, defaulting to CSV files"
+			print("Could not connect to gizacardtms, defaulting to CSV files")
 
 	## process_objects MUST go first.  Other methods can go in any order
 	process_objects(CURSOR)

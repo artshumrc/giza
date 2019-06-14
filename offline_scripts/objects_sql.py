@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # Object display data
 OBJECTS = """
 SELECT Objects.ObjectID AS ID, Objects.ObjectNumber AS Number, Objects.ObjectStatusID, Objects.ClassificationID,

@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import unicode_literals
+from builtins import next
 import csv
 import codecs
 import elasticsearch_connection
@@ -54,7 +57,7 @@ def process_constituents(CURSOR):
 		constituent['displaytext'] = display_text
 		return (constituent, current_id)
 
-	print "Starting Constituents..."
+	print("Starting Constituents...")
 	if CURSOR:
 		sql_command = constituents_sql.CONSTITUENTS
 		CURSOR.execute(sql_command)
@@ -68,16 +71,15 @@ def process_constituents(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(constituent)
 
 	else:
-		with open('../data/constituents.csv', 'rb') as csvfile:
+		with open('../data/constituents.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -89,7 +91,7 @@ def process_constituents(CURSOR):
 			# save last object to elasticsearch
 			save(constituent)
 
-	print "Finished Constituents..."
+	print("Finished Constituents...")
 
 # Update relevant constituents with alternate names
 def process_constituents_altnames(CURSOR):
@@ -116,7 +118,7 @@ def process_constituents_altnames(CURSOR):
 			if elasticsearch_connection.item_exists(constituent_id, type):
 				constituent = elasticsearch_connection.get_item(constituent_id, type)
 			else:
-				print "%s could not be found!" % constituent_id
+				print("%s could not be found!" % constituent_id)
 				return (constituent, current_id)
 
 		if 'altnames' not in constituent:
@@ -129,7 +131,7 @@ def process_constituents_altnames(CURSOR):
 		})
 		return (constituent, current_id)
 
-	print "Starting Constituents AltNames..."
+	print("Starting Constituents AltNames...")
 	if CURSOR:
 		sql_command = constituents_sql.ALT_NAMES
 		CURSOR.execute(sql_command)
@@ -143,15 +145,14 @@ def process_constituents_altnames(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('../data/constituents_altnames.csv', 'rb') as csvfile:
+		with open('../data/constituents_altnames.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -162,7 +163,7 @@ def process_constituents_altnames(CURSOR):
 				(constituent, current_id) = process_constituent_row(constituent, current_id)
 			# save last object to elasticsearch
 			save(constituent)
-	print "Finished Constituents AltNames..."
+	print("Finished Constituents AltNames...")
 
 # Update all related items from the Objects table
 def process_constituents_related_objects(CURSOR):
@@ -194,7 +195,7 @@ def process_constituents_related_objects(CURSOR):
 			if elasticsearch_connection.item_exists(constituent_id, type):
 				constituent = elasticsearch_connection.get_item(constituent_id, type)
 			else:
-				print "%s could not be found!" % constituent_id
+				print("%s could not be found!" % constituent_id)
 				return (constituent, current_id)
 
 		if 'relateditems' not in constituent:
@@ -228,7 +229,7 @@ def process_constituents_related_objects(CURSOR):
 
 		return (constituent, current_id)
 
-	print "Starting Constituents Related Objects..."
+	print("Starting Constituents Related Objects...")
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_OBJECTS
 		CURSOR.execute(sql_command)
@@ -242,15 +243,14 @@ def process_constituents_related_objects(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('../data/constituents_objects_related.csv', 'rb') as csvfile:
+		with open('../data/constituents_objects_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -261,7 +261,7 @@ def process_constituents_related_objects(CURSOR):
 				(constituent, current_id) = process_constituent_row(constituent, current_id)
 			# save last object to elasticsearch
 			save(constituent)
-	print "Finished Constituents Related Objects..."
+	print("Finished Constituents Related Objects...")
 
 # Next, update constituent with all related Sites
 def process_constituents_related_sites(CURSOR):
@@ -291,7 +291,7 @@ def process_constituents_related_sites(CURSOR):
 			if elasticsearch_connection.item_exists(constituent_id, type):
 				constituent = elasticsearch_connection.get_item(constituent_id, type)
 			else:
-				print "%s could not be found!" % constituent_id
+				print("%s could not be found!" % constituent_id)
 				return(constituent, current_id)
 		if 'relateditems' not in constituent:
 			constituent['relateditems'] = {}
@@ -316,7 +316,7 @@ def process_constituents_related_sites(CURSOR):
 
 		return(constituent, current_id)
 
-	print "Starting Constituents Related Sites..."
+	print("Starting Constituents Related Sites...")
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_SITES
 		CURSOR.execute(sql_command)
@@ -330,15 +330,14 @@ def process_constituents_related_sites(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('../data/constituents_sites_related.csv', 'rb') as csvfile:
+		with open('../data/constituents_sites_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -350,7 +349,7 @@ def process_constituents_related_sites(CURSOR):
 			# save last object to elasticsearch
 			save(constituent)
 
-	print "Finished Constituents Related Sites..."
+	print("Finished Constituents Related Sites...")
 
 # Next, update constituent with all related Published Documents
 def process_constituents_related_published(CURSOR):
@@ -381,7 +380,7 @@ def process_constituents_related_published(CURSOR):
 			if elasticsearch_connection.item_exists(constituent_id, type):
 				constituent = elasticsearch_connection.get_item(constituent_id, type)
 			else:
-				print "%s could not be found!" % constituent_id
+				print("%s could not be found!" % constituent_id)
 				return(constituent, current_id)
 		if 'relateditems' not in constituent:
 			constituent['relateditems'] = {}
@@ -404,7 +403,7 @@ def process_constituents_related_published(CURSOR):
 		constituent['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))
 		return(constituent, current_id)
 
-	print "Starting Constituents Related Published..."
+	print("Starting Constituents Related Published...")
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_PUBLISHED
 		CURSOR.execute(sql_command)
@@ -418,15 +417,14 @@ def process_constituents_related_published(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('../data/constituents_published_related.csv', 'rb') as csvfile:
+		with open('../data/constituents_published_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -438,7 +436,7 @@ def process_constituents_related_published(CURSOR):
 			# save last object to elasticsearch
 			save(constituent)
 
-	print "Finished Constituents Related Published..."
+	print("Finished Constituents Related Published...")
 
 # Update constituent with all related media
 def process_constituents_related_media(CURSOR):
@@ -474,7 +472,7 @@ def process_constituents_related_media(CURSOR):
 			if elasticsearch_connection.item_exists(constituent_id, type):
 				constituent = elasticsearch_connection.get_item(constituent_id, type)
 			else:
-				print "%s could not be found!" % constituent_id
+				print("%s could not be found!" % constituent_id)
 				return(constituent, current_id)
 		if 'relateditems' not in constituent:
 			constituent['relateditems'] = {}
@@ -518,7 +516,7 @@ def process_constituents_related_media(CURSOR):
 			})
 		return(constituent, current_id)
 
-	print "Starting Constituents Related Media..."
+	print("Starting Constituents Related Media...")
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
@@ -532,15 +530,14 @@ def process_constituents_related_media(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('../data/constituents_media_related.csv', 'rb') as csvfile:
+		with open('../data/constituents_media_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -552,12 +549,12 @@ def process_constituents_related_media(CURSOR):
 			# save last object to elasticsearch
 			save(constituent)
 
-	print "Finished Constituents Related Media..."
+	print("Finished Constituents Related Media...")
 
 def save(constituent):
 	if constituent and 'id' in constituent:
 		if not constituent['type']:
-			print "%s is missing a type, ignoring for now" % (constituent['id'])
+			print("%s is missing a type, ignoring for now" % (constituent['id']))
 			return
 		elasticsearch_connection.add_or_update_item(constituent['id'], json.dumps(constituent), constituent['type'])
 
@@ -574,7 +571,7 @@ def main(CURSOR=None):
 			connection = pyodbc.connect(connection_string)
 			CURSOR = connection.cursor()
 		except:
-			print "Could not connect to gizacardtms, defaulting to CSV files"
+			print("Could not connect to gizacardtms, defaulting to CSV files")
 
 	## process_constituents MUST go first.  The other methods can go in any order
 	process_constituents(CURSOR)

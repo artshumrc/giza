@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import unicode_literals
+from builtins import next
 import csv
 import codecs
 import elasticsearch_connection
@@ -15,6 +18,7 @@ from utils import get_media_url, process_cursor_row
 # This is the basic information/metadata that comprises a Site
 def process_sites(CURSOR):
 	def get_indices():
+		print(columns)
 		site_id_index = columns.index('ID')
 		return site_id_index
 
@@ -62,7 +66,7 @@ def process_sites(CURSOR):
 		site['datevalues'] = []
 		return (site, current_id)
 
-	print "Starting Sites..."
+	print("Starting Sites...")
 	if CURSOR:
 		sql_command = sites_sql.SITES
 		CURSOR.execute(sql_command)
@@ -76,20 +80,19 @@ def process_sites(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(site, current_id) = process_site_row(site, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(site)
 
 	else:
-		with open('../data/sites.csv', 'rb') as csvfile:
+		with open('../data/sites.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			site_id_index = get_indices()
 
-			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
+			rows = csv.reader(csvfile, delimiter=",", quotechar='"')
 			site = {}
 			current_id = '-1'
 			for row in rows:
@@ -97,7 +100,7 @@ def process_sites(CURSOR):
 			# save last object to elasticsearch
 			save(site)
 
-	print "Finished Sites..."
+	print("Finished Sites...")
 
 def process_site_dates(CURSOR):
 	def get_indices():
@@ -120,7 +123,7 @@ def process_site_dates(CURSOR):
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "%s could not be found!" % site_id
+				print("%s could not be found!" % site_id)
 				return (site, current_id)
 
 		if 'sitedates' not in site:
@@ -136,7 +139,7 @@ def process_site_dates(CURSOR):
 		site['datevalues'].append(date_text)
 		return (site, current_id)
 
-	print "Starting Sites Dates..."
+	print("Starting Sites Dates...")
 	if CURSOR:
 		sql_command = sites_sql.SITEDATES
 		CURSOR.execute(sql_command)
@@ -150,15 +153,14 @@ def process_site_dates(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(site, current_id) = process_site_row(site, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_dates.csv', 'rb') as csvfile:
+		with open('../data/sites_dates.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -169,7 +171,7 @@ def process_site_dates(CURSOR):
 				(site, current_id) = process_site_row(site, current_id)
 			# save last object to elasticsearch
 			save(site)
-	print "Finished Sites Dates..."
+	print("Finished Sites Dates...")
 
 # Update relevant sites with alternate numbers
 def process_site_altnums(CURSOR):
@@ -195,7 +197,7 @@ def process_site_altnums(CURSOR):
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "%s could not be found!" % site_id
+				print("%s could not be found!" % site_id)
 				return (site, current_id)
 
 		if 'altnums' not in site:
@@ -211,7 +213,7 @@ def process_site_altnums(CURSOR):
 		site['altnums'].append({"altnum" : altnum, "description" : description})
 		return (site, current_id)
 
-	print "Starting Sites AltNums..."
+	print("Starting Sites AltNums...")
 	if CURSOR:
 		sql_command = sites_sql.ALTNUMS
 		CURSOR.execute(sql_command)
@@ -225,15 +227,14 @@ def process_site_altnums(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(site, current_id) = process_site_row(site, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_altnums.csv', 'rb') as csvfile:
+		with open('../data/sites_altnums.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -244,7 +245,7 @@ def process_site_altnums(CURSOR):
 				(site, current_id) = process_site_row(site, current_id)
 			# save last object to elasticsearch
 			save(site)
-	print "Finished Sites AltNums..."
+	print("Finished Sites AltNums...")
 
 # Update all related items from the Objects table
 def process_site_related_objects(CURSOR):
@@ -274,7 +275,7 @@ def process_site_related_objects(CURSOR):
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "%s could not be found!" % site_id
+				print("%s could not be found!" % site_id)
 				return (site, current_id)
 
 		if 'relateditems' not in site:
@@ -307,7 +308,7 @@ def process_site_related_objects(CURSOR):
 		site['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
 		return (site, current_id)
 
-	print "Starting Sites Related Objects..."
+	print("Starting Sites Related Objects...")
 	if CURSOR:
 		sql_command = sites_sql.RELATED_OBJECTS
 		CURSOR.execute(sql_command)
@@ -321,15 +322,14 @@ def process_site_related_objects(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(site, current_id) = process_site_row(site, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_objects_related.csv', 'rb') as csvfile:
+		with open('../data/sites_objects_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -340,7 +340,7 @@ def process_site_related_objects(CURSOR):
 				(site, current_id) = process_site_row(site, current_id)
 			# save last object to elasticsearch
 			save(site)
-	print "Finished Sites Related Objects..."
+	print("Finished Sites Related Objects...")
 
 # Next, update site with all related Constituents
 def process_site_related_constituents(CURSOR):
@@ -371,7 +371,7 @@ def process_site_related_constituents(CURSOR):
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "%s could not be found!" % site_id
+				print("%s could not be found!" % site_id)
 				return(site, current_id)
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
@@ -419,7 +419,7 @@ def process_site_related_constituents(CURSOR):
 			site['tombowner'] = "Yes"
 		return(site, current_id)
 
-	print "Starting Sites Related Constituents..."
+	print("Starting Sites Related Constituents...")
 	if CURSOR:
 		sql_command = sites_sql.RELATED_CONSTITUENTS
 		CURSOR.execute(sql_command)
@@ -433,15 +433,14 @@ def process_site_related_constituents(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(site, current_id) = process_site_row(site, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_constituents_related.csv', 'rb') as csvfile:
+		with open('../data/sites_constituents_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -453,7 +452,7 @@ def process_site_related_constituents(CURSOR):
 			# save last object to elasticsearch
 			save(site)
 
-	print "Finished Sites Related Constituents..."
+	print("Finished Sites Related Constituents...")
 
 # Next, update site with all related Published Documents
 def process_site_related_published(CURSOR):
@@ -483,7 +482,7 @@ def process_site_related_published(CURSOR):
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "%s could not be found!" % site_id
+				print("%s could not be found!" % site_id)
 				return(site, current_id)
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
@@ -508,7 +507,7 @@ def process_site_related_published(CURSOR):
 		site['relateditems']['pubdocs'].sort(key=operator.itemgetter('displaytext'))
 		return(site, current_id)
 
-	print "Starting Sites Related Published..."
+	print("Starting Sites Related Published...")
 	if CURSOR:
 		sql_command = sites_sql.RELATED_PUBLISHED
 		CURSOR.execute(sql_command)
@@ -522,15 +521,14 @@ def process_site_related_published(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(site, current_id) = process_site_row(site, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_published_related.csv', 'rb') as csvfile:
+		with open('../data/sites_published_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -542,7 +540,7 @@ def process_site_related_published(CURSOR):
 			# save last object to elasticsearch
 			save(site)
 
-	print "Finished Sites Related Published..."
+	print("Finished Sites Related Published...")
 
 # Update site with all related media
 def process_site_related_media(CURSOR):
@@ -576,7 +574,7 @@ def process_site_related_media(CURSOR):
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
 				site = elasticsearch_connection.get_item(site_id, 'sites')
 			else:
-				print "%s could not be found!" % site_id
+				print("%s could not be found!" % site_id)
 				return(site, current_id)
 		if 'relateditems' not in site:
 			site['relateditems'] = {}
@@ -620,7 +618,7 @@ def process_site_related_media(CURSOR):
 			})
 		return(site, current_id)
 
-	print "Starting Sites Related Media..."
+	print("Starting Sites Related Media...")
 	if CURSOR:
 		sql_command = sites_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
@@ -634,15 +632,14 @@ def process_site_related_media(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(site, current_id) = process_site_row(site, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_media_related.csv', 'rb') as csvfile:
+		with open('../data/sites_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n','')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -654,7 +651,7 @@ def process_site_related_media(CURSOR):
 			# save last object to elasticsearch
 			save(site)
 
-	print "Finished Sites Related Media..."
+	print("Finished Sites Related Media...")
 
 def save(site):
 	if site and 'id' in site:

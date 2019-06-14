@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from elasticsearch import Elasticsearch
 
 # TODO: this needs to come from settings

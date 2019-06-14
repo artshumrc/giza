@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+from builtins import str
 def get_media_url(path, filename):
 	idx = path.find('images')
 	if idx == -1:
@@ -17,7 +19,7 @@ def process_cursor_row(cursor_row):
 	for x in cursor_row:
 		if isinstance(x, int):
 			row.append(str(x))
-		elif isinstance(x, unicode):
+		elif isinstance(x, str):
 			row.append(x.encode('utf-8'))
 		elif x is None:
 			row.append("NULL")

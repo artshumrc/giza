@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import unicode_literals
+from builtins import next
 import csv
 import codecs
 import elasticsearch_connection
@@ -72,7 +75,7 @@ def process_media(CURSOR):
 
 		return (media, current_id)
 
-	print "Starting Media..."
+	print("Starting Media...")
 	if CURSOR:
 		sql_command = media_sql.MEDIA
 		CURSOR.execute(sql_command)
@@ -86,16 +89,15 @@ def process_media(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(media, current_id) = process_media_row(media, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last media to elasticsearch
+		   # save last media to elasticsearch
 		save(media)
 
 	else:
-		with open('../data/media.csv', 'rb') as csvfile:
+		with open('../data/media.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -107,7 +109,7 @@ def process_media(CURSOR):
 			# save last media to elasticsearch
 			save(media)
 
-	print "Finished Media..."
+	print("Finished Media...")
 
 def process_media_related_sites(CURSOR):
 	def get_indices():
@@ -138,7 +140,7 @@ def process_media_related_sites(CURSOR):
 			if elasticsearch_connection.item_exists(id, media_type):
 				media = elasticsearch_connection.get_item(id, media_type)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return(media, current_id)
 		if 'relateditems' not in media:
 			media['relateditems'] = {}
@@ -163,7 +165,7 @@ def process_media_related_sites(CURSOR):
 
 		return(media, current_id)
 
-	print "Starting Media Related Sites..."
+	print("Starting Media Related Sites...")
 	if CURSOR:
 		sql_command = media_sql.RELATED_SITES
 		CURSOR.execute(sql_command)
@@ -177,15 +179,14 @@ def process_media_related_sites(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(media, current_id) = process_media_row(media, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last media to elasticsearch
+		   # save last media to elasticsearch
 		save(media)
 	else:
-		with open('../data/media_sites_related.csv', 'rb') as csvfile:
+		with open('../data/media_sites_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -197,7 +198,7 @@ def process_media_related_sites(CURSOR):
 			# save last media to elasticsearch
 			save(media)
 
-	print "Finished Media Related Sites..."
+	print("Finished Media Related Sites...")
 
 # Update all related items from the Objects table
 def process_media_related_objects(CURSOR):
@@ -231,7 +232,7 @@ def process_media_related_objects(CURSOR):
 			if elasticsearch_connection.item_exists(id, media_type):
 				media = elasticsearch_connection.get_item(id, media_type)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return (media, current_id)
 
 		if 'relateditems' not in media:
@@ -265,7 +266,7 @@ def process_media_related_objects(CURSOR):
 
 		return (media, current_id)
 
-	print "Starting Media Related Objects..."
+	print("Starting Media Related Objects...")
 	if CURSOR:
 		sql_command = media_sql.RELATED_OBJECTS
 		CURSOR.execute(sql_command)
@@ -279,15 +280,14 @@ def process_media_related_objects(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(media, current_id) = process_media_row(media, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(media)
 	else:
-		with open('../data/media_objects_related.csv', 'rb') as csvfile:
+		with open('../data/media_objects_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -298,7 +298,7 @@ def process_media_related_objects(CURSOR):
 				(media, current_id) = process_media_row(media, current_id)
 			# save last object to elasticsearch
 			save(media)
-	print "Finished Media Related Objects..."
+	print("Finished Media Related Objects...")
 
 def process_media_related_constituents(CURSOR):
 	def get_indices():
@@ -333,7 +333,7 @@ def process_media_related_constituents(CURSOR):
 			if elasticsearch_connection.item_exists(id, media_type):
 				media = elasticsearch_connection.get_item(id, media_type)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return(media, current_id)
 		if 'relateditems' not in media:
 			media['relateditems'] = {}
@@ -375,7 +375,7 @@ def process_media_related_constituents(CURSOR):
 
 		return(media, current_id)
 
-	print "Starting Media Related Constituents..."
+	print("Starting Media Related Constituents...")
 	if CURSOR:
 		# because this database can't be simple, we need to do two different queries to get related constituents
 		for sql_command in [media_sql.RELATED_CONSTITUENTS_1, media_sql.RELATED_CONSTITUENTS_2]:
@@ -390,15 +390,14 @@ def process_media_related_constituents(CURSOR):
 				row = process_cursor_row(cursor_row)
 				(media, current_id) = process_media_row(media, current_id)
 				cursor_row = CURSOR.fetchone()
-	   		# save last media to elasticsearch
+			   # save last media to elasticsearch
 			save(media)
 	else:
-		with open('../data/media_constituents_related_1.csv', 'rb') as csvfile:
+		with open('../data/media_constituents_related_1.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -409,12 +408,11 @@ def process_media_related_constituents(CURSOR):
 				(media, current_id) = process_media_row(media, current_id)
 			# save last media to elasticsearch
 			save(media)
-		with open('../data/media_constituents_related_2.csv', 'rb') as csvfile:
+		with open('../data/media_constituents_related_2.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -426,7 +424,7 @@ def process_media_related_constituents(CURSOR):
 			# save last media to elasticsearch
 			save(media)
 
-	print "Finished Media Related Constituents..."
+	print("Finished Media Related Constituents...")
 
 def process_media_related_published(CURSOR):
 	def get_indices():
@@ -458,7 +456,7 @@ def process_media_related_published(CURSOR):
 			if elasticsearch_connection.item_exists(id, media_type):
 				media = elasticsearch_connection.get_item(id, media_type)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return(media, current_id)
 		if 'relateditems' not in media:
 			media['relateditems'] = {}
@@ -482,7 +480,7 @@ def process_media_related_published(CURSOR):
 
 		return(media, current_id)
 
-	print "Starting Media Related Published..."
+	print("Starting Media Related Published...")
 	if CURSOR:
 		sql_command = media_sql.RELATED_PUBLISHED
 		CURSOR.execute(sql_command)
@@ -496,15 +494,14 @@ def process_media_related_published(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(media, current_id) = process_media_row(media, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last media to elasticsearch
+		   # save last media to elasticsearch
 		save(media)
 	else:
-		with open('../data/media_published_related.csv', 'rb') as csvfile:
+		with open('../data/media_published_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -516,14 +513,14 @@ def process_media_related_published(CURSOR):
 			# save last media to elasticsearch
 			save(media)
 
-	print "Finished Media Related Published..."
+	print("Finished Media Related Published...")
 
 def save(media):
 	if media and 'id' in media:
 		if not media['mediatype']:
 			# ignore for now, but this should send an email notification that there is missing data
 			# so that the classifications.py file can be updated
-			print "%s is missing a media type, ignoring for now" % (media['id'])
+			print("%s is missing a media type, ignoring for now" % (media['id']))
 			return
 		elasticsearch_connection.add_or_update_item(media['id'], json.dumps(media), media['mediatype'])
 
@@ -540,7 +537,7 @@ def main(CURSOR=None):
 			connection = pyodbc.connect(connection_string)
 			CURSOR = connection.cursor()
 		except:
-			print "Could not connect to gizacardtms, defaulting to CSV files"
+			print("Could not connect to gizacardtms, defaulting to CSV files")
 
 	## process_media MUST go first.  Other methods can go in any order
 	process_media(CURSOR)

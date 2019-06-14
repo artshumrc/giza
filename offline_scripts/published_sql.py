@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 PUBLISHED = """
 SELECT ReferenceMaster.ReferenceID AS ID, ReferenceMaster.Title, ReferenceMaster.Notes,
 ReferenceMaster.BoilerText, ReferenceMaster.DisplayDate, ReferenceMaster.YearPublished,

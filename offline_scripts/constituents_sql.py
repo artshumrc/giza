@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # Object display data
 CONSTITUENTS = """
 SELECT DISTINCT Constituents.ConstituentID AS ID, Constituents.DisplayName, Constituents.DisplayDate,
