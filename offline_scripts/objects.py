@@ -199,6 +199,7 @@ def process_object_altnums(CURSOR):
 
 		if object_id != current_id:
 			# will likely have multiple rows
+			print(json.dumps(object))
 			save(object)
 			current_id = object_id
 			object = {}
