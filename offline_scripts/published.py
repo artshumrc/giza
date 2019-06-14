@@ -20,7 +20,7 @@ def delete_pubs():
 	es_index = elasticsearch_connection.ELASTICSEARCH_INDEX
 	results = es.search(index=es_index, doc_type='pubdocs', body={
 		"size" : 1000,
-		"fields" : ["_id"],
+		"stored_fields" : ["_id"],
 		"query": {
 			"match_all" : {}
 		}
@@ -466,7 +466,7 @@ def create_library():
 	# delete library
 	results = es.search(index=es_index, doc_type='library', body={
 		"size" : 500,
-		"fields" : ["_id", "name"],
+		"stored_fields" : ["_id", "name"],
 		"query": {
 			"match_all" : {}
 		}

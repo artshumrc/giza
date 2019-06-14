@@ -26,8 +26,8 @@ if __name__ == "__main__":
 	except:
 		print("Could not connect, no cursor")
 
-	sites.main(CURSOR)
-	objects.main(CURSOR)
-	constituents.main(CURSOR)
+	# sites.main(CURSOR)
+	# objects.main(CURSOR)
+	# constituents.main(CURSOR)
 	published.main(CURSOR)
 	media.main(CURSOR)
