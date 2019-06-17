@@ -17,7 +17,7 @@ def library(request):
 	if sort == 'name':
 		results = es.search(index=ES_INDEX, doc_type='library', body={
 			"size": 500,
-			"sort": sort,
+			"sort": "sort"+sort,
 			"query": {
 				"match_all" : {}
 			}

@@ -8,6 +8,7 @@ import getpass
 import json
 import operator
 import time
+import unicodedata
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import published_sql
@@ -501,6 +502,8 @@ def create_library():
 
 			for author in authors:
 				author_id = author.replace(' ', '')
+				sortauthor = author.lower().strip()
+				sortauthor = str(unicodedata.normalize('NFD', sortauthor).encode('ascii', 'ignore').decode("utf-8"))
 				# see if this author already exists
 				if author_id in author_ids:
 					author_data = elasticsearch_connection.get_item(author_id, 'library')
@@ -508,6 +511,7 @@ def create_library():
 					author_ids.append(author_id)
 					author_data = {}
 					author_data['name'] = author
+					author_data['sortname'] = sortauthor
 					author_data['docs'] = []
 
 				author_data['docs'].append({

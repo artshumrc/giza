@@ -858,8 +858,12 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"library" : {
 			"properties" : {
 				"name" : {
-					"type" : "string",
+					"type" : "text",
 					"analyzer": "case_insensitive_sort",
+					"include_in_all" : false
+				},
+				"sortname" : {
+					"type" : "keyword",
 					"include_in_all" : false
 				},
 				"docs" : {
