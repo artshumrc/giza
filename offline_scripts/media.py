@@ -377,38 +377,22 @@ def process_media_related_constituents(CURSOR):
 
 	print("Starting Media Related Constituents...")
 	if CURSOR:
-		# because this database can't be simple, we need to do two different queries to get related constituents
-		for sql_command in [media_sql.RELATED_CONSTITUENTS_1, media_sql.RELATED_CONSTITUENTS_2]:
-			CURSOR.execute(sql_command)
-			columns = [column[0] for column in CURSOR.description]
-			indices = get_indices()
+		sql_command = media_sql.RELATED_CONSTITUENTS
+		CURSOR.execute(sql_command)
+		columns = [column[0] for column in CURSOR.description]
+		indices = get_indices()
 
-			media = {}
-			current_id = '-1'
+		media = {}
+		current_id = '-1'
+		cursor_row = CURSOR.fetchone()
+		while cursor_row is not None:
+			row = process_cursor_row(cursor_row)
+			(media, current_id) = process_media_row(media, current_id)
 			cursor_row = CURSOR.fetchone()
-			while cursor_row is not None:
-				row = process_cursor_row(cursor_row)
-				(media, current_id) = process_media_row(media, current_id)
-				cursor_row = CURSOR.fetchone()
-			   # save last media to elasticsearch
-			save(media)
+		   # save last media to elasticsearch
+		save(media)
 	else:
-		with open('../data/media_constituents_related_1.csv', 'r', encoding='utf-8-sig') as csvfile:
-			# Get the query headers to use as keys in the JSON
-			headers = next(csvfile)
-			headers = headers.replace('\r\n','')
-			headers = headers.replace('\n', '')
-			columns = headers.split(',')
-			indices = get_indices()
-
-			rows = csv.reader(csvfile, delimiter=',', quotechar='"')
-			media = {}
-			current_id = '-1'
-			for row in rows:
-				(media, current_id) = process_media_row(media, current_id)
-			# save last media to elasticsearch
-			save(media)
-		with open('../data/media_constituents_related_2.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/media_constituents_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
