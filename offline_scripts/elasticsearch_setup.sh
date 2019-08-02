@@ -29,39 +29,39 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"sites" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
 				"people": {
-					"type" : "string",
+					"type" : "text",
 					"include_in_all" : false
 				},
 				"datevalues": {
-					"type" : "string",
+					"type" : "text",
 					"include_in_all" : false
 				},
 				"allnumbers": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"altnums" : {
 					"properties": {
 						"altnum": {
-							"type" : "string",
+							"type" : "text",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"sitename": {
-					"type" : "string",
+					"type" : "text",
 					"fields" : {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index" : "not_analyzed"
 						}
 					}
@@ -70,10 +70,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"type" : "nested",
 					"properties" : {
 						"date" : {
-							"type" : "string",
+							"type" : "text",
 							"fields": {
 								"raw" : {
-									"type" : "string",
+									"type" : "keyword",
 									"index" : "not_analyzed"
 								}
 							}
@@ -83,10 +83,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"sitetype": {
 					"properties": {
 						"sitetype": {
-							"type": "string",
+							"type": "text",
 							"fields" : {
 								"raw" : {
-									"type" : "string",
+									"type" : "keyword",
 									"index" : "not_analyzed"
 								}
 							}
@@ -103,19 +103,19 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 						"modernpeople": {
 							"properties": {
 								"displayname": {
-									"type": "string",
+									"type": "text",
 									"fields" : {
 										"raw" : {
-											"type" : "string",
+											"type" : "keyword",
 											"index" : "not_analyzed"
 										}
 									}
 								},
 								"role": {
-									"type": "string",
+									"type": "text",
 									"fields" : {
 										"raw" : {
-											"type" : "string",
+											"type" : "keyword",
 											"index" : "not_analyzed"
 										}
 									}
@@ -138,7 +138,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"number": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"allnumbers": {
@@ -148,65 +148,65 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"altnums" : {
 					"properties": {
 						"altnum": {
-							"type" : "string",
+							"type" : "text",
 							"index":"not_analyzed"
 						},
 						"without_prefix": {
-							"type" : "string",
+							"type" : "text",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"classificationtext": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"provenance": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"medium": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"period": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"entrydate": {
-					"type": "string",
+					"type": "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
@@ -229,24 +229,24 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"altnumber": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"entrydate": {
-					"type": "string"
+					"type": "text"
 				}
 			}
 		},
@@ -266,33 +266,33 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"altnumber": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"classificationtext": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"entrydate": {
-					"type": "string"
+					"type": "text"
 				}
 			}
 		},
@@ -321,33 +321,33 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"altnumber": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"medium": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"entrydate": {
-					"type": "string"
+					"type": "text"
 				}
 			}
 		},
@@ -367,33 +367,33 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"altnumber": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"medium": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"entrydate": {
-					"type": "string"
+					"type": "text"
 				}
 			}
 		},
@@ -413,21 +413,21 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"altnumber": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"entrydate": {
-					"type": "string"
+					"type": "text"
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
@@ -450,32 +450,32 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"mediaview": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"date": {
-					"type": "string",
+					"type": "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
@@ -487,19 +487,19 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 						"modernpeople": {
 							"properties": {
 								"displayname": {
-									"type": "string",
+									"type": "text",
 									"fields" : {
 										"raw" : {
-											"type" : "string",
+											"type" : "keyword",
 											"index" : "not_analyzed"
 										}
 									}
 								},
 								"role": {
-									"type": "string",
+									"type": "text",
 									"fields" : {
 										"raw" : {
-											"type" : "string",
+											"type" : "keyword",
 											"index" : "not_analyzed"
 										}
 									}
@@ -522,7 +522,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"relateditems" : {
@@ -530,19 +530,19 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"mediaview": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
@@ -565,23 +565,23 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"mediaview": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
@@ -600,19 +600,19 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"mediaview": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
@@ -631,19 +631,19 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"mediaview": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"department": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
@@ -662,10 +662,10 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"gender": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
@@ -684,38 +684,38 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"gender": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"institution": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"nationality": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"begindate": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				},
 				"enddate": {
-					"type" : "string",
+					"type" : "text",
 					"index":"not_analyzed"
 				}
 			}
@@ -773,19 +773,19 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 						"modernpeople": {
 							"properties": {
 								"displayname": {
-									"type": "string",
+									"type": "text",
 									"fields" : {
 										"raw" : {
-											"type" : "string",
+											"type" : "keyword",
 											"index" : "not_analyzed"
 										}
 									}
 								},
 								"role": {
-									"type": "string",
+									"type": "text",
 									"fields" : {
 										"raw" : {
-											"type" : "string",
+											"type" : "keyword",
 											"index" : "not_analyzed"
 										}
 									}
@@ -795,61 +795,61 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					}
 				},
 				"format": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"language": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"yearpublished": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"journal": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"series": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"title": {
-					"type" : "string",
+					"type" : "text",
 					"fields": {
 						"raw" : {
-							"type" : "string",
+							"type" : "keyword",
 							"index":"not_analyzed"
 						}
 					}
 				},
 				"authors": {
-					"type" : "string",
+					"type" : "text",
 					"index" : "not_analyzed",
 					"include_in_all" : false
 				}
@@ -873,22 +873,22 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"properties" : {
 						"displaytext" : {
 							"index" : "no",
-							"type" : "string",
+							"type" : "text",
 							"include_in_all" : false
 						},
 						"format" : {
 							"index" : "no",
-							"type" : "string",
+							"type" : "text",
 							"include_in_all" : false
 						},
 						"size" : {
 							"index" : "no",
-							"type" : "string",
+							"type" : "text",
 							"include_in_all" : false
 						},
 						"url" : {
 							"index" : "no",
-							"type" : "string",
+							"type" : "text",
 							"include_in_all" : false
 						}
 					}
