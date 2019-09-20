@@ -129,7 +129,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"objects" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -142,7 +142,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"index":"not_analyzed"
 				},
 				"allnumbers": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
 				"altnums" : {
@@ -216,7 +216,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"unpubdocs" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -225,7 +225,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"allnumbers": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
@@ -253,7 +253,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"diarypages" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -262,7 +262,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"allnumbers": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
@@ -299,7 +299,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"plansanddrawings" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				}
@@ -308,7 +308,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"mapsandplans" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -317,7 +317,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"allnumbers": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
@@ -354,7 +354,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"drawings" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -363,7 +363,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"allnumbers": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
@@ -400,7 +400,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"3dmodels" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -409,7 +409,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"allnumbers": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
@@ -437,7 +437,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"photos" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -446,7 +446,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"allnumbers": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
@@ -513,12 +513,12 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"videos" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
 				"allnumbers": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
@@ -552,7 +552,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"audio" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -561,7 +561,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"include_in_all" : false
 				},
 				"allnumbers": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
 				"number": {
@@ -591,7 +591,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"microfilm" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -622,7 +622,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"document" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -653,7 +653,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"ancientpeople" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -675,7 +675,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"modernpeople" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -723,7 +723,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"institutions" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -736,7 +736,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"groups" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -749,7 +749,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"animals" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
@@ -762,7 +762,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		"pubdocs" : {
 			"properties": {
 				"displaytext": {
-					"type" : "string",
+					"type" : "text",
 					"analyzer" : "case_insensitive_sort",
 					"include_in_all" : false
 				},
