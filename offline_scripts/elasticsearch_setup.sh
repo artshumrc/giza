@@ -45,6 +45,9 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"type" : "text",
 					"analyzer":"lowercase_keyword"
 				},
+				"tombowner" : {
+					"type" : "keyword"
+				},
 				"number": {
 					"type" : "text",
 					"index":"not_analyzed"
@@ -57,24 +60,14 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 						}
 					}
 				},
-				"sitename": {
-					"type" : "text",
-					"fields" : {
-						"raw" : {
-							"type" : "keyword",
-							"index" : "not_analyzed"
-						}
-					}
-				},
 				"sitedates": {
 					"type" : "nested",
 					"properties" : {
 						"date" : {
 							"type" : "text",
 							"fields": {
-								"raw" : {
-									"type" : "keyword",
-									"index" : "not_analyzed"
+								"keyword" : {
+									"type" : "keyword"
 								}
 							}
 						}
@@ -82,15 +75,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				},
 				"sitetype": {
 					"properties": {
-						"sitetype": {
-							"type": "text",
-							"fields" : {
-								"raw" : {
-									"type" : "keyword",
-									"index" : "not_analyzed"
-								}
-							}
-						},
 						"sitetypeid": {
 							"type": "long"
 						}
@@ -98,31 +82,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				},
 				"relateditems": {
 					"type": "nested",
-					"include_in_all" : false,
-					"properties": {
-						"modernpeople": {
-							"properties": {
-								"displayname": {
-									"type": "text",
-									"fields" : {
-										"raw" : {
-											"type" : "keyword",
-											"index" : "not_analyzed"
-										}
-									}
-								},
-								"role": {
-									"type": "text",
-									"fields" : {
-										"raw" : {
-											"type" : "keyword",
-											"index" : "not_analyzed"
-										}
-									}
-								}
-							}
-						}
-					}
+					"include_in_all" : false
 				}
 			}
 		},
@@ -136,6 +96,9 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"relateditems" : {
 					"type" : "nested",
 					"include_in_all" : false
+				},
+				"hasphoto" : {
+					"type" : "keyword"
 				},
 				"number": {
 					"type" : "text",
@@ -709,14 +672,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 							"index":"not_analyzed"
 						}
 					}
-				},
-				"begindate": {
-					"type" : "text",
-					"index":"not_analyzed"
-				},
-				"enddate": {
-					"type" : "text",
-					"index":"not_analyzed"
 				}
 			}
 		},

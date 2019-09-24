@@ -41,17 +41,17 @@ FACETS_PER_CATEGORY = {
 	'sites' : {
 		'Site Type' : {
 	    	"terms": {
-				'field' : 'sitetype.sitetype.raw'
+				'field' : 'sitetype.sitetype.keyword'
 			}
 		},
 		'Site Name' : {
 	    	"terms": {
-				'field' : 'sitename.raw'
+				'field' : 'sitename.keyword'
 			}
 		},
 		'Site Date' : {
 	    	"terms": {
-				'field' : 'sitedates.date.raw'
+				'field' : 'sitedates.date.keyword'
 			}
 		},
 		'Has Tomb Owner' : {
@@ -59,16 +59,23 @@ FACETS_PER_CATEGORY = {
 				'field' : 'tombowner'
 			}
 		},
-		"Excavator": {
-         "filter": {
-            "term": {
-               "relateditems.modernpeople.role.raw" : "Excavator"
-            }
+      "Excavator": {
+         "nested": {
+            "path": "relateditems"
          },
          "aggregations": {
-            "Excavator": {
-               "terms": {
-                  "field": "relateditems.modernpeople.displayname.raw"
+            "exc_aggs": {
+               "filter": {
+                  "term": {
+                     "relateditems.modernpeople.role.keyword": "Excavator"
+                  }
+               },
+               "aggregations": {
+                  "Excavator": {
+                     "terms": {
+                        "field": "relateditems.modernpeople.displayname.keyword"
+                     }
+                  }
                }
             }
          }
@@ -388,12 +395,12 @@ FACETS_PER_CATEGORY = {
 		},
 		'Year of Birth' : {
 			'terms' : {
-				'field' : 'begindate'
+				'field' : 'begindate.keyword'
 			}
 		},
 		'Year of Death' : {
 			'terms' : {
-				'field' : 'enddate'
+				'field' : 'enddate.keyword'
 			}
 		}
 	},
