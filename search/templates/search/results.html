@@ -141,11 +141,11 @@
                         {% with sf_combined=cat_name|add:'_'|add:facet_title|add:'_'|add:f.display_text %}
                          {% if sf_combined in subfacet_strings %}
                          <li class="search-facet-item is-active">
-                           <input type="checkbox" id="{{facet_title}}_{{display_text}}" checked onclick="goToPage('{% url 'results' %}?{% build_search_params search_params current_category current_subfacets sf_combined '' page %}');"><label for="{{facet_title}}_{{display_text}}">{{f.display_text}} ({{f.doc_count}})</label>
+                           <input type="checkbox" id="{{facet_title}}_{{f.display_text}}" checked onclick="goToPage('{% url 'results' %}?{% build_search_params search_params current_category current_subfacets sf_combined '' page %}');"><label for="{{facet_title}}_{{f.display_text}}">{{f.display_text}} ({{f.doc_count}})</label>
                          </li>
                          {% else %}
                           <li class="search-facet-item">
-                            <input type="checkbox" id="{{facet_title}}_{{display_text}}" onclick="goToPage('{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' sf_combined page %}');"><label for="{{facet_title}}_{{display_text}}">{{f.display_text}} ({{f.doc_count}})</label>
+                            <input type="checkbox" id="{{facet_title}}_{{f.display_text}}" onclick="goToPage('{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' sf_combined page %}');"><label for="{{facet_title}}_{{f.display_text}}">{{f.display_text}} ({{f.doc_count}})</label>
                           </li>
                           {% endif %}
                         {% endwith %}
