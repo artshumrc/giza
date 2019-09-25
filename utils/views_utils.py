@@ -71,7 +71,7 @@ FACETS_PER_CATEGORY = {
             "path": "relateditems"
          },
          "aggregations": {
-            "exc_aggs": {
+            "excavator_aggs": {
                "filter": {
                   "term": {
                      "relateditems.modernpeople.role.keyword": "Excavator"
@@ -276,32 +276,46 @@ FACETS_PER_CATEGORY = {
 			}
 		},
 		"Author": {
-	         "filter": {
-	            "term": {
-	               "relateditems.modernpeople.role.raw" : "Author"
-	            }
+	         "nested": {
+	            "path": "relateditems"
 	         },
-	         "aggregations": {
-	            "Author": {
-	               "terms": {
-	                  "field": "relateditems.modernpeople.displayname.raw"
-	               }
-	            }
-	         }
+			  "aggregations": {
+	             "author_aggs": {
+			         "filter": {
+			            "term": {
+			               "relateditems.modernpeople.role.keyword" : "Author"
+			            }
+			         },
+			         "aggregations": {
+			            "Author": {
+			               "terms": {
+			                  "field": "relateditems.modernpeople.displayname.keyword"
+			               }
+			            }
+			         }
+				}
+			}
       	},
 	  	"Publisher": {
-	         "filter": {
-	            "term": {
-	               "relateditems.modernpeople.role.raw" : "Publisher"
-	            }
+	         "nested": {
+	            "path": "relateditems"
 	         },
-	         "aggregations": {
-	            "Publisher": {
-	               "terms": {
-	                  "field": "relateditems.modernpeople.displayname.raw"
-	               }
-	            }
-	         }
+			 "aggregations": {
+				"publisher_aggs": {
+			         "filter": {
+			            "term": {
+			               "relateditems.institutions.role.keyword" : "Publisher"
+			            }
+			         },
+			         "aggregations": {
+			            "Publisher": {
+			               "terms": {
+			                  "field": "relateditems.institutions.displayname.keyword"
+			               }
+			            }
+			         }
+				}
+			}
       	},
 		'Number of Pages' : {
 			'terms' : {

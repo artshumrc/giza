@@ -470,31 +470,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				},
 				"relateditems" : {
 					"type" : "nested",
-					"include_in_all" : false,
-					"properties": {
-						"modernpeople": {
-							"properties": {
-								"displayname": {
-									"type": "text",
-									"fields" : {
-										"raw" : {
-											"type" : "keyword",
-											"index" : "not_analyzed"
-										}
-									}
-								},
-								"role": {
-									"type": "text",
-									"fields" : {
-										"raw" : {
-											"type" : "keyword",
-											"index" : "not_analyzed"
-										}
-									}
-								}
-							}
-						}
-					}
+					"include_in_all" : false
 				},
 				"yearpublished": {
 					"type" : "text",
