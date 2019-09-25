@@ -91,14 +91,14 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				"Classification": {
 			    	"terms": {
-			        	"field": 'classificationtext.raw'
+			        	"field": 'classificationtext.keyword'
 					}
 				}
 			}
 		},
 		'Findspot' : {
 	    	"terms": {
-	        	"field": "provenance.raw"
+	        	"field": "provenance.keyword"
 	     	}
 		},
 		"Material": {
@@ -110,7 +110,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				"Material": {
 				   "terms": {
-				      "field": "medium.raw"
+				      "field": "medium.keyword"
 				   }
 				}
 			}
@@ -124,19 +124,19 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
 		},
 		'Period' : {
 	    	"terms": {
-	        	"field": 'period.raw'
+	        	"field": 'period.keyword'
 			}
 		},
 		'Date' : {
 	    	"terms": {
-	        	"field": 'entrydate.raw'
+	        	"field": 'entrydate.keyword'
 			}
 		},
 		'Has Related Photo' : {
@@ -155,7 +155,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				"Classification": {
 			    	"terms": {
-			        	"field": 'classificationtext.raw'
+			        	"field": 'classificationtext.keyword'
 					}
 				}
 			}
@@ -169,7 +169,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
@@ -186,7 +186,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
@@ -200,7 +200,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				"Material": {
 				   "terms": {
-				      "field": "medium.raw"
+				      "field": "medium.keyword"
 				   }
 				}
 			}
@@ -216,7 +216,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
@@ -230,7 +230,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				"Material": {
 				   "terms": {
-				      "field": "medium.raw"
+				      "field": "medium.keyword"
 				   }
 				}
 			}
@@ -246,7 +246,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
@@ -255,17 +255,17 @@ FACETS_PER_CATEGORY = {
 	'pubdocs' : {
 		'Format' : {
 			'terms' : {
-				'field' : 'format.raw'
+				'field' : 'format.keyword'
 			}
 		},
 		'Language' : {
 			'terms' : {
-				'field' : 'language.raw'
+				'field' : 'language.keyword'
 			}
 		},
 		'Year Published' : {
 			'terms' : {
-				'field' : 'yearpublished.raw'
+				'field' : 'yearpublished.keyword'
 			}
 		},
 		"Author": {
@@ -303,12 +303,12 @@ FACETS_PER_CATEGORY = {
 		},
 		'Journal' : {
 			'terms' : {
-				'field' : 'journal.raw'
+				'field' : 'journal.keyword'
 			}
 		},
 		'Series' : {
 			'terms' : {
-				'field' : 'series.raw'
+				'field' : 'series.keyword'
 			}
 		}
 	},
@@ -322,19 +322,19 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
 		},
 		'Media View' : {
 	    	"terms": {
-				'field' : 'mediaview.raw'
+				'field' : 'mediaview.keyword'
 			}
 		},
 		'Date' : {
 	    	"terms": {
-				'field' : 'date.raw'
+				'field' : 'date.keyword'
 			}
 		},
 		"Photographer": {
@@ -362,7 +362,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Gender' : {
 					'terms' : {
-						'field' : 'gender.raw'
+						'field' : 'gender.keyword'
 					}
 				}
 			}
@@ -378,19 +378,19 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Gender' : {
 					'terms' : {
-						'field' : 'gender.raw'
+						'field' : 'gender.keyword'
 					}
 				}
 			}
 		},
 		'Nationality' : {
 			'terms' : {
-				'field' : 'nationality.raw'
+				'field' : 'nationality.keyword'
 			}
 		},
 		'Institution' : {
 			'terms' : {
-				'field' : 'institution.raw'
+				'field' : 'institution.keyword'
 			}
 		},
 		'Year of Birth' : {
@@ -418,14 +418,14 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
 		},
 		'Media View' : {
 	    	"terms": {
-				'field' : 'mediaview.raw'
+				'field' : 'mediaview.keyword'
 			}
 		}
 	},
@@ -439,14 +439,14 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
 		},
 		'Media View' : {
 	    	"terms": {
-				'field' : 'mediaview.raw'
+				'field' : 'mediaview.keyword'
 			}
 		}
 	},

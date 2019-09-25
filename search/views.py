@@ -47,7 +47,7 @@ def library(request):
 		   "aggs": {
 			  "by_sort": {
 				 "terms": {
-					"field": sort+".raw",
+					"field": sort+".keyword",
 					"order": {
 					   "_term": "asc"
 					},

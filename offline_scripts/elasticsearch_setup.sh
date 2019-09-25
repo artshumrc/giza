@@ -119,60 +119,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 							"index":"not_analyzed"
 						}
 					}
-				},
-				"classificationtext": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"provenance": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"medium": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"period": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"entrydate": {
-					"type": "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				}
 			}
 		},
@@ -198,15 +144,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"altnumber": {
 					"type" : "text",
 					"index":"not_analyzed"
-				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				},
 				"entrydate": {
 					"type": "text"
@@ -235,24 +172,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"altnumber": {
 					"type" : "text",
 					"index":"not_analyzed"
-				},
-				"classificationtext": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				},
 				"entrydate": {
 					"type": "text"
@@ -291,24 +210,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"type" : "text",
 					"index":"not_analyzed"
 				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"medium": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
 				"entrydate": {
 					"type": "text"
 				}
@@ -336,24 +237,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"altnumber": {
 					"type" : "text",
 					"index":"not_analyzed"
-				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"medium": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				},
 				"entrydate": {
 					"type": "text"
@@ -385,15 +268,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				},
 				"entrydate": {
 					"type": "text"
-				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				}
 			}
 		},
@@ -416,30 +290,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"type" : "text",
 					"index":"not_analyzed"
 				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"mediaview": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
 				"date": {
 					"type": "text",
 					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
+						"keyword" : {
+							"type" : "keyword"
 						}
 					}
 				},
@@ -491,24 +346,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"relateditems" : {
 					"type" : "nested",
 					"include_in_all" : false
-				},
-				"mediaview": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				}
 			}
 		},
@@ -530,24 +367,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"number": {
 					"type" : "text",
 					"index":"not_analyzed"
-				},
-				"mediaview": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				}
 			}
 		},
@@ -561,24 +380,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"relateditems" : {
 					"type" : "nested",
 					"include_in_all" : false
-				},
-				"mediaview": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				}
 			}
 		},
@@ -592,24 +393,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"relateditems" : {
 					"type" : "nested",
 					"include_in_all" : false
-				},
-				"mediaview": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"department": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				}
 			}
 		},
@@ -623,15 +406,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"relateditems" : {
 					"type" : "nested",
 					"include_in_all" : false
-				},
-				"gender": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				}
 			}
 		},
@@ -645,33 +419,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"relateditems" : {
 					"type" : "nested",
 					"include_in_all" : false
-				},
-				"gender": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"institution": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"nationality": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
 				}
 			}
 		},
@@ -749,57 +496,11 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 						}
 					}
 				},
-				"format": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"language": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
 				"yearpublished": {
 					"type" : "text",
 					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"journal": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"series": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
-						}
-					}
-				},
-				"title": {
-					"type" : "text",
-					"fields": {
-						"raw" : {
-							"type" : "keyword",
-							"index":"not_analyzed"
+						"keyword" : {
+							"type" : "keyword"
 						}
 					}
 				},
