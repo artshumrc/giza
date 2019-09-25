@@ -50,8 +50,15 @@ FACETS_PER_CATEGORY = {
 			}
 		},
 		'Site Date' : {
-	    	"terms": {
-				'field' : 'sitedates.date.keyword'
+			"nested": {
+               "path": "sitedates"
+            },
+			"aggregations": {
+	             "Site Date": {
+	                "terms": {
+	                   "field": "sitedates.date.keyword"
+	                }
+	             }
 			}
 		},
 		'Has Tomb Owner' : {
