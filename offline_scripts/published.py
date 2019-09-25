@@ -57,6 +57,10 @@ def process_pubs(CURSOR):
 				row_value = None
 			else:
 				row_value = row_value.replace(',,','')
+				# remove font tags because it makes the Library page look weird with different fonts
+				import re
+				clean = re.compile('</?font.*?>', re.IGNORECASE)
+				row_value = re.sub(clean, '', row_value)
 
 			pub[key] = row_value
 
