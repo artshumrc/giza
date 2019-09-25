@@ -359,19 +359,26 @@ FACETS_PER_CATEGORY = {
 			}
 		},
 		"Photographer": {
-         "filter": {
-            "term": {
-               "relateditems.modernpeople.role.raw" : "Photographer"
-            }
-         },
-         "aggregations": {
-            "Photographer": {
-               "terms": {
-                  "field": "relateditems.modernpeople.displayname.raw"
-               }
-            }
-         }
-      }
+			"nested": {
+			   "path": "relateditems"
+			},
+			"aggregations": {
+	            "photographer_aggs": {
+			         "filter": {
+			            "term": {
+			               "relateditems.modernpeople.role.keyword" : "Photographer"
+			            }
+			         },
+			         "aggregations": {
+			            "Photographer": {
+			               "terms": {
+			                  "field": "relateditems.modernpeople.displayname.keyword"
+			               }
+			            }
+			         }
+				}
+			}
+      	}
 	},
 	'ancientpeople' : {
 		'Gender' : {
