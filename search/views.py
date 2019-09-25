@@ -28,11 +28,11 @@ def library(request):
 		letter_docs[current_letter] = []
 		for r in results:
 			source = r['_source']
-			if source['name'].encode('utf-8').lower().startswith(current_letter):
+			if source['name'].lower().startswith(current_letter):
 				letter_docs[current_letter].append(source)
 			else:
 				hits.append(letter_docs)
-				current_letter = source['name'].encode('utf-8').lower()[0]
+				current_letter = source['name'].lower()[0]
 				letter_docs = {}
 				letter_docs[current_letter] = []
 				letter_docs[current_letter].append(source)
