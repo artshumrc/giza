@@ -2,10 +2,10 @@
 JSON API for the Giza Archives Project TMS Database
 
 ## Requirements
-* python2.7
+* python 3.5+
 * pip
 * virtualenv
-* elasticsearch 1.7.5
+* elasticsearch 5 (does not yet work with elasticsearch 6)
 
 ## Installation
 1. [Install virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)
