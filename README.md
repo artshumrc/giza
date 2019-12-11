@@ -6,6 +6,7 @@ JSON API for the Giza Archives Project TMS Database
 * pip
 * virtualenv
 * elasticsearch 5 (does not yet work with elasticsearch 6)
+* Java 8 for ES5 - see this matrix: https://www.elastic.co/support/matrix#matrix_jvm
 
 ## Installation
 1. [Install virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)
