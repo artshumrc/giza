@@ -7,7 +7,7 @@ replace(replace(MediaMaster.PublicCaption, char(10), ''), char(13), ' ') AS Publ
 replace(replace(MediaRenditions.Remarks, char(10), ''), char(13), ' ') AS Remarks,
 Departments.Department,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
-MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName,
+MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName, MediaFiles.ArchIDNum,
 replace(replace(Date.TextEntry, char(10), ''), char(13), ' ') AS DateOfCapture, replace(replace(Problems.TextEntry, char(10), ''), char(13), ' ') AS ProblemsQuestions
 FROM MediaMaster
 LEFT JOIN Departments ON MediaMaster.DepartmentID=Departments.DepartmentID
