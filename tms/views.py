@@ -46,3 +46,31 @@ def add_headers(response):
     response["Access-Control-Allow-Origin"] = "*"
     response["Content-Type"] = "application/ld+json"
     return response
+
+	
+def get_manifest(request, id):
+	# use the request to get the build_absolute_uri('/manifests/')
+	# inject it for @id
+	# return json response of the manifest document -> found by item id
+	pass
+
+	
+def get_sequence(request, id, sequence_id):
+	# use the request to get the build_absolute_uri
+	# inject it for @id
+	# get document then return everything in sequence and below
+	pass
+	
+	
+def get_canvas(request, id, canvas_id):
+	# use the request to get the build_absolute_uri
+	# inject it for @id
+	# get document then return everything in canvas and below
+	pass
+	
+
+def get_annotation(request, id, canvas_id):
+	# use the request to get the build_absolute_uri
+	# inject it for @id
+	# get document then return everything in annotation and below
+	pass
