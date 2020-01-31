@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 
 from tms import models
 import json
@@ -43,34 +43,29 @@ def get_type_json(request, type, id):
 		raise Http404("There was an error getting this item")
 
 def add_headers(response):
-    response["Access-Control-Allow-Origin"] = "*"
-    response["Content-Type"] = "application/ld+json"
-    return response
+	response["Access-Control-Allow-Origin"] = "*"
+	response["Content-Type"] = "application/ld+json"
+	return response
 
 	
-def get_manifest(request, id):
-	# use the request to get the build_absolute_uri('/manifests/')
-	# inject it for @id
-	# return json response of the manifest document -> found by item id
-	pass
-
-	
-def get_sequence(request, id, sequence_id):
-	# use the request to get the build_absolute_uri
-	# inject it for @id
-	# get document then return everything in sequence and below
-	pass
-	
-	
-def get_canvas(request, id, canvas_id):
-	# use the request to get the build_absolute_uri
-	# inject it for @id
-	# get document then return everything in canvas and below
-	pass
-	
-
-def get_annotation(request, id, canvas_id):
-	# use the request to get the build_absolute_uri
-	# inject it for @id
-	# get document then return everything in annotation and below
-	pass
+def get_manifest(request, id, level):
+	""" Return json response for manifest found by drs_id """
+	try:
+		base_uri = request.build_absolute_uri('/manifests/')
+		data = models.get_item(id, "iiif_manifest")
+		manifest = data['manifest']
+		manifest['@id'] = base_uri + manifest['@id']
+		manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
+		manifest['sequences'][0]['canvases'][0]['@id'] = base_uri + manifest['sequences'][0]['canvases'][0]['@id']
+		manifest['sequences'][0]['canvases'][0]['images'][0]['@id'] = base_uri + manifest['sequences'][0]['canvases'][0]['images'][0]['@id']
+		manifest['sequences'][0]['canvases'][0]['images'][0]['on'] = manifest['sequences'][0]['canvases'][0]['@id']
+		if level == 'manifest':
+			return JsonResponse(manifest)
+		if level == 'sequence':
+			return JsonResponse(manifest['sequences'][0])
+		if level == 'canvas':
+			return JsonResponse(manifest['sequences'][0]['canvases'][0])
+		if level == 'annotation':
+			return JsonResponse(manifest['sequences'][0]['canvases'][0]['images'][0])
+	except:
+		raise Http404("There was an error getting this manifest")

@@ -57,4 +57,4 @@ class UtilsTestCase(TestCase):
             "Description": "A description of a manifest.",
             "MediaView": "Some label"
         }
-        self.assertEqual(json.loads(generate_IIIF_manifest(row)), MANIFEST)
+        self.assertEqual(generate_IIIF_manifest(row), MANIFEST)
