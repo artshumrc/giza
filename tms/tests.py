@@ -45,7 +45,7 @@ MANIFEST = {
 }
 
 
-def fake_get_manifest(req, id):
+def fake_get_manifest_data(req, id):
 	return MANIFEST
 
 
@@ -71,7 +71,7 @@ class ViewsTestCase(TestCase):
 	def setUp(self):
 		pass
 		
-	@mock.patch("tms.views.get_manifest_data", fake_get_manifest)
+	@mock.patch("tms.views.get_manifest_data", fake_get_manifest_data)
 	def test_get_manifest(self):
 		self.assertEqual(json.loads(get_manifest(0, 0).content), MANIFEST)
 		
@@ -82,14 +82,14 @@ class ViewsTestCase(TestCase):
 			MANIFEST['sequences'][0]
 			)
 	
-	@mock.patch("tms.views.get_manifest_data", fake_get_manifest)
+	@mock.patch("tms.views.get_manifest_data", fake_get_manifest_data)
 	def test_get_canvas(self):
 		self.assertEqual(
 			json.loads(get_canvas(0, 0).content),
 			MANIFEST['sequences'][0]['canvases'][0]
 			)
 			
-	@mock.patch("tms.views.get_manifest_data", fake_get_manifest)
+	@mock.patch("tms.views.get_manifest_data", fake_get_manifest_data)
 	def test_get_annotation(self):
 		self.assertEqual(
 			json.loads(get_annotation(0, 0).content),
