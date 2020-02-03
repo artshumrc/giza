@@ -46,29 +46,6 @@ def add_headers(response):
 	response["Access-Control-Allow-Origin"] = "*"
 	response["Content-Type"] = "application/ld+json"
 	return response
-
-	
-# def get_manifest(request, id, level):
-# 	""" Return json response for manifest found by drs_id """
-# 	try:
-# 		base_uri = request.build_absolute_uri('/manifests/')
-# 		data = models.get_item(id, "iiif_manifest")
-# 		manifest = data['manifest']
-# 		manifest['@id'] = base_uri + manifest['@id']
-# 		manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
-# 		manifest['sequences'][0]['canvases'][0]['@id'] = base_uri + manifest['sequences'][0]['canvases'][0]['@id']
-# 		manifest['sequences'][0]['canvases'][0]['images'][0]['@id'] = base_uri + manifest['sequences'][0]['canvases'][0]['images'][0]['@id']
-# 		manifest['sequences'][0]['canvases'][0]['images'][0]['on'] = manifest['sequences'][0]['canvases'][0]['@id']
-# 		if level == 'manifest':
-# 			return JsonResponse(manifest)
-# 		if level == 'sequence':
-# 			return JsonResponse(manifest['sequences'][0])
-# 		if level == 'canvas':
-# 			return JsonResponse(manifest['sequences'][0]['canvases'][0])
-# 		if level == 'annotation':
-# 			return JsonResponse(manifest['sequences'][0]['canvases'][0]['images'][0])
-# 	except:
-# 		raise Http404("There was an error getting this manifest")
 		
 
 def get_manifest_data(request, id):
