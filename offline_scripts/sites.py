@@ -83,7 +83,7 @@ def process_sites(CURSOR):
 		save(site)
 
 	else:
-		with open('../data/sites.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open('/Users/tyd851_local/src/apps/giza/data/sites.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -155,7 +155,7 @@ def process_site_dates(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_dates.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open('/Users/tyd851_local/src/apps/giza/data/sites_dates.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -229,7 +229,7 @@ def process_site_altnums(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_altnums.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open('/Users/tyd851_local/src/apps/giza/data/sites_altnums.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -324,7 +324,7 @@ def process_site_related_objects(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_objects_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open('/Users/tyd851_local/src/apps/giza/data/sites_objects_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -435,7 +435,7 @@ def process_site_related_constituents(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_constituents_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open('/Users/tyd851_local/src/apps/giza/data/sites_constituents_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -523,7 +523,7 @@ def process_site_related_published(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_published_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open('/Users/tyd851_local/src/apps/giza/data/sites_published_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -634,7 +634,7 @@ def process_site_related_media(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open('/Users/tyd851_local/src/apps/giza/data/sites_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')

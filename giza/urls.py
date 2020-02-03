@@ -30,10 +30,10 @@ urlpatterns = [
 	url(r'^search/$', search_views.search, name='search'),
 	url(r'^search-results/$', search_views.results, name='results'),
 	
-	path('manifests/<int:id>/', tms_views.get_manifest, {'level': 'manifest'}, name="iiif-manifest"),
-	path('manifests/<int:id>/sequence/1/', tms_views.get_manifest, {'level': 'sequence'}, name="iiif-manifest-sequence"),
-	path('manifests/<int:id>/canvas/1/', tms_views.get_manifest, {'level': 'canvas'}, name="iiif-manifest-canvas"),
-	path('manifests/<int:id>/annotation/canvas/1/', tms_views.get_manifest, {'level': 'annotation'}, name="iiif-manifest-annotation"),
+	path('manifests/<int:id>/', tms_views.get_manifest, name="iiif-manifest"),
+	path('manifests/<int:id>/sequence/1/', tms_views.get_sequence, name="iiif-manifest-sequence"),
+	path('manifests/<int:id>/canvas/1/', tms_views.get_canvas, name="iiif-manifest-canvas"),
+	path('manifests/<int:id>/annotation/canvas/1/', tms_views.get_annotation, name="iiif-manifest-annotation"),
 
 	url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html, name='get_type_html'),
 	url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)\.json$', tms_views.get_type_json, name='get_type_json'),

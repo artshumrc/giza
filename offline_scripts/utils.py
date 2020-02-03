@@ -49,7 +49,7 @@ def generate_IIIF_manifest(row):
 	manifest["sequences"] = build_manifest_sequences(row['ArchIDNum'])
 	manifest["sequences"][0]["canvases"] = build_manifest_canvas(row['ArchIDNum'])
 	
-	return json.dumps(manifest)
+	return manifest
 
 
 def build_base_manifest(drs_id, description, label):
