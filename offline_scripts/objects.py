@@ -7,10 +7,14 @@ import elasticsearch_connection
 import getpass
 import json
 import operator
+import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import objects_sql
 from utils import get_media_url, process_cursor_row
+
+
+DIRNAME = os.path.dirname(__file__)
 
 # SAMPLE_OBJECTS = ('61198', '15332', '15059', '52264', '50823', '35634', '5614', '46942', '48325', '3461', '25389', '25501')
 
@@ -91,7 +95,7 @@ def process_objects(CURSOR):
 		save(object)
 
 	else:
-		with open('../data/objects.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -163,7 +167,7 @@ def process_object_geocodes(CURSOR):
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_geocodes.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_geocodes.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -235,7 +239,7 @@ def process_object_altnums(CURSOR):
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_altnums.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_altnums.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -309,7 +313,7 @@ def process_object_flexfields(CURSOR):
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_flexfields.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_flexfields.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -335,7 +339,8 @@ def process_object_related_sites(CURSOR):
 			'site_number_index' : columns.index('SiteNumber'),
 			'classification_id_index' : columns.index('ClassificationID'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -361,6 +366,7 @@ def process_object_related_sites(CURSOR):
 		site_name = row[indices['site_name_index']]
 		site_number = row[indices['site_number_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 
 		site_dict = {}
 		site_dict['id'] = site_id
@@ -368,6 +374,7 @@ def process_object_related_sites(CURSOR):
 		site_dict['sitenumber'] = site_number
 		site_dict['displaytext'] = site_number
 		site_dict['thumbnail'] = thumbnail_url
+		site_dict['drs_id'] = drs_id
 
 		if 'sites' not in object['relateditems']:
 			object['relateditems']['sites'] = []
@@ -402,7 +409,7 @@ def process_object_related_sites(CURSOR):
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_sites_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_sites_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -505,7 +512,7 @@ def process_object_related_constituents(CURSOR):
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_constituents_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_constituents_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -591,7 +598,7 @@ def process_object_related_published(CURSOR):
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_published_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_published_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -678,7 +685,7 @@ def process_object_related_unpublished(CURSOR):
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_unpublished_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_unpublished_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -711,7 +718,8 @@ def process_object_related_media(CURSOR):
 			'thumb_path_index' : columns.index('ThumbPathName'),
 			'thumb_file_index' : columns.index('ThumbFileName'),
 			'main_path_index' : columns.index('MainPathName'),
-			'main_file_index' : columns.index('MainFileName')
+			'main_file_index' : columns.index('MainFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -743,6 +751,7 @@ def process_object_related_media(CURSOR):
 		mediaview = "" if row[indices['media_view_index']].lower() == "null" else row[indices['media_view_index']]
 		caption = "" if row[indices['caption_index']].lower() == "null" else row[indices['caption_index']]
 		display_text = ": ".join([mediaview, caption])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
 		# so, make sure we are only using videos that are mp4s
 		if media_type_key == 3:
@@ -771,7 +780,8 @@ def process_object_related_media(CURSOR):
 				'thumbnail' : thumbnail_url,
 				'main' : main_url,
 				'number' : number,
-				'description' : description
+				'description' : description,
+				'iiif_manifest': drs_id
 				})
 		return(object, current_id)
 
@@ -792,7 +802,7 @@ def process_object_related_media(CURSOR):
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_media_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')

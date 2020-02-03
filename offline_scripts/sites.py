@@ -83,7 +83,7 @@ def process_sites(CURSOR):
 		save(site)
 
 	else:
-		with open('../data/sites.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'sites.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -155,7 +155,7 @@ def process_site_dates(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_dates.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'sites_dates.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -229,7 +229,7 @@ def process_site_altnums(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_altnums.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'sites_altnums.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -257,7 +257,8 @@ def process_site_related_objects(CURSOR):
 			'object_number_index' : columns.index('ObjectNumber'),
 			'object_date_index' : columns.index('ObjectDate'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -283,6 +284,7 @@ def process_site_related_objects(CURSOR):
 		classification = CLASSIFICATIONS.get(classification_key)
 		object_id = int(row[indices['object_id_index']])
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 
 		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
 		object_title = row[indices['object_title_index']]
@@ -302,7 +304,8 @@ def process_site_related_objects(CURSOR):
 			'classificationid' : classification_key,
 			'number' : object_number,
 			'date' : date,
-			'thumbnail' : thumbnail_url})
+			'thumbnail' : thumbnail_url,
+			'drs_id' : drs_id})
 		# keep the related items sorted
 		site['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
 		return (site, current_id)
@@ -324,7 +327,7 @@ def process_site_related_objects(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_objects_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'sites_objects_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -435,7 +438,7 @@ def process_site_related_constituents(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_constituents_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'sites_constituents_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -523,7 +526,7 @@ def process_site_related_published(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_published_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'sites_published_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -556,7 +559,8 @@ def process_site_related_media(CURSOR):
 			'thumb_path_index' : columns.index('ThumbPathName'),
 			'thumb_file_index' : columns.index('ThumbFileName'),
 			'main_path_index' : columns.index('MainPathName'),
-			'main_file_index' : columns.index('MainFileName')
+			'main_file_index' : columns.index('MainFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -587,7 +591,8 @@ def process_site_related_media(CURSOR):
 		display_text = ": ".join([mediaview, caption])
 		media_master_id = row[indices['media_master_id_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
-		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
+		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']]),
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
 		# so, make sure we are only using videos that are mp4s
@@ -613,7 +618,8 @@ def process_site_related_media(CURSOR):
 			'thumbnail' : thumbnail_url,
 			'main' : main_url,
 			'number' : number,
-			'description' : description
+			'description' : description,
+			'drs_id' : drs_id
 			})
 		return(site, current_id)
 
@@ -634,7 +640,7 @@ def process_site_related_media(CURSOR):
 		   # save last object to elasticsearch
 		save(site)
 	else:
-		with open('../data/sites_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'sites_media_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')

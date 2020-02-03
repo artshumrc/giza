@@ -7,10 +7,14 @@ import elasticsearch_connection
 import getpass
 import json
 import operator
+import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import constituents_sql
 from utils import get_media_url, process_cursor_row
+
+
+DIRNAME = os.path.dirname(__file__)
 
 # First update each Constituent with the latest data
 # This is the basic information/metadata that comprises a Constituent
@@ -75,7 +79,7 @@ def process_constituents(CURSOR):
 		save(constituent)
 
 	else:
-		with open('../data/constituents.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'constituents.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -148,7 +152,7 @@ def process_constituents_altnames(CURSOR):
 		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('../data/constituents_altnames.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'constituents_altnames.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -246,7 +250,7 @@ def process_constituents_related_objects(CURSOR):
 		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('../data/constituents_objects_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'constituents_objects_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -333,7 +337,7 @@ def process_constituents_related_sites(CURSOR):
 		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('../data/constituents_sites_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'constituents_sites_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -420,7 +424,7 @@ def process_constituents_related_published(CURSOR):
 		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('../data/constituents_published_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'constituents_published_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -533,7 +537,7 @@ def process_constituents_related_media(CURSOR):
 		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('../data/constituents_media_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'constituents_media_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')

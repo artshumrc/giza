@@ -1,11 +1,14 @@
 import csv
 import elasticsearch_connection
 import json
+import os
 
 from utils import generate_IIIF_manifest
 
 
 ARCH_IDS = []
+
+DIRNAME = os.path.dirname(__file__)
 
 
 def process_sites_objects_related_manifests():
@@ -23,7 +26,7 @@ def process_sites_objects_related_manifests():
 		}
 		return indices
 		
-	with open('../data/sites_objects_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+	with open(os.path.join(DIRNAME, '..', 'data', 'sites_objects_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
 		headers = headers.replace('\r\n','')
@@ -33,7 +36,6 @@ def process_sites_objects_related_manifests():
 	
 		rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 		object = {}
-		current_id = '-1'
 		for row in rows:
 			if not row[indices['drs_id']].lower() == "null" and row[indices['drs_id']] not in ARCH_IDS:
 				manifest_ob = {
@@ -68,7 +70,7 @@ def process_sites_media_related_manifests():
 		}
 		return indices
 	
-	with open('../data/sites_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+	with open(os.path.join(DIRNAME, '..', 'data', 'sites_media_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
 		headers = headers.replace('\r\n','')
@@ -78,7 +80,6 @@ def process_sites_media_related_manifests():
 	
 		rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 		object = {}
-		current_id = '-1'
 		for row in rows:
 			if not row[indices['drs_id']].lower() == "null" and row[indices['drs_id']] not in ARCH_IDS:
 				manifest_ob = {
@@ -108,7 +109,7 @@ def process_object_sites_related_manifests():
 		}
 		
 	
-	with open('../data/objects_sites_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+	with open(os.path.join(DIRNAME, '..', 'data', 'objects_sites_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
 		headers = headers.replace('\r\n','')
@@ -118,7 +119,6 @@ def process_object_sites_related_manifests():
 	
 		rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 		object = {}
-		current_id = '-1'
 		for row in rows:
 			if not row[indices['drs_id']].lower() == "null" and row[indices['drs_id']] not in ARCH_IDS:
 				manifest_ob = {
@@ -154,7 +154,7 @@ def process_object_media_related_manifests():
 		}
 		return indices
 		
-	with open('../data/objects_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+	with open(os.path.join(DIRNAME, '..', 'data', 'objects_media_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
 		headers = headers.replace('\r\n','')
@@ -164,7 +164,6 @@ def process_object_media_related_manifests():
 	
 		rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 		object = {}
-		current_id = '-1'
 		for row in rows:
 			if not row[indices['drs_id']].lower() == "null" and row[indices['drs_id']] not in ARCH_IDS:
 				manifest_ob = {
