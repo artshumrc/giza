@@ -23,7 +23,7 @@ def process_sites_objects_related_manifests():
 		}
 		return indices
 		
-	with open('/Users/tyd851_local/src/apps/giza/data/sites_objects_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+	with open('../data/sites_objects_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
 		headers = headers.replace('\r\n','')
@@ -68,7 +68,7 @@ def process_sites_media_related_manifests():
 		}
 		return indices
 	
-	with open('/Users/tyd851_local/src/apps/giza/data/sites_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+	with open('../data/sites_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
 		headers = headers.replace('\r\n','')
@@ -108,7 +108,7 @@ def process_object_sites_related_manifests():
 		}
 		
 	
-	with open('/Users/tyd851_local/src/apps/giza/data/objects_sites_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+	with open('../data/objects_sites_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
 		headers = headers.replace('\r\n','')
@@ -154,7 +154,7 @@ def process_object_media_related_manifests():
 		}
 		return indices
 		
-	with open('/Users/tyd851_local/src/apps/giza/data/objects_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+	with open('../data/objects_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
 		headers = headers.replace('\r\n','')

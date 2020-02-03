@@ -88,7 +88,7 @@ def process_pubs(CURSOR):
 		save(pub)
 
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/pubdocs.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/pubdocs.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -170,7 +170,7 @@ def process_pub_related_sites(CURSOR):
 		   # save last pub to elasticsearch
 		save(pub)
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/pubdocs_sites_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/pubdocs_sites_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -264,7 +264,7 @@ def process_pub_related_objects(CURSOR):
 		   # save last object to elasticsearch
 		save(pub)
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/pubdocs_objects_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/pubdocs_objects_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -368,7 +368,7 @@ def process_pub_related_constituents(CURSOR):
 		   # save last object to elasticsearch
 		save(pub)
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/pubdocs_constituents_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/pubdocs_constituents_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -439,7 +439,7 @@ def process_pub_related_media(CURSOR):
 		   # save last object to elasticsearch
 		save(pub)
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/pubdocs_media_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/pubdocs_media_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')

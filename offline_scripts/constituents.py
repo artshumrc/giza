@@ -75,7 +75,7 @@ def process_constituents(CURSOR):
 		save(constituent)
 
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/constituents.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/constituents.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -148,7 +148,7 @@ def process_constituents_altnames(CURSOR):
 		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/constituents_altnames.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/constituents_altnames.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -246,7 +246,7 @@ def process_constituents_related_objects(CURSOR):
 		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/constituents_objects_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/constituents_objects_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -333,7 +333,7 @@ def process_constituents_related_sites(CURSOR):
 		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/constituents_sites_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/constituents_sites_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -420,7 +420,7 @@ def process_constituents_related_published(CURSOR):
 		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/constituents_published_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/constituents_published_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -533,7 +533,7 @@ def process_constituents_related_media(CURSOR):
 		   # save last object to elasticsearch
 		save(constituent)
 	else:
-		with open('/Users/tyd851_local/src/apps/giza/data/constituents_media_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open('../data/constituents_media_related.csv', 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
