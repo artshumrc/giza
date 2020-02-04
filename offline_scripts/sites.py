@@ -7,10 +7,14 @@ import elasticsearch_connection
 import getpass
 import json
 import operator
+import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import sites_sql
 from utils import get_media_url, process_cursor_row
+
+
+DIRNAME = os.path.dirname(__file__)
 
 #SAMPLE_SITES = ('1175', '670', '671', '672', '1509', '677', '2080', '2796', '2028', '2035', '2245', '2043', '3461', '3412')
 

@@ -107,6 +107,7 @@ def process_object_sites_related_manifests():
 			'thumb_file_index' : columns.index('ThumbFileName'),
 			'drs_id' : columns.index('ArchIDNum')
 		}
+		return indices
 		
 	
 	with open(os.path.join(DIRNAME, '..', 'data', 'objects_sites_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
