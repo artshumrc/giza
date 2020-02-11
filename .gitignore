@@ -1,4 +1,4 @@
 *.pyc
 *~
 *.sqlite3
-elasticsearch*
+elasticsearch-1.7.5

@@ -20,7 +20,7 @@ from search import views as search_views
 
 urlpatterns = [
     url(r'^$', tms_views.index, name="index"),
-    url(r'^update/$', tms_views.index_update, name="index_update"),
+    url(r'^v2/$', tms_views.index_update, name="index_update"),
     url(r'^(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', tms_views.about, name="about"),
     url(r'^(?P<page_name>donate)/$', tms_views.donate, name="donate"),
     url(r'^(?P<page_name>archaeology|commontopics|faq|gizaintro)/$', tms_views.explore, name="explore"),

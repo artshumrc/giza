@@ -1,8 +1,10 @@
+{% load static %}
+
 <!-- BEGIN FOOTER -->
 
 <nav class="footer">
   <div class="row">
-    
+
     <section class="large-6 columns">
       <div class="row">
         <div class="medium-4 columns">
@@ -56,7 +58,7 @@
         </div>
       </div>
     </section>
-    
+
     <section class="large-6 columns">
       <div class="row">
         <div class="medium-4 columns">
@@ -78,15 +80,15 @@
         </div>
       </div>
     </section>
-    
+
   </div>
 </nav>
 
 <footer class="legal-social" data-equalizer data-equalize-on="medium">
   <div class="row">
     <div class="large-6 large-push-6 columns text-md-right" data-equalizer-watch>
-      <img src="{{root}}assets/img/footerlogo.png" alt="Giza Project at Harvard University" class="image-spacer" style="max-width: 200px;">
-      <img src="{{root}}assets/img/neh_logo_web.svg" alt="National Endowment for the Humanities" class="image-spacer" style="margin-top: -0.2em; max-width: 200px;">
+      <img src="{% static 'img/footerlogo.png" alt="Giza Project at Harvard University" class="image-spacer" style="max-width: 200px;' %}">
+      <img src="{% static 'img/neh_logo_web.svg" alt="National Endowment for the Humanities" class="image-spacer" style="margin-top: -0.2em; max-width: 200px;' %}">
     </div>
     <div class="large-6 large-pull-6 columns" data-equalizer-watch>
       <div class="row" data-equalizer>
