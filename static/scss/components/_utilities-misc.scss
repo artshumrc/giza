@@ -1,0 +1,91 @@
+/*  Miscellaneous Utilities
+--------------------------------------*/
+
+.row-padded { // A row whose content should match the alignment of columns
+    
+  @include breakpoint(small) {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+    
+  @include breakpoint(medium) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+.lines {
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	padding: 1em;
+}
+
+// Screenreader support
+
+.sr-only {
+  @include sr-only();
+}
+
+.sr-only-focusable {
+  @include sr-only-focusable();
+}
+
+.invisible {
+  visibility: hidden !important;
+}
+
+#skippy, 
+.skiplink-text {
+  color: $white;
+}
+
+// Anchor links offset (to compensate for fixed navbar height)
+
+:target:before {
+  content: "";
+  display: block;
+  height: 85px; /* fixed header height*/
+  margin: -85px 0 0; /* negative fixed header height */
+}
+
+// Word-break allowance (for long strings like URLs, which otherwise
+// cause problems with anchor jumping/scrolling
+
+.breakable-word {
+  word-break: break-word;
+}
+
+// Responsive alignment 
+
+.text-md-right {
+  
+  @include breakpoint(medium) {
+    text-align: right;
+  }
+  
+} 
+
+.text-lg-right {
+  
+  @include breakpoint(large) {
+    text-align: right;
+  }
+  
+}
+
+.text-md-left {
+  
+  @include breakpoint(medium) {
+    text-align: left;
+  }
+  
+} 
+
+.text-lg-left {
+  
+  @include breakpoint(large) {
+    text-align: left;
+  }
+  
+} 
+

@@ -1,0 +1,46 @@
+---
+title: Khafre Valley Temple
+section: explore
+section-explore: true
+bodyclasses: header-full mode-intro
+---
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+  
+  <div class="page-header header-bg-1" id="content">
+    <div class="row title">
+      <header class="large-8 columns">
+        <h1>{{title}} <a name="top"></a></h1>
+        <h3 class="page-header__meta"><a href="{{root}}intro.html"><i class="icon-angle-left"></i> Back</a></h3>
+      </header> 
+    </div>
+  </div>
+  
+  <!-- row -->
+  
+  <div class="row content-start">
+    
+    <section class="large-12 columns content-col-primary">
+      
+      {{#> feature-block 
+        feature-title="All Photos" 
+        feature-block-class="" 
+        feature-icon="camera"
+        feature-counter="248"
+      }}
+        <ul class="feature-block__list item-grid thumbsize-md thumbs-square">
+        {{#each photos}}
+          <li>
+            {{> list-item-thumbonly}}
+          </li>
+        {{/each}}
+        </ul>
+      {{/feature-block}}
+      
+    </section>
+  
+  </div>
+    
+  <!-- END MAIN CONTENT ROWS -->
+  
+  {{> gallery-modal}}

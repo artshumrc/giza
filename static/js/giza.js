@@ -45,61 +45,16 @@ $('#search-dropdown').on('show.zf.dropdown', function() {
   }, 250);
 });
 
-// from http://jsfiddle.net/iambriansreed/bjdSF/ and http://stackoverflow.com/a/5454303
-$(function() {
-  var minimized_elements = $('span.minimize');
-
-  minimized_elements.each(function(){
-    var t = $(this).text(),
-    max_length = 200;
-
-    if(t.length < max_length) return;
-
-    var trimmed_string = t.substr(0, max_length);
-    max_length = Math.min(trimmed_string.length, trimmed_string.lastIndexOf(" "));
-    trimmed_string = trimmed_string.substr(0, max_length);
-
-    $(this).html(
-      trimmed_string+'<span> ... </span><a href="#" class="more">More</a>'+
-      '<span style="display:none;">'+ t.substr(max_length,t.length)+' <a href="#" class="less">Less</a></span>'
-    );
-
-  });
-
-  $('a.more', minimized_elements).click(function(event){
-    event.preventDefault();
-    $(this).hide().prev().hide();
-    $(this).next().show();
-  });
-
-  $('a.less', minimized_elements).click(function(event){
-    event.preventDefault();
-    $(this).parent().hide().prev().show().prev().show();
-  });
-
-});
-
-var goToPage = function(url) {
-  window.location = url;
-}
-
-// on Advanced Search page, switch between search fields for different categories
-$('fieldset#category-radio-selector input').click(function() {
-  $('.category-section').hide();
-  var section_id = $(this).attr('data-for-id');
-  $('#'+section_id).show();
-});
-
 // Dynamically adjust right-column margin on feature full view
 
 var fnAdjustRightColMargin = function() {
   var menu = $('#jumpmenu');
-  if (menu.length > 0) {
-    var col = $('.header-full.mode-full .content-col-secondary');
-    var offset = Foundation.Box.GetDimensions(menu)['height'];
-    offset = (offset + 50);
-    col.css('margin-top', offset);
-  }
+  var col = $('.header-full.mode-full .content-col-secondary');
+  var offset = Foundation.Box.GetDimensions(menu)['height'];
+  offset = (offset + 50);
+  col.css('margin-top', offset);
 }
 
 fnAdjustRightColMargin();
+
+

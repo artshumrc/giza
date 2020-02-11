@@ -1,0 +1,36 @@
+{% load static %}
+
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Giza | {{title}}</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+
+    <link rel="apple-touch-icon" sizes="144x144" href="{{root}}apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="{{root}}favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{root}}favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="{{root}}manifest.json">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+  <body class="
+    {% if section %} section-{{section}}-body{% endif %}
+  {% if body_class %} {{body_class}} {% endif %}
+  ">
+
+    {% include 'partials/header.html' %}
+
+    {% block content %}
+      No content
+    {% endblock %}
+
+    {% include 'partials/footer.html' %}
+
+    <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/giza.js' %}"></script>
+    <script src="{% static 'video/jquery.vide.min.js' %}"></script>
+  </body>
+</html>

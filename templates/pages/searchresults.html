@@ -1,0 +1,135 @@
+---
+title: Search the Archives
+section: search
+section-search: true
+---
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+  
+  <div class="page-header header-bg-5" id="content">
+    <div class="row title">
+      <header class="large-12 columns">
+        <h1>{{title}} <a name="top"></a></h1>
+      </header> 
+    </div>
+  </div>
+  
+  <div class="row">
+    
+    <section class="medium-9 medium-push-3 columns">
+
+      <div class="row">
+        <div class="medium-6 columns">
+          <h3 class="heading-alt m-t-half m-b-1">6 search results found.</h3>
+        </div>
+        <div class="medium-3 columns text-right">
+          <label for="sortResults" class="middle m-r-neg1">Sort by:</label>
+        </div>
+        <div class="medium-3 columns">
+          <select id="sortResults">
+            <option value="">Category</option>
+            <option value="">Name</option>
+            <option value="">Year</option>
+            <option value="">Material</option>
+            <option value="">Findspot</option>
+          </select>
+        </div>
+      </div>
+      
+      {{#each search-results}}
+        {{> search-result}}
+      {{/each}}
+              
+    </section>
+    <aside class="medium-3 medium-pull-9 columns">
+      
+      <div class="feature-block secondary text-smaller">  
+        <h5 class="heading-alt">Search options</h5>
+        <p><a href="{{root}}search.html">Start a new search</a></p>
+        
+        <div class="search-facet-section">
+          <h6 class="search-facet-title">Keyword:</h6>
+          <ul class="search-facet-list">
+            <li class="search-facet-item is-active">
+              <a href="#0">khafre</a>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="search-facet-section">
+          <fieldset>
+            <legend class="search-facet-title">Category:</legend>
+            <ul class="search-facet-list">
+              <li class="search-facet-item">
+                <input type="radio" name="Category" value="Objects" id="categoryObjects" required checked><label for="categoryObjects">Objects</label>
+              </li>
+              <li class="search-facet-item">
+                <input type="radio" name="Category" value="Videos" id="categoryVideos"><label for="categoryVideos">Videos</label>
+              </li>
+              <li class="search-facet-item">
+                <input type="radio" name="Category" value="Excavation Diaries" id="categoryExcavationDiaries"><label for="categoryExcavationDiaries">Excavation Diaries</label>
+              </li>
+            </ul>
+          </fieldset>
+        </div>
+                
+        <div class="search-facet-section">
+          <fieldset>
+            <legend class="search-facet-title">Material:</legend>
+            <ul class="search-facet-list">
+              <li class="search-facet-item">
+                <input type="checkbox" name="Material" value="limestone" id="materialLimestone" checked><label for="materialLimestone">limestone</label>
+              </li>
+              <li class="search-facet-item">
+                <input type="checkbox" name="Material" value="alabaster" id="materialAlabaster"><label for="materialAlabaster">alabaster</label>
+              </li>
+              <li class="search-facet-item">
+                <input type="checkbox" name="Material" value="bronze" id="materialBronze"><label for="materialBronze">bronze</label>
+              </li>
+            </ul>
+          </fieldset>
+        </div>
+      
+        <div class="search-facet-section">
+          <fieldset>
+            <legend class="search-facet-title">Year:</legend>
+            <ul class="search-facet-list">
+              <li class="search-facet-item">
+                <input type="checkbox" name="Year" value="1924" id="year1924"><label for="year1924">1924</label>
+              </li>
+              <li class="search-facet-item">
+                <input type="checkbox" name="Year" value="alabaster" id="year1925"><label for="year1925">1925</label>
+              </li>
+              <li class="search-facet-item">
+                <input type="checkbox" name="Year" value="bronze" id="year1926"><label for="year1926">1926</label>
+              </li>
+            </ul>
+          </fieldset>
+        </div>
+        
+        <div class="search-facet-section">
+          <fieldset>
+            <legend class="search-facet-title">Findspot:</legend>
+            <ul class="search-facet-list">
+              <li class="search-facet-item">
+                <input type="checkbox" name="Findspot" value="G 2104" id="findspotG2104"><label for="findspotG2104">G 2104</label>
+              </li>
+              <li class="search-facet-item">
+                <input type="checkbox" name="Findspot" value="G 2109" id="findspotG2109"><label for="findspotG2109">G 2109</label>
+              </li>
+              <li class="search-facet-item">
+                <input type="checkbox" name="Findspot" value="G 2110" id="findspotG2110"><label for="findspotG2110">G 2110</label>
+              </li>
+              <li class="search-facet-item">
+                <input type="checkbox" name="Findspot" value="G 2111" id="findspotG2111"><label for="findspotG2111">G 2111</label>
+              </li>
+            </ul>
+          </fieldset>
+        </div>
+        
+      </div>
+      
+    </aside>
+    
+  </div>
+

@@ -7,6 +7,9 @@ import json
 def index(request):
 	return static_pages(request, 'index')
 
+def index_update(request):
+	return render(request, 'pages/index.html')
+
 def about(request, page_name):
 	return static_pages(request, page_name)
 
@@ -26,7 +29,7 @@ def static_pages(request, page_name):
 def get_type_html(request, type, id, view):
 	# get site in elasticsearch and render or return 404
 	# try:
-		if view == "intro": 
+		if view == "intro":
 			view = "full"
 		type_object = models.get_item(id, type)
 		return render(request, 'tms/'+view+'.html', {'object': type_object, 'type': type})

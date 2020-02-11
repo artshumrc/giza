@@ -1,0 +1,101 @@
+<a id="skippy" class="sr-only sr-only-focusable" href="#content">
+  <div class="top-bar-container">
+    <span class="skiplink-text">Skip to main content</span>
+  </div>
+</a>
+
+<!-- BEGIN TOPBAR -->
+
+<div data-sticky-container>
+  <div class="top-bar-container" data-sticky data-options="marginTop:0;" style="width:100%">
+    <div class="row row-padded">
+      <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
+        <button class="icon-bars icon-padded title-bar-title" type="button" data-toggle>Menu</button>
+      </div>
+      <div class="top-bar" id="main-menu">
+        <div class="top-bar-left hide-for-small-only">
+              <a href="index.html"><img src="{{root}}assets/img/navlogo.png" alt="Digital Giza at Harvard University. Click for home."></a>
+        </div>
+        <div class="top-bar-left nav-menu-primary">
+          <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown" data-alignment="left">
+            <li {% if page and page == 'index' %} class="active"{% endif %}>
+              <a href="{{root}}index.html" class="icon-home"> <span class="hide-for-medium">Home</span></a>
+            </li>
+            <li {% if 'section-explore' %} class="active"{% endif %}>
+              <a href="{{root}}gizaintro.html">Explore</a>
+              <ul class="vertical menu">
+                <li><a href="{{root}}gizaintro.html">Introduction to Giza</a></li>
+                <li><a href="{{root}}archaeology.html">Archaeology at Giza</a></li>
+                <li><a href="{{root}}commontopics.html">Common Topics</a></li>
+                <li><a href="#0">Giza Maps &amp; Plans</a></li>
+                <li><a href="{{root}}library.html">Digital Giza Library</a></li>
+                <li><a href="{{root}}videos.html">Videos</a></li>
+                <li><a href="{{root}}faq.html">Glossary &amp; FAQs</a></li>
+              </ul>
+            </li>
+            <li {% if 'section-giza3d' %} class="active"{% endif %}>
+              <a href="{{root}}giza3d.html">Giza 3D</a>
+              <ul class="vertical menu">
+                <li><a href="{{root}}intro.html">Giza Plateau</a></li>
+                <li><a href="{{root}}intro.html">Khufu Pyramid Complex</a></li>
+                <li><a href="{{root}}intro.html">Khufu Pyramid Temple</a></li>
+                <li><a href="{{root}}intro.html">Khufu Valley Temple</a></li>
+                <li><a href="{{root}}intro.html">Khafre Pyramid Complex</a></li>
+                <li><a href="{{root}}intro.html">Khafre Pyramid Temple</a></li>
+                <li><a href="{{root}}intro.html">Khafre Valley Temple</a></li>
+                <li><a href="{{root}}giza3d.html">Sphinx</a></li>
+                <li><a href="{{root}}giza3d.html">Sphinx Temple</a></li>
+                <li><a href="{{root}}giza3d.html">Menkaure Pyramid Complex</a></li>
+                <li><a href="{{root}}giza3d.html">Menkaure Pyramid Temple</a></li>
+                <li><a href="{{root}}giza3d.html">Menkaure Valley Temple</a></li>
+                <li><a href="{{root}}giza3d.html">Tomb of Hetepheres I (G 7000 X)</a></li>
+                <li><a href="{{root}}giza3d.html">G 2100 Family Tomb Complex</a></li>
+                <li><a href="{{root}}giza3d.html">Tomb of Nefer (G 2110)</a></li>
+                <li><a href="{{root}}giza3d.html">Tomb of Kaninsut [I] (G 2155)</a></li>
+                <li><a href="{{root}}giza3d.html">Tomb of Meresankh III (G 7530-7540)</a></li>
+              </ul>
+            </li>
+            <li {% if 'section-mygiza' %} class="active"{% endif %}>
+              <a href="#0">My Giza</a>
+              <ul class="vertical menu">
+                <li><a href="#0">My Bookshelf</a></li>
+                <li><a href="#0">My Photo Albums</a></li>
+                <li><a href="#0">My Documents</a></li>
+                <li><a href="#0">My Object Collections</a></li>
+                <li><a href="#0">My Archives</a></li>
+                <li><a href="#0">Register for My Giza</a></li>
+              </ul>
+            </li>
+            <li {% if 'section-about' %} class="active"{% endif %}>
+              <a href="{{root}}about.html">About the Project</a>
+              <ul class="vertical menu">
+                <li><a href="{{root}}about.html">What is the Giza Project?</a></li>
+                <li><a href="{{root}}gizacard.html">The GizaCARD</a></li>
+                <li><a href="{{root}}resources.html">Resources</a></li>
+                <li><a href="{{root}}news.html">News</a></li>
+                <li><a href="{{root}}blog.html">Blog</a></li>
+                <li><a href="{{root}}contact.html">Contact</a></li>
+              </ul>
+            </li>
+            <li {% if page and page == 'donate' %} class="active"{% endif %}>
+              <a href="{{root}}donate.html">Donate</a>
+            </li>
+            <li {% if 'section-search' %} class="active"{% endif %}>
+              <button class="icon-search button" type="button" data-toggle="search-dropdown"> <span class="hide-for-medium">Search</span></button>
+              <div class="dropdown-pane left" id="search-dropdown" data-dropdown data-auto-focus="true">
+                <form>
+                    <input type="text" id="inputSimpleSearch" placeholder="Enter search keywords">
+                    <!-- this should be a <button> in real life -->
+                    <a class="button primary">Search</a>
+                </form>
+                <small class="middle"><a href="{{root}}search.html">Advanced Search</a></small>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- END TOPBAR -->

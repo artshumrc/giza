@@ -1,0 +1,49 @@
+/*  Buttons
+--------------------------------------*/
+
+.button {
+  font-weight: bold;
+  
+  &:hover, 
+  &:active, 
+  &:focus {
+    text-decoration: none;
+  }
+}
+
+// Button groups (toggle switch)
+
+.button-group {
+  
+  .button {
+    border-radius: 0;
+  }
+  
+  .button:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  
+  .button:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+  
+  .button.primary {
+    background-color: $dune;
+    color: $white;
+  }
+  
+  .button.secondary {
+    background-color: $sand-dark;
+    color: $sand-light;
+    
+    &:hover, 
+    &:active, 
+    &:focus {
+      background-color: $umber;
+      color: $white;
+    }
+  }
+  
+}

@@ -1,0 +1,91 @@
+/*  Search
+--------------------------------------*/
+
+// Faceted Search sidebar
+
+.search-facet-section {
+  display: block; // Needed for fieldsets which are inline by default
+  border-top: solid 1px $sand-light;
+  padding-top: $global-padding;
+}
+
+  .search-facet-title {
+    font-family: $body-font-family;
+    font-weight: normal;
+    font-size: $global-font-size;
+    text-transform: none;
+    color: $umber;
+    margin-bottom: 0;
+  }
+  
+  .search-facet-list {
+    @extend .no-bullet;
+  }
+  
+    .search-facet-item {
+      
+      input[type="radio"], 
+      input[type="checkbox"] {
+        margin-bottom: 0;
+      }
+      
+      label {
+        color: #4a4a4a;
+      }
+      
+      &.is-active a, 
+      &.is-active label, 
+      input:checked + label {
+        color: $dune;
+        font-weight: bold;
+      }  
+      
+      &.is-active a {
+        
+        &:after {
+          content: "\00d7";
+          display: inline-block;
+          margin-left: 0.3em;
+          vertical-align: baseline;
+          font-size: 110%;
+          font-weight: normal;
+          color: $maroon;
+        }
+        
+        &:hover, 
+        &:active, 
+        &:focus {
+          
+          &, &:after {
+            color: map-get($foundation-palette, alert);
+          }
+        }
+      }
+      
+    }
+
+// Search result items
+  
+.search-result {
+  border-top: solid 1px #ccc;
+  padding-top: $global-padding;
+  padding-bottom: $global-padding;
+  margin-bottom: 0;
+  
+  &:last-child {
+    border-bottom: solid 1px #ccc;
+  }
+  
+  .media-object-title {
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+  
+  .subheader {
+    @extend .text-smaller;
+    @extend .no-bullet;
+    margin-top: 0;
+  }
+  
+}
+
