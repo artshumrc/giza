@@ -25,7 +25,11 @@ SECRET_KEY = '9w)eu)4tj*v(x%8^tz$fsc8^t@jj66_7_!_w2wo@9lcs)^xf6='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '.local',
+    '.archimedes.digital',
+    '.fas.harvard.edu',
+]
 
 
 # Application definition
