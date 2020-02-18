@@ -1,3 +1,6 @@
+/*  Fontastic
+--------------------------------------*/
+
 @charset "UTF-8";
 
 @font-face {
@@ -144,4 +147,46 @@
 }
 .icon-university:before {
   content: "\46";
+}
+.icon-th:before {
+  content: "\47";
+}
+.icon-th-large:before {
+  content: "\48";
+}
+.icon-envelope-square:before {
+  content: "\49";
+}
+.icon-twitter-square:before {
+  content: "\4a";
+}
+.icon-link:before {
+  content: "\4b";
+}
+.icon-align-justify:before {
+  content: "\4c";
+}
+.icon-ellipsis-h:before {
+  content: "\4d";
+}
+.icon-plus-circle:before {
+  content: "\4e";
+}
+.icon-trash-o:before {
+  content: "\4f";
+}
+.icon-arrow-circle-right:before {
+  content: "\50";
+}
+.icon-minus-circle:before {
+  content: "\51";
+}
+.icon-check-circle:before {
+  content: "\52";
+}
+.icon-picture-o:before {
+  content: "\53";
+}
+.icon-comments:before {
+  content: "\54";
 }

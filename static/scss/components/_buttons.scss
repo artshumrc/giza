@@ -11,6 +11,20 @@
   }
 }
 
+.button.secondary {
+  background-color: $sand-light;
+  border: solid 1px $sand-medium;
+  color: $dune;
+  
+  &:hover, 
+  &:active, 
+  &:focus {
+    background-color: $sand-medium;
+    color: $dune;
+  }
+}
+
+
 // Button groups (toggle switch)
 
 .button-group {
@@ -36,6 +50,7 @@
   
   .button.secondary {
     background-color: $sand-dark;
+    border-color: transparent;
     color: $sand-light;
     
     &:hover, 

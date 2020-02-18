@@ -1,0 +1,188 @@
+---
+title: Giza @ School
+section: school
+section-school: true
+---
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{{> page-header bg="9"}}
+
+{{#> page-subheader}}
+  <p class="lead">
+    <strong class="accent-red">Welcome teachers and students!</strong><br>
+    Below you'll find resources to help you explore the many facets of ancient 
+    Egypt and Giza.
+  </p>
+{{/page-subheader}}
+
+{{#> content-main}}
+  <div class="row">
+    
+    <section class="large-8 columns">
+      
+      {{#> school-hilite-item
+        primary="true"
+        hilite-title="Lesson Topics"
+        hilite-link="lessontopics.html"
+        hilite-img="lessontopics"
+        hilite-link-text="View Topics"
+      }}
+        <p>
+          Browse artifacts from the Giza archive that relate to popular themes 
+          for the classroom &mdash; such as <strong>Daily Life in Ancient 
+          Egypt</strong> and <strong>What are the Pyramids?</strong> &mdash; 
+          to use in your lesson plans.
+        </p>
+      {{/school-hilite-item}}
+      
+      {{#> school-hilite-item
+        hilite-title="People and Places of Giza"
+        hilite-link="commontopics.html"
+        hilite-img="people"
+        hilite-link-text="View People and Places"
+      }}
+        <p>
+          Start here for an overview of the Giza Plateau and its most popular 
+          topics, like the <strong>Great Pyramid</strong>, the 
+          <strong>Sphinx</strong>, and <strong>King Khufu</strong>. 
+        </p>
+      {{/school-hilite-item}}
+      
+      {{#> school-hilite-item
+        hilite-title="Glossary and FAQ"
+        hilite-link="faq.html"
+        hilite-img="faq"
+        hilite-link-text="View Glossary and FAQ"
+      }}
+        <p>
+          Studying ancient Egypt, you might come across words and ideas that 
+          you don’t see every day. Check here if you’ve got questions!
+        </p>
+      {{/school-hilite-item}}
+      
+      {{#> school-hilite-item
+        hilite-title="Video Library"
+        hilite-link="videos.html"
+        hilite-img="videos"
+        hilite-link-text="View All Videos"
+      }}
+        <p>
+          Climb into a pyramid, descend into a tomb, and more in Digital 
+          Giza's video experiences.
+        </p>
+      {{/school-hilite-item}}
+      
+      <div class="p-y-1">
+        <p>
+          These resources are just the beginning. For more, search the 
+          Digital Giza archive:
+        </p>
+        <form class="form-search-joined" action="/searchresults.html">
+          <input type="text" name="" placeholder="Search">
+          <button class="icon-search button"></button>
+        </form>
+      </div>
+      
+    </section>
+    <section class="large-4 columns">
+      
+      {{#> feature-block 
+        feature-block-class="secondary" 
+      }}
+        <div class="m-b-half">
+          <span class="badge secondary">
+            <span class="text-smaller p-x-qt">
+              Spotlight on Video
+            </span>
+          </span>
+        </div>
+        <div class="m-b-1">
+          <a href="/videos.html">
+            <img class="img-fluid img-fluid-md-mw50" 
+              src="{% static 'assets/images/video-feature-thumb.png' %}" 
+              alt="Video thumbnail">
+          </a>
+        </div>
+        <p>
+          See the Giza Plateau in a whole new way:
+        </p>
+        <ul>
+          <li>
+            <a href="/videos.html">Videos</a>
+          </li>
+          <!-- Not live yet
+          <li>
+            <a href="/videos.html">Interactive Videos</a>
+          </li>
+          -->
+          <li>
+            <a href="/giza3d.html">Giza 3D Models</a>
+          </li>
+        </ul>
+      {{/feature-block}}
+      
+      {{#> feature-block 
+        feature-title="More Resources" 
+        feature-block-class="secondary" 
+        feature-icon="list"
+      }}
+        <div class="m-b-1">
+          <p>
+            Explore further with some of The Giza Project's favorite places 
+            online. 
+          </p>
+          <p class="text-smaller text-muted">
+            <em>Clicking these links will open a new browser tab.</em>
+          </p>
+        </div>
+        
+        {{#> list-item-resourcelink
+          resource-title="EDSITEment!"
+          resource-link="https://edsitement.neh.gov/"
+        }}
+          Lesson plans and study activities from the National Endowment for 
+          the Humanities (NEH). Check out their modules on Ancient Egypt's 
+          <a target="_blank" href="https://edsitement.neh.gov/lesson-plan/egypts-pyramids-monuments-message#sect-thelesson">pyramids</a> 
+          and <a target="_blank" href="https://edsitement.neh.gov/lesson-plan/egyptian-symbols-and-figures-scroll-paintings#sect-thelesson">scroll paintings</a>.
+        {{/list-item-resourcelink}}
+      
+        {{#> list-item-resourcelink
+          resource-title="Voices of Ancient Egypt"
+          resource-link="http://www.voicesofancientegypt.com/"
+        }}
+          Features a YouTube video channel as well as articles on popular 
+          topics such as hieroglyphs.
+        {{/list-item-resourcelink}}
+        
+        {{#> list-item-resourcelink
+          resource-title="NileScribes"
+          resource-link="https://nilescribes.org/"
+        }}
+          Weekly posts on the latest in Egyptology, in both English and Arabic.
+        {{/list-item-resourcelink}}
+        
+        {{#> list-item-resourcelink
+          resource-title="Ancient Egypt Research Associates (AERA)"
+          resource-link="http://www.aeraweb.org/"
+        }}
+          Professional group with a mission to advance archaeological research, 
+          conservation, and training in Egypt.
+        {{/list-item-resourcelink}}
+        
+        {{#> list-item-resourcelink
+          resource-title="Egyptology Resources"
+          resource-link="https://www.fitzmuseum.cam.ac.uk/er/"
+        }}
+          Long-standing online resource for those interested in Egyptology, 
+          professionals or not. Hosted by the Fitzwilliam Museum.
+        {{/list-item-resourcelink}}
+        
+      {{/feature-block}}
+      
+    </section>
+    
+  </div>
+{{/content-main}}
+
+<!-- END MAIN CONTENT ROWS -->

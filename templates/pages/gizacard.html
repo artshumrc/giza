@@ -6,48 +6,45 @@ section-about: true
 
 <!-- BEGIN MAIN CONTENT ROWS -->
     
-  <div class="page-header header-bg-6" id="content">
-    <div class="row title">
-      <header class="large-12 columns">
-        <h1>{{title}} <a name="top"></a></h1>
-      </header> 
-    </div>
-  </div>
-   
-    <div class="row">
-      <aside class="medium-4 medium-push-8 columns">
-        <div class="thumbnail"><img src="{% static 'img/contact.png" alt="appropriate alt' %}"></div>
-      </aside>
+{{> page-header bg="6"}}
 
-      <section class="medium-8 medium-pull-4 columns">
-        <h2>The Brains of Digital Giza</h2>
-        
-        <p>The “brains” behind what you see and what you can do on the Digital Giza website is a database called the <em>Giza Consolidated Archaeological Reference Database</em> (GizaCARD, for short). The Giza Project at Harvard has brought together and continues to manage the largest digital archive of documents and media relating to the archaeology of the Pyramids of Giza and their surrounding cemeteries and settlements. The GizaCARD is the software through which The Giza Project organizes over 150,000 files and records from the collections and archives of museums, universities, and Egyptian excavation projects from around the world, dating from as far back as the 1800s to the most recent material from ongoing work. But the GizaCARD does not just store all of this data and information. It also connects (through database links) individual Giza monuments, artifacts, documents, and media whenever they relate to each other. The result is a huge “web” of interrelated archival records so complex that it would be impossible to follow all the relationships without the help of a powerful database. The wide range of records that the GizaCARD links together for access through the Digital Giza website includes:</p>
-                
-        <ul>
-          <li>Pyramids, tombs, and monuments</li>
-          <li>Artifacts</li>
-          <li>Giza maps, plans, and architectural drawings</li>
-          <li>Excavation photographs</li>
-          <li>Archaeologists’ field diary pages from past excavations</li>
-          <li>Archaeologists’ notes</li>
-          <li>Artifact photographs and illustrations</li>
-          <li>Site and monument photographs</li>
-          <li>3D graphic models of Giza monuments and artifacts</li>
-          <li>Videos</li>
-          <li>Published books and articles</li>
-          <li>Unpublished manuscripts</li>
-          <li>Object register books</li>
-          <li>Letters</li>
-          <li>Packing lists for artifact transport</li>
-          <li>360-degree panoramas</li>
-          <li>Radio recordings</li>
-        </ul>
-        
-        <p>What this all means is, as you explore <em>Digital Giza: A Portal to the Pyramids</em>, whenever you come across one of these kinds of records—like, say, a photograph of the Sphinx at Giza—you’ll have the means to  connect to every other kind of record in the GizaCARD that has something to do with the Sphinx. And since this website pulls from the database in real-time, any information you access here will always reflect the most up-to-date information that The Giza Project has made available.</p>
+{{#> content-main}} 
+  <div class="row">
+    <aside class="medium-4 medium-push-8 columns">
+      <div class="thumbnail"><img src="{% static 'assets/images/contact.png' %}" alt="appropriate alt"></div>
+    </aside>
 
-        <p>For more information about how you can support the Giza Project, please see our <a href="donate.html">support page</a>.</p>
-      </section>
+    <section class="medium-8 medium-pull-4 columns">
+      <h2>The Brains of Digital Giza</h2>
       
-    </div>
-  
+      <p>The “brains” behind what you see and what you can do on the Digital Giza website is a database called the <em>Giza Consolidated Archaeological Reference Database</em> (GizaCARD, for short). The Giza Project at Harvard has brought together and continues to manage the largest digital archive of documents and media relating to the archaeology of the Pyramids of Giza and their surrounding cemeteries and settlements. The GizaCARD is the software through which The Giza Project organizes over 150,000 files and records from the collections and archives of museums, universities, and Egyptian excavation projects from around the world, dating from as far back as the 1800s to the most recent material from ongoing work. But the GizaCARD does not just store all of this data and information. It also connects (through database links) individual Giza monuments, artifacts, documents, and media whenever they relate to each other. The result is a huge “web” of interrelated archival records so complex that it would be impossible to follow all the relationships without the help of a powerful database. The wide range of records that the GizaCARD links together for access through the Digital Giza website includes:</p>
+              
+      <ul>
+        <li>Pyramids, tombs, and monuments</li>
+        <li>Artifacts</li>
+        <li>Giza maps, plans, and architectural drawings</li>
+        <li>Excavation photographs</li>
+        <li>Archaeologists’ field diary pages from past excavations</li>
+        <li>Archaeologists’ notes</li>
+        <li>Artifact photographs and illustrations</li>
+        <li>Site and monument photographs</li>
+        <li>3D graphic models of Giza monuments and artifacts</li>
+        <li>Videos</li>
+        <li>Published books and articles</li>
+        <li>Unpublished manuscripts</li>
+        <li>Object register books</li>
+        <li>Letters</li>
+        <li>Packing lists for artifact transport</li>
+        <li>360-degree panoramas</li>
+        <li>Radio recordings</li>
+      </ul>
+      
+      <p>What this all means is, as you explore <em>Digital Giza: A Portal to the Pyramids</em>, whenever you come across one of these kinds of records—like, say, a photograph of the Sphinx at Giza—you’ll have the means to  connect to every other kind of record in the GizaCARD that has something to do with the Sphinx. And since this website pulls from the database in real-time, any information you access here will always reflect the most up-to-date information that The Giza Project has made available.</p>
+
+      <p>For more information about how you can support the Giza Project, please see our <a href="donate.html">support page</a>.</p>
+    </section>
+    
+  </div>
+{{/content-main}}
+
+<!-- END MAIN CONTENT ROWS -->

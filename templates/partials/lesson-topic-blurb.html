@@ -1,0 +1,32 @@
+<div class="topic-blurb">
+  {{#if topic-title}}
+  <div class="topic-blurb-header">
+    <h3>
+      <a href="/{{topic-url}}">
+        {{topic-title}}
+      </a>
+      {{#if topic-anchor}}
+      <a name="{{topic-anchor}}"></a>
+      {{/if}}
+    </h3>
+  </div>
+  {{/if}}
+  <div class="topic-blurb-body">
+    
+    <div class="topic-blurb-image">
+      {{> mygiza-collection-thumb
+        images-1=topic-collection-images1
+        images-4=topic-collection-images4
+        images-9=topic-collection-images9
+        offset=topic-collection-offset
+        caption=false
+      }}
+    </div>
+    <div class="topic-blurb-text">
+      {{> @partial-block}}
+      <div class="topic-blurb-footer">
+        <a class="text-bold pointer-fwd" href="/{{topic-url}}">View topic</a>
+      </div>
+    </div>
+  </div>
+</div>

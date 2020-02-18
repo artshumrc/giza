@@ -7,7 +7,25 @@ h1, h3, h5 {
 	text-transform: uppercase;
 }
 
+h2, h3, h4, h5, h6 {
+  font-weight: 500;
+}
+
+.h7 { // h6 that mimics normal bold text
+  display: block;
+  color: $dune;
+  font-family: $body-font-family;
+  font-size: inherit;
+  font-weight: bold;
+  text-transform: none;
+  margin: 0;
+}
+
 // Alternate text style
+
+.text-heading {
+  font-family: $header-font-family;
+}
 
 .text-alt {
   font-family: $accent-font-family;
@@ -21,11 +39,51 @@ h1, h3, h5 {
   text-transform: none;
 }
 
+.heading-mixedcase {
+  text-transform: none;
+}
+
 .heading-em {
   font-family: $accent-font-family;
   text-transform: none;
   letter-spacing: 0;
   font-style: italic;
+}
+
+.h2-minor {
+  font-size: rem-calc(24px);
+}
+
+.h3-minor {
+  font-size: rem-calc(18px);
+}
+
+// Text variants
+
+.accent-red {
+  color: $harvard-crimson;
+}
+
+.accent-maroon {
+  color: $maroon;
+}
+
+.text-bold {
+  font-weight: 700;
+}
+
+.text-medium, 
+.text-semibold {
+  font-weight: 500;
+}
+
+.text-regular, 
+.text-normal {
+  font-weight: 300;
+}
+
+.text-light {
+  font-weight: 100;
 }
 
 // Heading links 

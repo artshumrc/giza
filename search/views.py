@@ -9,10 +9,86 @@ from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGO
 RESULTS_SIZE = 20
 
 def search(request):
+	return render(request, 'pages/search.html')
+
+def search_legacy(request):
 	return render(request, 'search/search.html')
 
 # get all pubdocs with pdfs for Digital Giza Library
 def library(request):
+	sort = request.GET.get('sort', 'name')
+	if sort == 'name':
+		results = es.search(index=ES_INDEX, doc_type='library', body={
+			"size": 500,
+			"sort": "sort"+sort,
+			"query": {
+				"match_all" : {}
+			}
+		})['hits']['hits']
+		current_letter = 'a'
+		hits = []
+		letter_docs = {}
+		letter_docs[current_letter] = []
+		for r in results:
+			source = r['_source']
+			if source['name'].lower().startswith(current_letter):
+				letter_docs[current_letter].append(source)
+			else:
+				hits.append(letter_docs)
+				current_letter = source['name'].lower()[0]
+				letter_docs = {}
+				letter_docs[current_letter] = []
+				letter_docs[current_letter].append(source)
+		hits.append(letter_docs)
+	else:
+		# year, format - TODO: title
+		results = es.search(index=ES_INDEX, doc_type='pubdocs', body={
+		   "size": 0,
+		   "query": {
+				"match_all": {}
+		   },
+		   "aggs": {
+			  "by_sort": {
+				 "terms": {
+					"field": sort+".keyword",
+					"order": {
+					   "_term": "asc"
+					},
+					"size": 500
+				 },
+				 "aggs": {
+					"by_top_hit": {
+					   "top_hits": {
+						  "size": 100
+					   }
+					}
+				 }
+			  }
+		   }
+		})['aggregations']['by_sort']['buckets']
+		hits = []
+		for r in results:
+			sort_docs = {}
+			key = r['key']
+			sort_docs[key] = []
+			docs = []
+			sort_docs[key].append({'docs' : docs})
+			for h in r['by_top_hit']['hits']['hits']:
+				if ('pdf' in h['_source'] and h['_source']['pdf'] != ''):
+					docs.append({
+					'url' : h['_source']['pdf'],
+					'displaytext' : h['_source']['boilertext'],
+					'format' : h['_source']['format']
+					})
+			if len(docs) > 0:
+				hits.append(sort_docs)
+	return render(request, 'pages/library.html', {
+		'results' : hits,
+		'sort' : sort
+	})
+
+# get all pubdocs with pdfs for Digital Giza Library
+def library_legacy(request):
 	sort = request.GET.get('sort', 'name')
 	if sort == 'name':
 		results = es.search(index=ES_INDEX, doc_type='library', body={
@@ -98,11 +174,203 @@ def videos(request):
 	hits = []
 	for r in results:
 		hits.append(r['_source'])
+	return render(request, 'pages/explorevideos.html', {
+		'results' : hits
+	})
+
+# get virtual Giza tour videos
+def videos_legacy(request):
+	results = es.search(index=ES_INDEX, doc_type='videos', body={
+		"size": 500,
+		"query": {
+			"wildcard" : {
+				"number" : "GPH_3DP*"
+			}
+		},
+		"sort" : "displaytext"
+	})['hits']['hits']
+	hits = []
+	for r in results:
+		hits.append(r['_source'])
 	return render(request, 'search/explorevideos.html', {
 		'results' : hits
 	})
 
 def results(request):
+	search_term = request.GET.get('q', '')
+	sort = request.GET.get('sort', '_score')
+	current_category = request.GET.get('category', '')
+	current_subfacets = {}
+	fields = {}
+	if current_category:
+		# check if there are subfacets for the currently selected category
+		subcats = request.GET.getlist(current_category+'_facet', [])
+		if subcats: current_subfacets[current_category] = {}
+		for sc in subcats:
+			parts = sc.split('_')
+			subfacet = parts[0]
+			term = parts[1]
+			if subfacet not in current_subfacets[current_category]:
+				current_subfacets[current_category][subfacet] = []
+			current_subfacets[current_category][subfacet].append(term)
+
+		# check if we have a field-specific search
+		for key in request.GET:
+			if key.startswith(current_category) and not key.endswith('_facet'):
+				field_value = request.GET.get(key, '')
+				parts = key.split('_')
+				field = parts[1]
+				fields[field] = field_value
+
+	page = int(request.GET.get('page', 1))
+	results_from = 0
+	# calculate elasticsearch's from, using the page value
+	results_from = (page - 1) * RESULTS_SIZE
+
+	# check if user is trying to search by specific item number
+	number_query = False
+	number = None
+	parts = search_term.split(':')
+	categorystring = ""
+	if len(parts) == 2:
+		categorystring = parts[0]
+		number = parts[1]
+		number_query = True
+
+	# values being passed to template
+	hits = []
+	all_categories = {}
+	sub_facets = {}
+	has_next = False
+	has_previous = False
+	previous_page_number = 0
+	next_page_number = 0
+	num_pages_range = []
+	num_pages = 0
+	total = 0
+
+	if number_query:
+		# user is searching for an exact item using its number
+		# such as 'objects:HUMFA_27-5-1'
+		search_results = es.search(index=ES_INDEX, doc_type=categorystring, body={
+		  "query": {
+			"match": {
+				"allnumbers": number
+			}
+		  }
+		})
+		results_total = search_results['hits']['total']
+		# user entered a number that only has one result for the given type, redirect to that page
+		if results_total == 1:
+			source = search_results['hits']['hits'][0].get('_source')
+			return HttpResponseRedirect(reverse('get_type_html', args=(categorystring, source.get('id'), 'full')))
+		#elif results_total == 0 and type == 'sites':
+		else:
+			# we have 0 or more than 1 result, treat it as a normal search result
+			# this shouldn't happen, since we are doing a termed search on number
+			# it expects an exact match
+			for hit in search_results['hits']['hits']:
+				hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
+	else:
+		# this is a normal search
+		base_query = build_es_query(search_term, fields)
+		bool_filter = build_bool(current_category, current_subfacets, '')
+		subfacet_aggs = build_subfacet_aggs(current_category, current_subfacets, bool_filter)
+
+		body_query = {
+			"size" : 0,
+			"query" : base_query,
+			"aggregations" : subfacet_aggs,
+			"post_filter" : {
+				"bool" : bool_filter
+			},
+			"sort" : sort
+		}
+		facets_for_category = es.search(index=ES_INDEX, body=body_query)
+
+		facet_names = []
+		if current_subfacets:
+			for facet_name in list(current_subfacets[current_category].keys()):
+				facet_names.append(facet_name)
+		rec = recurse_aggs('', facets_for_category, [], facet_names)
+		sub_facets[current_category] = rec
+
+		search_results = es.search(index=ES_INDEX, body={
+			"from": results_from,
+			"size": RESULTS_SIZE,
+			"query": base_query,
+			"aggregations": {
+				"aggregation": {
+					"terms": {
+						"field": "_type",
+						"exclude": "library", # ignore special type, library, which is used for the Digital Giza Library page
+						"size" : 50 # make sure to get all categories (rather than just 10)
+					}
+				}
+			},
+			"post_filter" : {
+				"bool" : bool_filter
+			},
+			"sort" : sort
+		})
+		all_categories['types'] = []
+		for count in search_results['aggregations']['aggregation']['buckets']:
+			all_categories['types'].append({
+				'key' : count['key'],
+				'doc_count' : count['doc_count'],
+				'display_text' : CATEGORIES[count['key']]
+				})
+		for hit in search_results['hits']['hits']:
+			hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
+
+		total = search_results['hits']['total']
+
+		num_pages = (total // RESULTS_SIZE) + (total % RESULTS_SIZE > 0)
+		if num_pages > 0:
+			num_pages_range = create_page_ranges(page, num_pages)
+
+		if page > 1:
+			has_previous = True
+			previous_page_number = page - 1
+		if page < num_pages:
+			has_next = True
+			next_page_number = page + 1
+
+	# combine the current_subfacets into strings for quick comparison in template
+	subfacet_strings = []
+	if current_category and current_category in current_subfacets:
+		for facet_name, facet_values in list(current_subfacets[current_category].items()):
+			for value in facet_values:
+				subfacet_strings.append("%s_%s_%s" % (current_category, facet_name, value))
+
+	search_params = []
+	if search_term:
+		search_params.append(('q', 'Keyword', search_term))
+	if current_category:
+		for k, v in list(fields.items()):
+			if v:
+				search_params.append((current_category+'_'+k, FIELDS_PER_CATEGORY[current_category][k], v))
+
+	return render(request, 'pages/results.html', {
+		'search_params' : search_params,
+		'hits' : hits,
+		'all_categories' : all_categories,
+		'CATEGORIES' : CATEGORIES,
+		'sub_facets' : sub_facets,
+		'current_subfacets' : current_subfacets,
+		'subfacet_strings' : subfacet_strings,
+		'total' : total,
+		'has_previous' : has_previous,
+		'previous_page_number' : previous_page_number,
+		'has_next' : has_next,
+		'next_page_number' : next_page_number,
+		'num_pages_range' : num_pages_range,
+		'num_pages' : num_pages,
+		'current_page' : str(page),
+		'current_category' : current_category
+	})
+
+def results_legacy(request):
 	search_term = request.GET.get('q', '')
 	sort = request.GET.get('sort', '_score')
 	current_category = request.GET.get('category', '')

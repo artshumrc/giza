@@ -1,6 +1,7 @@
 <section id="featureBlock_{{feature-anchor}}" class="feature-block {{feature-block-class}}" data-toggler=".is-collapsed">
+  {{#if feature-title}}
   <div class="feature-block__header">
-    <h3 class="feature-block__title">
+    <h3 class="feature-block__title {{heading-class}}">
       <i class="icon-{{feature-icon}} icon-padded"></i> {{feature-title}} 
       <a name="{{feature-anchor}}"></a> 
       {{#if feature-counter}}<span class="badge">{{feature-counter}}</span>{{/if}}
@@ -9,6 +10,7 @@
       <span class="sr-only">Collapse or Expand</span>
     </button>
   </div>
+  {{/if}}
   <div class="feature-block__body">
     {{> @partial-block}}
     
@@ -16,9 +18,9 @@
     <div class="feature-block__footer">
       <p class="content-footer-info">
         {{#if feature-subpg}}
-          <a href="{{root}}item-{{feature-anchor}}.html">View all {{feature-counter}} {{feature-title}} <i class="icon-angle-right"></i></a>
+          <a href="/item-{{feature-anchor}}.html">View all {{feature-counter}} {{feature-title}} <i class="icon-angle-right"></i></a>
         {{else}}
-          <a href="{{root}}full.html#{{feature-anchor}}">View all {{feature-counter}} {{feature-title}} <i class="icon-angle-right"></i></a>
+          <a href="/full.html#{{feature-anchor}}">View all {{feature-counter}} {{feature-title}} <i class="icon-angle-right"></i></a>
         {{/if}}
         </p>
     </div>

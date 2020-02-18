@@ -1,0 +1,27 @@
+<div class="content-hilite{{#if primary}} content-hilite-primary{{/if}}">
+  <div class="content-hilite-content">
+    <div class="content-hilite-header">
+      <h2 class="text-bold">
+        {{#if hilite-link}}
+        <a class="heading-link" href="/{{hilite-link}}">
+          {{hilite-title}}
+        </a>
+        {{else}}
+        {{hilite-title}}
+        {{/if}}
+      </h2>
+    </div>
+    <div class="content-hilite-body">
+      {{> @partial-block}}
+    </div>
+    {{#if hilite-link}}
+    <div class="content-hilite-footer">
+      <a class="button{{#unless primary}} secondary{{/unless}}" href="/{{hilite-link}}">
+        {{hilite-link-text}} 
+        <i class="icon-angle-right"></i>
+      </a>
+    </div>
+    {{/if}}
+  </div>
+  <div class="content-hilite-image img-{{hilite-img}}"></div>
+</div>

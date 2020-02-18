@@ -6,16 +6,12 @@ bodyclasses: header-full mode-intro
 ---
 
 <!-- BEGIN MAIN CONTENT ROWS -->
-  
-  <div class="page-header header-bg-1" id="content">
-    <div class="row title">
-      <header class="large-8 columns">
-        <h1>{{title}} <a name="top"></a></h1>
-        <h3 class="page-header__meta"><a href="{{root}}intro.html"><i class="icon-angle-left"></i> Back</a></h3>
-      </header> 
-    </div>
-  </div>
-  
+
+{{> page-header bg="1"
+  page-header-meta-link="full.html"
+}}
+
+{{#> content-main}} 
   <!-- row -->
   
   <div class="row content-start">
@@ -39,8 +35,7 @@ bodyclasses: header-full mode-intro
       
     </section>
   
-  </div>
-    
-  <!-- END MAIN CONTENT ROWS -->
-  
-  {{> gallery-modal}}
+  </div> 
+{{/content-main}}
+
+<!-- END MAIN CONTENT ROWS -->

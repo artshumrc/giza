@@ -19,18 +19,26 @@ from tms import views as tms_views
 from search import views as search_views
 
 urlpatterns = [
-    url(r'^$', tms_views.index, name="index"),
-    url(r'^v2/$', tms_views.index_update, name="index_update"),
+    url(r'^$', tms_views.index, name="index_update"),
+    url(r'^v1/$', tms_views.index_legacy, name="index"),
     url(r'^(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', tms_views.about, name="about"),
+    url(r'^v1/(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', tms_views.about_legacy, name="about"),
     url(r'^(?P<page_name>donate)/$', tms_views.donate, name="donate"),
+    url(r'^v1/(?P<page_name>donate)/$', tms_views.donate_legacy, name="donate"),
     url(r'^(?P<page_name>archaeology|commontopics|faq|gizaintro)/$', tms_views.explore, name="explore"),
+    url(r'^v1/(?P<page_name>archaeology|commontopics|faq|gizaintro)/$', tms_views.explore_legacy, name="explore"),
     url(r'^library/$', search_views.library, name="library"),
+    url(r'^v1/library/$', search_views.library_legacy, name="library"),
     url(r'^explorevideos/$', search_views.videos, name="explorevideos"),
+    url(r'^v1/explorevideos/$', search_views.videos_legacy, name="explorevideos"),
 
     url(r'^search/$', search_views.search, name='search'),
+    url(r'^v1/search/$', search_views.search_legacy, name='search'),
     url(r'^search-results/$', search_views.results, name='results'),
+    url(r'^v1/search-results/$', search_views.results_legacy, name='results'),
 
     url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html, name='get_type_html'),
+    url(r'^v1/(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html_legacy, name='get_type_html'),
     url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)\.json$', tms_views.get_type_json, name='get_type_json'),
 
     url(r'^admin/', admin.site.urls),

@@ -2,18 +2,14 @@
 title: Search the Archives
 section: search
 section-search: true
+bodyclasses: list-active
 ---
 
 <!-- BEGIN MAIN CONTENT ROWS -->
   
-  <div class="page-header header-bg-5" id="content">
-    <div class="row title">
-      <header class="large-12 columns">
-        <h1>{{title}} <a name="top"></a></h1>
-      </header> 
-    </div>
-  </div>
-  
+{{> page-header bg="5"}}
+
+{{#> content-main}}
   <div class="row">
     
     <section class="medium-9 medium-push-3 columns">
@@ -22,31 +18,76 @@ section-search: true
         <div class="medium-6 columns">
           <h3 class="heading-alt m-t-half m-b-1">6 search results found.</h3>
         </div>
-        <div class="medium-3 columns text-right">
-          <label for="sortResults" class="middle m-r-neg1">Sort by:</label>
-        </div>
-        <div class="medium-3 columns">
-          <select id="sortResults">
-            <option value="">Category</option>
-            <option value="">Name</option>
-            <option value="">Year</option>
-            <option value="">Material</option>
-            <option value="">Findspot</option>
-          </select>
+        <div class="medium-6 columns text-right">
+          <label for="sortResults" class="d-inline-block middle m-r-qt">Sort by:</label>
+          <div class="d-inline-block img-fluid-mw150">
+            <select id="sortResults">
+              <option value="">Category</option>
+              <option value="">Name</option>
+              <option value="">Year</option>
+              <option value="">Material</option>
+              <option value="">Findspot</option>
+            </select>
+          </div>
+          <ul class="d-inline-block view-switcher p-y-qt m-l-1 hide-for-small-only">
+            <li><a href="#" class="switcher"><i class="fa fa-fw fa-align-justify"></i><span class="sr-only">List</span></a></li>
+            <li><a href="#" class="switcher"><i class="fa fa-fw fa-th-large"></i><span class="sr-only">Grid</span></a></li>
+          </ul>
         </div>
       </div>
       
-      {{#each search-results}}
-        {{> search-result}}
-      {{/each}}
+      <div class="row">
+        <div class="large-6 large-push-6 columns text-lg-right">
+          <a href="">
+            <strong>Save this search</strong>
+          </a>
+        </div>
+        <div class="large-6 large-pull-6 columns">
+          <nav aria-label="Pagination">
+            <ul class="pagination m-l-neghalf">
+              <li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></li>
+              <li class="current"><span class="show-for-sr">You're on page</span> 1</li>
+              <li><a href="#" aria-label="Page 2">2</a></li>
+              <li><a href="#" aria-label="Page 3">3</a></li>
+              <li class="ellipsis" aria-hidden="true"></li>
+              <li><a href="#" aria-label="Page 144">144</a></li>
+              <li class="pagination-next"><a href="#" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      
+      <div class="media-object-holder">
+        {{#each search-results}}
+          {{> search-result}}
+        {{/each}}
+      </div>
+      
+      <div class="row">
+        <div class="columns p-t-1">
+          <nav aria-label="Pagination">
+            <ul class="pagination m-l-neghalf">
+              <li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></li>
+              <li class="current"><span class="show-for-sr">You're on page</span> 1</li>
+              <li><a href="#" aria-label="Page 2">2</a></li>
+              <li><a href="#" aria-label="Page 3">3</a></li>
+              <li class="ellipsis" aria-hidden="true"></li>
+              <li><a href="#" aria-label="Page 144">144</a></li>
+              <li class="pagination-next"><a href="#" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
               
     </section>
     <aside class="medium-3 medium-pull-9 columns">
       
       <div class="feature-block secondary text-smaller">  
-        <h5 class="heading-alt">Search options</h5>
-        <p><a href="{{root}}search.html">Start a new search</a></p>
-        
+        <h5 class="heading-alt">Search Options</h5>
+        <p>
+          <a href="">Save this search</a><br>
+          <a href="/search.html">Start a new search</a>
+        </p>
         <div class="search-facet-section">
           <h6 class="search-facet-title">Keyword:</h6>
           <ul class="search-facet-list">
@@ -132,4 +173,6 @@ section-search: true
     </aside>
     
   </div>
+{{/content-main}}
 
+<!-- END MAIN CONTENT ROWS -->

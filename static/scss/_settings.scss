@@ -56,18 +56,22 @@ $foundation-palette: (
   warning: #ffae00,
   alert: #ec5840,
 );
+
 // TODO: move to above array
 // $primary-color: #2199e8;
 // $secondary-color: #777;
 // $success-color: #3adb76;
 // $warning-color: #ffae00;1
 // $alert-color: #ec5840;
+
 $light-gray: #e6e6e6;
 $medium-gray: #cacaca;
 $dark-gray: #8a8a8a;
 $black: #0a0a0a;
 $white: #fefefe;
-//custom colors for Giza
+
+// Custom colors for Giza
+
 $lochmara: #1164AD; //#0972BD; //Text hyperlinks
 $maroon: #731422;  //Headings
 $maroon-dark: #590F1A; //Heading icons
@@ -78,8 +82,6 @@ $sand-light: #F0EAE4; // Main column heading bar background, footer background
 $sand-medium: #DBD6D0; //Right column module background, assorted borders
 $sand-dark: #B3AAA1; //Assorted borders
 $umber: #8C8179; //Assorted borders
-
-//#FFFAF5; – body background color (very close to white)
 
 $body-background: #FFFAF5;
 $body-font-color: $dune;
@@ -102,17 +104,120 @@ $accent-font-family: Georgia, serif; //larger intro paragraphs
 
 @include add-foundation-colors;
 
+// Spacers (borrowed from Bootstrap)
+
+$spacer:    $global-margin;
+$spacer-x:  $spacer;
+$spacer-y:  $spacer;
+
+// Useful for directional utility classes
+$spacers: (
+  0: (
+    x:   0,
+    y:   0
+  ),
+  "qt": (
+    x:   ($spacer-x * 0.25),
+    y:   ($spacer-y * 0.25)
+  ),
+  "half": (
+    x:   ($spacer-x * 0.5),
+    y:   ($spacer-y * 0.5)
+  ),
+  1: (
+    x:   $spacer-x,
+    y:   $spacer-y
+  ),
+  2: (
+    x:   ($spacer-x * 2),
+    y:   ($spacer-y * 2)
+  ),
+  3: (
+    x:   ($spacer-x * 3),
+    y:   ($spacer-y * 3)
+  ),
+  4: (
+    x:   ($spacer-x * 4),
+    y:   ($spacer-y * 4)
+  ), 
+  "negqt": (
+    x:   ($spacer-x * -.25),
+    y:   ($spacer-y * -.25)
+  ),
+  "neghalf": (
+    x:   ($spacer-x * -.5),
+    y:   ($spacer-y * -.5)
+  ),
+  "neg1": (
+    x:   ($spacer-x * -1),
+    y:   ($spacer-y * -1)
+  )
+);
+
+// Useful for utility values
+$space: ();
+$space: map-merge((
+  0:          0,
+  "qt":       ($spacer * .25),
+  "half":     ($spacer * .5),
+  1:          ($spacer * 1),
+  2:          ($spacer * 2),
+  3:          ($spacer * 3), 
+  4:          ($spacer * 4), 
+  "negqt":    ($spacer * -.25),
+  "neghalf":  ($spacer * -.5),
+  "neg1":     ($spacer * -1),
+), $space);
+
+// Return spacer value (more bulletproof than using $spacer itself)
+@function spacer($key: 1) {
+  @return map-get($space, $key);
+}
+
+
 // 2. Breakpoints
 // --------------
 
-$breakpoints: (
+/* $breakpoints: (
   small: 0,
   medium: 640px,
   large: 1024px,
   xlarge: 1200px,
   xxlarge: 1440px,
+); */
+
+// Amalgamates original Foundation + include-media, new for MyGiza
+$breakpoints: (
+  'small': 0,
+	'xs-phone': 320px,
+	'sm-phone': 375px,
+	'md-phone': 480px, 
+	//'phone': 640px, 
+	'medium': 640px, 
+	'tablet': 768px,
+	'lg-tablet': 880px, 
+	'desktop': 992px, // This breakpoint needs to exist for include-media 
+	'large': 1024px, 
+	'widescreen': 1200px, 
+	'xlarge': 1200px, 
+	'xxlarge': 1440px
 );
-$breakpoint-classes: (small medium large);
+
+$breakpoint-classes: (small sm-phone md-phone medium tablet lg-tablet large xlarge); // Added a bunch more than defaults
+
+// keywords
+$media-expressions: (
+	'screen': 'screen',
+	'print': 'print',
+	'handheld': 'handheld',
+	'landscape': '(orientation: landscape)',
+	'portrait': '(orientation: portrait)',
+	'retina2x': '(-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi)',
+	'retina3x': '(-webkit-min-device-pixel-ratio: 2.5), (min-resolution: 240dpi)'
+);
+
+// Include-media update (no longer using 'desktop')
+$im-no-media-breakpoint: 'large';
 
 // 3. The Grid
 // -----------
@@ -606,7 +711,7 @@ $topbar-submenu-background: $dune;
 $topbar-title-spacing: 1rem;
 $topbar-background: $dune;
 $topbar-link-color: #fff;
-$topbar-input-width: 200px;
+$topbar-input-width: 108px; // #Backfill - was 200px
 $topbar-unstack-breakpoint: medium;
 
 // Custom mixins

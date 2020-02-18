@@ -11,7 +11,6 @@
     .top-bar {
       display: none;
     }
-  
   }
 
   @include breakpoint(medium) {
@@ -19,17 +18,18 @@
     .title-bar {
       display: none;
     }
-  
   }
   
   @include breakpoint(medium) {
   
     [data-sticky-container] {
-      height: 56px; // Pre-set this to the normal value to prevent layout-jumping
+      height: 85px; // Pre-set this to the normal value to prevent layout-jumping
     }
-  
   }
+}
 
+[data-sticky-container] {
+  height: 85px; // Pre-set this to the normal value to prevent FOUC
 }
 
 // Title bar
@@ -47,16 +47,17 @@
 	background-color: $dune;
 	border-bottom: solid 1px $sand-dark;
 	box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  position: absolute; // ??
+  // position: absolute; // ??
   z-index: 999;	
   // Deal with sticky problems
-  position: fixed !important; // Dunno if this causes any havoc, but it works...
+  // position: fixed !important; // Dunno if this causes any havoc, but it works...
   
   @include breakpoint(medium) {
   }
   
 }
 
+/*
 .sticky.is-stuck { // Sticky top nav
   z-index: 10;
   
@@ -65,6 +66,7 @@
   }
   
 }
+*/
 
 .top-bar {
 	padding: 0;
@@ -78,7 +80,8 @@
   	height: 55px;
   }	
   
-  a {
+  a, 
+  .pseudolink {
     color: $sand-dark;
     
     &:hover, 
@@ -88,6 +91,11 @@
     }
   }
   
+  input {
+    margin-#{$global-right}: 4px; // #Backfill - Override Foundation default 1rem
+    display: inline-block; // #Backfill
+  }
+  
 }
 
 .nav-menu-primary {
@@ -95,14 +103,22 @@
   
   li {
   
-    > a {
+    > a, 
+    > .pseudolink, 
+    > .menu-text-item {
       display: block;
       height: 55px;
     	padding-top: 17px; // Adjusted for improved line-height in _menu.scss
-    	font-weight: normal;
+    	font-weight: bold; // #Backfill
     	text-transform: uppercase;
     	font-size: 15px;
     	font-family: $header-font-family;
+    	color: $white; // #Backfill
+    }
+    
+    > .menu-text-item {
+      color: $sand-medium;
+      font-weight: normal;
     }
     
     .icon-home .hide-for-medium {
@@ -115,10 +131,10 @@
       @include breakpoint(medium) {
         top: 0; // Fix alignment issue
       }
-      
     }
     
-    &.active > a {
+    &.active > a, 
+    &.active > .pseudolink {
       background-color: transparent;
       color: $white;
     	font-weight: bold;
@@ -129,8 +145,8 @@
         border-left: 0;
         border-bottom: solid 5px $harvard-crimson;
         padding-left: $global-padding;
+        /*background-color: #A51C30*/ // #Backfill
       }
-    	
     }
     
     .is-dropdown-submenu {
@@ -142,7 +158,9 @@
       z-index: 60;
     }
     
-    &.is-submenu-item > a {
+    &.is-submenu-item > a, 
+    &.is-submenu-item > .pseudolink, 
+    &.is-submenu-item > .menu-text-item {
       height: auto;
       text-transform: none;
       padding-top: 0.8rem;
@@ -152,11 +170,31 @@
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
       }
-      
     }
     
+    &.li-indented {
+      padding-left: spacer(1);
+      
+      > a, 
+      > .pseudolink, 
+      > .menu-text-item {
+        font-weight: normal;
+        font-size: rem-calc(14px);
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        
+        @include breakpoint(medium) {
+          padding-top: 0.2rem;
+          padding-bottom: 0.2rem;
+        }
+      }
+    }
   }
+}
 
+.menu > li > .menu-text-item { // Fixes discrepancy from _menu.scss
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 // Below is to fix the scrolling issues caused by the sticky top bar
@@ -219,7 +257,7 @@
 
 .top-bar .menu li:last-child button {
   margin-right: 0;
-  height: 41px;
+  height: 39px; // #Backfill
   color: $sand-dark;
   font-family: $header-font-family;
   font-size: 15px;
@@ -238,7 +276,7 @@
   }
   
   @include breakpoint(small down) {
-    display: none !important;
+    //display: none !important; I don't think this is relevant anymore
   }
   
 }

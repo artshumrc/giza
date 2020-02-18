@@ -1,0 +1,1664 @@
+---
+title: MyGIZA
+section: mygiza
+section-mygiza: true
+mygiza-auth: true
+---
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{{> page-header bg="7"}}
+
+{{#> content-main class="p-t-1"}}
+  <div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+    <div class="row">
+      <div class="columns">
+        <div class="titles">
+          <a href="mygiza-collection.html" class="active">Collections</a>
+          <a href="mygiza-saved-searches.html">Saved Searches</a>
+        </div>
+        <a href="#" class="add" data-open="add_collection"><span class="sr-only">add</span></a>
+      </div>
+    </div>
+    <div class="row links">
+      <div class="columns">
+        <ul class="dropdown menu" data-dropdown-menu>
+          <li class="active">
+            <a href="#">All Collections</a>
+            <ul class="menu show-for-small-only">
+              <li><a href="#">My Collections</a></li>
+              <li><a href="#">Collections Shared with Me</a></li>
+            </ul>
+          </li>
+          <li class="hide-for-small-only"><a href="#">My Collections</a></li>
+          <li class="hide-for-small-only"><a href="#">Collections Shared with Me</a></li>
+        </ul>
+        <a href="/mygiza-collection.html" class="go-back">Back to Individual Collections</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="collection-section">
+    <div class="row row-padded">
+      <span class="num-title hide-for-small-only">56 Collections <em>(10 Shown)</em></span>
+      <div class="selection-row">
+        <form action="#" class="collection-search">
+          <label for="collection-search" class="hide-for-small-only">Search for a collection:</label>
+          <div class="input-wrap">
+            <input type="search" placeholder="Search for a collection" id="collection-search" accesskey="4">
+            <button type="submit" class="show-for-small-only"><i class="fas fa-search"></i></button>
+          </div>
+        </form>
+        <ul class="select-links hide-for-small-only">
+          <li><a href="#">Delete selected</a></li>
+          <li><a href="#">Select all</a></li>
+          <li><a href="#">Deselect all</a></li>
+        </ul>
+        <ul class="d-inline-block view-switcher p-y-qt m-l-1 hide-for-small-only">
+          <li><a href="#" class="switcher"><i class="fa fa-fw fa-align-justify"></i><span class="sr-only">List</span></a></li>
+          <li><a href="#" class="switcher"><i class="fa fa-fw fa-th-large"></i><span class="sr-only">Grid</span></a></li>
+        </ul>
+      </div>
+      <ul class="collections-list">
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n10.jpg' %}, {% static '/assets/images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>My latest Stuff <em>(10 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Favorite Items</strong>
+                <span>214 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>3D Models <em>(116 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n11.jpg' %}, {% static '/assets/images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n11.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Statues</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n12.jpg' %}, {% static '/assets/images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n10.jpg' %}, {% static '/assets/images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>My latest Stuff <em>(10 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Favorite Items</strong>
+                <span>214 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>3D Models <em>(116 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n11.jpg' %}, {% static '/assets/images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n11.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Statues</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n12.jpg' %}, {% static '/assets/images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n10.jpg' %}, {% static '/assets/images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>My latest Stuff <em>(10 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Favorite Items</strong>
+                <span>214 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>3D Models <em>(116 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n11.jpg' %}, {% static '/assets/images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n11.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Statues</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n12.jpg' %}, {% static '/assets/images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n10.jpg' %}, {% static '/assets/images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>My latest Stuff <em>(10 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Favorite Items</strong>
+                <span>214 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>3D Models <em>(116 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n11.jpg' %}, {% static '/assets/images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n11.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Statues</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n12.jpg' %}, {% static '/assets/images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n10.jpg' %}, {% static '/assets/images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>My latest Stuff <em>(10 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Favorite Items</strong>
+                <span>214 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>3D Models <em>(116 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n11.jpg' %}, {% static '/assets/images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n11.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Statues</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n12.jpg' %}, {% static '/assets/images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n10.jpg' %}, {% static '/assets/images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>My latest Stuff <em>(10 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Favorite Items</strong>
+                <span>214 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>3D Models <em>(116 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n11.jpg' %}, {% static '/assets/images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n11.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Statues</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n12.jpg' %}, {% static '/assets/images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n10.jpg' %}, {% static '/assets/images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>My latest Stuff <em>(10 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Favorite Items</strong>
+                <span>214 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>3D Models <em>(116 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n11.jpg' %}, {% static '/assets/images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n11.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Statues</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n12.jpg' %}, {% static '/assets/images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n10.jpg' %}, {% static '/assets/images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>My latest Stuff <em>(10 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Favorite Items</strong>
+                <span>214 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>3D Models <em>(116 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n11.jpg' %}, {% static '/assets/images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n11.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Statues</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n12.jpg' %}, {% static '/assets/images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n10.jpg' %}, {% static '/assets/images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>My latest Stuff <em>(10 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Favorite Items</strong>
+                <span>214 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>3D Models <em>(116 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n11.jpg' %}, {% static '/assets/images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n11.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Statues</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n12.jpg' %}, {% static '/assets/images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Statues <em>(1 item)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static '/assets/images/img-n9.jpg' %}, {% static '/assets/images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>Sphinx Details <em>(17 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static '/assets/images/img-n10.jpg' %}, {% static '/assets/images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static '/assets/images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+          <div class="list-row">
+            <div class="check-hold">
+              <label>
+                <input type="checkbox">
+                <span class="fake-input"></span>
+                <span>My latest Stuff <em>(10 items)</em></span>
+              </label>
+            </div>
+            <div class="btn-hold">
+              <a href="#" class="button primary">View this collection</a>
+              <a href="#" class="button primary">Delete</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+{{/content-main}}
+
+<!-- END MAIN CONTENT ROWS -->

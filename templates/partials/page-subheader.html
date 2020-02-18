@@ -1,0 +1,14 @@
+<div class="page-subheader {{class}}">
+  <div class="row p-t-1">
+    <div class="large-12 columns">
+      {{#if backlink-url}}
+      <div class="text-smaller m-x-negqt m-t-neg1 p-y-half">
+        <a class="pointer-back" href="/{{backlink-url}}">{{safeval backlink-text 'Back'}}</a>
+      </div>
+      {{/if}}
+      <div class="text-heading">
+        {{> @partial-block}}
+      </div>
+    </div>
+  </div>
+</div>

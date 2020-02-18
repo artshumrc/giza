@@ -53,7 +53,15 @@
 @include motion-ui-animations;
 
 //custom styles
+@import 'components/functions'; // New for MyGiza
+@import 'components/mixins'; // New for MyGiza
+@import 'components/helpers'; // New for MyGiza
+
+@import 'include-media'; // New for MyGiza
+@import 'slick.scss'; // New for MyGiza
+@import 'components/vendors/jcf'; // New for MyGiza
 @import 'components/fontastic';
+
 @import 'components/typography';
 @import 'components/spacers';
 @import 'components/forms';
@@ -62,9 +70,12 @@
 @import 'components/modal';
 @import 'components/navbar';
 @import 'components/footer';
+@import 'components/headers';
 @import 'components/feature-items';
 @import 'components/library';
-@import 'components/home';
-@import 'components/search';
+@import 'components/home'; // Updated for MyGiza
+@import 'components/mygiza'; // New for MyGiza
+@import 'components/search'; // Updated for MyGiza
+@import 'components/school'; // New for Giza @ School
 @import 'components/utilities-misc';
-
+@import 'components/timeline';

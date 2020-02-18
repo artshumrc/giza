@@ -1,6 +1,129 @@
 /*  Miscellaneous Utilities
 --------------------------------------*/
 
+// Display (borrowed from Bootstrap)
+
+.d-block {          display: block; }
+.d-inline {         display: inline; }
+.d-inline-block {   display: inline-block; }
+.d-flex {           display: flex; }
+.d-none {           display: none; }
+
+// Responsive image (borrowed from Bootstrap)
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+// Responsive image max-width constraint
+//    Particularly for sidebar modules whose images could get very wide;
+//    these classes set reasonable maximum sizes.
+//    Pixel `width` values get enforced when container is larger than that value, 
+//    otherwise max-width:100% applies and the container determines width.
+//    Remember to use these paired with .img-fluid!
+
+.img-fluid-mw150 {
+  width: 150px;
+}
+.img-fluid-mw250 {
+  width: 250px; 
+}
+.img-fluid-mw325 {
+  width: 325px;
+}
+.img-fluid-mw450 {
+  width: 450px;
+}
+
+.img-fluid-sm-mw325 { // Medium and/or tablet
+  @include breakpoint(medium down) {
+    max-width: 325px;
+  }
+}
+
+.img-fluid-md-mw50 { // Medium and/or tablet
+  @include breakpoint(medium only) {
+    max-width: 50%;
+  }
+  @include breakpoint(tablet only) {
+    max-width: 50%;
+  }
+}
+.img-fluid-lg-mw50 { // Large & up
+  @include breakpoint(large) {
+    max-width: 50%;
+  }
+}
+
+// Flex utilities, inspired by Bootstrap, for items that behave like media blocks
+
+.flex-v {
+  flex-direction: column; // Non-default value for flexbox
+}
+
+.flex-fixed {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.flex-mw-150 {
+  flex-basis: 150px;
+}
+
+.flex-fluid {
+  flex: 1 1 auto;
+}
+
+// Fixed header/footer, fluid body components
+.flex-header {
+  flex: 0;
+}
+.flex-body {
+  flex: 1;
+}
+.flex-footer {
+  flex: 0;
+}
+
+
+
+// Borders - flexible dividers for different uses
+
+.border-light {
+  border: solid 1px rgba($white, 0.5);
+}
+.border-dark {
+  border: solid 1px rgba($dune, 0.25);
+}
+.border-top-light {
+  border-top: solid 1px rgba($white, 0.5);
+}
+.border-top-dark {
+  border-top: solid 1px rgba($dune, 0.25);
+}
+.border-bottom-light {
+  border-bottom: solid 1px rgba($white, 0.5);
+}
+.border-bottom-dark {
+  border-bottom: solid 1px rgba($dune, 0.25);
+}
+.border-left-light {
+  border-left: solid 1px rgba($white, 0.5);
+}
+.border-left-dark {
+  border-left: solid 1px rgba($dune, 0.25);
+}
+.border-right-light {
+  border-right: solid 1px rgba($white, 0.5);
+}
+.border-right-dark {
+  border-right: solid 1px rgba($dune, 0.25);
+}
+
+
+// Padding on rows
+
 .row-padded { // A row whose content should match the alignment of columns
     
   @include breakpoint(small) {
@@ -58,34 +181,69 @@
 // Responsive alignment 
 
 .text-md-right {
-  
   @include breakpoint(medium) {
     text-align: right;
   }
-  
 } 
 
 .text-lg-right {
-  
   @include breakpoint(large) {
     text-align: right;
   }
-  
 }
 
 .text-md-left {
-  
   @include breakpoint(medium) {
     text-align: left;
   }
-  
 } 
 
 .text-lg-left {
-  
   @include breakpoint(large) {
     text-align: left;
-  }
-  
-} 
+  } 
+}
 
+// Word wrapping
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+// Arrows prepended or appended
+
+.pointer-back::before, 
+.pointer-fwd::after {
+  display: inline-block;
+  font-family: "giza-project-icons";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  font-size: inherit !important;
+  line-height: 1 !important;
+  position: relative;
+  padding-left: 0.1em;
+  padding-right: 0.1em;
+  top: 0.17em;
+}
+
+.pointer-back::before {
+  content: "\61"; // chevron-left icon
+}
+
+.pointer-fwd::after {
+  content: "\62"; // chevron-right icon
+}
+
+
+// Top Banner (under construction) - #Backfill
+
+.top-banner {
+  height: 29px; // Fixed height to accommodate smooth-scroll offset
+  background-color: #FAF4CA;
+  color: $body-font-color;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 5px;
+}

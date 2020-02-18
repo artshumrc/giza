@@ -1,5 +1,3 @@
-{% load static %}
-
 <!-- BEGIN FOOTER -->
 
 <nav class="footer">
@@ -7,31 +5,34 @@
 
     <section class="large-6 columns">
       <div class="row">
+
         <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{{root}}gizaintro.html">Explore</a></h6>
+          <h6><a class="heading-link" href="/library.html">Library</a></h6>
+        </div>
+
+        <div class="medium-4 columns">
+          <h6><a class="heading-link" href="/gizaatschool.html">Giza @ School</a></h6>
           <ul class="footer-menu-list">
-            <li><a href="{{root}}gizaintro.html">Introduction to Giza</a></li>
-            <li><a href="{{root}}archaeology.html">Archaeology at Giza</a></li>
-            <li><a href="{{root}}commontopics.html">Common Topics</a></li>
-            <li><a href="#0">Giza Maps &amp; Plans</a></li>
-            <li><a href="#0">Digital Giza Library</a></li>
-            <li><a href="{{root}}videos.html">Videos</a></li>
-            <li><a href="{{root}}faq.html">Glossary &amp; FAQs</a></li>
+            <li><a href="/lessontopics.html">Lesson Topics</a></li>
+            <li><a href="/commontopics.html">People and Places of Giza</a></li>
+            <li><a href="/faq.html">Glossary and FAQ</a></li>
+            <li><a href="/videos.html">Video Library</a></li>
           </ul>
         </div>
+
         <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{{root}}giza3d.html">Giza 3D</a></h6>
+          <h6><a class="heading-link" href="/giza3d.html">Giza 3D</a></h6>
           <ul class="footer-menu-list vertical menu accordion-slim" data-accordion-menu>
             <li>
               <a href="#0" class="accordion-toggletext" data-closed-text="Show models" data-open-text="Hide models">Show models</a>
               <ul class="no-bullet menu vertical nested">
-                <li><a href="{{root}}giza3d.html">Giza Plateau</a></li>
+                <li><a href="/giza3d.html">Giza Plateau</a></li>
                 <li><a href="#0">Khufu Pyramid Complex</a></li>
                 <li><a href="#0">Khufu Pyramid Temple</a></li>
                 <li><a href="#0">Khufu Valley Temple</a></li>
                 <li><a href="#0">Khafre Pyramid Complex</a></li>
-                <li><a href="{{root}}intro.html">Khafre Pyramid Temple</a></li>
-                <li><a href="{{root}}full.html">Khafre Valley Temple</a></li>
+                <li><a href="/full.html">Khafre Pyramid Temple</a></li>
+                <li><a href="/full.html">Khafre Valley Temple</a></li>
                 <li><a href="#0">Sphinx</a></li>
                 <li><a href="#0">Sphinx Temple</a></li>
                 <li><a href="#0">Menkaure Pyramid Complex</a></li>
@@ -45,39 +46,39 @@
               </ul>
             </li>
         </div>
-        <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{{root}}mygiza.html">My Giza</a></h6>
-          <ul class="footer-menu-list">
-            <li><a href="#0">MY Bookshelf</a></li>
-            <li><a href="#0">MY Photo Albums</a></li>
-            <li><a href="#0">MY Documents</a></li>
-            <li><a href="#0">MY Object Collections</a></li>
-            <li><a href="#0">MY Archives</a></li>
-            <li><a href="#0">Register for MY Giza</a></li>
-          </ul>
-        </div>
+
       </div>
     </section>
 
     <section class="large-6 columns">
       <div class="row">
+
         <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{{root}}about.html">About the Project</a></h6>
+          <h6><a class="heading-link" href="/mygiza.html">My Giza</a></h6>
           <ul class="footer-menu-list">
-            <li><a href="{{root}}about.html">What is the Giza Project?</a></li>
-            <li><a href="{{root}}gizacard.html">The GizaCARD</a></li>
-            <li><a href="{{root}}resources.html">Resources</a></li>
-            <li><a href="{{root}}news.html">News</a></li>
-            <li><a href="{{root}}blog.html">Blog</a></li>
-            <li><a href="{{root}}contact.html">Contact</a></li>
+            <li><a href="/mygiza-collections.html">My Collections</a></li>
+            <li><a href="/mygiza-savedsearches.html">My Saved Searches</a></li>
+            <li><a href="/mygiza-collections.html">Browse Collections</a></li>
+            <li><a href="#0">Log In</a></li>
+            <li><a href="#0">Create a MyGiza Account</a></li>
           </ul>
         </div>
+
         <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{{root}}donate.html">Donate</a></h6>
+          <h6><a class="heading-link" href="/gizaintro.html">About the Project</a></h6>
+          <ul class="footer-menu-list">
+            <li><a href="/gizaintro.html">Introduction to Giza</a></li>
+            <li><a href="/about.html">What is the Giza Project?</a></li>
+            <li><a href="/archaeology.html">Archaeology at Giza</a></li>
+          </ul>
         </div>
+
         <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{{root}}search.html">Search</a></h6>
+          <h6><a class="heading-link" href="/donate.html">Donate</a></h6>
+          <h6><a class="heading-link" href="/search.html">Search</a></h6>
+          <h6><a class="heading-link" data-open="modal_contact">Contact</a></h6>
         </div>
+
       </div>
     </section>
 
@@ -87,20 +88,21 @@
 <footer class="legal-social" data-equalizer data-equalize-on="medium">
   <div class="row">
     <div class="large-6 large-push-6 columns text-md-right" data-equalizer-watch>
-      <img src="{% static 'img/footerlogo.png" alt="Giza Project at Harvard University" class="image-spacer" style="max-width: 200px;' %}">
-      <img src="{% static 'img/neh_logo_web.svg" alt="National Endowment for the Humanities" class="image-spacer" style="margin-top: -0.2em; max-width: 200px;' %}">
+      <img src="{% static 'assets/images/footerlogo.png' %}" alt="Giza Project at Harvard University" class="image-spacer" style="max-width: 200px;">
+      <img src="{% static 'assets/images/neh_logo_web.svg' %}" alt="National Endowment for the Humanities" class="image-spacer" style="margin-top: -0.2em; max-width: 200px;">
+      <p class="medium-9 columns text-smaller text-muted text-center">Digital Giza has been made possible in part by the <a href="http://www.neh.gov/">National Endowment for the Humanities</a>: Exploring the human endeavor</p>
     </div>
     <div class="large-6 large-pull-6 columns" data-equalizer-watch>
       <div class="row" data-equalizer>
         <div class="medium-6 columns" data-equalizer-watch>
-          <p class="text-smaller text-muted" style="margin-top: 0.25em;">&copy; 2016 Copyright Holder. <br> All rights reserved.</p>
+          <p class="text-smaller text-muted" style="margin-top: 0.25em;">&copy; 2017 Giza Project at Harvard University. <br> All rights reserved.</p>
         </div>
         <div class="medium-6 columns text-md-right" data-equalizer-watch>
           <p class="stat" style="margin-top: 0.0em;">
-            <a class="icon-facebook-square text-muted" href="http://www.facebook.com" target="_blank"></a>
-            <a class="icon-twitter text-muted" href="http://www.twitter.com" target="_blank"></a>
+            <a class="icon-facebook-square text-muted" href="https://www.facebook.com/The-Giza-Project-at-Harvard-University-1872145656335515/" target="_blank"></a>
+            <!-- <a class="icon-twitter text-muted" href="http://www.twitter.com" target="_blank"></a>
             <a class="icon-google-plus-square text-muted" href="https://plus.google.com" target="_blank"></a>
-            <a class="icon-instagram text-muted" href="http://www.instagram.com" target="_blank"></a>
+            <a class="icon-instagram text-muted" href="http://www.instagram.com" target="_blank"></a> -->
           </p>
         </div>
       </div>
@@ -109,3 +111,21 @@
 </footer>
 
 <!-- END FOOTER -->
+
+{{#if section-home}}
+<div class="callout primary callout-banner-bottom" data-closable>
+  <div class="row">
+    <div class="columns">
+      <span class="m-r-half">
+        <strong>Cookie use:</strong> This site uses cookies to allow you to save items without an account.
+      </span>
+      <span class="text-nowrap">
+        <a href="#">Privacy Policy</a> <span class="p-x-qt">|</span> <a href="#">Opt Out</a>
+      </span>
+      <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</div>
+{{/if}}

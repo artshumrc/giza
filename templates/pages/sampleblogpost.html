@@ -6,14 +6,9 @@ section-about: true
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-  <div class="page-header header-bg-6" id="content">
-    <div class="row title">
-      <header class="large-12 columns">
-        <h1>{{title}} <a name="top"></a></h1>
-      </header> 
-    </div>
-  </div>
+{{> page-header bg="6"}}
 
+{{#> content-main}}
   <div class="row">
     <section class="medium-8 columns">
       <article>
@@ -22,7 +17,7 @@ section-about: true
         
 
             
-            <div class="thumbnail float-left m-r-1"><a href="#"><img src="{% static 'img/contact.png" alt="appropriate alt' %}"></a></div>
+            <div class="thumbnail float-left m-r-1"><a href="#"><img src="{% static 'assets/images/contact.png' %}" alt="appropriate alt"></a></div>
 	            
 	         <p>Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.</p> 
             <p>Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.</p>
@@ -58,3 +53,6 @@ section-about: true
       </div>
     </aside>
   </div>
+{{/content-main}}
+
+<!-- END MAIN CONTENT ROWS -->

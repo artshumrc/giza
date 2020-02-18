@@ -1,0 +1,36 @@
+<div class="reveal modal" id="modal_contact" data-reveal>
+  <span class="title p-x-1">Contact the Digital Giza Team</span>
+  
+  <div class="modal-body p-x-1">
+  
+    <p class="m-b-half">
+      <strong>Questions, comments, concerns?</strong> We'd love to hear from you.
+    </p>
+    <p class="text-smaller">
+      <em>All fields below are required. Please note: although we make every 
+      effort to respond, we are unable to personally reply to every comment.</em>
+    </p>
+    
+    <hr>
+
+    <form>
+      <label>
+        Name:
+        <input type="text" placeholder="Type your name here.">
+      </label>
+      <label>
+        Email address:
+        <input type="email" placeholder="i.e. jane@example.com">
+      </label>
+      <label>
+        Comment:            
+        <textarea placeholder="How can we help you?" rows="6"></textarea>
+      </label>
+      <div class="text-right">
+        <button type="button" class="button m-r-0">Submit</button>
+      </div>
+    </form>
+
+  </div>
+  {{> close-button label="Close modal"}}
+</div>

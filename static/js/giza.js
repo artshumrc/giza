@@ -4,13 +4,20 @@ $(document).foundation();
 // Src: https://css-tricks.com/snippets/jquery/smooth-scrolling/
 
 $(function() {
+  
+  // Variable set to accommodate fixed-top navbar.
+  // Un-comment the appropriate value below.
+  var topOffset;
+  //topOffset = 70; // Normal, no extra banner
+  topOffset = 99; // With extra under-construction banner
+  
   $('a[href*="#"]:not([href="#0"])').click(function() {
     if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
       var target = $(this.hash);
       target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
       if (target.length) {
         $('html, body').animate({
-          scrollTop: (target.offset().top - 70)
+          scrollTop: (target.offset().top - topOffset)
         }, 600);
         return false;
       }
@@ -55,6 +62,7 @@ var fnAdjustRightColMargin = function() {
   col.css('margin-top', offset);
 }
 
-fnAdjustRightColMargin();
-
-
+// Only run this function on ready if #jumpmenu is present
+if ($('#jumpmenu').length) {
+  fnAdjustRightColMargin();
+}

@@ -1,0 +1,28 @@
+<div class="page-header header-bg-{{safeval bg '1'}}">
+  <div class="row title">
+    <header class="large-12 columns">
+      <h1>
+        {{#if backlink-url}}
+        <a href="/{{backlink-url}}">
+          {{title}}
+        </a>
+        {{else}}
+        {{title}}
+        {{/if}}
+        <a name="top"></a>
+      </h1>
+      {{#if page-header-meta-text}}
+      <h3 class="page-header__meta">
+        {{page-header-meta-text}}
+      </h3>
+      {{/if}}
+      {{#if page-header-meta-link}}
+      <h3 class="page-header__meta">
+        <a href="/{{page-header-meta-link}}">
+          <i class="icon-angle-left"></i> Back
+        </a>
+      </h3>
+      {{/if}}
+    </header> 
+  </div>
+</div>
