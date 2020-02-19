@@ -31,10 +31,10 @@
             <div class="feature-block secondary" id="jumpmenu">
               <div class="feature-block__body">
 
-                {{> jump-menu-full}}
+                {% include 'partials/jump-menu-full.html' %}
 
                 <div class="border-top-light m-t-1 p-t-1">
-                  {{> share-links}}
+                  {% include 'partials/share-links.html' %}
                 </div>
 
               </div>
@@ -65,7 +65,7 @@
         <ul class="feature-block__list multicol-2">
         {{#each details}}
           <li>
-            {{> list-item-textinfo}}
+            {% include 'partials/list-item-textinfo.html' %}
           </li>
         {{/each}}
         </ul>
@@ -76,7 +76,7 @@
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
         {{#each objects}}
           <li>
-            {{> list-item-thumbnail}}
+            {% include 'partials/list-item-thumbnail.html' %}
           </li>
         {{/each}}
         </ul>
@@ -87,7 +87,7 @@
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
         {{#each diary-pages}}
           <li>
-            {{> list-item-thumbnail}}
+            {% include 'partials/list-item-thumbnail.html' %}
           </li>
         {{/each}}
         </ul>
@@ -98,7 +98,7 @@
         <ul class="feature-block__list item-grid thumbsize-lg thumbs-square">
         {{#each maps-plans}}
           <li>
-            {{> list-item-thumbcaption}}
+            {% include 'partials/list-item-thumbcaption.html' %}
           </li>
         {{/each}}
         </ul>
@@ -109,7 +109,7 @@
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
         {{#each drawings}}
           <li>
-            {{> list-item-thumbnail}}
+            {% include 'partials/list-item-thumbnail.html' %}
           </li>
         {{/each}}
         </ul>
@@ -120,7 +120,7 @@
         <ul class="feature-block__list multicol-2">
         {{#each published-docs}}
           <li>
-            {{> list-item-document}}
+            {% include 'partials/list-item-document.html' %}
           </li>
         {{/each}}
         </ul>
@@ -131,7 +131,7 @@
         <ul class="feature-block__list multicol-2">
         {{#each unpublished-docs}}
           <li>
-            {{> list-item-document}}
+            {% include 'partials/list-item-document.html' %}
           </li>
         {{/each}}
         </ul>
@@ -181,7 +181,7 @@
         <ul class="feature-block__list item-grid thumbsize-sm thumbs-square">
         {{#limit photos limit="15"}}
           <li>
-            {{> list-item-thumbonly}}
+            {% include 'partials/list-item-thumbonly.html' %}
           </li>
         {{/limit}}
         </ul>
@@ -192,7 +192,7 @@
         <ul class="feature-block__list thumbsize-full">
         {{#each 3d-models}}
           <li>
-            {{> list-item-thumbcaption}}
+            {% include 'partials/list-item-thumbcaption.html' %}
           </li>
         {{/each}}
         </ul>
@@ -203,7 +203,7 @@
         <ul class="feature-block__list multicol-2 thumbsize-lg thumbs-square">
         {{#each videos}}
           <li>
-            {{> list-item-thumbcaption}}
+            {% include 'partials/list-item-thumbcaption.html' %}
           </li>
         {{/each}}
         </ul>
@@ -214,7 +214,7 @@
         <ul class="feature-block__list">
         {{#each audio}}
           <li>
-            {{> list-item-mediacaption}}
+            {% include 'partials/list-item-mediacaption.html' %}
           </li>
         {{/each}}
         </ul>
@@ -227,7 +227,7 @@
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each ancient-people}}
           <li>
-            {{> list-item-thumbnail}}
+            {% include 'partials/list-item-thumbnail.html' %}
           </li>
         {{/each}}
         </ul>
@@ -237,7 +237,7 @@
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each modern-people}}
           <li>
-            {{> list-item-thumbnail}}
+            {% include 'partials/list-item-thumbnail.html' %}
           </li>
         {{/each}}
         </ul>
@@ -248,7 +248,7 @@
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each institutions}}
           <li>
-            {{> list-item-thumbnail}}
+            {% include 'partials/list-item-thumbnail.html' %}
           </li>
         {{/each}}
         </ul>
@@ -259,7 +259,7 @@
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each groups}}
           <li>
-            {{> list-item-thumbnail}}
+            {% include 'partials/list-item-thumbnail.html' %}
           </li>
         {{/each}}
         </ul>
@@ -270,7 +270,7 @@
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each animals}}
           <li>
-            {{> list-item-thumbnail}}
+            {% include 'partials/list-item-thumbnail.html' %}
           </li>
         {{/each}}
         </ul>

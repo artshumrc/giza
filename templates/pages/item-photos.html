@@ -24,7 +24,7 @@
         <ul class="feature-block__list item-grid thumbsize-md thumbs-square">
         {{#each photos}}
           <li>
-            {{> list-item-thumbonly}}
+            {% include 'partials/list-item-thumbonly.html' %}
           </li>
         {{/each}}
         </ul>

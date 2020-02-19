@@ -67,7 +67,7 @@
             <ul class="feature-block__list thumbsize-sm thumbs-square">
             {{#limit objects limit="5"}}
               <li>
-                {{> list-item-thumbnail}}
+                {% include 'partials/list-item-thumbnail.html' %}
               </li>
             {{/limit}}
             </ul>
@@ -78,7 +78,7 @@
             <ul class="feature-block__list thumbsize-sm thumbs-square">
             {{#limit diary-pages limit="5"}}
               <li>
-                {{> list-item-thumbnail}}
+                {% include 'partials/list-item-thumbnail.html' %}
               </li>
             {{/limit}}
             </ul>
@@ -89,7 +89,7 @@
             <ul class="feature-block__list item-grid thumbsize-lg thumbs-square">
             {{#limit maps-plans limit="2"}}
               <li>
-                {{> list-item-thumbcaption}}
+                {% include 'partials/list-item-thumbcaption.html' %}
               </li>
             {{/limit}}
             </ul>
@@ -100,7 +100,7 @@
             <ul class="feature-block__list thumbsize-sm thumbs-square">
             {{#limit drawings limit="5"}}
               <li>
-                {{> list-item-thumbnail}}
+                {% include 'partials/list-item-thumbnail.html' %}
               </li>
             {{/limit}}
             </ul>
@@ -115,7 +115,7 @@
             <ul class="feature-block__list item-grid thumbsize-sm thumbs-square">
             {{#limit photos limit="15"}}
               <li>
-                {{> list-item-thumbonly}}
+                {% include 'partials/list-item-thumbonly.html' %}
               </li>
             {{/limit}}
             </ul>
@@ -126,7 +126,7 @@
             <ul class="feature-block__list thumbsize-full">
             {{#limit 3d-models limit="3"}}
               <li>
-                {{> list-item-thumbcaption}}
+                {% include 'partials/list-item-thumbcaption.html' %}
               </li>
             {{/limit}}
             </ul>
@@ -136,7 +136,7 @@
             <ul class="feature-block__list">
             {{#limit published-docs limit="5"}}
               <li>
-                {{> list-item-document}}
+                {% include 'partials/list-item-document.html' %}
               </li>
             {{/limit}}
             </ul>
@@ -147,7 +147,7 @@
             <ul class="feature-block__list">
             {{#limit unpublished-docs}}
               <li>
-                {{> list-item-document}}
+                {% include 'partials/list-item-document.html' %}
               </li>
             {{/limit}}
             </ul>
@@ -167,7 +167,7 @@
             <ul class="feature-block__list multicol-2 thumbsize-lg">
             {{#each videos}}
               <li>
-                {{> list-item-thumbcaption}}
+                {% include 'partials/list-item-thumbcaption.html' %}
               </li>
             {{/each}}
             </ul>
@@ -185,7 +185,7 @@
             <ul class="feature-block__list">
             {{#each audio}}
               <li>
-                {{> list-item-mediacaption}}
+                {% include 'partials/list-item-mediacaption.html' %}
               </li>
             {{/each}}
             </ul>
@@ -198,7 +198,7 @@
             <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
             {{#each ancient-people}}
               <li>
-                {{> list-item-thumbnail}}
+                {% include 'partials/list-item-thumbnail.html' %}
               </li>
             {{/each}}
             </ul>
@@ -208,7 +208,7 @@
             <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
             {{#each modern-people}}
               <li>
-                {{> list-item-thumbnail}}
+                {% include 'partials/list-item-thumbnail.html' %}
               </li>
             {{/each}}
             </ul>
@@ -223,5 +223,5 @@
 
   <!-- END MAIN CONTENT ROWS -->
 
-  {{> gallery-modal}}
+  {% include 'partials/gallery-modal.html' %}
 {% endblock  %}
