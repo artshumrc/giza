@@ -8,9 +8,11 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{% include 'partials/page-header.html' with bg="7" %}
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="7" %}
+{% endblock  %}
 
-{% block 'content' %}
+{% block 'main_content' %}
   <div class="row heading-block row-padded" id="content-skip">
     <h1>MyGiza: Save, share, and make our collection your own.</h1>
     <p>MyGiza helps you explore the vast Digital Giza collection, and organize it in a way that makes sense for you. For example, take a look at some of our curated collections below – then sign up to make your own.</p>
@@ -23,8 +25,8 @@
             <a href="#">
               <picture>
                 <!-- <source srcset="images/small.jpg, images/small-2x.jpg 2x, images/small-3x.jpg 3x" media="(max-width: 767px)"/> -->
-                <source srcset="assets/images/img-n2.jpg, assets/images/img-n2@2x.jpg 2x"/>
-                <img src="assets/images/img-n2.jpg" alt="image description" width="517" height="517">
+                <source srcset="{% static 'images/img-n2.jpg' %}, {% static 'images/img-n2@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n2.jpg' %}" alt="image description" width="517" height="517">
               </picture>
               <div class="caption">
                 <strong>Curated Collection: Staff Picks</strong>
@@ -38,7 +40,7 @@
             <div class="item-wrap">
               <a href="#">
                 <picture>
-                  <source srcset="assets/images/img-n3.jpg, assets/images/img-n3@2x.jpg 2x"/>
+                  <source srcset="{% static 'images/img-n3.jpg' %}, {% static 'images/img-n3@2x.jpg' %} 2x"/>
                   <img src="assets/images/img-n3.jpg" alt="image description" width="250" height="250">
                 </picture>
                 <div class="caption">
@@ -50,8 +52,8 @@
             <div class="item-wrap">
               <a href="#">
                 <picture>
-                  <source srcset="assets/images/img-n4.jpg, assets/images/img-n4@2x.jpg 2x"/>
-                  <img src="assets/images/img-n4.jpg" alt="image description" width="250" height="250">
+                  <source srcset="{% static 'images/img-n4.jpg' %}, {% static 'images/img-n4@2x.jpg' %} 2x"/>
+                  <img src="{% static 'images/img-n4.jpg' %}" alt="image description" width="250" height="250">
                 </picture>
                 <div class="caption">
                   <strong>Curated Collection: Something Else</strong>
@@ -62,8 +64,8 @@
             <div class="item-wrap">
               <a href="#">
                 <picture>
-                  <source srcset="assets/images/img-n5.jpg, assets/images/img-n5@2x.jpg 2x"/>
-                  <img src="assets/images/img-n5.jpg" alt="image description" width="250" height="250">
+                  <source srcset="{% static 'images/img-n5.jpg' %}, {% static 'images/img-n5@2x.jpg' %} 2x"/>
+                  <img src="{% static 'images/img-n5.jpg' %}" alt="image description" width="250" height="250">
                 </picture>
                 <div class="caption">
                   <strong>Curated Collection: Favorite Items</strong>
@@ -74,10 +76,10 @@
             <div class="item-wrap">
               <a href="#">
                 <picture>
-                  <source srcset="assets/images/img-n6.jpg, assets/images/img-n6@2x.jpg 2x"/>
-                  <img src="assets/images/img-n6.jpg" alt="image description" width="250" height="250">
+                  <source srcset="{% static 'images/img-n6.jpg' %}, {% static 'images/img-n6@2x.jpg' %} 2x"/>
+                  <img src="{% static 'images/img-n6.jpg' %}" alt="image description" width="250" height="250">
                 </picture>
-                <img src="assets/images/upload-icon.svg" alt="image description" class="upload-icon">
+                <img src="{% static 'images/upload-icon.svg' %}" alt="image description" class="upload-icon">
                 <div class="caption">
                   <strong>Your First Collection</strong>
                   <span>No items – start adding some!</span>
@@ -104,8 +106,8 @@
       <div class="img-wrap">
         <div class="img">
           <picture>
-            <source srcset="assets/images/img-n7.jpg, assets/images/img-n7@2x.jpg 2x"/>
-            <img src="assets/images/img-n7.jpg" alt="image description" width="442" height="362">
+            <source srcset="{% static 'images/img-n7.jpg' %}, {% static 'images/img-n7@2x.jpg' %} 2x"/>
+            <img src="{% static 'images/img-n7.jpg' %}" alt="image description" width="442" height="362">
           </picture>
         </div>
       </div>
@@ -118,8 +120,8 @@
       <div class="img-wrap">
         <div class="img">
           <picture>
-            <source srcset="assets/images/img-n8.jpg, assets/images/img-n8@2x.jpg 2x"/>
-            <img src="assets/images/img-n8.jpg" alt="image description" width="442" height="362">
+            <source srcset="{% static 'images/img-n8.jpg' %}, {% static 'images/img-n8@2x.jpg' %} 2x"/>
+            <img src="{% static 'images/img-n8.jpg' %}" alt="image description" width="442" height="362">
           </picture>
         </div>
       </div>

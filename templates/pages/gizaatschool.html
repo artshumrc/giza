@@ -7,13 +7,14 @@
 %}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="9" %}
 
-{% include 'partials/page-header.html' with bg="9" %}
+  {% include 'partials/page-subheader--gizaatschool.html' %}
 
-{% include 'partials/page-subheader--gizaatschool.html' %}
+{% endblock  %}
 
-
-{% block 'content' %}
+{% block 'main_content' %}
   <div class="row">
 
     <section class="large-8 columns">

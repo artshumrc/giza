@@ -10,9 +10,11 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{% include 'partials/page-header.html' with bg="7" %}
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="7" %}
+{% endblock  %}
 
-{% block 'content' %}
+{% block 'main_content' %}
   <!-- GDPR cookies callout -->
   <div class="row">
     <div class="columns">
@@ -68,9 +70,9 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n9-small.jpg, assets/images/img-n9-small@2x.jpg 2x" media="(max-width: 639px)"/>
-                <source srcset="assets/images/img-n9.jpg, assets/images/img-n9@2x.jpg 2x"/>
-                <img src="assets/images/img-n9.jpg" alt="image description" width="250" height="250">
+                <source srcset="{% static 'images/img-n9-small.jpg' %}, {% static 'images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static 'images/img-n9.jpg' %}, {% static 'images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n9.jpg' %}" alt="image description" width="250" height="250">
               </picture>
               <div class="caption">
                 <strong>My Latest Project</strong>
@@ -84,8 +86,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n10.jpg, assets/images/img-n10@2x.jpg 2x"/>
-                <img src="assets/images/img-n10.jpg" alt="image description" width="250" height="250">
+                <source srcset="{% static 'images/img-n10.jpg' %}, {% static 'images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n10.jpg' %}" alt="image description" width="250" height="250">
               </picture>
               <div class="caption">
                 <strong>Sample Collection</strong>
@@ -99,9 +101,9 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n9-small.jpg, assets/images/img-n9-small@2x.jpg 2x" media="(max-width: 639px)"/>
-                <source srcset="assets/images/img-n9.jpg, assets/images/img-n9@2x.jpg 2x"/>
-                <img src="assets/images/img-n9.jpg" alt="image description" width="250" height="250">
+                <source srcset="{% static 'images/img-n9-small.jpg' %}, {% static 'images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static 'images/img-n9.jpg' %}, {% static 'images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n9.jpg' %}" alt="image description" width="250" height="250">
               </picture>
               <div class="caption">
                 <strong>Favorite Items</strong>
@@ -115,8 +117,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n11.jpg, assets/images/img-n11@2x.jpg 2x"/>
-                <img src="assets/images/img-n11.jpg" alt="image description" width="250" height="250">
+                <source srcset="{% static 'images/img-n11.jpg' %}, {% static 'images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n11.jpg' %}" alt="image description" width="250" height="250">
               </picture>
               <div class="caption">
                 <strong>Statues</strong>
@@ -130,8 +132,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n12.jpg, assets/images/img-n12@2x.jpg 2x"/>
-                <img src="assets/images/img-n12.jpg" alt="image description" width="250" height="250">
+                <source srcset="{% static 'images/img-n12.jpg' %}, {% static 'images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n12.jpg' %}" alt="image description" width="250" height="250">
               </picture>
               <div class="caption">
                 <strong>A Collection with a Much Longer Name</strong>
@@ -145,8 +147,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n12.jpg, assets/images/img-n12@2x.jpg 2x"/>
-                <img src="assets/images/img-n12.jpg" alt="image description" width="250" height="250">
+                <source srcset="{% static 'images/img-n12.jpg' %}, {% static 'images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n12.jpg' %}" alt="image description" width="250" height="250">
               </picture>
               <div class="caption">
                 <strong>A Collection with a Much Longer Name</strong>
@@ -217,8 +219,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n13.jpg, assets/images/img-n13@2x.jpg 2x"/>
-                <img src="assets/images/img-n13.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n13.jpg' %}, {% static 'images/img-n13@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n13.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -233,8 +235,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n14.jpg, assets/images/img-n14@2x.jpg 2x"/>
-                <img src="assets/images/img-n14.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n14.jpg' %}, {% static 'images/img-n14@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n14.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -249,8 +251,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n15.jpg, assets/images/img-n15@2x.jpg 2x"/>
-                <img src="assets/images/img-n15.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n15.jpg' %}, {% static 'images/img-n15@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n15.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -265,8 +267,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n16.jpg, assets/images/img-n16@2x.jpg 2x"/>
-                <img src="assets/images/img-n16.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n16.jpg' %}, {% static 'images/img-n16@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n16.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -281,8 +283,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n13.jpg, assets/images/img-n13@2x.jpg 2x"/>
-                <img src="assets/images/img-n13.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n13.jpg' %}, {% static 'images/img-n13@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n13.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -297,8 +299,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n14.jpg, assets/images/img-n14@2x.jpg 2x"/>
-                <img src="assets/images/img-n14.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n14.jpg' %}, {% static 'images/img-n14@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n14.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -313,8 +315,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n15.jpg, assets/images/img-n15@2x.jpg 2x"/>
-                <img src="assets/images/img-n15.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n15.jpg' %}, {% static 'images/img-n15@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n15.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -329,8 +331,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n16.jpg, assets/images/img-n16@2x.jpg 2x"/>
-                <img src="assets/images/img-n16.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n16.jpg' %}, {% static 'images/img-n16@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n16.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -345,8 +347,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n13.jpg, assets/images/img-n13@2x.jpg 2x"/>
-                <img src="assets/images/img-n13.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n13.jpg' %}, {% static 'images/img-n13@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n13.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -361,8 +363,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n14.jpg, assets/images/img-n14@2x.jpg 2x"/>
-                <img src="assets/images/img-n14.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n14.jpg' %}, {% static 'images/img-n14@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n14.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -377,8 +379,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n15.jpg, assets/images/img-n15@2x.jpg 2x"/>
-                <img src="assets/images/img-n15.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n15.jpg' %}, {% static 'images/img-n15@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n15.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>
@@ -393,8 +395,8 @@
           <div class="item-wrap">
             <a href="#">
               <picture>
-                <source srcset="assets/images/img-n16.jpg, assets/images/img-n16@2x.jpg 2x"/>
-                <img src="assets/images/img-n16.jpg" alt="image description" width="180" height="180">
+                <source srcset="{% static 'images/img-n16.jpg' %}, {% static 'images/img-n16@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n16.jpg' %}" alt="image description" width="180" height="180">
               </picture>
               <div class="caption">
                 <strong>Khafre Pyramid Complex</strong>

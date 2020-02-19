@@ -8,9 +8,11 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{% include 'partials/page-header.html' with bg="8" %}
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="8" %}
+{% endblock  %}
 
-{% block 'content' %}
+{% block 'main_content' %}
   <div class="row">
 
     <aside class="medium-4 columns medium-push-8" data-sticky-container>

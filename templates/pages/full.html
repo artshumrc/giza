@@ -8,10 +8,12 @@
 %}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="1" page_header_meta_text="Khafre Pyramid Complex" %}
+{% endblock  %}
 
-{% include 'partials/page-header.html' with bg="1" page_header_meta_text="Khafre Pyramid Complex" %}
 
-{% block 'content' %}
+{% block 'main_content' %}
   <!-- row -->
 
   <div class="row content-start">

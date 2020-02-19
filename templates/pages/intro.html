@@ -7,8 +7,11 @@
   bodyclasses: "header-full mode-intro"
 %}
 
+{% block 'page_headers' %}
+{% endblock  %}
 <!-- BEGIN MAIN CONTENT ROWS -->
 
+{% block 'main_content' %}
   <div class="page-header header-bg-1" id="content">
     <div class="row title">
       <header class="large-8 columns">
@@ -221,3 +224,4 @@
   <!-- END MAIN CONTENT ROWS -->
 
   {{> gallery-modal}}
+{% endblock  %}

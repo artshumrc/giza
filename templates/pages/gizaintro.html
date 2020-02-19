@@ -8,9 +8,11 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{% include 'partials/page-header.html' with bg="6" %}
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="6" %}
+{% endblock  %}
 
-{% block 'content' %}
+{% block 'main_content' %}
   <div class="row">
     <aside class="medium-4 medium-push-8 columns">
       <div class="thumbnail"><img src="{% static 'images/intro-image-1.png' %}" alt="Black & white photo of a pyramid at Giza"></div>

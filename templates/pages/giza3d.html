@@ -14,10 +14,12 @@ giza3d
 true
 {% endblock %}
 
-
-{% block 'content' %}
-  <!-- BEGIN MAIN CONTENT ROWS -->
+{% block 'page_headers' %}
   {% include 'partials/page-header.html' with bg="1" title="Giza 3D" %}
+{% endblock  %}
+
+{% block 'main_content' %}
+  <!-- BEGIN MAIN CONTENT ROWS -->
   <div class="row">
     <div class="large-12 columns">
       <img src="{% static 'images/giza3d.png' %}" alt="Giza 3D">

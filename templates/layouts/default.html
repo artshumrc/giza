@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Giza | {{title}}</title>
+    <title>Digital Giza | {{title}}{% block 'title' %}{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
@@ -25,8 +25,14 @@
 
     {% include 'partials/header.html' %}
 
-    <div id="content">
-      {% block 'content' %}
+    {% block 'page_headers' %}
+    {% endblock %}
+
+    {% block 'content' %}
+    {% endblock %}
+
+    <div class="content-main {{class|default:'p-t-2'}}">
+      {% block 'main_content' %}
       {% endblock %}
     </div>
 

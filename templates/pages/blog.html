@@ -9,8 +9,11 @@
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 
-{% block 'content' %}
+{% block 'page_headers' %}
   {% include 'partials/page-header.html' with bg="6" %}
+{% endblock  %}
+
+{% block 'main_content' %}
   <div class="row">
     <aside class="medium-4 medium-push-8 columns">
       <div class="feature-block secondary">

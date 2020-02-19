@@ -9,9 +9,11 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{% include 'partials/page-header.html' with bg="7" %}
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="7" %}
+{% endblock  %}
 
-{% block 'content' %}
+{% block 'main_content' %}
   <div class="collection-heading p-t-half m-b-1 hide-for-small-only">
     <div class="row">
       <div class="columns">

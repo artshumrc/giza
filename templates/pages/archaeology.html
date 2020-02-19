@@ -8,9 +8,11 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-
-{% block 'content' %}
+{% block 'page_headers' %}
   {% include 'partials/page-header.html' with bg="6" %}
+{% endblock  %}
+
+{% block 'main_content' %}
   <div id='timeline-embed' style="width: 100%; height: 750px"></div>
   <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
   <script type="text/javascript">

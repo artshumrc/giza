@@ -9,11 +9,13 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{% include 'partials/page-header.html' with bg="9" backlink_url="gizaatschool.html" %}
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="9" backlink_url="gizaatschool.html" %}
 
-{% include 'partials/page-subheader.html' with backlink_url="gizaatschool.html" backlink_text="Back to Giza @ School" %}
+  {% include 'partials/page-subheader.html' with backlink_url="gizaatschool.html" backlink_text="Back to Giza @ School" %}
+{% endblock  %}
 
-{% block 'content' %}
+{% block 'main_content' %}
   <div class="row">
     <section class="small-12 columns">
 

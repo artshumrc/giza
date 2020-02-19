@@ -8,9 +8,11 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-
-{% block 'content' %}
+{% block 'page_headers' %}
   {% include 'partials/page-header.html' with bg="6" %}
+{% endblock  %}
+
+{% block 'main_content' %}
   <div class="row">
     <div class="large-12 columns">
       <h2>Questions? Comments? Concerns? Let us know.</h2>

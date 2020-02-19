@@ -61,13 +61,6 @@ def explore(request, page_name):
 
 def static_pages(request, page_name):
 	template = 'pages/%s.html' % page_name
-	print(template)
-	print(template)
-	print(template)
-	print(template)
-	print(template)
-	print(template)
-	return render(request, template)
 	try:
 		return render(request, template)
 	except TemplateDoesNotExist:
