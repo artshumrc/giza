@@ -16,6 +16,7 @@ def search_legacy(request):
 
 # get all pubdocs with pdfs for Digital Giza Library
 def library(request):
+	"""
 	sort = request.GET.get('sort', 'name')
 	if sort == 'name':
 		results = es.search(index=ES_INDEX, doc_type='library', body={
@@ -82,9 +83,10 @@ def library(request):
 					})
 			if len(docs) > 0:
 				hits.append(sort_docs)
+	"""
 	return render(request, 'pages/library.html', {
-		'results' : hits,
-		'sort' : sort
+		'results' : [], # hits,
+		'sort' : '', # sort
 	})
 
 # get all pubdocs with pdfs for Digital Giza Library
@@ -162,6 +164,7 @@ def library_legacy(request):
 
 # get virtual Giza tour videos
 def videos(request):
+	"""
 	results = es.search(index=ES_INDEX, doc_type='videos', body={
 		"size": 500,
 		"query": {
@@ -174,8 +177,9 @@ def videos(request):
 	hits = []
 	for r in results:
 		hits.append(r['_source'])
-	return render(request, 'pages/explorevideos.html', {
-		'results' : hits
+	"""
+	return render(request, 'pages/videos.html', {
+		'results' : [], # hits
 	})
 
 # get virtual Giza tour videos
@@ -197,6 +201,7 @@ def videos_legacy(request):
 	})
 
 def results(request):
+	"""
 	search_term = request.GET.get('q', '')
 	sort = request.GET.get('sort', '_score')
 	current_category = request.GET.get('category', '')
@@ -351,7 +356,7 @@ def results(request):
 			if v:
 				search_params.append((current_category+'_'+k, FIELDS_PER_CATEGORY[current_category][k], v))
 
-	return render(request, 'pages/results.html', {
+	return render(request, 'pages/searchresults.html', {
 		'search_params' : search_params,
 		'hits' : hits,
 		'all_categories' : all_categories,
@@ -369,6 +374,8 @@ def results(request):
 		'current_page' : str(page),
 		'current_category' : current_category
 	})
+	"""
+	return render(request, 'pages/searchresults.html', {'search_results': [1, 2, 3, 4, 5, 6]})
 
 def results_legacy(request):
 	search_term = request.GET.get('q', '')
