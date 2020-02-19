@@ -1,14 +1,16 @@
----
-title: News
-section: about
-section-about: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "News",
+  section: "about",
+  section_about: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {{> page-header bg="6"}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
     <aside class="medium-4 medium-push-8 columns">
       <div class="feature-block secondary">
@@ -27,17 +29,17 @@ section-about: true
         </ul>
       </div>
     </aside>
-    
+
     <section class="medium-8 medium-pull-4 columns">
       <article>
         <h3><a href="#">News Item Title</a></h3>
-        <p class="subheader"><strong class="author">Author Name</strong> | 
+        <p class="subheader"><strong class="author">Author Name</strong> |
         <span class="date">Date of publication</span>
         </p>
         <div class="media-object">
           <div class="media-object-section">
             <div class="thumbnail">
-              <a href="#"><img src="{% static 'assets/images/blogphoto.png' %}" alt="appropriate alt"></a>
+              <a href="#"><img src="{% static 'images/blogphoto.png' %}" alt="appropriate alt"></a>
             </div>
           </div>
           <div class="media-object-section">
@@ -48,13 +50,13 @@ section-about: true
       </article>
       <article>
         <h3><a href="#">News Item Title</a></h3>
-        <p class="subheader"><strong class="author">Author Name</strong> | 
+        <p class="subheader"><strong class="author">Author Name</strong> |
         <span class="date">Date of publication</span>
         </p>
         <div class="media-object">
           <div class="media-object-section">
             <div class="thumbnail">
-              <a href="#"><img src="{% static 'assets/images/blogphoto.png' %}" alt="appropriate alt"></a>
+              <a href="#"><img src="{% static 'images/blogphoto.png' %}" alt="appropriate alt"></a>
             </div>
           </div>
           <div class="media-object-section">
@@ -65,13 +67,13 @@ section-about: true
       </article>
       <article>
         <h3><a href="#">News Item Title</a></h3>
-        <p class="subheader"><strong class="author">Author Name</strong> | 
+        <p class="subheader"><strong class="author">Author Name</strong> |
         <span class="date">Date of publication</span>
         </p>
         <div class="media-object">
           <div class="media-object-section">
             <div class="thumbnail">
-              <a href="#"><img src="{% static 'assets/images/blogphoto.png' %}" alt="appropriate alt"></a>
+              <a href="#"><img src="{% static 'images/blogphoto.png' %}" alt="appropriate alt"></a>
             </div>
           </div>
           <div class="media-object-section">
@@ -93,8 +95,8 @@ section-about: true
         <li class="pagination-next"><a href="#" aria-label="Next page">Next</a></li>
       </ul>
     </section>
-    
+
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

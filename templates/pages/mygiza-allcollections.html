@@ -1,9 +1,11 @@
----
-title: MyGIZA
-section: mygiza
-section-mygiza: true
-mygiza-auth: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "MyGIZA",
+  section: "mygiza",
+  section_mygiza: true,
+  mygiza_auth: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
@@ -1659,6 +1661,6 @@ mygiza-auth: true
       </ul>
     </div>
   </section>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

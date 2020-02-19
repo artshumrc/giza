@@ -1,31 +1,33 @@
----
-title: Khafre Valley Temple
-section: explore
-section-explore: true
-bodyclasses: header-full mode-intro
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Khafre Valley Temple",
+  section: "explore",
+  section_explore: true,
+  bodyclasses: "header-full mode-intro"
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
-  
+
   <div class="page-header header-bg-1">
     <div class="row title">
       <header class="large-8 columns">
         <h1>{{title}} <a name="top"></a></h1>
         <h3 class="page-header__meta">Khafre Pyramid Complex</h3>
-      </header> 
+      </header>
     </div>
   </div>
-  
+
   <!-- row -->
-  
+
   <div class="row content-start">
-    
+
     <section class="large-8 columns content-col-primary">
-      
+
       <div class="row page-navigation-container">
         <div class="large-4 columns large-push-8">
           <div class="page-navigation">
-            
+
             <div class="view-mode-toggle">
               <h5 class="heading-em">Show:</h5>
               <div class="button-group">
@@ -33,34 +35,34 @@ bodyclasses: header-full mode-intro
                 <a class="secondary button" href="/full.html">Full View</a>
               </div>
             </div>
-            
+
           </div>
         </div>
       </div>
-      
+
       <div class="item__featured-image">
-        <img src="{% static 'assets/images/full-khafre.jpg' %}" alt="appropriate alt">
+        <img src="{% static 'images/full-khafre.jpg' %}" alt="appropriate alt">
         <p class="item__featured-image__caption">
           Caption for this photo.
         </p>
       </div>
-      
+
       <div class="item__overview">
-        
+
         <p class="lead text-alt">
           Khafre was king during the Fourth Dynasty of ancient Egypt’s Old Kingdom; builder of the Second Pyramid at Giza. and probably of the Great Sphinx as well. Known two thousand years later by the Greeks as King Chephren.
         </p>
-        
+
       </div>
-      
+
       <!-- nested row -->
-      
+
       <div class="row">
         <div class="medium-6 columns">
-          
-          {{#> feature-block 
-            feature-title="Finds" 
-            feature-block-class="" 
+
+          {{#> feature-block
+            feature-title="Finds"
+            feature-block-class=""
             feature-icon="vase"
             feature-counter="11"
             feature-anchor="objects"
@@ -74,11 +76,11 @@ bodyclasses: header-full mode-intro
             {{/limit}}
             </ul>
           {{/feature-block}}
-          
-          
-          {{#> feature-block 
-            feature-title="Excavation Diary Pages" 
-            feature-block-class="" 
+
+
+          {{#> feature-block
+            feature-title="Excavation Diary Pages"
+            feature-block-class=""
             feature-icon="sticky-note-o"
             feature-counter="9"
             feature-anchor="diary"
@@ -92,11 +94,11 @@ bodyclasses: header-full mode-intro
             {{/limit}}
             </ul>
           {{/feature-block}}
-          
-          
-          {{#> feature-block 
-            feature-title="Maps & Plans" 
-            feature-block-class="" 
+
+
+          {{#> feature-block
+            feature-title="Maps & Plans"
+            feature-block-class=""
             feature-icon="map-o"
             feature-counter="5"
             feature-anchor="maps"
@@ -110,11 +112,11 @@ bodyclasses: header-full mode-intro
             {{/limit}}
             </ul>
           {{/feature-block}}
-          
-          
-          {{#> feature-block 
-            feature-title="Drawings" 
-            feature-block-class="" 
+
+
+          {{#> feature-block
+            feature-title="Drawings"
+            feature-block-class=""
             feature-icon="pencil-square-o"
             feature-counter="11"
             feature-anchor="drawings"
@@ -128,15 +130,15 @@ bodyclasses: header-full mode-intro
             {{/limit}}
             </ul>
           {{/feature-block}}
-              
-          
+
+
         </div>
         <div class="medium-6 columns">
-          
-          
-          {{#> feature-block 
-            feature-title="Photos" 
-            feature-block-class="" 
+
+
+          {{#> feature-block
+            feature-title="Photos"
+            feature-block-class=""
             feature-icon="camera"
             feature-counter="248"
             feature-anchor="photos"
@@ -151,11 +153,11 @@ bodyclasses: header-full mode-intro
             {{/limit}}
             </ul>
           {{/feature-block}}
-          
-          
-          {{#> feature-block 
-            feature-title="3D Models" 
-            feature-block-class="" 
+
+
+          {{#> feature-block
+            feature-title="3D Models"
+            feature-block-class=""
             feature-icon="pyramid-3d"
             feature-counter="1"
             feature-anchor="models"
@@ -169,10 +171,10 @@ bodyclasses: header-full mode-intro
             {{/limit}}
             </ul>
           {{/feature-block}}
-          
-          {{#> feature-block 
-            feature-title="Published Documents" 
-            feature-block-class="" 
+
+          {{#> feature-block
+            feature-title="Published Documents"
+            feature-block-class=""
             feature-icon="book"
             feature-counter="12"
             feature-anchor="published"
@@ -186,11 +188,11 @@ bodyclasses: header-full mode-intro
             {{/limit}}
             </ul>
           {{/feature-block}}
-          
-          
-          {{#> feature-block 
-            feature-title="Unpublished Documents" 
-            feature-block-class="" 
+
+
+          {{#> feature-block
+            feature-title="Unpublished Documents"
+            feature-block-class=""
             feature-icon="file-text-o"
             feature-counter="4"
             feature-anchor="unpublished"
@@ -204,20 +206,20 @@ bodyclasses: header-full mode-intro
             {{/limit}}
             </ul>
           {{/feature-block}}
-          
-          
+
+
         </div>
       </div> <!-- end nested row -->
     </section>
-    
+
     <section class="large-4 columns content-col-secondary">
       <div class="row small-up-1 medium-up-2 large-up-1">
         <div class="column">
-          
-                    
-          {{#> feature-block 
-            feature-title="Videos" 
-            feature-block-class="secondary" 
+
+
+          {{#> feature-block
+            feature-title="Videos"
+            feature-block-class="secondary"
             feature-icon="video-camera"
             feature-counter="3"
             feature-anchor="videos"
@@ -231,11 +233,11 @@ bodyclasses: header-full mode-intro
             {{/each}}
             </ul>
           {{/feature-block}}
-          
-          
-          {{#> feature-block 
-            feature-title="Audio" 
-            feature-block-class="secondary" 
+
+
+          {{#> feature-block
+            feature-title="Audio"
+            feature-block-class="secondary"
             feature-icon="volume-up"
             feature-counter="2"
             feature-anchor="audio"
@@ -249,18 +251,18 @@ bodyclasses: header-full mode-intro
             {{/each}}
             </ul>
           {{/feature-block}}
-          
-          
-          {{#> feature-block 
-            feature-title="People" 
-            feature-block-class="secondary collapsible" 
+
+
+          {{#> feature-block
+            feature-title="People"
+            feature-block-class="secondary collapsible"
             feature-icon="user"
             feature-counter="4"
             feature-anchor="people"
             feature-footer="true"
           }}
             <h4>Ancient People</h4>
-            
+
             <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
             {{#each ancient-people}}
               <li>
@@ -268,9 +270,9 @@ bodyclasses: header-full mode-intro
               </li>
             {{/each}}
             </ul>
-            
+
             <h4>Modern People</h4>
-            
+
             <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
             {{#each modern-people}}
               <li>
@@ -279,12 +281,12 @@ bodyclasses: header-full mode-intro
             {{/each}}
             </ul>
           {{/feature-block}}
-                    
-          
+
+
         </div>
       </div>
     </section>
-  
+
   </div>
-    
+
   <!-- END MAIN CONTENT ROWS -->

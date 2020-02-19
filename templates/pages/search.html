@@ -1,38 +1,40 @@
----
-title: Search the Archives
-section: search
-section-search: true
-met-tooltip-text: The "Multilingual Egyptological Thesaurus" (MET) allows users to search any image on the website using keywords and descriptions of the image itself. The MET applies to two-dimensional wall scene photos, as well as three-dimensional object photos. Start typing your search term to get a menu of available options.
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Search the Archives",
+  section: "search",
+  section_search: true,
+  met-tooltip-text: 'The "Multilingual Egyptological Thesaurus" (MET) allows users to search any image on the website using keywords and descriptions of the image itself. The MET applies to two-dimensional wall scene photos, as well as three-dimensional object photos. Start typing your search term to get a menu of available options.'
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
-  
+
 {{> page-header bg="5"}}
 
-{{#> content-main}} 
+{% block 'content' %}
   <div class="row">
     <section class="large-8 columns">
-      
+
       <h3>Advanced Search</h3>
       <p>
         Narrow your search results using the advanced search fields below.
       </p>
       <p class="text-smaller">
-        Need help with abbreviations? Check out our 
-        <a href="/faq.html#abbr">list of abbreviations on the FAQ 
+        Need help with abbreviations? Check out our
+        <a href="/faq.html#abbr">list of abbreviations on the FAQ
         page.</a>
       </p>
-      
+
       <hr>
-      
+
       <form>
-        <div class="row">      
-          
+        <div class="row">
+
           <section class="medium-5 medium-push-7 columns">
-            
+
             <fieldset>
               <legend>Search within the selected category:</legend>
-              
+
               <div class="feature-block tertiary">
                 <input id="objects" value="objects" type="radio" name="category"><label for="objects">Objects</label><br>
                 <input id="videos" type="radio" name="category"><label for="videos">Videos</label><br>
@@ -45,61 +47,61 @@ met-tooltip-text: The "Multilingual Egyptological Thesaurus" (MET) allows users 
                 <input id="unpubdoc" value="unpubdoc" type="radio" name="category"><label for="unpubdoc">Unpublished Documentation</label>
               </div>
             </fieldset>
-            
+
           </section>
           <section class="medium-7 medium-pull-5 columns">
-            
+
               <label>Object title or name:
                 <input type="text" placeholder="Example: 'royal statue' or 'Khafre'">
               </label>
-              
+
               <label>Object or ID number:
                 <input type="text" placeholder="Example: 'HUMFA_14-11-206'">
               </label>
-              
+
               <label>Material:
                 <input type="text" placeholder="Example: 'alabaster'">
               </label>
-              
+
               <label>Findspot:
                 <input type="text" placeholder="Example: 'G 2110'">
               </label>
-              
+
               <label>Date of register entry:
                 <input type="text" placeholder="Example: 05/23/1924">
               </label>
-              
+
               <label>MET (Multilingual Egyptological Thesaurus) search: <span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="{{met-tooltip-text}}"></span>
                 <span class="input-wrap"><input type="text" placeholder="No items selected"><a href="#" class="select-btn" data-open="MET-search">Select MET terms</a></span>
               </label>
-              
+
               <p class="hide-for-medium text-smaller" style="margin-top: -0.75em;">
-                <span id="tooltipMetMobile" class="icon-info-circle has-tip right" 
-                  data-tooltip aria-haspopup="true" data-disable-hover="false" 
-                  data-position-class="right" data-template-classes="narrow" 
+                <span id="tooltipMetMobile" class="icon-info-circle has-tip right"
+                  data-tooltip aria-haspopup="true" data-disable-hover="false"
+                  data-position-class="right" data-template-classes="narrow"
                   tabindex="2" title="{{met-tooltip-text}}">
                   What is MET?
                 </span>
               </p>
-              
+
           </section>
-        </div>  
-        
+        </div>
+
         <div class="row">
           <div class="large-12 columns">
             <!-- This should be a <button> in real life -->
             <a class="button primary" href="/searchresults.html">Search</a>
           </div>
         </div>
-          
+
       </form>
-      
+
     </section>
     <section class="large-4 columns">
       <!-- My Saved Searches -->
-      {{#> feature-block 
-        feature-title="My Saved Searches" 
-        feature-block-class="secondary" 
+      {{#> feature-block
+        feature-title="My Saved Searches"
+        feature-block-class="secondary"
       }}
         <ul class="feature-block__list">
         {{#each saved-searches-sb}}
@@ -112,10 +114,10 @@ met-tooltip-text: The "Multilingual Egyptological Thesaurus" (MET) allows users 
             {{/list-item-textblob}}
           </li>
         {{/each}}
-        </ul>          
-      {{/feature-block}}      
+        </ul>
+      {{/feature-block}}
     </section>
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

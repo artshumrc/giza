@@ -1,9 +1,11 @@
----
-title: Giza @ School
-subtitle: Video Library
-section: school
-section-school: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Giza @ School",
+  subtitle: "Video Library",
+  section: "school",
+  section_school: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
@@ -18,16 +20,16 @@ section-school: true
   <h2 class="text-medium">{{subtitle}}</h2>
 {{/page-subheader}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
     <section class="small-12 columns">
-      
+
       <article>
         <h3>A Video Title</h3>
         <div class="row">
           <div class="medium-6 columns">
             <div class="thumbnail">
-              <img src="{% static 'assets/images/video1.png' %}" alt="appropriate alt">
+              <img src="{% static 'images/video1.png' %}" alt="appropriate alt">
             </div>
           </div>
           <div class="medium-6 columns">
@@ -35,13 +37,13 @@ section-school: true
           </div>
         </div>
       </article>
-      
+
       <article>
         <h3>Another Video Title</h3>
         <div class="row">
           <div class="medium-6 columns">
             <div class="thumbnail">
-              <img src="{% static 'assets/images/video1.png' %}" alt="appropriate alt">
+              <img src="{% static 'images/video1.png' %}" alt="appropriate alt">
             </div>
           </div>
           <div class="medium-6 columns">
@@ -49,13 +51,13 @@ section-school: true
           </div>
         </div>
       </article>
-      
+
       <article>
         <h3>Another Video Title</h3>
         <div class="row">
           <div class="medium-6 columns">
             <div class="thumbnail">
-              <img src="{% static 'assets/images/video1.png' %}" alt="appropriate alt">
+              <img src="{% static 'images/video1.png' %}" alt="appropriate alt">
             </div>
           </div>
           <div class="medium-6 columns">
@@ -63,13 +65,13 @@ section-school: true
           </div>
         </div>
       </article>
-      
+
       <article>
         <h3>Another Video Title</h3>
         <div class="row">
           <div class="medium-6 columns">
             <div class="thumbnail">
-              <img src="{% static 'assets/images/video1.png' %}" alt="appropriate alt">
+              <img src="{% static 'images/video1.png' %}" alt="appropriate alt">
             </div>
           </div>
           <div class="medium-6 columns">
@@ -77,13 +79,13 @@ section-school: true
           </div>
         </div>
       </article>
-      
+
       <article>
         <h3>Another Video Title</h3>
         <div class="row">
           <div class="medium-6 columns">
             <div class="thumbnail">
-              <img src="{% static 'assets/images/video1.png' %}" alt="appropriate alt">
+              <img src="{% static 'images/video1.png' %}" alt="appropriate alt">
             </div>
           </div>
           <div class="medium-6 columns">
@@ -91,13 +93,13 @@ section-school: true
           </div>
         </div>
       </article>
-      
+
       <article>
         <h3>Another Video Title</h3>
         <div class="row">
           <div class="medium-6 columns">
             <div class="thumbnail">
-              <img src="{% static 'assets/images/video1.png' %}" alt="appropriate alt">
+              <img src="{% static 'images/video1.png' %}" alt="appropriate alt">
             </div>
           </div>
           <div class="medium-6 columns">
@@ -105,8 +107,8 @@ section-school: true
           </div>
         </div>
       </article>
-      
-      
+
+
       <ul class="pagination text-center" role="navigation" aria-label="Pagination">
         <li class="pagination-previous disabled">Previous</li>
         <li class="current"><span class="show-for-sr">You're on page</span> 1</li>
@@ -120,6 +122,6 @@ section-school: true
       </ul>
     </section>
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

@@ -1,16 +1,19 @@
----
-title: Home
-section: home
-section-home: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Home",
+  section: "home",
+  section_home: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
+{% block 'content' %}
 <div class="home-hero-container">
   <div class="row row-padded">
 
     <div class="video-bg-home"
-      data-vide-bg="{% static 'assets/video/home/GizaHome_web' %}"
+      data-vide-bg="{% static 'video/home/GizaHome_web' %}"
       data-vide-options="posterType: jpg, loop: true, position: 0% -5%">
 
       <div class="home-hero-title">
@@ -47,72 +50,14 @@ section-home: true
 
 <div class="row p-r-1" data-equalizer data-equalize-on="medium">
 
-  {{#> home-4col-block
-    block-title="Explore Giza 3D"
-    block-button="Jump In"
-    block-destination="giza3d.html"
-  }}
-    <p>
-      <a href="{{block-destination}}">
-        <img class="img-fluid img-fluid-mw325 border-dark"
-          src="{% static '$1' %}"
-          alt="Digital rendering of the Giza Plateau as seen from the air">
-      </a>
-    </p>
-    <p>
-      Immerse yourself in <strong>realistic 3D reconstructions</strong>
-      of the Giza plateau.
-    </p>
-  {{/home-4col-block}}
+  {% include 'partials/home-4col-block--giza3d.html' with block_title="Explore Giza 3D"  block_button="Jump In" block_destination="giza3d.html" %}
 
-  {{#> home-4col-block
-    block-title="Giza @ School"
-    block-button="View Resources"
-    block-destination="gizaatschool.html"
-  }}
-    <p>
-      <a href="{{block-destination}}">
-        <img class="img-fluid img-fluid-mw325 border-dark"
-          src="{% static '$1' %}"
-          alt="Digital rendering of a figure from Giza's past standing in front of a tomb entrance">
-      </a>
-    </p>
-    <p>
-      Resources designed especially for <strong>teachers and students</strong>.
-    </p>
-  {{/home-4col-block}}
+  {% include 'partials/home-4col-block--gizaatschool.html' with block_title="Giza @ School" block_button="View Resources" block_destination="gizaatschool.html" %}
 
-  {{#> home-4col-block
-    block-title="Make it Yours"
-    block-button="Start Collecting"
-    block-destination="mygiza-landing.html"
-  }}
-    <p>
-      <a href="{{block-destination}}">
-        <img class="img-fluid img-fluid-mw325 border-dark"
-          src="{% static '$1' %}"
-          alt="Digital rendering of the Giza Plateau as seen from the air">
-      </a>
-    </p>
-    <p>
-      Save and share your collections and searches with <strong>MyGiza</strong>.
-    </p>
-  {{/home-4col-block}}
+  {% include 'partials/home-4col-block--mygiza.html' with block_title="Make it Yours" block_button="Start Collecting" block_destination="mygiza-landing.html" %}
 
-  {{#> home-4col-block
-    block-title="Support the Project"
-    block-button="Donate Now"
-    block-destination="donate.html"
-  }}
-    <p>
-      The Giza Project, an international collaboration based at Harvard
-      University, aims to <strong>assemble and provide access to all
-      archeological records</strong> about the most famous site in the
-      world: the Pyramids, surrounding cemeteries and settlements of
-      Giza, Egypt.
-    </p>
-  {{/home-4col-block}}
+  {% include 'partials/home-4col-block--donate.html' with block_title="Support the Project" block_button="Donate Now" block_destination="donate.html" %}
 
 </div>
-
+{% endblock %}
 <!-- END MAIN CONTENT ROWS -->

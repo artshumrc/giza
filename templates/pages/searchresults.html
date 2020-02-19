@@ -1,17 +1,19 @@
----
-title: Search the Archives
-section: search
-section-search: true
-bodyclasses: list-active
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Search the Archives",
+  section: "search",
+  section_search: true,
+  bodyclasses: "list-active"
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
-  
+
 {{> page-header bg="5"}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
-    
+
     <section class="medium-9 medium-push-3 columns">
 
       <div class="row">
@@ -35,7 +37,7 @@ bodyclasses: list-active
           </ul>
         </div>
       </div>
-      
+
       <div class="row">
         <div class="large-6 large-push-6 columns text-lg-right">
           <a href="">
@@ -56,13 +58,13 @@ bodyclasses: list-active
           </nav>
         </div>
       </div>
-      
+
       <div class="media-object-holder">
         {{#each search-results}}
           {{> search-result}}
         {{/each}}
       </div>
-      
+
       <div class="row">
         <div class="columns p-t-1">
           <nav aria-label="Pagination">
@@ -78,11 +80,11 @@ bodyclasses: list-active
           </nav>
         </div>
       </div>
-              
+
     </section>
     <aside class="medium-3 medium-pull-9 columns">
-      
-      <div class="feature-block secondary text-smaller">  
+
+      <div class="feature-block secondary text-smaller">
         <h5 class="heading-alt">Search Options</h5>
         <p>
           <a href="">Save this search</a><br>
@@ -96,7 +98,7 @@ bodyclasses: list-active
             </li>
           </ul>
         </div>
-        
+
         <div class="search-facet-section">
           <fieldset>
             <legend class="search-facet-title">Category:</legend>
@@ -113,7 +115,7 @@ bodyclasses: list-active
             </ul>
           </fieldset>
         </div>
-                
+
         <div class="search-facet-section">
           <fieldset>
             <legend class="search-facet-title">Material:</legend>
@@ -130,7 +132,7 @@ bodyclasses: list-active
             </ul>
           </fieldset>
         </div>
-      
+
         <div class="search-facet-section">
           <fieldset>
             <legend class="search-facet-title">Year:</legend>
@@ -147,7 +149,7 @@ bodyclasses: list-active
             </ul>
           </fieldset>
         </div>
-        
+
         <div class="search-facet-section">
           <fieldset>
             <legend class="search-facet-title">Findspot:</legend>
@@ -167,12 +169,12 @@ bodyclasses: list-active
             </ul>
           </fieldset>
         </div>
-        
+
       </div>
-      
+
     </aside>
-    
+
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

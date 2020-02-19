@@ -1,9 +1,11 @@
----
-title: MyGIZA
-section: mygiza
-section-mygiza: true
-mygiza-auth: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "MyGIZA",
+  section: "mygiza",
+  section_mygiza: true,
+  mygiza_auth: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
@@ -15,11 +17,11 @@ mygiza-auth: true
     <div class="columns">
       <div class="callout primary text-smaller" data-closable>
         <span>
-          <strong>Cookie use:</strong> This site uses cookies to track items that you add to MyGiza if 
-          you do not have an account. To use MyGiza, you must 
-          <a href="#">opt into our cookies policy</a>, or 
-          <a href="#" data-open="login_new">create or log into a My Giza 
-          account</a> to save collections of items from the Digital Giza 
+          <strong>Cookie use:</strong> This site uses cookies to track items that you add to MyGiza if
+          you do not have an account. To use MyGiza, you must
+          <a href="#">opt into our cookies policy</a>, or
+          <a href="#" data-open="login_new">create or log into a My Giza
+          account</a> to save collections of items from the Digital Giza
           library and share those items.
         </span>
         <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
@@ -56,10 +58,10 @@ mygiza-auth: true
       </div>
     </div>
   </div>
-  
+
   <div class="row collection-section hide-for-small-only">
     <div class="columns">
-    
+
       <div class="collection-slider">
         <div class="slide">
           <div class="item-wrap">
@@ -154,10 +156,10 @@ mygiza-auth: true
           </div>
         </div>
       </div>
-    
+
     </div>
   </div>
-  
+
   <section class="collection-section two-columns">
     <div class="row row-padded">
       <aside class="sidebar">
@@ -405,6 +407,6 @@ mygiza-auth: true
       </ul>
     </div>
   </section>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

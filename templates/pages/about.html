@@ -1,14 +1,16 @@
----
-title: About the Giza Project
-section: about
-section-about: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "About the Giza Project",
+  section: "about",
+  section_about: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {{> page-header bg="6"}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
 
     <aside class="medium-4 medium-push-8 columns">
@@ -127,7 +129,7 @@ section-about: true
 
       <p>The result is a huge "web" of interrelated archival records that enable you to access all the information you need as you explore each record, without having to conduct multiple searches or open lots of different pages.</p>
 
-      <p class="p-y-1"><img class="img-fluid thumbnail" src="{% static 'assets/images/about-image-1.png" alt="Illustration of the 'web' of archival records' %}"></p>
+      <p class="p-y-1"><img class="img-fluid thumbnail" src="{% static 'images/about-image-1.png" alt="Illustration of the 'web' of archival records' %}"></p>
 
       <p>And since this website pulls from the database in real-time, any information you access here will always reflect the most up-to-date information that The Giza Project has made available. </p>
 
@@ -210,6 +212,6 @@ section-about: true
     </section>
 
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

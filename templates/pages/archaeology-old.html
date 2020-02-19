@@ -1,8 +1,10 @@
----
-title: Archaeology at Giza
-section: explore
-section-explore: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Archaeology at Giza",
+  section: "explore",
+  section_explore: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
@@ -16,7 +18,7 @@ section-explore: true
 
     <div class="row">
       <aside class="medium-4 medium-push-8 columns">
-        <div class="thumbnail"><img src="{% static 'assets/images/contact.png' %}" alt="appropriate alt"></div>
+        <div class="thumbnail"><img src="{% static 'images/contact.png' %}" alt="appropriate alt"></div>
       </aside>
 
       <section class="medium-8 medium-pull-4 columns">

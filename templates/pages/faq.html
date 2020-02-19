@@ -1,9 +1,11 @@
----
-title: Giza @ School
-subtitle: Frequently Asked Questions
-section: school
-section-school: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Giza @ School",
+  subtitle: "Frequently Asked Questions",
+  section: "school",
+  section_school: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
@@ -16,9 +18,9 @@ section-school: true
   <h2 class="text-medium">{{subtitle}}</h2>
 {{/page-subheader}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
-    
+
     <aside class="medium-4 columns medium-push-8" data-sticky-container>
       <div class="sticky sticky-sidebar" data-sticky data-margin-top="4.6" data-top-anchor="page-content-main" data-btm-anchor="page-content-main:bottom">
         <div class="feature-block secondary">
@@ -47,7 +49,7 @@ section-school: true
         </div>
       </div>
     </aside>
-    
+
     <section class="medium-8 columns medium-pull-4" id="page-content-main">
       <h3><a name="q1"></a>Egyptian Geography/Nile River</h3>
       <p>Egyptian civilization developed along the banks of the Nile River, which flows from south to north into the Mediterranean Sea. Because of the direction of the current, the southern part of the country is referred to as "Upper" Egypt (i.e., upstream), and the northern part (including the Delta, where the river splits into multiple branches) is called "Lower" Egypt. Until the construction of the Aswan High Dam in the 1960s, the Nile flooded every year during the summer months. When the floodwaters withdrew they left behind a layer of rich black silt, which the Egyptians used to fertilize their crops. Thus black was the color of life for the Egyptians, and they called their country "Kemet," meaning "the black land." This stood in contrast to the "Deshret" ("red land"), the land of the dead, referring to the inhospitable sands of the deserts which surround the Nile valley. Because it was the annual flood that created the fertile conditions allowing for life in the middle of a harsh desert environment, the ancient Greek historian Herodotus called Egypt the "gift of the Nile."</p>
@@ -55,7 +57,7 @@ section-school: true
 </em></p>
       <p>Manuelian, Peter Der. "The Nile," and Picardo, Nicholas. "The Desert & the Oases." In Manuelian, Peter Der. <em>30-Second Ancient Egypt: The 50 Most Important Achievements of a Timeless Civilization Each Explained in Half a Minute.</em> London: Ivy Press, 2014, pp. 16-19.</p>
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-      
+
       <h3><a name="q2"></a>What and when was the Old Kingdom?</h3>
       <p>Broadly speaking, historians divide Egyptian history into three "Kingdoms" (Old, Middle, and New), each of which is divided into multiple dynasties (successive generations of a ruling family). The Old Kingdom (Dynasties 3-8, about 2650-2130 BCE) was the first manifestation of a unified Egyptian state, which joined the northern (Nile delta) and southern (Nile valley) halves of the country under a single ruler. This was a period of strong central government, which allowed Egypt’s kings to organize the tremendous labor force necessary for massive building projects like the pyramids (built in Dynasty 4). </p>
       <p><em>Suggested reading:
@@ -71,7 +73,7 @@ section-school: true
 </p>
       <p>Manuelian, Peter Der. "Pharaoh." In Manuelian, Peter Der. <em>30-Second Ancient Egypt: The 50 Most Important Achievements of a Timeless Civilization Each Explained in Half a Minute.</em> London: Ivy Press, 2014, pp. 22-23.</p>
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-      
+
       <h3><a name="q4"></a>Royal attire and symbols</h3>
       <p>Egyptian kings wore several different styles of crown. Most common were the "Red Crown" (representing Lower Egypt) and the "White Crown" (representing Upper Egypt); the two were frequently worn together as the "Double Crown" to demonstrate the king’s rule over the entire unified country. Kings were also shown wearing the "<em>nemes</em>," a striped headdress (famously seen on the gold mask of Tutankhamun from the Valley of the Kings; at Giza, it can be seen on the head of the Great Sphinx, as well as on a number of royal statues). In addition to the crown or headdress the king wore a <em>uraeus</em>, a representation of a fierce protective cobra which was worn on the forehead to frighten pharaoh’s enemies. Kings also often wore a ceremonial braided false beard and carried one or more official scepters, maces, or staffs.</p>
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
@@ -100,23 +102,23 @@ section-school: true
 
       <p>Jones, Dilwyn. <em>Boats.</em> Egyptian Bookshelf. Austin: University of Texas Press, 1995.</p>
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-      
-      
+
+
       <h3><a name="q8"></a>Who built the pyramids?</h3>
-      
+
       <p>Contrary to popular belief, the pyramids were not built by slaves (or aliens!). According to recent work at Giza, which has revealed the town and tombs of the pyramid builders, the workforce likely consisted of 20,000 to 30,000 native Egyptians. Some of them would have been skilled craftsmen, but most were manual laborers employed in cutting and hauling the massive blocks of stone. Egypt did not use money during this time period, so the workers were paid in food, primarily bread and beer.</p>
-        
+
       <p><em>Suggested reading: </em></p>
-      
+
       <p>Morell, Virginia. "The Pyramid Builders." National Geographic Magazine (November 2001): <a href="http://ngm.nationalgeographic.com/ngm/data/2001/11/01/html/ft_20011101.5.fulltext.html" target="_blank" class="breakable-word">http://ngm.nationalgeographic.com/ngm/data/2001/11/01/html/ft_20011101.5.fulltext.html</a></p>
 
       <p>Lehner, Mark. "The Living Pyramid." In <em>The Complete Pyramids: Solving the Ancient Mysteries.</em> London: Thames and Hudson, 1997, pp. 200-225.</p>
 
       <p>Website of the Ancient Egypt Research Association (AERA), currently exploring Giza’s "Lost City" of the pyramid builders:  <a href="http://www.aeraweb.org/" target="_blank">http://www.aeraweb.org/</a></p>
-      
+
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-      
-      
+
+
 
       <h3><a name="q9"></a>What is the Sphinx?</h3>
       <p>In ancient Egypt, a sphinx was a mythical creature with the body of a lion (symbolizing the strength and power of the kingship) and a human head (usually that of the ruling king, wearing the royal headdress). The colossal Great Sphinx of Giza and its associated temple are located near the valley temple of Khafre, builder of the second pyramid at Giza, and are generally believed to have been built during his reign. The Sphinx is one of the earliest and largest monolithic statues in the world, 241 feet (73.5 m) long, 63 feet (19 m) wide, and 66 feet (20 m) high. During the New Kingdom (roughly a thousand years after its construction), the Sphinx was worshipped as Horemakhet ("Horus in the horizon"), a form of the sun god.</p>
@@ -135,7 +137,7 @@ section-school: true
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
 
       <h3><a name="q11"></a>Who was buried at Giza?</h3>
-      <p>First and foremost, Giza was a royal cemetery. Kings themselves were buried there, inside the three great pyramids. But there are also thousands of other ancient burials at Giza. Many of these were for other members of the royal family. Queens sometimes had smaller, subsidiary pyramids next to their husbands’, and the cemetery to the east of the Great Pyramid contains tombs of princes, princesses, and other relatives of the king. Most of the remaining tombs across the plateau belonged to society’s elite: scribes, priests, bureaucrats, overseers of the workers who built the pyramids, and other high officials who served the royal court.</p> 
+      <p>First and foremost, Giza was a royal cemetery. Kings themselves were buried there, inside the three great pyramids. But there are also thousands of other ancient burials at Giza. Many of these were for other members of the royal family. Queens sometimes had smaller, subsidiary pyramids next to their husbands’, and the cemetery to the east of the Great Pyramid contains tombs of princes, princesses, and other relatives of the king. Most of the remaining tombs across the plateau belonged to society’s elite: scribes, priests, bureaucrats, overseers of the workers who built the pyramids, and other high officials who served the royal court.</p>
 
       <p><em>Suggested reading:</em></p>
       <p>Markowitz, Yvonne J. "Excavating Giza." In Markowitz, Yvonne J., Joyce L. Haynes and Rita E. Freed. <em>Egypt in the Age of the Pyramids: Highlights from the Harvard University-Museum of Fine Arts, Boston Expedition.</em> Boston: Museum of Fine Arts, 2002, pp. 33-45.</p>
@@ -148,7 +150,7 @@ section-school: true
 
       <p><em>Suggested reading:</em></p>
       <p>Allen, James P. "Some Aspects of the Non-royal Afterlife in the Old Kingdom." In Miroslav Bárta, ed. <em>The Old Kingdom Art and Archaeology. Proceedings of the Conference held in Prague, May 31-June 4, 2004.</em> Prague: Czech Institute of Egyptology, 2006, pp. 9-17.</p>
-        
+
       <p>Lehner, Mark. "Tomb and Temple." In <em>The Complete Pyramids: Solving the Ancient Mysteries.</em> London: Thames and Hudson, 1997, pp. 22-30.</p>
 
       <p>Aronin, Rachel. "Burial Equipment." In Manuelian, Peter Der. <em>30-Second Ancient Egypt: The 50 Most Important Achievements of a Timeless Civilization Each Explained in Half a Minute.</em> London: Ivy Press, 2014, pp. 106-107.</p>
@@ -203,9 +205,9 @@ section-school: true
 
       <p>Leprohon, Ronald J. "Re, the Sun God," Picardo, Nicholas. "Osiris & Resurrection," and Eaton-Krauss, M. "Amun." In Manuelian, Peter Der. <em>30-Second Ancient Egypt: The 50 Most Important Achievements of a Timeless Civilization Each Explained in Half a Minute.</em> London: Ivy Press, 2014, pp. 98-101, 104-105.</p>
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-      
+
       <h3><a name="q17"></a>Elements of Tombs and Tomb Equipment</h3>
-      
+
       <p><em>Suggested reading:</em></p>
       <p>Dodson, Aidan and Salima Ikram. <em>The Tomb in Ancient Egypt.</em> New York: Thames & Hudson, 2008.</p>
 
@@ -249,13 +251,13 @@ section-school: true
       <p>Andrews, Carol. <em>Ancient Egyptian Jewelry.</em> London: British Museum Press, 1990.</p>
 
       <p>Andrews, Carol. <em>Amulets of Ancient Egypt.</em> London: British Museum Press, 1994.</p>
-        
+
       <p><strong>Stelae</strong>: A stela (also spelled stele, plural: stelae) is a slab, usually made of stone, which was inscribed with texts and/or images. Stelae could be either freestanding or embedded in a wall. They served a number of purposes: they could record royal decrees or proclamations; show an individual making offerings to the gods, as a sort of lasting prayer that could be left at temples; or be part of a person’s tomb, showing them receiving offerings to sustain them in the afterlife.</p>
-      
+
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-      
+
       <h3><a name="q18"></a>Archaeological Methods</h3>
-      
+
       <p>While people have been visiting and exploring Giza for many centuries, the turn of the 20th century saw the development of scientific archaeology, which involves the meticulous documentation of everything the archaeologist finds while excavating. Archaeologists kept daily diaries, recording where on the plateau they were working and what they found; any objects they discovered were assigned a number, and described (and sometimes drawn) in a register book; photographs were taken and plans and drawings made to document the various stages of excavation. Today, Egyptologists are using increasingly sophisticated technological methods to record and study archaeological data in as much detail as possible. By recording the contexts of all discoveries, scholars are able to explore more complex questions about ancient Egyptian society and the lives, beliefs, and achievements of the people who built such a magnificent civilization thousands of years ago.</p>
 
       <p><em>Suggested reading:</em></p>
@@ -263,7 +265,7 @@ section-school: true
 
       <p>Manuelian, Peter Der. "Excavating the Old Kingdom. The Giza Necropolis and Other Mastaba Fields." In <em>Egyptian Art in the Age of the Pyramids.</em> New York: The Metropolitan Museum of Art, 1999, pp. 138–153.</p>
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-      
+
       <h3><a name="abbr"></a>List of abbreviations of museums, institutions, and expeditions</h3>
       <dl class="abbr-list">
         <dt>ÄMUL</dt>
@@ -288,7 +290,7 @@ section-school: true
         <dd>Field Museum, Chicago (USA)</dd>
         <dt>GEM</dt>
         <dd>Grand Egyptian Museum (Egypt)</dd>
-        <dt>GMBA</dt> 
+        <dt>GMBA</dt>
         <dd>Glencairn Museum, Bryn Athyn (USA)</dd>
         <dt>GPH</dt>
         <dd>Giza Project at Harvard University (USA)</dd>
@@ -311,7 +313,7 @@ section-school: true
         <dt>NCG</dt>
         <dd>Ny Carlsberg Glyptotek, Copenhagen (Denmark)</dd>
         <dt>NHM</dt>
-        <dd>Naturhistorisches Museum, Vienna (Austria)</dd>              
+        <dd>Naturhistorisches Museum, Vienna (Austria)</dd>
         <dt>OIC</dt>
         <dd>Oriental Institute, Chicago (USA)</dd>
         <dt>OSUT</dt>
@@ -332,15 +334,15 @@ section-school: true
         <dd>Museo Egizio, Turin (Italy)</dd>
         <dt>UPM</dt>
         <dd>University of Pennsylvania Museum of Archaeology & Anthropology (USA)</dd>
-        <dt>VMFA</dt> 
+        <dt>VMFA</dt>
         <dd>Virginia Museum of Fine Arts, Richmond (USA)</dd>
         <dt>WAM</dt>
         <dd>Worcester Art Museum, Massachusetts (USA)</dd>
       </dl>
       <p style="clear: both;"><a class="back-to-top-link" href="#top">Back to top</a></p>
     </section>
-    
+
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

@@ -1,0 +1,15 @@
+{% extends 'partials/home-4col-block.html' %}
+{% load static %}
+
+{% block '4col_block_partial' %}
+  <p>
+    <a href="{{block_destination}}">
+      <img class="img-fluid img-fluid-mw325 border-dark"
+        src="{% static 'images/home-feature-mygiza.png' %}"
+        alt="Digital rendering of the Giza Plateau as seen from the air">
+    </a>
+  </p>
+  <p>
+    Save and share your collections and searches with <strong>MyGiza</strong>.
+  </p>
+{% endblock %}

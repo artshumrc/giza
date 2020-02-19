@@ -1,14 +1,16 @@
----
-title: The Giza Project Blog
-section: about
-section-about: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "The Giza Project Blog",
+  section: "about",
+  section_about: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {{> page-header bg="6"}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
     <aside class="medium-4 medium-push-8 columns">
       <div class="feature-block secondary">
@@ -64,7 +66,7 @@ section-about: true
         <div class="media-object">
           <div class="media-object-section">
             <div class="thumbnail">
-              <a href="#"><img src="{% static 'assets/images/blogphoto.png' %}" alt="appropriate alt"></a>
+              <a href="#"><img src="{% static 'images/blogphoto.png' %}" alt="appropriate alt"></a>
             </div>
           </div>
           <div class="media-object-section">
@@ -82,7 +84,7 @@ section-about: true
         <div class="media-object">
           <div class="media-object-section">
             <div class="thumbnail">
-              <a href="#"><img src="{% static '$1' %}" alt="appropriate alt"></a>
+              <a href="#"><img src="{% static 'images/blogphoto.png' %}" alt="appropriate alt"></a>
             </div>
           </div>
           <div class="media-object-section">
@@ -100,7 +102,7 @@ section-about: true
         <div class="media-object">
           <div class="media-object-section">
             <div class="thumbnail">
-              <a href="#"><img src="{% static '$1' %}" alt="appropriate alt"></a>
+              <a href="#"><img src="{% static 'images/blogphoto.png' %}" alt="appropriate alt"></a>
             </div>
           </div>
           <div class="media-object-section">
@@ -118,7 +120,7 @@ section-about: true
         <div class="media-object">
           <div class="media-object-section">
             <div class="thumbnail">
-              <a href="#"><img src="{% static '$1' %}" alt="appropriate alt"></a>
+              <a href="#"><img src="{% static 'images/blogphoto.png' %}" alt="appropriate alt"></a>
             </div>
           </div>
           <div class="media-object-section">
@@ -136,7 +138,7 @@ section-about: true
         <div class="media-object">
           <div class="media-object-section">
             <div class="thumbnail">
-              <a href="#"><img src="{% static '$1' %}" alt="appropriate alt"></a>
+              <a href="#"><img src="{% static 'images/blogphoto.png' %}" alt="appropriate alt"></a>
             </div>
           </div>
           <div class="media-object-section">
@@ -154,7 +156,7 @@ section-about: true
         <div class="media-object">
           <div class="media-object-section">
             <div class="thumbnail">
-              <a href="#"><img src="{% static '$1' %}" alt="appropriate alt"></a>
+              <a href="#"><img src="{% static 'images/blogphoto.png' %}" alt="appropriate alt"></a>
             </div>
           </div>
           <div class="media-object-section">
@@ -176,6 +178,6 @@ section-about: true
     </section>
 
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

@@ -1,31 +1,33 @@
----
-title: The Giza Project Blog
-section: about
-section-about: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "The Giza Project Blog",
+  section: "about",
+  section_about: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {{> page-header bg="6"}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
     <section class="medium-8 columns">
       <article>
       <h2>Blog Post Title</h2>
         <p class="subheader">Author Name | Date of publication</p>
-        
 
-            
-            <div class="thumbnail float-left m-r-1"><a href="#"><img src="{% static 'assets/images/contact.png' %}" alt="appropriate alt"></a></div>
-	            
-	         <p>Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.</p> 
+
+
+            <div class="thumbnail float-left m-r-1"><a href="#"><img src="{% static 'images/contact.png' %}" alt="appropriate alt"></a></div>
+
+	         <p>Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.</p>
             <p>Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.</p>
             <p>Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.</p>
-            <p>Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.</p> 
+            <p>Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.Intro blog post blurb goes here. Pyramids were the burial places for Egyptian royalty during the Old Kingdom. The three large pyramids at Giza were built for three generations of Egyptian kings: Khufu, his son Khafre, and his grandson Menkaure. Each intro should take up at least 4 lines of text.</p>
     </section>
     <aside class="medium-4 columns">
-      
+
       <div class="feature-block secondary">
         <h5><span class="icon-list icon-padded"></span> Related Posts</h5>
         <ul class="menu vertical">
@@ -53,6 +55,6 @@ section-about: true
       </div>
     </aside>
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

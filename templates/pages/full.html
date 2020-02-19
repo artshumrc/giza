@@ -1,9 +1,11 @@
----
-title: Khafre Valley Temple
-section: explore
-section-explore: true
-bodyclasses: header-full mode-full
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Khafre Valley Temple",
+  section: "explore",
+  section_explore: true,
+  bodyclasses: "header-full mode-full"
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
@@ -11,57 +13,57 @@ bodyclasses: header-full mode-full
   page-header-meta-text="Khafre Pyramid Complex"
 }}
 
-{{#> content-main}}
+{% block 'content' %}
   <!-- row -->
-   
+
   <div class="row content-start">
-    
+
     <section class="large-8 columns content-col-primary">
-      
+
       <div class="row page-navigation-container">
         <div class="large-4 columns large-push-8">
           <div class="page-navigation">
-            
+
             <div class="title-bar" data-responsive-toggle="jumpmenu" data-hide-for="medium">
               <button class="icon-bars icon-padded title-bar-title" type="button" data-toggle>Jump to...</button>
             </div>
-            
+
             <div class="feature-block secondary" id="jumpmenu">
               <div class="feature-block__body">
-                
+
                 {{> jump-menu-full}}
-                
+
                 <div class="border-top-light m-t-1 p-t-1">
                   {{> share-links}}
                 </div>
-                
+
               </div>
             </div>
-            
+
           </div>
         </div>
       </div>
-      
-      
+
+
       <div class="item__featured-image">
-        <img src="{% static 'assets/images/full-khafre.jpg' %}" alt="appropriate alt">
+        <img src="{% static 'images/full-khafre.jpg' %}" alt="appropriate alt">
         <p class="item__featured-image__caption">
           Caption for this photo.
         </p>
       </div>
-      
+
       <div class="item__overview">
-                
+
         <p class="lead text-alt">
           Khafre was king during the Fourth Dynasty of ancient Egypt’s Old Kingdom; builder of the Second Pyramid at Giza. and probably of the Great Sphinx as well. Known two thousand years later by the Greeks as King Chephren.
         </p>
-        
+
       </div>
-      
-      
-      {{#> feature-block 
-        feature-title="Details" 
-        feature-block-class="collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Details"
+        feature-block-class="collapsible"
         feature-icon="info-circle"
         feature-anchor="details"
       }}
@@ -73,11 +75,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Finds" 
-        feature-block-class="collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Finds"
+        feature-block-class="collapsible"
         feature-icon="vase"
         feature-counter="11"
         feature-anchor="objects"
@@ -90,11 +92,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Excavation Diary Pages" 
-        feature-block-class="collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Excavation Diary Pages"
+        feature-block-class="collapsible"
         feature-icon="sticky-note-o"
         feature-counter="9"
         feature-anchor="diary"
@@ -107,11 +109,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Maps & Plans" 
-        feature-block-class="collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Maps & Plans"
+        feature-block-class="collapsible"
         feature-icon="map-o"
         feature-counter="5"
         feature-anchor="maps"
@@ -124,11 +126,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Drawings" 
-        feature-block-class="collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Drawings"
+        feature-block-class="collapsible"
         feature-icon="pencil-square-o"
         feature-counter="11"
         feature-anchor="drawings"
@@ -141,11 +143,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Published Documents" 
-        feature-block-class="collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Published Documents"
+        feature-block-class="collapsible"
         feature-icon="book"
         feature-counter="12"
         feature-anchor="published"
@@ -158,11 +160,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Unpublished Documents" 
-        feature-block-class="collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Unpublished Documents"
+        feature-block-class="collapsible"
         feature-icon="file-text-o"
         feature-counter="4"
         feature-anchor="unpublished"
@@ -175,11 +177,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Full Bibliography" 
-        feature-block-class="collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Full Bibliography"
+        feature-block-class="collapsible"
         feature-icon="bookmark"
         feature-counter="48"
         feature-anchor="biblio"
@@ -188,43 +190,43 @@ bodyclasses: header-full mode-full
           <li>
             {{#> list-item-textblob}}
               <p>Becker, Jürgen. "Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem." Sokar 8 (1. Halbjahr 2004), pp. 6-17, unnumbered figs.</p>
-              
+
               <p>Becker, Jürgen. "Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem." Sokar 8 (1. Halbjahr 2004), pp. 6-17, unnumbered figs.</p>
-              
+
               <p>Becker, Jürgen. "Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem." Sokar 8 (1. Halbjahr 2004), pp. 6-17, unnumbered figs.</p>
-              
+
               <p>Becker, Jürgen. "Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem." Sokar 8 (1. Halbjahr 2004), pp. 6-17, unnumbered figs.</p>
-              
+
               <p>Becker, Jürgen. "Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem." Sokar 8 (1. Halbjahr 2004), pp. 6-17, unnumbered figs.</p>
-              
+
               <p>Becker, Jürgen. "Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem." Sokar 8 (1. Halbjahr 2004), pp. 6-17, unnumbered figs.</p>
-              
+
               <h4>Publications (PDF) in the Giza Archive Library:</h4>
-              
+
               <p><a href="#0">Hawass, Zahi. "The Discovery of the Osiris Shaft at Giza." In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 379, 381.</a></p>
-              
+
               <p><a href="#0">Hawass, Zahi. "The Discovery of the Osiris Shaft at Giza." In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 379, 381.</a></p>
-              
+
               <p><a href="#0">Hawass, Zahi. "The Discovery of the Osiris Shaft at Giza." In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 379, 381.</a></p>
-              
+
               <p><a href="#0">Hawass, Zahi. "The Discovery of the Osiris Shaft at Giza." In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 379, 381.</a></p>
-              
+
               <p><a href="#0">Hawass, Zahi. "The Discovery of the Osiris Shaft at Giza." In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 379, 381.</a></p>
-              
+
               <p><a href="#0">Hawass, Zahi. "The Discovery of the Osiris Shaft at Giza." In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 379, 381.</a></p>
-              
+
             {{/list-item-textblob}}
-          </li>        
+          </li>
         </ul>
       {{/feature-block}}
-      
+
     </section>
-    
+
     <section class="large-4 columns content-col-secondary">
-      
-      {{#> feature-block 
-        feature-title="Photos" 
-        feature-block-class="secondary collapsible" 
+
+      {{#> feature-block
+        feature-title="Photos"
+        feature-block-class="secondary collapsible"
         feature-icon="camera"
         feature-counter="248"
         feature-anchor="photos"
@@ -239,11 +241,11 @@ bodyclasses: header-full mode-full
         {{/limit}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="3D Models" 
-        feature-block-class="secondary collapsible" 
+
+
+      {{#> feature-block
+        feature-title="3D Models"
+        feature-block-class="secondary collapsible"
         feature-icon="pyramid-3d"
         feature-counter="1"
         feature-anchor="models"
@@ -256,11 +258,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Videos" 
-        feature-block-class="secondary collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Videos"
+        feature-block-class="secondary collapsible"
         feature-icon="video-camera"
         feature-counter="3"
         feature-anchor="videos"
@@ -273,11 +275,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Audio" 
-        feature-block-class="secondary collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Audio"
+        feature-block-class="secondary collapsible"
         feature-icon="volume-up"
         feature-counter="2"
         feature-anchor="audio"
@@ -290,17 +292,17 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="People" 
-        feature-block-class="secondary collapsible" 
+
+
+      {{#> feature-block
+        feature-title="People"
+        feature-block-class="secondary collapsible"
         feature-icon="user"
         feature-counter="4"
         feature-anchor="people"
       }}
         <h4>Ancient People</h4>
-        
+
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each ancient-people}}
           <li>
@@ -308,9 +310,9 @@ bodyclasses: header-full mode-full
           </li>
         {{/each}}
         </ul>
-        
+
         <h4>Modern People</h4>
-        
+
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each modern-people}}
           <li>
@@ -319,11 +321,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Institutions" 
-        feature-block-class="secondary collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Institutions"
+        feature-block-class="secondary collapsible"
         feature-icon="university"
         feature-counter="1"
         feature-anchor="institutions"
@@ -336,11 +338,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Groups" 
-        feature-block-class="secondary collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Groups"
+        feature-block-class="secondary collapsible"
         feature-icon="users"
         feature-counter="1"
         feature-anchor="groups"
@@ -353,11 +355,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-      {{#> feature-block 
-        feature-title="Animals" 
-        feature-block-class="secondary collapsible" 
+
+
+      {{#> feature-block
+        feature-title="Animals"
+        feature-block-class="secondary collapsible"
         feature-icon="paw"
         feature-counter="1"
         feature-anchor="animals"
@@ -370,11 +372,11 @@ bodyclasses: header-full mode-full
         {{/each}}
         </ul>
       {{/feature-block}}
-      
-      
-    </section>  
-      
+
+
+    </section>
+
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

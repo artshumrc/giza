@@ -1,17 +1,19 @@
----
-title: Giza 3D
-section: giza3d
-section-giza3d: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Giza 3D",
+  section: "giza3d",
+  section_giza3d: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {{> page-header bg="1"}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
     <div class="large-12 columns">
-      <img src="{% static 'assets/images/giza3d.png' %}" alt="Giza 3D">
+      <img src="{% static 'images/giza3d.png' %}" alt="Giza 3D">
       <p>Explore the model of the whole Giza Plateau; you will find links to other models inside. Or choose from individual models below.</p>
     </div>
   </div>
@@ -20,36 +22,36 @@ section-giza3d: true
       <h3><span class="pyramid-3d"></span> Models</h3>
       <div class="row medium-up-2 large-up-4">
         <div class="column">
-          <a href="#"><img src="{% static 'assets/images/giza3dthumb.png' %}" alt=""></a>
+          <a href="#"><img src="{% static 'images/giza3dthumb.png' %}" alt=""></a>
           <p><a href="#">Caption for 3D Model</a></p>
         </div>
         <div class="column">
-          <a href="#"><img src="{% static 'assets/images/giza3dthumb.png' %}" alt=""></a>
+          <a href="#"><img src="{% static 'images/giza3dthumb.png' %}" alt=""></a>
           <p><a href="#">Caption for 3D Model</a></p>
         </div>
         <div class="column">
-          <a href="#"><img src="{% static 'assets/images/giza3dthumb.png' %}" alt=""></a>
+          <a href="#"><img src="{% static 'images/giza3dthumb.png' %}" alt=""></a>
           <p><a href="#">Caption for 3D Model</a></p>
         </div>
         <div class="column">
-          <a href="#"><img src="{% static 'assets/images/giza3dthumb.png' %}" alt=""></a>
+          <a href="#"><img src="{% static 'images/giza3dthumb.png' %}" alt=""></a>
           <p><a href="#">Caption for 3D Model</a></p>
         </div>
         <div class="column">
-          <a href="#"><img src="{% static 'assets/images/giza3dthumb.png' %}" alt=""></a>
+          <a href="#"><img src="{% static 'images/giza3dthumb.png' %}" alt=""></a>
           <p><a href="#">Caption for 3D Model</a></p>
         </div>
         <div class="column">
-          <a href="#"><img src="{% static 'assets/images/giza3dthumb.png' %}" alt=""></a>
+          <a href="#"><img src="{% static 'images/giza3dthumb.png' %}" alt=""></a>
           <p><a href="#">Caption for 3D Model</a></p>
         </div>
         <div class="column">
-          <a href="#"><img src="{% static 'assets/images/giza3dthumb.png' %}" alt=""></a>
+          <a href="#"><img src="{% static 'images/giza3dthumb.png' %}" alt=""></a>
           <p><a href="#">Caption for 3D Model</a></p>
         </div>
       </div>
     </section>
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

@@ -1,8 +1,10 @@
----
-title: Resources
-section: about
-section-about: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Resources",
+  section: "about",
+  section_about: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
@@ -10,10 +12,10 @@ section-about: true
     <div class="row title">
       <header class="large-12 columns">
         <h1>{{title}} <a name="top"></a></h1>
-      </header> 
+      </header>
     </div>
   </div>
-   
+
     <div class="row">
       <aside class="medium-4 medium-push-8 columns">
         <div class="feature-block secondary">
@@ -26,7 +28,7 @@ section-about: true
           </ul>
         </div>
       </aside>
-      
+
       <section class="medium-8 medium-pull-4 columns">
         <h3>Item 1<a name="1"></a></h3>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, culpa, delectus. Voluptatum magnam, voluptate maiores iusto, accusantium fugit unde quis quidem ut possimus laudantium quibusdam, sapiente voluptatibus adipisci sed ea!</p>
@@ -44,5 +46,5 @@ section-about: true
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, culpa, delectus. Voluptatum magnam, voluptate maiores iusto, accusantium fugit unde quis quidem ut possimus laudantium quibusdam, sapiente voluptatibus adipisci sed ea!</p>
         <p><a class="back-to-top-link" href="#top">Back to top</a></p>
       </section>
-      
+
     </div>

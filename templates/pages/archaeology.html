@@ -1,14 +1,16 @@
----
-title: Archaeology at Giza
-section: about
-section-about: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Archaeology at Giza",
+  section: "about",
+  section_about: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
-    
+
 {{> page-header bg="6"}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div id='timeline-embed' style="width: 100%; height: 750px"></div>
   <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
   <script type="text/javascript">
@@ -21,7 +23,7 @@ section-about: true
 
     timeline = new TL.Timeline('timeline-embed',
     // Local dev version
-    //'https://docs.google.com/spreadsheets/d/1fjHNruPyT7ydVx93NSL95VI5nCG9MB2sjQ_lte7LkHs/edit#gid=0', 
+    //'https://docs.google.com/spreadsheets/d/1fjHNruPyT7ydVx93NSL95VI5nCG9MB2sjQ_lte7LkHs/edit#gid=0',
     // Prod version from Giza team
     'https://docs.google.com/spreadsheets/d/1YL2WjtESR9lo7fIDoqbaDIhhaoOYLod9R1MFDGjWx7c/edit#gid=0',
     options);
@@ -43,6 +45,6 @@ section-about: true
 
     });
   </script>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

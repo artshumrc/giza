@@ -2,19 +2,20 @@
   <div class="d-flex flex-v border-left-dark p-l-1 m-r-neg1 m-b-2" data-equalizer-watch>
     <div class="flex-header">
       <h2 class="h2-minor text-medium m-b-1">
-        <a class="heading-link" href="{{block-destination}}">
-          {{block-title}}
+        <a class="heading-link" href="{{block_destination}}">
+          {{block_title}}
         </a>
       </h2>
     </div>
     <div class="flex-body text-smaller">
-      {{> @partial-block}}
+      {% block '4col_block_partial' %}
+      {% endblock %}
     </div>
     <div class="flex-footer">
       <div class="row">
         <div class="columns small-12 md-phone-6 medium-12 lg-tablet-8 large-12">
-          <a href="/{{block-destination}}" class="button primary expanded m-b-0">
-            {{block-button}} <i class="icon-angle-right"></i>
+          <a href="/{{block_destination}}" class="button primary expanded m-b-0">
+            {{block_button}} <i class="icon-angle-right"></i>
           </a>
         </div>
       </div>

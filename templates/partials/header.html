@@ -1,3 +1,5 @@
+{% load static %}
+
 <a id="skippy" class="sr-only sr-only-focusable" href="#content">
   <div class="top-bar-container">
     <span class="skiplink-text">Skip to main content</span>
@@ -20,23 +22,23 @@
 
           <div class="top-bar-left hide-for-small-only">
             <a href="index.html">
-              <img src="{% static '$1' %}" alt="Digital Giza at Harvard University. Click for home.">
+              <img src="{% static 'images/navlogo.png' %}" alt="Digital Giza at Harvard University. Click for home.">
             </a>
           </div>
 
           <div class="top-bar-left nav-menu-primary">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown" data-alignment="left">
-              <li{{#ifpage 'library'}} class="active"{{/ifpage}}>
+              <li {% if page == 'library' %} class="active" {% endif %}>
                 <a href="/library.html">Library</a>
               </li>
-              <li{{#if section-school}} class="active"{{/if}}>
+              <li {% if section_school %} class="active" {% endif %}>
                 <a href="/gizaatschool.html">Giza @ School</a>
               </li>
-              <li{{#if section-giza3d}} class="active"{{/if}}>
+              <li {% if section_giza3d %} class="active" {% endif %}>
                 <a href="/giza3d.html">Giza 3D</a>
               </li>
-              <li{{#if section-mygiza}} class="active"{{/if}}>
-                {{#if mygiza-auth}}
+              <li {% if section_mygiza %} class="active" {% endif %}>
+                {% if mygiza_auth %}
                 <a href="/mygiza-collection.html">My Giza</a>
                 <ul class="vertical menu">
                   <li><span class="menu-text-item"><i class="icon-user m-r-qt"></i> Stephanie Daedelus</span></li>
@@ -54,7 +56,7 @@
                   <li><a href="/mygiza-collection.html">Browse Collections</a></li>
                   <li><a>Log Out</a></li>
                 </ul>
-                {{else}}
+                {% else %}
                 <a href="/mygiza-landing.html">My Giza</a>
                 <ul class="vertical menu">
                   <li><span class="menu-text-item"><em>You are not logged in.</em></span></li>
@@ -63,9 +65,9 @@
                   <li><a href="/mygiza-collection.html">My Collections</a></li>
                   <li><a href="/mygiza-collection.html">Browse Collections</a></li>
                 </ul>
-                {{/if}}
+                {% endif %}
               </li>
-              <li{{#if section-about}} class="active"{{/if}}>
+              <li {% if section_about %} class="active" {% endif %}>
                 <a href="/gizaintro.html">About</a>
                 <ul class="vertical menu">
                   <li><a href="/gizaintro.html">Introduction to Giza</a></li>
@@ -73,10 +75,10 @@
                   <li><a href="/archaeology.html">Archaeology at Giza</a></li>
                 </ul>
               </li>
-              <li{{#ifpage 'donate'}} class="active"{{/ifpage}}>
+              <li {% if page == 'donate' %} class="active" {% endif %}>
                 <a href="/donate.html">Donate</a>
               </li>
-              <li{{#if section-search}} class="active"{{/if}}>
+              <li {% if section_search %} class="active" {% endif %}>
                 <form id="search-form" action="/searchresults.html">
                   <input type="text" id="inputSimpleSearch" name="q" placeholder="Search">
                   <button class="icon-search button" onclick="document.getElementById('search-form').submit();"></button>

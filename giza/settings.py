@@ -26,6 +26,7 @@ SECRET_KEY = '9w)eu)4tj*v(x%8^tz$fsc8^t@jj66_7_!_w2wo@9lcs)^xf6='
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'localhost',
     '.local',
     '.archimedes.digital',
     '.fas.harvard.edu',

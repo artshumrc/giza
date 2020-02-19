@@ -1,11 +1,13 @@
----
-title: Giza @ School
-section: school
-section-school: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Giza @ School",
+  section: "school",
+  section_school: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
-    
+
 {{> page-header bg="9"}}
 
 {{#> page-subheader
@@ -18,14 +20,14 @@ section-school: true
   </p>
 {{/page-subheader}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
-    
+
     <aside class="large-4 large-push-8 columns">
-      
-      {{#> feature-block 
-        feature-title="Contents" 
-        feature-block-class="secondary" 
+
+      {{#> feature-block
+        feature-title="Contents"
+        feature-block-class="secondary"
         feature-icon="list"
       }}
         <ul class="menu vertical">
@@ -36,10 +38,10 @@ section-school: true
           <li><a href="#socialstatus">Social Status in Ancient Egypt</a></li>
         </ul>
       {{/feature-block}}
-      
+
     </aside>
     <section class="large-8 large-pull-4 columns">
-      
+
       {{#> lesson-topic-blurb
         topic-title="Daily Life in Ancient Egypt"
         topic-img="img-n5@2x.jpg"
@@ -49,16 +51,16 @@ section-school: true
         topic-collection-offset="3"
       }}
         <p>
-          Explore these artifacts and sites to discover what daily life was 
-          like in Ancient Egypt, from breakfast to bedtime and more. 
+          Explore these artifacts and sites to discover what daily life was
+          like in Ancient Egypt, from breakfast to bedtime and more.
         </p>
         <p>
-          This layout format provides space for a more detailed description of 
-          what this collection is all about, so that we can effectively 
+          This layout format provides space for a more detailed description of
+          what this collection is all about, so that we can effectively
           explain how it might help in the creation of a lesson plan.
         </p>
       {{/lesson-topic-blurb}}
-      
+
       {{#> lesson-topic-blurb
         topic-title="What Are Pyramids?"
         topic-img="img-n5@2x.jpg"
@@ -68,14 +70,14 @@ section-school: true
         topic-collection-offset="0"
       }}
         <p>
-          The Pyramids at Giza are one of the wonders of the ancient world. But 
-          what do we really know about what they were for, and who built them?  
+          The Pyramids at Giza are one of the wonders of the ancient world. But
+          what do we really know about what they were for, and who built them?
         </p>
       {{/lesson-topic-blurb}}
-      
+
     </section>
-    
+
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

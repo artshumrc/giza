@@ -1,9 +1,11 @@
----
-title: Khafre Valley Temple
-section: explore
-section-explore: true
-bodyclasses: header-full mode-intro
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Khafre Valley Temple",
+  section: "explore",
+  section_explore: true,
+  bodyclasses: "header-full mode-intro"
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
@@ -11,16 +13,16 @@ bodyclasses: header-full mode-intro
   page-header-meta-link="full.html"
 }}
 
-{{#> content-main}} 
+{% block 'content' %}
   <!-- row -->
-  
+
   <div class="row content-start">
-    
+
     <section class="large-12 columns content-col-primary">
-      
-      {{#> feature-block 
-        feature-title="All Photos" 
-        feature-block-class="" 
+
+      {{#> feature-block
+        feature-title="All Photos"
+        feature-block-class=""
         feature-icon="camera"
         feature-counter="248"
       }}
@@ -32,10 +34,10 @@ bodyclasses: header-full mode-intro
         {{/each}}
         </ul>
       {{/feature-block}}
-      
+
     </section>
-  
-  </div> 
-{{/content-main}}
+
+  </div>
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

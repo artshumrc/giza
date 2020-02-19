@@ -1,14 +1,16 @@
----
-title: MyGIZA
-section: mygiza
-section-mygiza: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "MyGIZA",
+  section: "mygiza",
+  section_mygiza: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {{> page-header bg="7"}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row heading-block row-padded" id="content-skip">
     <h1>MyGiza: Save, share, and make our collection your own.</h1>
     <p>MyGiza helps you explore the vast Digital Giza collection, and organize it in a way that makes sense for you. For example, take a look at some of our curated collections below – then sign up to make your own.</p>
@@ -136,6 +138,6 @@ section-mygiza: true
       </div>
     </div>
   </section>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

@@ -1,8 +1,10 @@
----
-title: MyGIZA
-section: mygiza
-section-mygiza: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "MyGIZA",
+  section: "mygiza",
+  section_mygiza: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
@@ -416,6 +418,6 @@ section-mygiza: true
       </ul>
     </div>
   </section>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

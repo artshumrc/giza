@@ -1,12 +1,14 @@
----
-title: Giza @ School
-subtitle: People and Places of Giza
-section: school
-section-school: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Giza @ School",
+  subtitle: "People and Places of Giza",
+  section: "school",
+  section_school: true
+%}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
-  
+
 {{> page-header bg="9"}}
 
 {{#> page-subheader
@@ -16,9 +18,9 @@ section-school: true
   <h2 class="text-medium">{{subtitle}}</h2>
 {{/page-subheader}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
-    
+
     <aside class="medium-4 columns medium-push-8" data-sticky-container>
       <div class="sticky sticky-sidebar" data-sticky data-margin-top="6.6" data-top-anchor="page-content-main" data-btm-anchor="page-content-main:bottom">
         <div class="feature-block secondary">
@@ -38,7 +40,7 @@ section-school: true
         </div>
       </div>
     </aside>
-    
+
     <section class="medium-8 columns medium-pull-4" id="page-content-main">
       <h3><a name="1"></a> <a href="full.html">Giza/Giza Plateau</a></h3>
       <p>The Giza Plateau of Egypt, located about 15 miles southwest of modern Cairo, is one of the most important and famous archaeological sites in the world. It is home to the Great Pyramid, the only one of the Seven Wonders of the Ancient World still standing.  Built by King Khufu in the Fourth Dynasty of ancient Egypt’s Old Kingdom (around 2550 BCE), the Great Pyramid was the largest ever constructed in Egypt, originally reaching a height of 481 feet. Two of Khufu’s successors also built major monuments at Giza: Khafre, whose burial complex includes the second-largest pyramid as well as the Great Sphinx; and Menkaure, builder of the smallest of the three pyramids at Giza. </p>
@@ -79,13 +81,13 @@ section-school: true
       <h3><a name="9"></a> <a href="full.html">King Tutankhamen/Tut (reigned c. 1336-1327 BCE)</a></h3>
       <p>King during the Eighteenth Dynasty of ancient Egypt’s New Kingdom; came to the throne at age nine and ruled nine years until his untimely death.  His spectacular tomb, discovered in 1922 by Egyptologist Howard Carter in Egypt’s Valley of the Kings, contained many rich treasures, which may be seen today in the Egyptian Museum in Cairo. Despite ruling over a thousand years after the pyramids were built, Tut and other kings of his dynasty continued to visit and venerate the sacred site of Giza, building small chapels and rest-houses, and setting up inscribed dedications to the Sphinx.</p>
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-      
+
       <h3><a name="10"></a> <a href="full.html">King Ramses II (reigned c. 1279-1213 BCE)</a></h3>
       <p>King during the Nineteenth Dynasty of ancient Egypt’s New Kingdom; ruled nearly 67 years and fathered over 100 children. Ramses fought a number of battles against foreign enemies, such as the Hittites and the Nubians, and built many temples and other monuments throughout Egypt and Nubia. Despite ruling over a thousand years after the pyramids were built and being buried far to the south in Egypt’s Valley of the Kings, there is evidence that Ramses may have done some building, restoring, and/or usurping of earlier monuments at Giza.</p>
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>
     </section>
-    
+
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

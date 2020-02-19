@@ -1,29 +1,31 @@
----
-title: Donate
-section: donate
-section-donate: true
----
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Donate",
+  section: "donate",
+  section_donate: true
+%}
 
-<!-- BEGIN MAIN CONTENT ROWS -->  
+<!-- BEGIN MAIN CONTENT ROWS -->
 
 {{> page-header bg="4"}}
 
-{{#> content-main}}
+{% block 'content' %}
   <div class="row">
     <div class="large-12 columns">
       <h3>Support Our Work</h3>
       <p>Become a donor and make a contribution to preserving centuries of history and culture. The Giza Project is funded in part by the generosity of donors like you.</p>
     </div>
   </div>
- 
+
   <div class="row">
     <aside class="medium-4 medium-push-8 columns">
       <div class="feature-block secondary">
         <p>Instead of donating by credit card, you can also donate using PayPal.</p>
-        <p class="text-center"><img src="{% static 'assets/images/paypal.gif' %}" alt=""></p>
+        <p class="text-center"><img src="{% static 'images/paypal.gif' %}" alt=""></p>
       </div>
     </aside>
-    
+
     <section class="medium-8 medium-pull-4 columns">
       <form>
         <fieldset>
@@ -142,9 +144,9 @@ section-donate: true
                   <optgroup label="Armed Forces">
                     <option value="AA">Armed Forces Americas</option>
                     <option value="AP">Armed Forces Pacific</option>
-                    <option value="AE">Armed Forces Others</option> 
+                    <option value="AE">Armed Forces Others</option>
                   </optgroup>
-                </select>       
+                </select>
               </label>
             </div>
             <div class="medium-3 columns">
@@ -197,8 +199,8 @@ section-donate: true
         <button type="submit" class="button">Donate</button>
       </form>
     </section>
-    
+
   </div>
-{{/content-main}}
+{% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->
