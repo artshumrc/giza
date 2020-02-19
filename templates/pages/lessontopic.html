@@ -136,11 +136,11 @@
 
       {% include 'partials/feature-block-start.html' with feature_title="3D Models" feature_block_class="secondary collapsible" feature_icon="pyramid-3d" feature_counter="1" feature_anchor="models" %}
         <ul class="feature-block__list thumbsize-full">
-        {{#each 3d-models}}
+        {% for x in 3d-models %}
           <li>
             {% include 'partials/list-item-thumbcaption.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 

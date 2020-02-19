@@ -22,11 +22,11 @@
 
       {% include 'partials/feature-block-start.html' with feature_title="All Photos" feature_block_class="" feature_icon="camera" feature_counter="248" %}
         <ul class="feature-block__list item-grid thumbsize-md thumbs-square">
-        {{#each photos}}
+        {% for x in photos %}
           <li>
             {% include 'partials/list-item-thumbonly.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 

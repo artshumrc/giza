@@ -5,9 +5,9 @@
   <div class="media-object-section">
     <p class="media-object-title"><a href="#0">{{li-title}}</a></p>
     <ul class="subheader">
-    {{#each li-properties}}
+    {% for x in li-properties %}
       <li>{{@key}}: {{this}}</li>
-    {{/each}}
+    {% endfor %}
     </ul>
   </div>
 </div>

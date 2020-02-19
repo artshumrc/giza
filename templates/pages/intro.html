@@ -165,11 +165,11 @@
 
           {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="secondary" feature_icon="video-camera" feature_counter="3" feature_anchor="videos" feature_footer="true" %}
             <ul class="feature-block__list multicol-2 thumbsize-lg">
-            {{#each videos}}
+            {% for x in videos %}
               <li>
                 {% include 'partials/list-item-thumbcaption.html' %}
               </li>
-            {{/each}}
+            {% endfor %}
             </ul>
           {% include 'partials/feature-block-end.html' %}
 
@@ -183,11 +183,11 @@
             feature_footer="true"
           }}
             <ul class="feature-block__list">
-            {{#each audio}}
+            {% for x in audio %}
               <li>
                 {% include 'partials/list-item-mediacaption.html' %}
               </li>
-            {{/each}}
+            {% endfor %}
             </ul>
           {% include 'partials/feature-block-end.html' %}
 
@@ -196,21 +196,21 @@
             <h4>Ancient People</h4>
 
             <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
-            {{#each ancient-people}}
+            {% for x in ancient-people %}
               <li>
                 {% include 'partials/list-item-thumbnail.html' %}
               </li>
-            {{/each}}
+            {% endfor %}
             </ul>
 
             <h4>Modern People</h4>
 
             <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
-            {{#each modern-people}}
+            {% for x in modern-people %}
               <li>
                 {% include 'partials/list-item-thumbnail.html' %}
               </li>
-            {{/each}}
+            {% endfor %}
             </ul>
           {% include 'partials/feature-block-end.html' %}
 

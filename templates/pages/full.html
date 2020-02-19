@@ -63,77 +63,77 @@
 
       {% include 'partials/feature-block-start.html' with  feature_title="Details" feature_block_class="collapsible" feature_icon="info-circle" feature_anchor="details" %}
         <ul class="feature-block__list multicol-2">
-        {{#each details}}
+        {% for x in details %}
           <li>
             {% include 'partials/list-item-textinfo.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Finds" feature_block_class="collapsible" feature_icon="vase" feature_counter="11" feature_anchor="objects" %}
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
-        {{#each objects}}
+        {% for x in objects %}
           <li>
             {% include 'partials/list-item-thumbnail.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Excavation Diary Pages" feature_block_class="collapsible" feature_icon="sticky-note-o" feature_counter="9" feature_anchor="diary" %}
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
-        {{#each diary-pages}}
+        {% for x in diary-pages %}
           <li>
             {% include 'partials/list-item-thumbnail.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Maps & Plans" feature_block_class="collapsible" feature_icon="map-o" feature_counter="5" feature_anchor="maps" %}
         <ul class="feature-block__list item-grid thumbsize-lg thumbs-square">
-        {{#each maps-plans}}
+        {% for x in maps-plans %}
           <li>
             {% include 'partials/list-item-thumbcaption.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Drawings" feature_block_class="collapsible" feature_icon="pencil-square-o" feature_counter="11" feature_anchor="drawings" %}
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
-        {{#each drawings}}
+        {% for x in drawings %}
           <li>
             {% include 'partials/list-item-thumbnail.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Published Documents" feature_block_class="collapsible" feature_icon="book" feature_counter="12" feature_anchor="published" %}
         <ul class="feature-block__list multicol-2">
-        {{#each published-docs}}
+        {% for x in published-docs %}
           <li>
             {% include 'partials/list-item-document.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Unpublished Documents" feature_block_class="collapsible" feature_icon="file-text-o" feature_counter="4" feature_anchor="unpublished" %}
         <ul class="feature-block__list multicol-2">
-        {{#each unpublished-docs}}
+        {% for x in unpublished-docs %}
           <li>
             {% include 'partials/list-item-document.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
@@ -190,33 +190,33 @@
 
       {% include 'partials/feature-block-start.html' with feature_title="3D Models" feature_block_class="secondary collapsible" feature_icon="pyramid-3d" feature_counter="1" feature_anchor="models" %}
         <ul class="feature-block__list thumbsize-full">
-        {{#each 3d-models}}
+        {% for x in 3d-models %}
           <li>
             {% include 'partials/list-item-thumbcaption.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="secondary collapsible" feature_icon="video-camera" feature_counter="3" feature_anchor="videos" %}
         <ul class="feature-block__list multicol-2 thumbsize-lg thumbs-square">
-        {{#each videos}}
+        {% for x in videos %}
           <li>
             {% include 'partials/list-item-thumbcaption.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Audio" feature_block_class="secondary collapsible" feature_icon="volume-up" feature_counter="2" feature_anchor="audio" %}
         <ul class="feature-block__list">
-        {{#each audio}}
+        {% for x in audio %}
           <li>
             {% include 'partials/list-item-mediacaption.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
@@ -225,54 +225,54 @@
         <h4>Ancient People</h4>
 
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
-        {{#each ancient-people}}
+        {% for x in ancient-people %}
           <li>
             {% include 'partials/list-item-thumbnail.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
 
         <h4>Modern People</h4>
 
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
-        {{#each modern-people}}
+        {% for x in modern-people %}
           <li>
             {% include 'partials/list-item-thumbnail.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Institutions" feature_block_class="secondary collapsible" feature_icon="university" feature_counter="1" feature_anchor="institutions" %}
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
-        {{#each institutions}}
+        {% for x in institutions %}
           <li>
             {% include 'partials/list-item-thumbnail.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Groups" feature_block_class="secondary collapsible" feature_icon="users" feature_counter="1" feature_anchor="groups" %}
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
-        {{#each groups}}
+        {% for x in groups %}
           <li>
             {% include 'partials/list-item-thumbnail.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 
 
       {% include 'partials/feature-block-start.html' with feature_title="Animals" feature_block_class="secondary collapsible" feature_icon="paw" feature_counter="1" feature_anchor="animals" %}
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
-        {{#each animals}}
+        {% for x in animals %}
           <li>
             {% include 'partials/list-item-thumbnail.html' %}
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
 

@@ -73,7 +73,7 @@
                 <input type="text" placeholder="Example: 05/23/1924">
               </label>
 
-              <label>MET (Multilingual Egyptological Thesaurus) search: <span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="{{met-tooltip-text}}"></span>
+              <label>MET (Multilingual Egyptological Thesaurus) search: <span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="{{met_tooltip_text}}"></span>
                 <span class="input-wrap"><input type="text" placeholder="No items selected"><a href="#" class="select-btn" data-open="MET-search">Select MET terms</a></span>
               </label>
 
@@ -81,7 +81,7 @@
                 <span id="tooltipMetMobile" class="icon-info-circle has-tip right"
                   data-tooltip aria-haspopup="true" data-disable-hover="false"
                   data-position-class="right" data-template-classes="narrow"
-                  tabindex="2" title="{{met-tooltip-text}}">
+                  tabindex="2" title="{{met_tooltip_text}}">
                   What is MET?
                 </span>
               </p>
@@ -103,16 +103,16 @@
       <!-- My Saved Searches -->
       {% include 'partials/feature-block-start.html' with feature_title="My Saved Searches" feature_block_class="secondary" %}
         <ul class="feature-block__list">
-        {{#each saved-searches-sb}}
+        {% for x in saved_searches_sb %}
           <li>
             <div class="media-object list-item list-item-textblob">
-              <h6 class="h7">{{li-search-title}}</h6>
+              <h6 class="h7">{{li_search_title}}</h6>
               <div>
                 <a href="#">View Details</a> <span class="text-muted m-x-qt">|</span> <a href="#">Run Search</a>
               </div>
             </div>
           </li>
-        {{/each}}
+        {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
     </section>
