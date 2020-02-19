@@ -1,38 +1,39 @@
+{% load static %}
 <div class="collection-thumb">
-  {% if images-1}}
+  {% if images_1 %}
   <div class="collection-thumb-grid grid-images-1">
-    {{#limit images-thumb limit="1" offset=offset}}
+    {% for file in images_thumb|slice:":1" %}
     <div class="grid-image">
       <img src="{% static 'images/example-data/thumb/{{file}}' %}">
     </div>
-    {{/limit}}
+    {% endfor %}
   </div>
   {% endif %}
-  {% if images-4}}
+  {% if images_4 %}
   <div class="collection-thumb-grid grid-images-4">
-    {{#limit images-thumb limit="4" offset=offset}}
+    {% for file in images_thumb|slice:":4" %}
     <div class="grid-image">
       <img src="{% static 'images/example-data/thumb/{{file}}' %}">
     </div>
-    {{/limit}}
+    {% endfor %}
   </div>
   {% endif %}
-  {% if images-9}}
+  {% if images_9 %}
   <div class="collection-thumb-grid grid-images-9">
-    {{#limit images-thumb limit="9" offset=offset}}
+    {% for file in images_thumb|slice:":9" %}
     <div class="grid-image">
       <img src="{% static 'images/example-data/thumb/{{file}}' %}">
     </div>
-    {{/limit}}
+    {% endfor %}
   </div>
   {% endif %}
-  {% if caption}}
+  {% if caption %}
   <div class="collection-thumb-caption">
     <h6 class="collection-thumb-title">
-      {{collection-title}}
+      {{collection_title}}
     </h6>
     <div class="collection-thumb-meta">
-      {{collection-count}} items
+      {{collection_count}} items
     </div>
   </div>
   {% endif %}

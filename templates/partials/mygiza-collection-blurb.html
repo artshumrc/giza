@@ -1,25 +1,19 @@
 <div class="collection-blurb d-flex m-b-2">
   <div class="collection-image flex-fixed flex-mw-150 m-r-1">
-    <a href="/mygiza-collection.html">
-    {{> mygiza-collection-thumb
-        images-1=topic-collection-images1
-        images-4=topic-collection-images4
-        images-9=topic-collection-images9
-        offset=topic-collection-offset
-        caption=false
-      }}
+    <a href="/mygiza-collection/">
+    {% include 'partials/mygiza-collection-thumb.html' with  images_1="topic-collection-images1" images_4="topic-collection-images4" images_9="topic-collection-images9" offset="topic-collection-offset" caption=False %}
     </a>
   </div>
   <div class="collection-body flex-fluid">
     <div class="collection-text">
       <h3 class="collection-title heading-mixedcase">
-        <a href="/mygiza-collection.html">
-          {{collection-title}}
+        <a href="/mygiza-collection/">
+          {{collection_title}}
         </a>
       </h3>
       <p class="text-smaller">
-        <strong class="collection-meta-count">{{collection-count}} items</strong><br>
-        <span class="collection-meta-creator">Created by {{collection-creator}}</span> 
+        <strong class="collection-meta-count">{{collection_count}} items</strong><br>
+        <span class="collection-meta-creator">Created by {{collection_creator}}</span>
       </p>
     </div>
   </div>

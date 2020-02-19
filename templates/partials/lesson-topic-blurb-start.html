@@ -14,12 +14,6 @@
   <div class="topic-blurb-body">
 
     <div class="topic-blurb-image">
-      {{> mygiza-collection-thumb
-        images-1=topic-collection-images1
-        images-4=topic-collection-images4
-        images-9=topic-collection-images9
-        offset=topic-collection-offset
-        caption=false
-      }}
+      {% include 'partials/mygiza-collection-thumb.html' with images_1="topic-collection-images1" images_4="topic-collection-images4" images_9="topic-collection-images9" offset="topic-collection-offset" caption=False %}
     </div>
     <div class="topic-blurb-text">

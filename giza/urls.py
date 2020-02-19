@@ -28,14 +28,14 @@ urlpatterns = [
     url(r'^(?P<page_name>donate)/$', tms_views.donate, name="donate"),
     url(r'^v1/(?P<page_name>donate)/$', tms_views.donate_legacy, name="donate_legacy"),
 
-    url(r'^(?P<page_name>archaeology|commontopics|faq|gizaintro|gizaatschool|giza3d|mygiza-collection|mygiza-saved-searches|mygiza-landing)/$', tms_views.explore, name="explore"),
+    url(r'^(?P<page_name>archaeology|commontopics|lessontopics|faq|gizaintro|gizaatschool|giza3d|mygiza-collection|mygiza-saved-searches|mygiza-landing)/$', tms_views.explore, name="explore"),
     url(r'^v1/(?P<page_name>archaeology|commontopics|faq|gizaintro)/$', tms_views.explore_legacy, name="explore_legacy"),
 
     url(r'^library/$', search_views.library, name="library"),
     url(r'^v1/library/$', search_views.library_legacy, name="library_legacy"),
 
-    url(r'^explorevideos/$', search_views.videos, name="explorevideos"),
-    url(r'^v1/explorevideos/$', search_views.videos_legacy, name="explorevideos_legacy"),
+    url(r'^videos/$', search_views.videos, name="videos"),
+    url(r'^v1/videos/$', search_views.videos_legacy, name="videos_legacy"),
 
     url(r'^search/$', search_views.search, name='search'),
     url(r'^v1/search/$', search_views.search_legacy, name='search_legacy'),
