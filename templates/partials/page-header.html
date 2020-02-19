@@ -1,28 +1,28 @@
-<div class="page-header header-bg-{{safeval bg '1'}}">
+<div class="page-header header-bg-{{bg|default:'1'}}">
   <div class="row title">
     <header class="large-12 columns">
       <h1>
-        {{#if backlink-url}}
-        <a href="/{{backlink-url}}">
+        {% if backlink_url %}
+        <a href="/{{backlink_url}}">
           {{title}}
         </a>
-        {{else}}
+        {% else %}
         {{title}}
-        {{/if}}
+        {% endif %}
         <a name="top"></a>
       </h1>
-      {{#if page-header-meta-text}}
+      {% if page_header_meta_text %}
       <h3 class="page-header__meta">
-        {{page-header-meta-text}}
+        {{page_header_meta_text}}
       </h3>
-      {{/if}}
-      {{#if page-header-meta-link}}
+      {% endif %}
+      {% if page_header_meta_link %}
       <h3 class="page-header__meta">
-        <a href="/{{page-header-meta-link}}">
+        <a href="/{{page_header_meta_link}}">
           <i class="icon-angle-left"></i> Back
         </a>
       </h3>
-      {{/if}}
-    </header> 
+      {% endif %}
+    </header>
   </div>
 </div>

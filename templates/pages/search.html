@@ -9,7 +9,7 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{{> page-header bg="5"}}
+{% include 'partials/page-header.html' with bg="5" %}
 
 {% block 'content' %}
   <div class="row">
@@ -99,23 +99,20 @@
     </section>
     <section class="large-4 columns">
       <!-- My Saved Searches -->
-      {{#> feature-block
-        feature-title="My Saved Searches"
-        feature-block-class="secondary"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="My Saved Searches" feature_block_class="secondary" %}
         <ul class="feature-block__list">
         {{#each saved-searches-sb}}
           <li>
-            {{#> list-item-textblob}}
-            <h6 class="h7">{{li-search-title}}</h6>
-            <div>
-              <a href="#">View Details</a> <span class="text-muted m-x-qt">|</span> <a href="#">Run Search</a>
+            <div class="media-object list-item list-item-textblob">
+              <h6 class="h7">{{li-search-title}}</h6>
+              <div>
+                <a href="#">View Details</a> <span class="text-muted m-x-qt">|</span> <a href="#">Run Search</a>
+              </div>
             </div>
-            {{/list-item-textblob}}
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
     </section>
   </div>
 {% endblock %}

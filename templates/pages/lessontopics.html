@@ -8,28 +8,16 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{{> page-header bg="9"}}
+{% include 'partials/page-header.html' with bg="9" %}
 
-{{#> page-subheader
-  backlink-url="gizaatschool.html"
-  backlink-text="Back to Giza @ School"
-}}
-  <h2 class="text-medium m-b-qt">Lesson Topics</h2>
-  <p class="lead">
-    These popular classroom topics have been specially curated with lesson planning in mind.
-  </p>
-{{/page-subheader}}
+{% include 'partials/page-subheader.html' with backlink_url="gizaatschool.html" backlink_text="Back to Giza @ School" %}
 
 {% block 'content' %}
   <div class="row">
 
     <aside class="large-4 large-push-8 columns">
 
-      {{#> feature-block
-        feature-title="Contents"
-        feature-block-class="secondary"
-        feature-icon="list"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Contents" feature_block_class="secondary" feature_icon="list" %}
         <ul class="menu vertical">
           <li><a href="#dailylife">Daily Life in Ancient Egypt</a></li>
           <li><a href="#pyramids">What Are Pyramids?</a></li>
@@ -37,19 +25,12 @@
           <li><a href="#mummification">Early Mummification</a></li>
           <li><a href="#socialstatus">Social Status in Ancient Egypt</a></li>
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
     </aside>
     <section class="large-8 large-pull-4 columns">
 
-      {{#> lesson-topic-blurb
-        topic-title="Daily Life in Ancient Egypt"
-        topic-img="img-n5@2x.jpg"
-        topic-url="lessontopic.html"
-        topic-anchor="dailylife"
-        topic-collection-images9=true
-        topic-collection-offset="3"
-      }}
+      {% include 'partials/lesson-topic-blurb-start.html' with topic_title="Daily Life in Ancient Egypt" topic_img="img-n5@2x.jpg" topic_url="lessontopic.html" topic_anchor="dailylife" topic_collection_images9=true topic_collection_offset="3" %}
         <p>
           Explore these artifacts and sites to discover what daily life was
           like in Ancient Egypt, from breakfast to bedtime and more.
@@ -59,21 +40,14 @@
           what this collection is all about, so that we can effectively
           explain how it might help in the creation of a lesson plan.
         </p>
-      {{/lesson-topic-blurb}}
+      {% include 'partials/lesson-topic-blurb-end.html' %}
 
-      {{#> lesson-topic-blurb
-        topic-title="What Are Pyramids?"
-        topic-img="img-n5@2x.jpg"
-        topic-url="lessontopic.html"
-        topic-anchor="pyramids"
-        topic-collection-images4=true
-        topic-collection-offset="0"
-      }}
+      {% include 'partials/lesson-topic-blurb-start.html' topic-title="What Are Pyramids?" topic-img="img-n5@2x.jpg" topic-url="lessontopic.html" topic-anchor="pyramids" topic-collection-images4=true topic-collection-offset="0" %}
         <p>
           The Pyramids at Giza are one of the wonders of the ancient world. But
           what do we really know about what they were for, and who built them?
         </p>
-      {{/lesson-topic-blurb}}
+      {% include 'partials/lesson-topic-blurb-end.html' %}
 
     </section>
 

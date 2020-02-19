@@ -9,9 +9,7 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{{> page-header bg="1"
-  page-header-meta-text="Khafre Pyramid Complex"
-}}
+{% include 'partials/page-header.html' with bg="1" page_header_meta_text="Khafre Pyramid Complex" %}
 
 {% block 'content' %}
   <!-- row -->
@@ -61,12 +59,7 @@
       </div>
 
 
-      {{#> feature-block
-        feature-title="Details"
-        feature-block-class="collapsible"
-        feature-icon="info-circle"
-        feature-anchor="details"
-      }}
+      {% include 'partials/feature-block-start.html' with  feature_title="Details" feature_block_class="collapsible" feature_icon="info-circle" feature_anchor="details" %}
         <ul class="feature-block__list multicol-2">
         {{#each details}}
           <li>
@@ -74,16 +67,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Finds"
-        feature-block-class="collapsible"
-        feature-icon="vase"
-        feature-counter="11"
-        feature-anchor="objects"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Finds" feature_block_class="collapsible" feature_icon="vase" feature_counter="11" feature_anchor="objects" %}
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
         {{#each objects}}
           <li>
@@ -91,16 +78,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Excavation Diary Pages"
-        feature-block-class="collapsible"
-        feature-icon="sticky-note-o"
-        feature-counter="9"
-        feature-anchor="diary"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Excavation Diary Pages" feature_block_class="collapsible" feature_icon="sticky-note-o" feature_counter="9" feature_anchor="diary" %}
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
         {{#each diary-pages}}
           <li>
@@ -108,16 +89,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Maps & Plans"
-        feature-block-class="collapsible"
-        feature-icon="map-o"
-        feature-counter="5"
-        feature-anchor="maps"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Maps & Plans" feature_block_class="collapsible" feature_icon="map-o" feature_counter="5" feature_anchor="maps" %}
         <ul class="feature-block__list item-grid thumbsize-lg thumbs-square">
         {{#each maps-plans}}
           <li>
@@ -125,16 +100,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Drawings"
-        feature-block-class="collapsible"
-        feature-icon="pencil-square-o"
-        feature-counter="11"
-        feature-anchor="drawings"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Drawings" feature_block_class="collapsible" feature_icon="pencil-square-o" feature_counter="11" feature_anchor="drawings" %}
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
         {{#each drawings}}
           <li>
@@ -142,16 +111,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Published Documents"
-        feature-block-class="collapsible"
-        feature-icon="book"
-        feature-counter="12"
-        feature-anchor="published"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Published Documents" feature_block_class="collapsible" feature_icon="book" feature_counter="12" feature_anchor="published" %}
         <ul class="feature-block__list multicol-2">
         {{#each published-docs}}
           <li>
@@ -159,16 +122,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Unpublished Documents"
-        feature-block-class="collapsible"
-        feature-icon="file-text-o"
-        feature-counter="4"
-        feature-anchor="unpublished"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Unpublished Documents" feature_block_class="collapsible" feature_icon="file-text-o" feature_counter="4" feature_anchor="unpublished" %}
         <ul class="feature-block__list multicol-2">
         {{#each unpublished-docs}}
           <li>
@@ -176,19 +133,13 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Full Bibliography"
-        feature-block-class="collapsible"
-        feature-icon="bookmark"
-        feature-counter="48"
-        feature-anchor="biblio"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Full Bibliography" feature_block_class="collapsible" feature_icon="bookmark" feature_counter="48" feature_anchor="biblio" %}
         <ul class="feature-block__list">
           <li>
-            {{#> list-item-textblob}}
+            <div class="media-object list-item list-item-textblob">
               <p>Becker, Jürgen. "Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem." Sokar 8 (1. Halbjahr 2004), pp. 6-17, unnumbered figs.</p>
 
               <p>Becker, Jürgen. "Die Chephren-Pyramide. Planänderung des Baukörpers und ihre Auswirkung auf das Kammersystem." Sokar 8 (1. Halbjahr 2004), pp. 6-17, unnumbered figs.</p>
@@ -215,24 +166,16 @@
 
               <p><a href="#0">Hawass, Zahi. "The Discovery of the Osiris Shaft at Giza." In Zahi Hawass and Janet Richards, eds. The Archaeology and Art of Ancient Egypt. Essays in Honor of David B. O'Connor, Vol. I. Annales du Service des Antiquités de l'Égypte, Cahier no. 36. Cairo: Supreme Council of Antiquities, 2007, pp. 379, 381.</a></p>
 
-            {{/list-item-textblob}}
+            </div>
           </li>
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
     </section>
 
     <section class="large-4 columns content-col-secondary">
 
-      {{#> feature-block
-        feature-title="Photos"
-        feature-block-class="secondary collapsible"
-        feature-icon="camera"
-        feature-counter="248"
-        feature-anchor="photos"
-        feature-subpg="true"
-        feature-footer="true"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Photos" feature_block_class="secondary collapsible" feature_icon="camera" feature_counter="248" feature_anchor="photos" feature-subpg="true" feature_footer="true" %}
         <ul class="feature-block__list item-grid thumbsize-sm thumbs-square">
         {{#limit photos limit="15"}}
           <li>
@@ -240,16 +183,10 @@
           </li>
         {{/limit}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="3D Models"
-        feature-block-class="secondary collapsible"
-        feature-icon="pyramid-3d"
-        feature-counter="1"
-        feature-anchor="models"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="3D Models" feature_block_class="secondary collapsible" feature_icon="pyramid-3d" feature_counter="1" feature_anchor="models" %}
         <ul class="feature-block__list thumbsize-full">
         {{#each 3d-models}}
           <li>
@@ -257,16 +194,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Videos"
-        feature-block-class="secondary collapsible"
-        feature-icon="video-camera"
-        feature-counter="3"
-        feature-anchor="videos"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="secondary collapsible" feature_icon="video-camera" feature_counter="3" feature_anchor="videos" %}
         <ul class="feature-block__list multicol-2 thumbsize-lg thumbs-square">
         {{#each videos}}
           <li>
@@ -274,16 +205,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Audio"
-        feature-block-class="secondary collapsible"
-        feature-icon="volume-up"
-        feature-counter="2"
-        feature-anchor="audio"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Audio" feature_block_class="secondary collapsible" feature_icon="volume-up" feature_counter="2" feature_anchor="audio" %}
         <ul class="feature-block__list">
         {{#each audio}}
           <li>
@@ -291,16 +216,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="People"
-        feature-block-class="secondary collapsible"
-        feature-icon="user"
-        feature-counter="4"
-        feature-anchor="people"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="People" feature_block_class="secondary collapsible" feature_icon="user" feature_counter="4" feature_anchor="people" %}
         <h4>Ancient People</h4>
 
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
@@ -320,16 +239,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Institutions"
-        feature-block-class="secondary collapsible"
-        feature-icon="university"
-        feature-counter="1"
-        feature-anchor="institutions"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Institutions" feature_block_class="secondary collapsible" feature_icon="university" feature_counter="1" feature_anchor="institutions" %}
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each institutions}}
           <li>
@@ -337,16 +250,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Groups"
-        feature-block-class="secondary collapsible"
-        feature-icon="users"
-        feature-counter="1"
-        feature-anchor="groups"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Groups" feature_block_class="secondary collapsible" feature_icon="users" feature_counter="1" feature_anchor="groups" %}
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each groups}}
           <li>
@@ -354,16 +261,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Animals"
-        feature-block-class="secondary collapsible"
-        feature-icon="paw"
-        feature-counter="1"
-        feature-anchor="animals"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Animals" feature_block_class="secondary collapsible" feature_icon="paw" feature_counter="1" feature_anchor="animals" %}
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each animals}}
           <li>
@@ -371,7 +272,7 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
     </section>

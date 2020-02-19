@@ -9,9 +9,7 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{{> page-header bg="1"
-  page-header-meta-link="full.html"
-}}
+{% include 'partials/page-header.html' with bg="1" page_header_meta_link="full.html" %}
 
 {% block 'content' %}
   <!-- row -->
@@ -20,12 +18,7 @@
 
     <section class="large-12 columns content-col-primary">
 
-      {{#> feature-block
-        feature-title="All Photos"
-        feature-block-class=""
-        feature-icon="camera"
-        feature-counter="248"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="All Photos" feature_block_class="" feature_icon="camera" feature_counter="248" %}
         <ul class="feature-block__list item-grid thumbsize-md thumbs-square">
         {{#each photos}}
           <li>
@@ -33,7 +26,7 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
     </section>
 

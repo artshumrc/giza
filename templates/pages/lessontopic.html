@@ -9,14 +9,9 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{{> page-header bg="9"}}
+{% include 'partials/page-header.html' with bg="9" %}
 
-{{#> page-subheader
-  backlink-url="lessontopics.html"
-  backlink-text="Back to Lesson Topics"
-}}
-  <h2 class="text-medium m-b-qt">Topic: {{subtitle}}</h2>
-{{/page-subheader}}
+{% include 'partials/page-header.html' with backlink_url="lessontopics.html" backlink_text="Back to Lesson Topics" %}
 
 {% block 'content' %}
   <div class="row">
@@ -45,13 +40,7 @@
         </p>
       </div>
 
-      {{#> feature-block
-        feature-title="MyGiza Collections"
-        feature-block-class="collapsible"
-        feature-icon="th"
-        feature-counter="2"
-        feature-anchor="collections"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="MyGiza Collections" feature_block_class="collapsible" feature_icon="th" feature_counter="2" feature_anchor="collections" %}
         {{> mygiza-collection-blurb
           collection-title="Daily Life in Ancient Egypt: Morning"
           collection-count="17"
@@ -66,15 +55,9 @@
           topic-collection-images4=true
           topic-collection-offset="12"
         }}
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
-      {{#> feature-block
-        feature-title="Videos"
-        feature-block-class="collapsible"
-        feature-icon="video-camera"
-        feature-counter="5"
-        feature-anchor="videos"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="collapsible" feature_icon="video-camera" feature_counter="5" feature_anchor="videos" %}
         <ul class="feature-block__list multicol-2 thumbsize-lg thumbs-square">
 
           <li class="video-border">
@@ -143,19 +126,13 @@
           </li>
 
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
     </section>
 
     <aside class="large-4 columns">
 
-      {{#> feature-block
-        feature-title="3D Models"
-        feature-block-class="secondary collapsible"
-        feature-icon="pyramid-3d"
-        feature-counter="1"
-        feature-anchor="models"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="3D Models" feature_block_class="secondary collapsible" feature_icon="pyramid-3d" feature_counter="1" feature_anchor="models" %}
         <ul class="feature-block__list thumbsize-full">
         {{#each 3d-models}}
           <li>
@@ -163,39 +140,26 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
-      {{#> feature-block
-        feature-title="More Resources"
-        feature-block-class="secondary collapsible"
-        feature-icon="list"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="More Resources" feature_block_class="secondary collapsible" feature_icon="list" %}
         <div class="m-b-1">
           <p class="text-smaller text-muted">
             <em>Clicking these links will open a new browser tab.</em>
           </p>
         </div>
-        {{#> list-item-resourcelink
-          resource-title="An External Link"
-          resource-link="https://nilescribes.org/"
-        }}
+        {% include 'partials/list-item-resourcelink-start.html' with resource_title="An External Link" resource_link="https://nilescribes.org/" %}
           Some descriptive content about this link.
-        {{/list-item-resourcelink}}
+        {% include 'partials/list-item-resourcelink-end.html' %}
 
-        {{#> list-item-resourcelink
-          resource-title="Another External Link"
-          resource-link="http://www.aeraweb.org/"
-        }}
+        {% include 'partials/list-item-resourcelink-start.html' with resource_title="Another External Link" resource_link="http://www.aeraweb.org/" %}
           Some descriptive content about this link.
-        {{/list-item-resourcelink}}
+        {% include 'partials/list-item-resourcelink-end.html' %}
 
-        {{#> list-item-resourcelink
-          resource-title="Yet One More External Link"
-          resource-link="https://www.fitzmuseum.cam.ac.uk/er/"
-        }}
+        {% include 'partials/list-item-resourcelink-start.html' with resource_title="Yet One More External Link" resource_link="https://www.fitzmuseum.cam.ac.uk/er/" %}
           Some descriptive content about this link.
-        {{/list-item-resourcelink}}
-      {{/feature-block}}
+        {% include 'partials/list-item-resourcelink-end.html' %}
+      {% include 'partials/feature-block-end.html' %}
 
     </aside>
 

@@ -1,13 +1,15 @@
 <div class="page-subheader {{class}}">
   <div class="row p-t-1">
     <div class="large-12 columns">
-      {{#if backlink-url}}
+      {% if backlink_url %}
       <div class="text-smaller m-x-negqt m-t-neg1 p-y-half">
-        <a class="pointer-back" href="/{{backlink-url}}">{{safeval backlink-text 'Back'}}</a>
+        <a class="pointer-back" href="/{{backlink_url}}">{{backlink_text|default:'Back'}}</a>
       </div>
-      {{/if}}
+      {% endif %}
       <div class="text-heading">
-        {{> @partial-block}}
+        {% block 'subheader_content' %}
+          <h2 class="text-medium">{{subtitle}}</h2>
+        {% endblock %}
       </div>
     </div>
   </div>

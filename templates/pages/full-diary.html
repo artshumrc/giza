@@ -4,15 +4,16 @@
   title: "Sample Diary Page",
   section: "explore",
   section_explore: true,
-  bodyclasses: "header-full mode-full"
+  bodyclasses: "header-full mode-full",
+  class: "p-t-0"
 %}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{{> page-header bg="1"}}
-
-{{#> content-main class="p-t-0"}}
+{% block 'content' %}
   <!-- row -->
+  {% include 'partials/page-header.html' with bg="1" %}
+
 
   <div class="row content-start">
 
@@ -72,12 +73,7 @@
       </div>
 
 
-      {{#> feature-block
-        feature-title="Details"
-        feature-block-class="collapsible"
-        feature-icon="info-circle"
-        feature-anchor="details"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Details" feature_block_class="collapsible" feature_icon="info-circle" feature_anchor="details" %}
         <ul class="feature-block__list multicol-2">
         {{#each details}}
           <li>
@@ -85,15 +81,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Tombs and Monuments"
-        feature-block-class="collapsible"
-        feature-icon="map-marker"
-        feature-anchor="tombs"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Tombs and Monuments" feature_block_class="collapsible" feature_icon="map-marker" feature_anchor="tombs" %}
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
         {{#each sites}}
           <li>
@@ -101,16 +92,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Objects"
-        feature-block-class="collapsible"
-        feature-icon="vase"
-        feature-counter="11"
-        feature-anchor="objects"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Objects" feature_block_class="collapsible" feature_icon="vase" feature_counter="11" feature_anchor="objects" %}
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
         {{#each objects}}
           <li>
@@ -118,16 +103,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Drawings"
-        feature-block-class="collapsible"
-        feature-icon="pencil-square-o"
-        feature-counter="11"
-        feature-anchor="drawings"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Drawings" feature_block_class="collapsible" feature_icon="pencil-square-o" feature_counter="11" feature_anchor="drawings" %}
         <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
         {{#each drawings}}
           <li>
@@ -135,16 +114,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Published Documents"
-        feature-block-class="collapsible"
-        feature-icon="book"
-        feature-counter="12"
-        feature-anchor="published"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Published Documents" feature_block_class="collapsible" feature_icon="book" feature_counter="12" feature_anchor="published" %}
         <ul class="feature-block__list multicol-2">
         {{#each published-docs}}
           <li>
@@ -152,20 +125,13 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
     </section>
 
     <section class="large-4 columns content-col-secondary">
 
-      {{#> feature-block
-        feature-title="Photos"
-        feature-block-class="secondary collapsible"
-        feature-icon="camera"
-        feature-counter="248"
-        feature-anchor="photos"
-        feature-footer="true"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Photos" feature_block_class="secondary collapsible" feature_icon="camera" feature_counter="248" feature_anchor="photos" feature_footer="true" %}
         <ul class="feature-block__list item-grid thumbsize-sm thumbs-square">
         {{#limit photos limit=15}}
           <li>
@@ -173,16 +139,10 @@
           </li>
         {{/limit}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Videos"
-        feature-block-class="secondary collapsible"
-        feature-icon="video-camera"
-        feature-counter="3"
-        feature-anchor="videos"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="secondary collapsible" feature_icon="video-camera" feature_counter="3" feature_anchor="videos" %}
         <ul class="feature-block__list multicol-2 thumbsize-lg">
         {{#each videos}}
           <li>
@@ -190,16 +150,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Audio"
-        feature-block-class="secondary collapsible"
-        feature-icon="volume-up"
-        feature-counter="2"
-        feature-anchor="audio"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Audio" feature_block_class="secondary collapsible" feature_icon="volume-up" feature_counter="2" feature_anchor="audio" %}
         <ul class="feature-block__list">
         {{#each audio}}
           <li>
@@ -207,16 +161,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="People"
-        feature-block-class="secondary collapsible"
-        feature-icon="user"
-        feature-counter="4"
-        feature-anchor="people"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="People" feature_block_class="secondary collapsible" feature_icon="user" feature_counter="4" feature_anchor="people" %}
         <h4>Ancient People</h4>
 
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
@@ -236,16 +184,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Institutions"
-        feature-block-class="secondary collapsible"
-        feature-icon="university"
-        feature-counter="1"
-        feature-anchor="institutions"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Institutions" feature_block_class="secondary collapsible" feature_icon="university" feature_counter="1" feature_anchor="institutions" %}
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each institutions}}
           <li>
@@ -253,16 +195,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Groups"
-        feature-block-class="secondary collapsible"
-        feature-icon="users"
-        feature-counter="1"
-        feature-anchor="groups"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Groups" feature_block_class="secondary collapsible" feature_icon="users" feature_counter="1" feature_anchor="groups" %}
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each groups}}
           <li>
@@ -270,16 +206,10 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
-      {{#> feature-block
-        feature-title="Animals"
-        feature-block-class="secondary collapsible"
-        feature-icon="paw"
-        feature-counter="1"
-        feature-anchor="animals"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Animals" feature_block_class="secondary collapsible" feature_icon="paw" feature_counter="1" feature_anchor="animals" %}
         <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
         {{#each animals}}
           <li>
@@ -287,7 +217,7 @@
           </li>
         {{/each}}
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
 
 
     </section>

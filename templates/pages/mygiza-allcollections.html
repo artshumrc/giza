@@ -4,14 +4,15 @@
   title: "MyGIZA",
   section: "mygiza",
   section_mygiza: true,
-  mygiza_auth: true
+  mygiza_auth: true,
+  class: "p-t-1"
 %}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{{> page-header bg="7"}}
+{% include 'partials/page-header.html' with bg="7" %}
 
-{{#> content-main class="p-t-1"}}
+{% block 'content' %}
   <div class="collection-heading p-t-half m-b-1 hide-for-small-only">
     <div class="row">
       <div class="columns">

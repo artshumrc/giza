@@ -60,14 +60,7 @@
       <div class="row">
         <div class="medium-6 columns">
 
-          {{#> feature-block
-            feature-title="Finds"
-            feature-block-class=""
-            feature-icon="vase"
-            feature-counter="11"
-            feature-anchor="objects"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="Finds" feature_block_class="" feature_icon="vase" feature_counter="11" feature_anchor="objects" feature_footer="true" %}
             <ul class="feature-block__list thumbsize-sm thumbs-square">
             {{#limit objects limit="5"}}
               <li>
@@ -75,17 +68,10 @@
               </li>
             {{/limit}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
 
-          {{#> feature-block
-            feature-title="Excavation Diary Pages"
-            feature-block-class=""
-            feature-icon="sticky-note-o"
-            feature-counter="9"
-            feature-anchor="diary"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="Excavation Diary Pages" feature_block_class="" feature_icon="sticky-note-o" feature_counter="9" feature_anchor="diary" feature_footer="true" %}
             <ul class="feature-block__list thumbsize-sm thumbs-square">
             {{#limit diary-pages limit="5"}}
               <li>
@@ -93,17 +79,10 @@
               </li>
             {{/limit}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
 
-          {{#> feature-block
-            feature-title="Maps & Plans"
-            feature-block-class=""
-            feature-icon="map-o"
-            feature-counter="5"
-            feature-anchor="maps"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="Maps & Plans" feature_block_class="" feature_icon="map-o" feature_counter="5" feature_anchor="maps" feature_footer="true" %}
             <ul class="feature-block__list item-grid thumbsize-lg thumbs-square">
             {{#limit maps-plans limit="2"}}
               <li>
@@ -111,17 +90,10 @@
               </li>
             {{/limit}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
 
-          {{#> feature-block
-            feature-title="Drawings"
-            feature-block-class=""
-            feature-icon="pencil-square-o"
-            feature-counter="11"
-            feature-anchor="drawings"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="Drawings" feature_block_class="" feature_icon="pencil-square-o" feature_counter="11" feature_anchor="drawings" feature_footer="true" %}
             <ul class="feature-block__list thumbsize-sm thumbs-square">
             {{#limit drawings limit="5"}}
               <li>
@@ -129,22 +101,14 @@
               </li>
             {{/limit}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
 
         </div>
         <div class="medium-6 columns">
 
 
-          {{#> feature-block
-            feature-title="Photos"
-            feature-block-class=""
-            feature-icon="camera"
-            feature-counter="248"
-            feature-anchor="photos"
-            feature-subpg="true"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="Photos" feature_block_class="" feature_icon="camera" feature_counter="248" feature_anchor="photos" feature-subpg="true" feature_footer="true" %}
             <ul class="feature-block__list item-grid thumbsize-sm thumbs-square">
             {{#limit photos limit="15"}}
               <li>
@@ -152,17 +116,10 @@
               </li>
             {{/limit}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
 
-          {{#> feature-block
-            feature-title="3D Models"
-            feature-block-class=""
-            feature-icon="pyramid-3d"
-            feature-counter="1"
-            feature-anchor="models"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="3D Models" feature_block_class="" feature_icon="pyramid-3d" feature_counter="1" feature_anchor="models" feature_footer="true" %}
             <ul class="feature-block__list thumbsize-full">
             {{#limit 3d-models limit="3"}}
               <li>
@@ -170,16 +127,9 @@
               </li>
             {{/limit}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
-          {{#> feature-block
-            feature-title="Published Documents"
-            feature-block-class=""
-            feature-icon="book"
-            feature-counter="12"
-            feature-anchor="published"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="Published Documents" feature_block_class="" feature_icon="book" feature_counter="12" feature_anchor="published" feature_footer="true" %}
             <ul class="feature-block__list">
             {{#limit published-docs limit="5"}}
               <li>
@@ -187,17 +137,10 @@
               </li>
             {{/limit}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
 
-          {{#> feature-block
-            feature-title="Unpublished Documents"
-            feature-block-class=""
-            feature-icon="file-text-o"
-            feature-counter="4"
-            feature-anchor="unpublished"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="Unpublished Documents" feature_block_class="" feature_icon="file-text-o" feature_counter="4" feature_anchor="unpublished" feature_footer="true" %}
             <ul class="feature-block__list">
             {{#limit unpublished-docs}}
               <li>
@@ -205,7 +148,7 @@
               </li>
             {{/limit}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
 
         </div>
@@ -217,14 +160,7 @@
         <div class="column">
 
 
-          {{#> feature-block
-            feature-title="Videos"
-            feature-block-class="secondary"
-            feature-icon="video-camera"
-            feature-counter="3"
-            feature-anchor="videos"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="secondary" feature_icon="video-camera" feature_counter="3" feature_anchor="videos" feature_footer="true" %}
             <ul class="feature-block__list multicol-2 thumbsize-lg">
             {{#each videos}}
               <li>
@@ -232,17 +168,10 @@
               </li>
             {{/each}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
 
-          {{#> feature-block
-            feature-title="Audio"
-            feature-block-class="secondary"
-            feature-icon="volume-up"
-            feature-counter="2"
-            feature-anchor="audio"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="Audio" feature_block_class="secondary" feature_icon="volume-up" feature_counter="2" feature_anchor="audio" feature_footer="true" %}
             <ul class="feature-block__list">
             {{#each audio}}
               <li>
@@ -250,17 +179,10 @@
               </li>
             {{/each}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
 
-          {{#> feature-block
-            feature-title="People"
-            feature-block-class="secondary collapsible"
-            feature-icon="user"
-            feature-counter="4"
-            feature-anchor="people"
-            feature-footer="true"
-          }}
+          {% include 'partials/feature-block-start.html' with feature_title="People" feature_block_class="secondary collapsible" feature_icon="user" feature_counter="4" feature_anchor="people" feature_footer="true" %}
             <h4>Ancient People</h4>
 
             <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
@@ -280,7 +202,7 @@
               </li>
             {{/each}}
             </ul>
-          {{/feature-block}}
+          {% include 'partials/feature-block-end.html' %}
 
 
         </div>

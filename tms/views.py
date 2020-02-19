@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.template.exceptions import TemplateDoesNotExist
 
 from tms import models
 import json
+
+
 
 def index_legacy(request):
 	return static_pages_legacy(request, 'index')
@@ -48,19 +51,26 @@ def index(request):
 	return render(request, 'pages/index.html')
 
 def about(request, page_name):
-	return static_pages_v2(request, page_name)
+	return static_pages(request, page_name)
 
 def donate(request, page_name):
-	return static_pages_v2(request, page_name)
+	return static_pages(request, page_name)
 
 def explore(request, page_name):
-	return static_pages_v2(request, page_name)
+	return static_pages(request, page_name)
 
 def static_pages(request, page_name):
 	template = 'pages/%s.html' % page_name
+	print(template)
+	print(template)
+	print(template)
+	print(template)
+	print(template)
+	print(template)
+	return render(request, template)
 	try:
 		return render(request, template)
-	except:
+	except TemplateDoesNotExist:
 		raise Http404("This page does not exist!")
 
 def get_type_html(request, type, id, view):

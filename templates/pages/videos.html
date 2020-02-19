@@ -9,16 +9,9 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{{> page-header bg="9"
-  backlink-url="gizaatschool.html"
-}}
+{% include 'partials/page-header.html' with bg="9" backlink_url="gizaatschool.html" %}
 
-{{#> page-subheader
-  backlink-url="gizaatschool.html"
-  backlink-text="Back to Giza @ School"
-}}
-  <h2 class="text-medium">{{subtitle}}</h2>
-{{/page-subheader}}
+{% include 'partials/page-subheader.html' with backlink_url="gizaatschool.html" backlink_text="Back to Giza @ School" %}
 
 {% block 'content' %}
   <div class="row">

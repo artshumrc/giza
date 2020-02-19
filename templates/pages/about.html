@@ -8,17 +8,13 @@
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
-{{> page-header bg="6"}}
 
 {% block 'content' %}
+  {% include 'partials/page-header.html' with bg="6" %}
   <div class="row">
 
     <aside class="medium-4 medium-push-8 columns">
-      {{#> feature-block
-        feature-title="Contents"
-        feature-block-class="secondary"
-        feature-icon="list"
-      }}
+      {% include 'partials/feature-block-start.html' with feature_title="Contents" feature_block_class="secondary" feature_icon="list" %}
         <ul class="menu vertical">
           <li><a href="#about">About the Giza Project</a></li>
           <li><a href="#staff">Giza Project Staff</a></li>
@@ -27,7 +23,7 @@
           <li><a href="#card">The Digital Brain behind Digital Giza</a></li>
           <li><a href="#abbrev">Database Abbreviations</a></li>
         </ul>
-      {{/feature-block}}
+      {% include 'partials/feature-block-end.html' %}
     </aside>
 
 
@@ -129,7 +125,7 @@
 
       <p>The result is a huge "web" of interrelated archival records that enable you to access all the information you need as you explore each record, without having to conduct multiple searches or open lots of different pages.</p>
 
-      <p class="p-y-1"><img class="img-fluid thumbnail" src="{% static 'images/about-image-1.png" alt="Illustration of the 'web' of archival records' %}"></p>
+      <p class="p-y-1"><img class="img-fluid thumbnail" src="{% static 'images/about-image-1.png' %}" alt="Illustration of the 'web' of archival records"></p>
 
       <p>And since this website pulls from the database in real-time, any information you access here will always reflect the most up-to-date information that The Giza Project has made available. </p>
 
