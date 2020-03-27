@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
+from django.conf import settings
 
 from tms import models
 import json
+import os
 
 def index(request):
 	return static_pages(request, 'index')
@@ -56,6 +58,7 @@ def get_manifest_data(request, id):
 		manifest['@id'] = base_uri + manifest['@id']
 		manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
 		manifest['sequences'][0]['canvases'][0]['@id'] = base_uri + manifest['sequences'][0]['canvases'][0]['@id']
+		manifest['sequences'][0]['canvases'][0]['thumbnail'] = os.path.join(settings.BASE_DIR, 'static', 'images', 'thumb-default.png')
 		manifest['sequences'][0]['canvases'][0]['images'][0]['@id'] = base_uri + manifest['sequences'][0]['canvases'][0]['images'][0]['@id']
 		manifest['sequences'][0]['canvases'][0]['images'][0]['on'] = manifest['sequences'][0]['canvases'][0]['@id']
 		return manifest
@@ -87,9 +90,18 @@ def get_canvas(request, id):
 		raise Http404("There was an error getting this manifest")
 	
 
-def get_annotation(request, id):
+def get_annotation(request, id, image):
 	manifest = get_manifest_data(request, id)
 	if manifest:
-		return JsonResponse(manifest['sequences'][0]['canvases'][0]['images'][0])
+		try:
+		    annotation = manifest['sequences'][0]['canvases'][0]['images'][image]
+		    return JsonResponse(annotation)
+		except:
+			raise Http404("There was an error getting this manifest")
 	else:
 		raise Http404("There was an error getting this manifest")
+		
+	
+# def try_mirador(request, id):
+# 	data = get_manifest_data(request, id)
+# 	return render(request, 'tms/mirador.html', {'data': json.dumps(data)})

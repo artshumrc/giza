@@ -50,6 +50,13 @@ def generate_IIIF_manifest(row):
 	manifest["sequences"][0]["canvases"] = build_manifest_canvas(row['ArchIDNum'])
 	
 	return manifest
+	
+def generate_site_IIIF_manifest(key, data):
+	""" Compile all the resources associated with a site into one manifest """
+	manifest = build_base_manifest(key, data['description'], data['label'])
+	manifest["sequences"] = build_manifest_sequences(key)
+	manifest["sequences"][0]["canvases"] = build_multi_image_canvas(key, data['resources'])
+	return manifest
 
 
 def build_base_manifest(drs_id, description, label):
@@ -109,3 +116,30 @@ def build_manifest_canvas(drs_id):
 	]
 	
 	return canvas
+	
+def build_multi_image_canvas(id, resources_list):
+	canvas_id = "{}/canvas/1".format(id)
+	width = max([ob['width'] for ob in resources_list])
+	height = max([ob['height'] for ob in resources_list])
+	canvas = [
+	    {
+		    "@id": canvas_id,
+			"label": "some label",
+			"@type": "sc:Canvas",
+			"width": width,
+		    "height": height,
+			"images": [
+			    {
+			        "on": canvas_id,
+					"motivation": "sc:painting",
+					"@type": "oa:Annotation",
+					"@id": "{}/annotation/canvas/{}".format(id, idx),
+					"resource": ob
+			    }
+			for idx, ob in enumerate(resources_list)
+			]
+		}
+	    
+	]
+	return canvas
+	
