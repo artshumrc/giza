@@ -52,19 +52,18 @@ def process_sites_objects_related_manifests():
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 				ARCH_IDS[row[indices['drs_id']]] = resource
+			elif row[indices['site_id_index']] not in SITE_RELATIONS.keys():
+				SITE_RELATIONS[row[indices['site_id_index']]] = {
+					'description': row[indices['object_title_index']],
+					'label': row[indices['object_number_index']],
+					'resources': [
+						ARCH_IDS[row[indices['drs_id']]]
+					]
+				}
 			else:
-				if row[indices['site_id_index']] not in SITE_RELATIONS.keys():
-					SITE_RELATIONS[row[indices['site_id_index']]] = {
-						'description': row[indices['object_title_index']],
-						'label': row[indices['object_number_index']],
-						'resources': [
-						    ARCH_IDS[row[indices['drs_id']]]
-						]
-					}
-				else:
-					SITE_RELATIONS[row[indices['site_id_index']]]['resources'].append(
-					    ARCH_IDS[row[indices['drs_id']]]
-					)
+				SITE_RELATIONS[row[indices['site_id_index']]]['resources'].append(
+					ARCH_IDS[row[indices['drs_id']]]
+				)
 					
 
 
@@ -113,19 +112,18 @@ def process_sites_media_related_manifests():
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 				ARCH_IDS[row[indices['drs_id']]] = resource
+			elif row[indices['site_id_index']] not in SITE_RELATIONS.keys():
+				SITE_RELATIONS[row[indices['site_id_index']]] = {
+					'description': row[indices['description_index']],
+					'label': row[indices['media_view_index']],
+					'resources': [
+						ARCH_IDS[row[indices['drs_id']]]
+					]
+				}
 			else:
-				if row[indices['site_id_index']] not in SITE_RELATIONS.keys():
-					SITE_RELATIONS[row[indices['site_id_index']]] = {
-						'description': row[indices['description_index']],
-						'label': row[indices['media_view_index']],
-						'resources': [
-						    ARCH_IDS[row[indices['drs_id']]]
-						]
-					}
-				else:
-					SITE_RELATIONS[row[indices['site_id_index']]]['resources'].append(
-					    ARCH_IDS[row[indices['drs_id']]]
-					)
+				SITE_RELATIONS[row[indices['site_id_index']]]['resources'].append(
+					ARCH_IDS[row[indices['drs_id']]]
+				)
 
 
 def process_object_sites_related_manifests():
@@ -169,19 +167,18 @@ def process_object_sites_related_manifests():
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 				ARCH_IDS[row[indices['drs_id']]] = resource
+			elif row[indices['site_id_index']] not in SITE_RELATIONS.keys():
+				SITE_RELATIONS[row[indices['site_id_index']]] = {
+					'description': row[indices['site_name_index']],
+					'label': row[indices['site_number_index']],
+					'resources': [
+						ARCH_IDS[row[indices['drs_id']]]
+					]
+				}
 			else:
-				if row[indices['site_id_index']] not in SITE_RELATIONS.keys():
-					SITE_RELATIONS[row[indices['site_id_index']]] = {
-						'description': row[indices['site_name_index']],
-						'label': row[indices['site_number_index']],
-						'resources': [
-						    ARCH_IDS[row[indices['drs_id']]]
-						]
-					}
-				else:
-					SITE_RELATIONS[row[indices['site_id_index']]]['resources'].append(
-					    ARCH_IDS[row[indices['drs_id']]]
-					)
+				SITE_RELATIONS[row[indices['site_id_index']]]['resources'].append(
+					ARCH_IDS[row[indices['drs_id']]]
+				)
 
 
 def process_object_media_related_manifests():
