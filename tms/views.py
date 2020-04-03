@@ -58,7 +58,6 @@ def get_manifest_data(request, id):
 		manifest['@id'] = base_uri + manifest['@id']
 		manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
 		manifest['sequences'][0]['canvases'][0]['@id'] = base_uri + manifest['sequences'][0]['canvases'][0]['@id']
-		manifest['sequences'][0]['canvases'][0]['thumbnail'] = os.path.join(settings.BASE_DIR, 'static', 'images', 'thumb-default.png')
 		manifest['sequences'][0]['canvases'][0]['images'][0]['@id'] = base_uri + manifest['sequences'][0]['canvases'][0]['images'][0]['@id']
 		manifest['sequences'][0]['canvases'][0]['images'][0]['on'] = manifest['sequences'][0]['canvases'][0]['@id']
 		return manifest
@@ -69,7 +68,9 @@ def get_manifest_data(request, id):
 def get_manifest(request, id):
 	manifest = get_manifest_data(request, id)
 	if manifest:
-		return JsonResponse(manifest)
+		response = JsonResponse(manifest)
+		response["Access-Control-Allow-Origin"] = "*"
+		return response
 	else:
 		raise Http404("There was an error getting this manifest")
 
@@ -101,7 +102,8 @@ def get_annotation(request, id, image):
 	else:
 		raise Http404("There was an error getting this manifest")
 		
-	
+
+# this view if for testing Giza's manifests in mirador, it will be removed	
 # def try_mirador(request, id):
 # 	data = get_manifest_data(request, id)
 # 	return render(request, 'tms/mirador.html', {'data': json.dumps(data)})

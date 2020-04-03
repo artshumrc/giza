@@ -33,7 +33,12 @@ MANIFEST = {
 								"width": 2616,
 								"@id": "https://ids.lib.harvard.edu/ids/iiif/459673218/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
-								"height": 1952
+								"height": 1952,
+								"service": {
+								    "@context": "https://iiif.io/api/presentation/2/context.json",
+									"@id": "https://ids.lib.harvard.edu/ids/iiif/459673218",
+									"profile": "http://iiif.io/api/image/2/level1.json"
+								}
 							}
 						}
 					]    
@@ -66,24 +71,34 @@ MULTI_MANIFEST = {
 							"on": "1/canvas/1",
 							"motivation": "sc:painting",
 							"@type": "oa:Annotation",
-							"@id": "1/annotation/canvas/1",
+							"@id": "1/annotation/canvas/0",
 							"resource": {
 								"width": 2616,
 								"@id": "https://ids.lib.harvard.edu/ids/iiif/459673218/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
-								"height": 1952
+								"height": 1952,
+								"service": {
+								    "@context": "https://iiif.io/api/presentation/2/context.json",
+									"@id": "https://ids.lib.harvard.edu/ids/iiif/459673218",
+									"profile": "http://iiif.io/api/image/2/level1.json"
+								}
 							}
 						},
 						{
 							"on": "1/canvas/1",
 							"motivation": "sc:painting",
 							"@type": "oa:Annotation",
-							"@id": "1/annotation/canvas/2",
+							"@id": "1/annotation/canvas/1",
 							"resource": {
 								"width": 3000,
 								"@id": "https://ids.lib.harvard.edu/ids/iiif/459003218/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
-								"height": 2000
+								"height": 2000,
+								"service": {
+								    "@context": "https://iiif.io/api/presentation/2/context.json",
+									"@id": "https://ids.lib.harvard.edu/ids/iiif/459003218",
+									"profile": "http://iiif.io/api/image/2/level1.json"
+								}
 							}
 						}
 					]    
@@ -128,13 +143,23 @@ class UtilsTestCase(TestCase):
 						"width": 2616,
 						"@id": "https://ids.lib.harvard.edu/ids/iiif/459673218/full/full/0/default.jpg",
 						"@type": "dctypes:Image",
-						"height": 1952
+						"height": 1952,
+						"service": {
+							"@context": "https://iiif.io/api/presentation/2/context.json",
+							"@id": "https://ids.lib.harvard.edu/ids/iiif/459673218",
+							"profile": "http://iiif.io/api/image/2/level1.json"
+						}
 					},
 				    {
 						"width": 3000,
 						"@id": "https://ids.lib.harvard.edu/ids/iiif/459003218/full/full/0/default.jpg",
 						"@type": "dctypes:Image",
-						"height": 2000
+						"height": 2000,
+						"service": {
+							"@context": "https://iiif.io/api/presentation/2/context.json",
+							"@id": "https://ids.lib.harvard.edu/ids/iiif/459003218",
+							"profile": "http://iiif.io/api/image/2/level1.json"
+						}
 					}
 				]
 			}

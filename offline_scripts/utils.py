@@ -90,6 +90,11 @@ def build_manifest_canvas(drs_id):
 	image_id = "{}/annotation/canvas/1".format(drs_id)
 	resource_id = "https://ids.lib.harvard.edu/ids/iiif/{}/full/full/0/default.jpg".format(drs_id)
 	height, width = get_height_and_width(drs_id)
+	service = {
+	    "@context": "https://iiif.io/api/presentation/2/context.json",
+	    "@id": "https://ids.lib.harvard.edu/ids/iiif/{}".format(drs_id),
+		"profile": "http://iiif.io/api/image/2/level1.json"
+	}
 	canvas = [
 	    {
 		    "@id": canvas_id,
@@ -107,7 +112,8 @@ def build_manifest_canvas(drs_id):
 						"width": width,
 						"@id": resource_id,
 						"@type": "dctypes:Image",
-						"height": height
+						"height": height,
+						"service": service
 					}
 				}
 			]
