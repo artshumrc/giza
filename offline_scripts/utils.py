@@ -71,7 +71,7 @@ def build_base_manifest(id, description, label):
 	
 def build_manifest_sequences(id):
 	""" return sequence list for IIIF manifest """
-	seq_id = "{}/sequence/1".format(id)
+	seq_id = "{}/sequence/0".format(id)
 	seq = [
 	    {
 		    "label": "Default order",
@@ -84,7 +84,7 @@ def build_manifest_sequences(id):
 
 def build_multi_image_sequence(id, resources_list):
 	""" return sequence list of canvases each with one image """
-	seq_id = "{}/sequence/1".format(id)
+	seq_id = "{}/sequence/0".format(id)
 	seq = [
 	    {
 		    "label": "Default order",
@@ -101,7 +101,7 @@ def build_multi_image_sequence(id, resources_list):
 def build_manifest_canvas(id, idx, resource):
 	if resource is None:
 		resource = build_resource(id)
-	canvas_id = "{}/canvas/{}".format(id, idx+1)
+	canvas_id = "{}/canvas/{}".format(id, idx)
 	canvas = {
 	    "@id": canvas_id,
 		"label": str(idx+1),
@@ -113,7 +113,7 @@ def build_manifest_canvas(id, idx, resource):
 			    "on": canvas_id,
 				"motivation": "sc:painting",
 				"@type": "oa:Annotation",
-				"@id": "{}/annotation/canvas/{}".format(id, idx+1),
+				"@id": "{}/annotation/canvas/{}".format(id, idx),
 				"resource": resource
 			}
 		]

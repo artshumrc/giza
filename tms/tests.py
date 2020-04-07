@@ -15,20 +15,20 @@ MANIFEST = {
 		{
 			"label": "Default order",
 			"@type": "sc:Sequence",
-			"@id": "459673218/sequence/1",
+			"@id": "459673218/sequence/0",
 			"canvases": [
 				{
-					"@id": "459673218/canvas/1",
+					"@id": "459673218/canvas/0",
 					"label": "1",
 					"@type": "sc:Canvas",
 					"width": 2616,
 					"height": 1952,
 					"images": [
 						{
-							"on": "459673218/canvas/1",
+							"on": "459673218/canvas/0",
 							"motivation": "sc:painting",
 							"@type": "oa:Annotation",
-							"@id": "459673218/annotation/canvas/1",
+							"@id": "459673218/annotation/canvas/0",
 							"resource": {
 								"width": 2616,
 								"@id": "https://ids.lib.harvard.edu/ids/iiif/459673218/full/full/0/default.jpg",
@@ -58,20 +58,20 @@ MULTI_MANIFEST = {
 		{
 			"label": "Default order",
 			"@type": "sc:Sequence",
-			"@id": "1/sequence/1",
+			"@id": "1/sequence/0",
 			"canvases": [
 				{
-					"@id": "1/canvas/1",
+					"@id": "1/canvas/0",
 					"label": "1",
 					"@type": "sc:Canvas",
 					"width": 2616,
 					"height": 1952,
 					"images": [
 						{
-							"on": "1/canvas/1",
+							"on": "1/canvas/0",
 							"motivation": "sc:painting",
 							"@type": "oa:Annotation",
-							"@id": "1/annotation/canvas/1",
+							"@id": "1/annotation/canvas/0",
 							"resource": {
 								"width": 2616,
 								"@id": "https://ids.lib.harvard.edu/ids/iiif/459673218/full/full/0/default.jpg",
@@ -87,17 +87,17 @@ MULTI_MANIFEST = {
 					]    
 				},
 				{
-				    "@id": "1/canvas/2",
+				    "@id": "1/canvas/1",
 				    "label": "2",
 				    "@type": "sc:Canvas",
 				    "width": 3000,
 				    "height": 2000,
 				    "images": [
 					    {
-						    "on": "1/canvas/2",
+						    "on": "1/canvas/1",
 						    "motivation": "sc:painting",
 						    "@type": "oa:Annotation",
-						    "@id": "1/annotation/canvas/2",
+						    "@id": "1/annotation/canvas/1",
 						    "resource": {
 							    "width": 3000,
 							    "@id": "https://ids.lib.harvard.edu/ids/iiif/459003218/full/full/0/default.jpg",
@@ -194,7 +194,7 @@ class ViewsTestCase(TestCase):
 	@mock.patch("tms.views.get_manifest_data", fake_get_manifest_data)
 	def test_get_canvas(self):
 		self.assertEqual(
-			json.loads(get_canvas(0, 0).content),
+			json.loads(get_canvas(0, 0, 0).content),
 			MANIFEST['sequences'][0]['canvases'][0]
 			)
 			
@@ -214,8 +214,10 @@ class ViewsTestCase(TestCase):
 	
 	@mock.patch("tms.views.get_manifest_data", fake_get_multi_resource_manifest_data)		
 	def test_get_single_annotation(self):
+		# get the annotation by changing the canvas.
+		# there is only ever one image per canvas
 		self.assertEqual(
-		    json.loads(get_annotation(0, 0, 0).content),
-			MULTI_MANIFEST['sequences'][0]['canvases'][0]['images'][0]
+		    json.loads(get_annotation(0, 0, 1).content),
+			MULTI_MANIFEST['sequences'][0]['canvases'][1]['images'][0]
 		    )
 		

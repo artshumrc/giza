@@ -4,7 +4,7 @@ from django.conf import settings
 
 from tms import models
 import json
-import os
+
 
 def index(request):
 	return static_pages(request, 'index')
@@ -86,19 +86,20 @@ def get_sequence(request, id):
 		raise Http404("There was an error getting this manifest")
 	
 	
-def get_canvas(request, id):
+def get_canvas(request, id, canvas_index):
 	manifest = get_manifest_data(request, id)
 	if manifest:
-		return JsonResponse(manifest['sequences'][0]['canvases'][0])
+		return JsonResponse(manifest['sequences'][0]['canvases'][canvas_index])
 	else:
 		raise Http404("There was an error getting this manifest")
 	
 
-def get_annotation(request, id, image):
+def get_annotation(request, id, canvas_index):
 	manifest = get_manifest_data(request, id)
 	if manifest:
 		try:
-		    annotation = manifest['sequences'][0]['canvases'][0]['images'][image]
+			# so far, there is only one image in the image list
+		    annotation = manifest['sequences'][0]['canvases'][canvas_index]['images'][0]
 		    return JsonResponse(annotation)
 		except:
 			raise Http404("There was an error getting this manifest")
