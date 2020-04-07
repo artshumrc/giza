@@ -57,9 +57,12 @@ def get_manifest_data(request, id):
 		manifest = data['manifest']
 		manifest['@id'] = base_uri + manifest['@id']
 		manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
-		manifest['sequences'][0]['canvases'][0]['@id'] = base_uri + manifest['sequences'][0]['canvases'][0]['@id']
-		manifest['sequences'][0]['canvases'][0]['images'][0]['@id'] = base_uri + manifest['sequences'][0]['canvases'][0]['images'][0]['@id']
-		manifest['sequences'][0]['canvases'][0]['images'][0]['on'] = manifest['sequences'][0]['canvases'][0]['@id']
+		canvases = manifest['sequences'][0]['canvases']
+		for canvas in canvases:
+			canvas['@id'] = base_uri + canvas['@id']
+			for image in canvas['images']:
+				image['@id'] = base_uri + image['@id']
+				image['on'] = canvas['@id']	
 		return manifest
 	except:
 		return None
@@ -101,9 +104,3 @@ def get_annotation(request, id, image):
 			raise Http404("There was an error getting this manifest")
 	else:
 		raise Http404("There was an error getting this manifest")
-		
-
-# this view if for testing Giza's manifests in mirador, it will be removed	
-# def try_mirador(request, id):
-# 	data = get_manifest_data(request, id)
-# 	return render(request, 'tms/mirador.html', {'data': json.dumps(data)})

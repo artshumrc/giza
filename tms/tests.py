@@ -19,7 +19,7 @@ MANIFEST = {
 			"canvases": [
 				{
 					"@id": "459673218/canvas/1",
-					"label": "some label",
+					"label": "1",
 					"@type": "sc:Canvas",
 					"width": 2616,
 					"height": 1952,
@@ -62,16 +62,16 @@ MULTI_MANIFEST = {
 			"canvases": [
 				{
 					"@id": "1/canvas/1",
-					"label": "some label",
+					"label": "1",
 					"@type": "sc:Canvas",
-					"width": 3000,
-					"height": 2000,
+					"width": 2616,
+					"height": 1952,
 					"images": [
 						{
 							"on": "1/canvas/1",
 							"motivation": "sc:painting",
 							"@type": "oa:Annotation",
-							"@id": "1/annotation/canvas/0",
+							"@id": "1/annotation/canvas/1",
 							"resource": {
 								"width": 2616,
 								"@id": "https://ids.lib.harvard.edu/ids/iiif/459673218/full/full/0/default.jpg",
@@ -83,25 +83,34 @@ MULTI_MANIFEST = {
 									"profile": "http://iiif.io/api/image/2/level1.json"
 								}
 							}
-						},
-						{
-							"on": "1/canvas/1",
-							"motivation": "sc:painting",
-							"@type": "oa:Annotation",
-							"@id": "1/annotation/canvas/1",
-							"resource": {
-								"width": 3000,
-								"@id": "https://ids.lib.harvard.edu/ids/iiif/459003218/full/full/0/default.jpg",
-								"@type": "dctypes:Image",
-								"height": 2000,
-								"service": {
-								    "@context": "https://iiif.io/api/presentation/2/context.json",
-									"@id": "https://ids.lib.harvard.edu/ids/iiif/459003218",
-									"profile": "http://iiif.io/api/image/2/level1.json"
-								}
-							}
 						}
 					]    
+				},
+				{
+				    "@id": "1/canvas/2",
+				    "label": "2",
+				    "@type": "sc:Canvas",
+				    "width": 3000,
+				    "height": 2000,
+				    "images": [
+					    {
+						    "on": "1/canvas/2",
+						    "motivation": "sc:painting",
+						    "@type": "oa:Annotation",
+						    "@id": "1/annotation/canvas/2",
+						    "resource": {
+							    "width": 3000,
+							    "@id": "https://ids.lib.harvard.edu/ids/iiif/459003218/full/full/0/default.jpg",
+							    "@type": "dctypes:Image",
+							    "height": 2000,
+							    "service": {
+								    "@context": "https://iiif.io/api/presentation/2/context.json",
+								    "@id": "https://ids.lib.harvard.edu/ids/iiif/459003218",
+								    "profile": "http://iiif.io/api/image/2/level1.json"
+							    }
+						    }
+					    }
+					]
 				}
 			]
 		}
@@ -206,7 +215,7 @@ class ViewsTestCase(TestCase):
 	@mock.patch("tms.views.get_manifest_data", fake_get_multi_resource_manifest_data)		
 	def test_get_single_annotation(self):
 		self.assertEqual(
-		    json.loads(get_annotation(0, 0, 1).content),
-			MULTI_MANIFEST['sequences'][0]['canvases'][0]['images'][1]
+		    json.loads(get_annotation(0, 0, 0).content),
+			MULTI_MANIFEST['sequences'][0]['canvases'][0]['images'][0]
 		    )
 		

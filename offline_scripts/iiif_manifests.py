@@ -52,7 +52,7 @@ def process_sites_objects_related_manifests():
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 				ARCH_IDS[row[indices['drs_id']]] = resource
-			elif row[indices['site_id_index']] not in SITE_RELATIONS.keys():
+			if row[indices['site_id_index']] not in SITE_RELATIONS.keys():
 				SITE_RELATIONS[row[indices['site_id_index']]] = {
 					'description': row[indices['object_title_index']],
 					'label': row[indices['object_number_index']],
@@ -112,7 +112,7 @@ def process_sites_media_related_manifests():
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 				ARCH_IDS[row[indices['drs_id']]] = resource
-			elif row[indices['site_id_index']] not in SITE_RELATIONS.keys():
+			if row[indices['site_id_index']] not in SITE_RELATIONS.keys():
 				SITE_RELATIONS[row[indices['site_id_index']]] = {
 					'description': row[indices['description_index']],
 					'label': row[indices['media_view_index']],
@@ -167,7 +167,7 @@ def process_object_sites_related_manifests():
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 				ARCH_IDS[row[indices['drs_id']]] = resource
-			elif row[indices['site_id_index']] not in SITE_RELATIONS.keys():
+			if row[indices['site_id_index']] not in SITE_RELATIONS.keys():
 				SITE_RELATIONS[row[indices['site_id_index']]] = {
 					'description': row[indices['site_name_index']],
 					'label': row[indices['site_number_index']],
@@ -234,7 +234,7 @@ def compile_resources_by_site():
 			"manifest": generate_site_IIIF_manifest(k, v)
 		}
 		save(object)
-	print(f"Compile resources for {len(SITE_RELATIONS)} sites.")
+	print(f"Compiled resources for {len(SITE_RELATIONS)} sites.")
 				
 	
 def save(manifest):
