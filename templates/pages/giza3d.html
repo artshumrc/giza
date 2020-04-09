@@ -22,7 +22,7 @@ true
   <!-- BEGIN MAIN CONTENT ROWS -->
   <div class="row">
     <div class="large-12 columns">
-      <iframe src="//giza3d.archimedes.digital/?mode={{ request.GET.mode|default:'FreeExplore'}}{% if request.GET.guidedTourId %}&guidedTourId={{request.GET.guidedTourId}}{% endif %}" frameborder="0" class="gizaviewer"></iframe>
+      <iframe src="/static/build/index.html?mode={{ request.GET.mode|default:'FreeExplore'}}{% if request.GET.guidedTourId %}&guidedTourId={{request.GET.guidedTourId}}{% endif %}" frameborder="0" class="gizaviewer"></iframe>
       <p>Explore the model of the whole Giza Plateau; you will find links to other models inside. Or choose from individual tours below.</p>
     </div>
   </div>
@@ -49,6 +49,10 @@ true
         <div class="column">
           <a href="/giza3d/??mode=GuidedTour&guidedTourId=neZZCDSf5"><img src="https://iiif.orphe.us/My79GJodRu-PDM_06085.jpg/square/350,/0/default.jpg" alt=""></a>
           <p><a href="#">Sphinx Tour</a></p>
+        </div>
+        <div class="column">
+          <a href="/giza3d/??mode=GuidedTour&guidedTourId=nGQi15GpZ"><img src="https://iiif.orphe.us/jUYsa8-o9t-D1067_NS.jpg/square/350,/0/default.jpg" alt=""></a>
+          <p><a href="#">Great Sphinx Interactive Video</a></p>
         </div>
       </div>
     </section>
