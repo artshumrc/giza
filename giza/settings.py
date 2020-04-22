@@ -38,6 +38,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'search',
     'tms',
+    'giza',
     'utils',
 
     'django.contrib.admin',
@@ -101,6 +102,12 @@ SEARCH_BACKENDS = {
     }
 }
 
+# Custom User and auth settings
+# https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-LOGIN_URL
+LOGIN_URL = '/login'
+
+# custom user model registration
+AUTH_USER_MODEL = 'giza.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
