@@ -7,13 +7,18 @@
   <div class="collection-body flex-fluid">
     <div class="collection-text">
       <h3 class="collection-title heading-mixedcase">
-        <a href="/mygiza-collection/">
-          {{collection_title}}
+        <a href="/collections/{{collection.slug}}">
+          {{collection.title}}
         </a>
       </h3>
       <p class="text-smaller">
-        <strong class="collection-meta-count">{{collection_count}} items</strong><br>
-        <span class="collection-meta-creator">Created by {{collection_creator}}</span>
+        <strong class="collection-meta-count">{{collection.items|length}} items</strong><br>
+        {% for owner in collection.owners.all %}
+          <span class="collection-meta-creator">
+            Created by
+            {{owner.full_name}}
+          </span>
+        {% endfor %}
       </p>
     </div>
   </div>

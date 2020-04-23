@@ -1,9 +1,9 @@
 <div class="topic-blurb">
-  {% if topic_title %}
+  {% if lesson.title %}
   <div class="topic-blurb-header">
     <h3>
-      <a href="/{{topic_url}}">
-        {{topic_title}}
+      <a href="/lessons/{{lesson.slug}}">
+        {{lesson.title}}
       </a>
       {% if topic_anchor %}
       <a name="{{topic_anchor}}"></a>
@@ -17,3 +17,12 @@
       {% include 'partials/mygiza-collection-thumb.html' with images_1="topic-collection-images1" images_4="topic-collection-images4" images_9="topic-collection-images9" offset="topic-collection-offset" caption=False %}
     </div>
     <div class="topic-blurb-text">
+      <p>
+      {{lesson.content|truncatewords:24}}
+      </p>
+      <div class="topic-blurb-footer">
+        <a class="text-bold pointer-fwd" href="/{{topic_url}}">View topic</a>
+      </div>
+    </div>
+  </div>
+</div>

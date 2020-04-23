@@ -42,6 +42,11 @@
                 <a href="/mygiza/">My Giza</a>
                 <ul class="vertical menu">
                   <li><span class="menu-text-item"><i class="icon-user m-r-qt"></i>{{user.full_name}}</span></li>
+                  {% if user.is_superuser %}
+                    <li> 
+                      <a href="/admin/">Dashboard</a>
+                    </li>
+                  {% endif %}
                   <li><a href="/collections/">My Collections</a></li>
                   {% for collection in user_collections|slice:":5" %}
                     <li class="li-indented"><a href="/collections/collection-{{collection}}">Collection {{collection}}</a></li>

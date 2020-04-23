@@ -12,8 +12,10 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse, resolve
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
 
 from .forms import CustomUserCreationForm
+from .models import Collection, Lesson
 
 
 def user_login(request):
@@ -85,17 +87,31 @@ def mygiza(request):
     return render(request, 'pages/mygiza-landing.html')
 
 def collections(request):
-    context = {
-        'collections': [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    }
+    collections = Collection.objects.all()
 
-    return render(request, 'pages/mygiza-allcollections.html', context)
+    return render(request, 'pages/mygiza-allcollections.html', {
+        'collections': collections,
+    })
 
 def collection(request, slug):
-    collection = {}
+    collection = get_object_or_404(Collection, slug=slug)
 
-    context = {
+    return render(request, 'pages/mygiza-collection.html', {
         'collection': collection,
-    }
+    })
 
-    return render(request, 'pages/mygiza-collection.html', context)
+def lessons(request):
+    lessons = Lesson.objects.all()
+
+    return render(request, 'pages/lessons.html', {
+        'lessons': lessons,
+    })
+
+def lesson(request, slug):
+    lesson = get_object_or_404(Lesson, slug=slug)
+    lessons = Lesson.objects.all()
+
+    return render(request, 'pages/lesson.html', {
+        'lesson': lesson,
+        'lessons': lessons,
+    })

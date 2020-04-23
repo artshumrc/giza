@@ -15,7 +15,16 @@ class CustomUserAdmin(UserAdmin):
             (None, {'fields': ('full_name', 'bio', 'tagline', 'picture')}),
     )
 
+class CollectionAdmin(admin.ModelAdmin):
+    readonly_fields=('slug',)
+
+class LessonAdmin(admin.ModelAdmin):
+    readonly_fields=('slug',)
+
+class TopicAdmin(admin.ModelAdmin):
+    readonly_fields=('slug',)
+
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(Lesson)
-admin.site.register(Topic)
-admin.site.register(Collection)
+admin.site.register(Lesson, LessonAdmin)
+admin.site.register(Topic, TopicAdmin)
+admin.site.register(Collection, CollectionAdmin)

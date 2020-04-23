@@ -12,7 +12,7 @@
 {% block 'page_headers' %}
   {% include 'partials/page-header.html' with bg="9" %}
 
-  {% include 'partials/page-subheader.html' with backlink_url="/lessontopics/" backlink_text="Back to Lesson Topics" %}
+  {% include 'partials/page-subheader.html' with backlink_url="/lessons/" backlink_text="Back to Lesson Topics" %}
 {% endblock  %}
 
 {% block 'main_content' %}
@@ -21,44 +21,21 @@
     <section class="large-8 columns">
 
       <div class="m-b-2">
-        <p class="lead text-alt m-b-2">
-          Explore these artifacts and sites to discover what daily life was
-          like in Ancient Egypt, from breakfast to bedtime and more.
-        </p>
+        <h1>{{lesson.title}}</h1>
         <p>
-          These are more words that describe this topic in more detail. The words
-          include letters, spaces and punctuation. Also sometimes pretend Latin.
-          Maecenas faucibus mollis interdum. Integer posuere erat a ante venenatis
-          dapibus posuere velit aliquet. Aenean eu leo quam. Pellentesque ornare
-          sem lacinia quam venenatis vestibulum. Nulla vitae elit libero, a
-          pharetra augue.
-        </p>
-        <p>
-          Cum sociis natoque penatibus et magnis dis parturient montes, nascetur
-          ridiculus mus. Nullam quis risus eget urna mollis ornare vel eu leo.
-          Donec id elit non mi porta gravida at eget metus. Curabitur blandit
-          tempus porttitor. Cras justo odio, dapibus ac facilisis in, egestas
-          eget quam. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+          {{lesson.content}}
         </p>
       </div>
 
-      {% include 'partials/feature-block-start.html' with feature_title="MyGiza Collections" feature_block_class="collapsible" feature_icon="th" feature_counter="2" feature_anchor="collections" %}
-        {{> mygiza-collection-blurb
-          collection-title="Daily Life in Ancient Egypt: Morning"
-          collection-count="17"
-          collection-creator="Digital Giza Team"
-          topic-collection-images9=true
-          topic-collection-offset="3"
-        }}
-        {{> mygiza-collection-blurb
-          collection-title="Daily Life in Ancient Egypt: Evening"
-          collection-count="6"
-          collection-creator="Digital Giza Team"
-          topic-collection-images4=true
-          topic-collection-offset="12"
-        }}
+      {% include 'partials/feature-block-start.html' with feature_title="MyGiza Collections" feature_block_class="collapsible" feature_icon="th" feature_counter=lesson.collections|length feature_anchor="collections" %}
+
+        {% for collection in lesson.collections.all %}
+          {% include 'partials/mygiza-collection-blurb.html' %}
+        {% endfor %}
+
       {% include 'partials/feature-block-end.html' %}
 
+      <!--
       {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="collapsible" feature_icon="video-camera" feature_counter="5" feature_anchor="videos" %}
         <ul class="feature-block__list multicol-2 thumbsize-lg thumbs-square">
 
@@ -129,38 +106,37 @@
 
         </ul>
       {% include 'partials/feature-block-end.html' %}
+      -->
 
     </section>
 
     <aside class="large-4 columns">
 
+      <!--
       {% include 'partials/feature-block-start.html' with feature_title="3D Models" feature_block_class="secondary collapsible" feature_icon="pyramid-3d" feature_counter="1" feature_anchor="models" %}
         <ul class="feature-block__list thumbsize-full">
-        {% for x in 3d-models %}
+        {% for x in 3d_models %}
           <li>
             {% include 'partials/list-item-thumbcaption.html' %}
           </li>
         {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
+      -->
 
       {% include 'partials/feature-block-start.html' with feature_title="More Resources" feature_block_class="secondary collapsible" feature_icon="list" %}
         <div class="m-b-1">
           <p class="text-smaller text-muted">
-            <em>Clicking these links will open a new browser tab.</em>
+            <em>Explore these related lessons and topics.</em>
           </p>
         </div>
-        {% include 'partials/list-item-resourcelink-start.html' with resource_title="An External Link" resource_link="https://nilescribes.org/" %}
-          Some descriptive content about this link.
-        {% include 'partials/list-item-resourcelink-end.html' %}
 
-        {% include 'partials/list-item-resourcelink-start.html' with resource_title="Another External Link" resource_link="http://www.aeraweb.org/" %}
-          Some descriptive content about this link.
-        {% include 'partials/list-item-resourcelink-end.html' %}
+        {% for lesson in lessons %}
+          {% include 'partials/list-item-resourcelink-start.html' with resource_title=lesson.title resource_link=lesson.slug %}
+            {{lesson.content|truncatewords:14}}
+          {% include 'partials/list-item-resourcelink-end.html' %}
+        {% endfor %}
 
-        {% include 'partials/list-item-resourcelink-start.html' with resource_title="Yet One More External Link" resource_link="https://www.fitzmuseum.cam.ac.uk/er/" %}
-          Some descriptive content about this link.
-        {% include 'partials/list-item-resourcelink-end.html' %}
       {% include 'partials/feature-block-end.html' %}
 
     </aside>
