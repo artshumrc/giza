@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="topic-blurb">
   {% if lesson.title %}
   <div class="topic-blurb-header">
@@ -5,8 +7,8 @@
       <a href="/lessons/{{lesson.slug}}">
         {{lesson.title}}
       </a>
-      {% if topic_anchor %}
-      <a name="{{topic_anchor}}"></a>
+      {% if lesson.anchor %}
+        <a name="{{lesson.anchor}}"></a>
       {% endif %}
     </h3>
   </div>
@@ -14,14 +16,27 @@
   <div class="topic-blurb-body">
 
     <div class="topic-blurb-image">
+      <!--
       {% include 'partials/mygiza-collection-thumb.html' with images_1="topic-collection-images1" images_4="topic-collection-images4" images_9="topic-collection-images9" offset="topic-collection-offset" caption=False %}
+      -->
+      <div class="collection-thumb">
+        <div class="collection-thumb-grid grid-images-1">
+          <div class="grid-image">
+            {% if lesson.picture %}
+            <img src="{{lesson.picture}}">
+            {% else %}
+            <img src="{% static 'images/thumb-default.png' %}">
+            {% endif %}
+          </div>
+        </div>
+      </div>
     </div>
     <div class="topic-blurb-text">
       <p>
       {{lesson.content|truncatewords:24}}
       </p>
       <div class="topic-blurb-footer">
-        <a class="text-bold pointer-fwd" href="/{{topic_url}}">View topic</a>
+        <a class="text-bold pointer-fwd" href="/lessons/{{lesson.slug}}">View topic</a>
       </div>
     </div>
   </div>

@@ -1,8 +1,8 @@
 <div class="media-object list-item list-item-resourcelink">
-  {% if resource_title %}
+  {% if resource.title %}
   <h4 class="text-medium">
-    <a {% if not internal %} target="_blank" {% endif %} href="{% if internal %}/{% endif %}{{resource_url}}">
-      {{resource_title}}
+    <a {% if not internal %} target="_blank" {% endif %} href="{% if internal %}/{% endif %}{{resource_url}}/{{resource.slug}}">
+      {{resource.title}}
     </a>
   </h4>
   {% endif %}

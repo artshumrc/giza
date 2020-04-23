@@ -132,7 +132,7 @@
         </div>
 
         {% for lesson in lessons %}
-          {% include 'partials/list-item-resourcelink-start.html' with resource_title=lesson.title resource_link=lesson.slug %}
+          {% include 'partials/list-item-resourcelink-start.html' with resource=lesson resource_url='lessons' internal=True %}
             {{lesson.content|truncatewords:14}}
           {% include 'partials/list-item-resourcelink-end.html' %}
         {% endfor %}
