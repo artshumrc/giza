@@ -22,8 +22,8 @@
       {% endif %}
       <form id="login_form" method="post" action="{% url 'login' %}?redirect_to={{redirect_to}}" enctype="multipart/form-data">
         {% csrf_token %}
-        <label>Email
-          <input placeholder="meresankh@giza.edu" type="text" name="username" value="" size="50"/>
+        <label>Username
+          <input placeholder="Username" type="text" name="username" value="" size="50"/>
         </label>
         <label>Password
           <input placeholder="Password" type="password" name="password" value="" size="50"/>

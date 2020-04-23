@@ -77,8 +77,8 @@
     <form class="new_form" id="login_form" method="post" action="{% url 'login' %}?redirect_to=/" enctype="multipart/form-data">
       {% csrf_token %}
       <span class="info">All * items are required.</span>
-      <label>Email*
-        <input placeholder="meresankh@giza.edu" type="text" name="email" value="" size="50"/>
+      <label>Username*
+        <input placeholder="Username" type="text" name="username" value="" size="50"/>
       </label>
       <label>Password*
         <input placeholder="Password" type="password" name="password" value="" size="50"/>
