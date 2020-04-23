@@ -80,3 +80,22 @@ def sign_up(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
+
+def mygiza(request):
+    return render(request, 'pages/mygiza-landing.html')
+
+def collections(request):
+    context = {
+        'collections': [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    }
+
+    return render(request, 'pages/mygiza-allcollections.html', context)
+
+def collection(request, slug):
+    collection = {}
+
+    context = {
+        'collection': collection,
+    }
+
+    return render(request, 'pages/mygiza-collection.html', context)

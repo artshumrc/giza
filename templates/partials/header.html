@@ -39,30 +39,24 @@
               </li>
               <li {% if section_mygiza %} class="active" {% endif %}>
                 {% if user.is_authenticated %}
-                <a href="/mygiza-collection/">My Giza</a>
+                <a href="/mygiza/">My Giza</a>
                 <ul class="vertical menu">
-                  <li><span class="menu-text-item"><i class="icon-user m-r-qt"></i> Stephanie Daedelus</span></li>
-                  <li><a href="/mygiza-collection/">My Collections</a></li>
-                  <li class="li-indented"><a href="#">cool tombs, bro</a></li>
-                  <li class="li-indented"><a href="#">Stephanie's favorite artifacts, part 1</a></li>
-                  <li class="li-indented"><a href="#">Senior Thesis - March 2019</a></li>
-                  <li class="li-indented"><a href="#"><em>View all</em></a></li>
-                  </li>
-                  <!--li><a href="/mygiza-saved-searches/">My Saved Searches</a></li-->
-                  <li class="li-indented"><a href="#">Khafre photos</a></li>
-                  <li class="li-indented"><a href="#">documents and stuff</a></li>
-                  <li class="li-indented"><a href="#">Alabaster artifacts found near the Sphinx by Reisner expedition</a></li>
-                  <li class="li-indented"><a href="#"><em>View all</em></a></li>
-                  <li><a href="/mygiza-collection/">Browse Collections</a></li>
+                  <li><span class="menu-text-item"><i class="icon-user m-r-qt"></i>{{user.full_name}}</span></li>
+                  <li><a href="/collections/">My Collections</a></li>
+                  {% for collection in user_collections|slice:":5" %}
+                    <li class="li-indented"><a href="/collections/collection-{{collection}}">Collection {{collection}}</a></li>
+                  {% endfor %}
+                  <li class="li-indented"><a href="/collections/"><em>View all</em></a></li>
+                  <li><a href="/collections/">Browse Collections</a></li>
                   <li><a href="/logout">Log Out</a></li>
                 </ul>
                 {% else %}
-                <a href="/mygiza-landing/">My Giza</a>
+                <a href="/mygiza/">My Giza</a>
                 <ul class="vertical menu">
                   <li><span class="menu-text-item"><em>You are not logged in.</em></span></li>
                   <li><a class="signup-toggle" data-open="login_new">Log In</a></li>
                   <li><a class="login-toggle" href="/sign-up">Create a MyGiza account</a></li>
-                  <li><a href="/mygiza-collection/">Browse Collections</a></li>
+                  <li><a href="/collections/">Browse Collections</a></li>
                 </ul>
                 {% endif %}
               </li>

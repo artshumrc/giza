@@ -75,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',
+                'giza.context_processors.user_collections',
             ],
         },
     },
@@ -113,7 +114,7 @@ AUTH_USER_MODEL = 'giza.CustomUser'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 # NOTE: password validation is deactived for testing during development, readd when
-# ready for production 
+# ready for production
 """
 
 AUTH_PASSWORD_VALIDATORS = [
