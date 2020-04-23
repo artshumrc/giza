@@ -93,12 +93,29 @@ def collections(request):
         'collections': collections,
     })
 
+def collections_user(request):
+    collections = []
+    if request.user:
+        collections = Collection.objects.filter(owners=request.user.id)
+
+    return render(request, 'pages/mygiza-allcollections.html', {
+        'collections': collections,
+    })
+
 def collection(request, slug):
     collection = get_object_or_404(Collection, slug=slug)
 
     return render(request, 'pages/mygiza-collection.html', {
         'collection': collection,
     })
+
+def collections_create(request):
+
+    return render(request, 'pages/mygiza-collection-edit.html')
+
+def collections_edit(request):
+
+    return render(request, 'pages/mygiza-collection-edit.html')
 
 def lessons(request):
     lessons = Lesson.objects.all()

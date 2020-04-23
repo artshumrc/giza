@@ -1,5 +1,11 @@
+from .models import Collection
+
 def user_collections(request):
-    collections = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    collections = []
+
+    if request.user:
+        collections = Collection.objects.filter(owners=request.user.id) 
+
     return {
             'user_collections': collections
         }

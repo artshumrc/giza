@@ -34,7 +34,10 @@ urlpatterns = [
 
     url(r'^lessons/(?P<slug>[\w-]+)$', views.lesson, name="lesson"),
     url(r'^lessons/$', views.lessons, name="lessons"),
+    url(r'^collections/user$', views.collections_user, name="collections_user"),
+    url(r'^collections/create$', views.collections_create, name="collections_create"),
     url(r'^collections/(?P<slug>[\w-]+)$', views.collection, name="collection"),
+    url(r'^collections/(?P<slug>[\w-]+)/edit$', views.collection, name="collection_edit"),
     url(r'^collections/$', views.collections, name="collections"),
     url(r'^mygiza/$', views.mygiza, name="mygiza"),
 
