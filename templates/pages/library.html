@@ -22,50 +22,32 @@
 
           <div>
             <label><h6 class="heading-em">Sort by:</h6>
-              <select>
-                <option value="Author">Author</option>
-                <option value="Author">Publisher</option>
-                <option value="Author">Year Published</option>
+              <select onchange="goToPage({% url 'library' %}+'?sort='+this.value);">
+                <option {% if sort == 'name'%}selected{% endif %} value="name">Author</option>
+                <option {% if sort == 'format'%}selected{% endif %} value="format">Format</option>
+                <!-- <option {% if sort == 'title'%}selected{% endif %} value="title">Title</option> -->
+                <option {% if sort == 'yearpublished'%}selected{% endif %} value="yearpublished">Year Published</option>
               </select>
             </label>
           </div>
 
+          {% if sort == 'name' %}
           <h6 class="heading-em">Jump to:</h6>
           <ul class="menu menu-pagination">
-            <li><a href="#alpha-a">A</a></li>
-            <li><a href="#alpha-b">B</a></li>
-            <li><a href="#alpha-c">C</a></li>
-            <li><a href="#alpha-d">D</a></li>
-            <li><a href="#alpha-e">E</a></li>
-            <li><a href="#alpha-f">F</a></li>
-            <li><a href="#alpha-g">G</a></li>
-            <li><a href="#alpha-h">H</a></li>
-            <li><a href="#alpha-i">I</a></li>
-            <li><a href="#alpha-j">J</a></li>
-            <li><a href="#alpha-k">K</a></li>
-            <li><a href="#alpha-l">L</a></li>
-            <li><a href="#alpha-m">M</a></li>
-            <li><a href="#alpha-n">N</a></li>
-            <li><a href="#alpha-o">O</a></li>
-            <li><a href="#alpha-p">P</a></li>
-            <li><a href="#alpha-q">Q</a></li>
-            <li><a href="#alpha-r">R</a></li>
-            <li><a href="#alpha-s">S</a></li>
-            <li><a href="#alpha-t">T</a></li>
-            <li><a href="#alpha-u">U</a></li>
-            <li><a href="#alpha-v">V</a></li>
-            <li><a href="#alpha-w">W</a></li>
-            <li><a href="#alpha-x">X</a></li>
-            <li><a href="#alpha-y">Y</a></li>
-            <li><a href="#alpha-z">Z</a></li>
+            {% for result in results %}
+              {% for letter in result.keys %}
+              <li><a href="#alpha-{{letter}}">{{letter|upper}}</a></li>
+              {% endfor %}
+            {% endfor %}
           </ul>
+          {% endif %}
         </div>
 
         <div class="feature-block secondary">
           <h5><span class="icon-info-circle icon-padded"></span> Contributions</h5>
 
           <p class="text-smaller">
-            In an effort to provide a comprehensive online library for the Digital Giza Project, authors are encouraged to <a href="#0">contact the Giza Archives Project staff</a> if they have Giza-related publications already converted to electronic form (PDF) that they would like to post here.
+            In an effort to provide a comprehensive online library for the Digital Giza Project, authors are encouraged to <a href="{% url 'about' 'contact' %}">contact the Giza Archives Project staff</a> if they have Giza-related publications already converted to electronic form (PDF) that they would like to post here.
           </p>
 
       </div>
@@ -77,200 +59,35 @@
         A complete list of downloadable (PDF) Giza publications.
       </p>
 
-      <h3 id="alpha-a">A</h3>
+      {% for result in results %}
+        {% for letter, sources in result.items %}
+          <h3 id="alpha-{{letter}}">{{letter|upper}}</h3>
+          {% for source in sources %}
+            <h6 class="heading-alt">{{ source.name }}</h6>
 
-      <h6 class="heading-alt">Abou-Ghazi, Dia'</h6>
-
-      <ul class="no-bullet">
-        <li>
-          <div class="library-item">
-            <div class="row">
-              <div class="library-item__primary medium-9 columns">
-                <a href="#0">
-                  Abou-Ghazi, Dia', “Selim Hassan. His Writings and Excavations.” <em>Annales du Service des Antiquités de l'Egypte 58</em> (1964), pp. 61–84.
-                </a>
-              </div>
-              <div class="library-item__secondary medium-3 columns">
-                <span class="library-item__format">Book</span>
-                <span class="library-item__filesize">6.5 MB</span>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-
-      <h6 class="heading-alt">Abu Bakr, Abdel Moneim</h6>
-
-      <ul class="no-bullet">
-        <li>
-          <div class="library-item">
-            <div class="row">
-              <div class="library-item__primary medium-9 columns">
-                <a href="#0">
-                  Abu Bakr, Abdel Moneim. Excavations at Giza 1949-1950. Cairo:Government Press, 1953.
-                </a>
-              </div>
-              <div class="library-item__secondary medium-3 columns">
-                <span class="library-item__format">Book</span>
-                <span class="library-item__filesize">6.5 MB</span>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-
-      <h6 class="heading-alt">Alexanian, Nicole</h6>
-
-      <ul class="no-bullet">
-        <li>
-          <div class="library-item">
-            <div class="row">
-              <div class="library-item__primary medium-9 columns">
-                <a href="#0">
-                  Alexanian, Nicole. “Tomb and social status. The textual evidence.” In <em>The Old Kingdom Art and Archaeology. Proceedings of the Conference held in Prague</em>, May 31–June 4, 2004, pp. 1–8. Edited by Miroslav Bárta. Prague: Czech Institute of Egyptology, 2006.
-                </a>
-              </div>
-              <div class="library-item__secondary medium-3 columns">
-                <span class="library-item__format">Article</span>
-                <span class="library-item__filesize">1.9 MB</span>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-
-      <h6 class="heading-alt">Altenmüller, Hartwig</h6>
-
-      <ul class="no-bullet">
-        <li>
-          <div class="library-item">
-            <div class="row">
-              <div class="library-item__primary medium-9 columns">
-                <a href="#0">
-                  Altenmüller, Hartwig. “Funerary Boats and Boat Pits of the Old Kingdom.” <em>Abusir and Saqqara in the Year 2001. Proceedings of the Symposium (Prague, September 25th–27th, 2001). Archiv Orientální</em> 70 (2002), no. 3, pp. 269–290. Edited by Filip Coppens. Prague: Czech National Centre of Egyptology, 2002.
-                </a>
-              </div>
-              <div class="library-item__secondary medium-3 columns">
-                <span class="library-item__format">Book</span>
-                <span class="library-item__filesize">4.3 MB</span>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="library-item">
-            <div class="row">
-              <div class="library-item__primary medium-9 columns">
-                <a href="#0">
-                  Altenmüller, Hartwig. “Presenting the nDt-Hr offerings to the tomb owner.” In <em>The Old Kingdom Art and Archaeology. Proceedings of the Conference held in Prague, May 31–June 4, 2004</em>, pp. 25–35. Edited by Miroslav Bárta. Prague: Czech Institute of Egyptology, 2006.
-                </a>
-              </div>
-              <div class="library-item__secondary medium-3 columns">
-                <span class="library-item__format">Article</span>
-                <span class="library-item__filesize">5.4 MB</span>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="library-item">
-            <div class="row">
-              <div class="library-item__primary medium-9 columns">
-                <a href="#0">
-                  Altenmüller, Hartwig. “Väter, Brüder und Götter—Bemerkungen zur Szene der Übergabe der Lotosblüte.” In <em>“Zur Zierde gereicht...” Festschrift Bettina Schmitz zum 60. Geburtstag am 24. Juli 2008</em>, pp. 17–28. Hildesheimer Ägyptologische Beiträge 50. Edited by Antje Spiekermann. Hildesheim: Verlag Gebrüder Gerstenberg, 2008.
-                </a>
-              </div>
-              <div class="library-item__secondary medium-3 columns">
-                <span class="library-item__format">Catalogue</span>
-                <span class="library-item__filesize">7.7 MB</span>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-
-
-
-      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-
-      <h3 id="alpha-b">B</h3>
-
-      <h6 class="heading-alt">Badawy, Alexander</h6>
-
-      <ul class="no-bullet">
-        <li>
-          <div class="library-item">
-            <div class="row">
-              <div class="library-item__primary medium-9 columns">
-                <a href="#0">
-                  Badawy, Alexander M. “The Periodic System of Building a Pyramid.” <em>Journal of Egyptian Archaeology</em> 63 (1977), pp. 52–58.
-                </a>
-              </div>
-              <div class="library-item__secondary medium-3 columns">
-                <span class="library-item__format">Article</span>
-                <span class="library-item__filesize">1.1 MB</span>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-
-
-
-      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-
-      <h3 id="alpha-c">C</h3>
-
-      <h6 class="heading-alt">Callender, Vivienne Gae</h6>
-
-      <ul class="no-bullet">
-        <li>
-          <div class="library-item">
-            <div class="row">
-              <div class="library-item__primary medium-9 columns">
-                <a href="#0">
-                  Callender, Vivienne G. “A Contribution to the Burial of Women in the Old Kingdom.” In <em>Abusir and Saqqara in the Year 2001, Proceedings of the Symposium, Prague, September 25th–27th, 2001</em>, pp. 337–350. Edited by Filip Coppens. <em>Archiv Orientální</em> 70, no. 3 (August, 2002).
-                </a>
-              </div>
-              <div class="library-item__secondary medium-3 columns">
-                <span class="library-item__format">Book</span>
-                <span class="library-item__filesize">6.8 MB</span>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="library-item">
-            <div class="row">
-              <div class="library-item__primary medium-9 columns">
-                <a href="#0">
-                  Callender, Vivienne G. “The iconography of the princess in the Old Kingdom.” In The Old Kingdom Art and Archaeology. Proceedings of the Conference held in Prague, May 31–June 4, 2004, pp. 119–126. Edited by Miroslav Bárta. Prague: Czech Institute of Egyptology, 2006.
-                </a>
-              </div>
-              <div class="library-item__secondary medium-3 columns">
-                <span class="library-item__format">Article</span>
-                <span class="library-item__filesize">1.6 MB</span>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="library-item">
-            <div class="row">
-              <div class="library-item__primary medium-9 columns">
-                <a href="#0">
-                  Callender, Vivienne G. and Peter Jánosi. “The Tomb of Queen Khamerernebty II at Giza.” <em>Mitteilungen des Deutschen Archäologischen Instituts Abteilung Kairo</em> 53 (1997), pp. 1–22.
-                </a>
-              </div>
-              <div class="library-item__secondary medium-3 columns">
-                <span class="library-item__format">Catalogue</span>
-                <span class="library-item__filesize">12.5 MB</span>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-
+            <ul class="no-bullet">
+              {% for doc in source.docs %}
+              <li>
+                <div class="library-item">
+                  <div class="row">
+                    <div class="library-item__primary medium-9 columns">
+                      {% if doc.url %}<a href="{{doc.url}}">{% endif %}
+                        {{ doc.displaytext|safe }}
+                      {% if doc.url %}</a>{% endif %}
+                    </div>
+                    <div class="library-item__secondary medium-3 columns">
+                      <span class="library-item__format">{{ doc.format }}</span>
+                      <span class="library-item__filesize"></span>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          {% endfor %}
+          <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+        {% endfor %}
+      {% endfor %}
 
 
       <p><a class="back-to-top-link" href="#top">Back to top</a></p>

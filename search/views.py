@@ -16,7 +16,6 @@ def search_legacy(request):
 
 # get all pubdocs with pdfs for Digital Giza Library
 def library(request):
-	"""
 	sort = request.GET.get('sort', 'name')
 	if sort == 'name':
 		results = es.search(index=ES_INDEX, doc_type='library', body={
@@ -83,10 +82,10 @@ def library(request):
 					})
 			if len(docs) > 0:
 				hits.append(sort_docs)
-	"""
+
 	return render(request, 'pages/library.html', {
-		'results' : [], # hits,
-		'sort' : '', # sort
+		'results' : hits,
+		'sort' : sort
 	})
 
 # get all pubdocs with pdfs for Digital Giza Library
