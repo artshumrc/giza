@@ -1,5 +1,6 @@
 {% extends 'layouts/default.html' %}
 {% load static %}
+{% load search_tags %}
 {% set
   title: "Search the Archives",
   section: "search",
@@ -20,7 +21,7 @@
 
       <div class="row">
         <div class="medium-6 columns">
-          <h3 class="heading-alt m-t-half m-b-1">6 search results found.</h3>
+          <h3 class="heading-alt m-t-half m-b-1">{{ total }} search result{{ total|pluralize }} found.</h3>
         </div>
         <div class="medium-6 columns text-right">
           <label for="sortResults" class="d-inline-block middle m-r-qt">Sort by:</label>
@@ -34,53 +35,63 @@
             </select>
           </div>
           <ul class="d-inline-block view-switcher p-y-qt m-l-1 hide-for-small-only">
-            <li><a href="#" class="switcher"><i class="fa fa-fw fa-align-justify"></i><span class="sr-only">List</span></a></li>
+            <!--li><a href="#" class="switcher"><i class="fa fa-fw fa-align-justify"></i><span class="sr-only">List</span></a></li-->
             <li><a href="#" class="switcher"><i class="fa fa-fw fa-th-large"></i><span class="sr-only">Grid</span></a></li>
           </ul>
         </div>
       </div>
 
       <div class="row">
-        <div class="large-6 large-push-6 columns text-lg-right">
+        <!--div class="large-6 large-push-6 columns text-lg-right">
           <a href="">
             <strong>Save this search</strong>
           </a>
-        </div>
-        <div class="large-6 large-pull-6 columns">
-          <nav aria-label="Pagination">
-            <ul class="pagination m-l-neghalf">
-              <li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></li>
-              <li class="current"><span class="show-for-sr">You're on page</span> 1</li>
-              <li><a href="#" aria-label="Page 2">2</a></li>
-              <li><a href="#" aria-label="Page 3">3</a></li>
-              <li class="ellipsis" aria-hidden="true"></li>
-              <li><a href="#" aria-label="Page 144">144</a></li>
-              <li class="pagination-next"><a href="#" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li>
-            </ul>
-          </nav>
-        </div>
+        </div-->
+        {% if total > 0 %}
+          <div class="large-6 large-pull-6 columns">
+            <nav aria-label="Pagination">
+              <ul class="pagination m-l-neghalf">
+                <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' '' previous_page_number %}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
+
+                {% for i in num_pages_range %}
+                  {% if i == 'ellipsis' %}
+                    <li class="ellipsis"></li>
+                  {% else %}
+                    <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' '' i %}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
+                  {% endif %}
+                {% endfor %}
+                <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' '' next_page_number %}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
+              </ul>
+            </nav>
+          </div>
+        {% endif %}
       </div>
 
       <div class="media-object-holder">
-        {% for x in search_results %}
+        {% for result in hits %}
           {% include 'partials/search-result.html' %}
         {% endfor %}
       </div>
 
       <div class="row">
-        <div class="columns p-t-1">
-          <nav aria-label="Pagination">
-            <ul class="pagination m-l-neghalf">
-              <li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></li>
-              <li class="current"><span class="show-for-sr">You're on page</span> 1</li>
-              <li><a href="#" aria-label="Page 2">2</a></li>
-              <li><a href="#" aria-label="Page 3">3</a></li>
-              <li class="ellipsis" aria-hidden="true"></li>
-              <li><a href="#" aria-label="Page 144">144</a></li>
-              <li class="pagination-next"><a href="#" aria-label="Next page">Next <span class="show-for-sr">page</span></a></li>
-            </ul>
-          </nav>
-        </div>
+        {% if total > 0 %}
+          <div class=" columns p-t-1">
+            <nav aria-label="Pagination">
+              <ul class="pagination m-l-neghalf">
+                <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' '' previous_page_number %}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>
+
+                {% for i in num_pages_range %}
+                  {% if i == 'ellipsis' %}
+                    <li class="ellipsis"></li>
+                  {% else %}
+                    <li {% if i == current_page %}class="current"{% endif %}>{% if i == current_page %}<span class="show-for-sr">You're on page</span> {{i}}{% else %}<a href="{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' '' i %}" aria-label="Page {{i}}">{{i}}</a>{% endif %}</li>
+                  {% endif %}
+                {% endfor %}
+                <li class="pagination-next {% if not has_next%}disabled{% endif %}">{% if has_next%}<a href="{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' '' next_page_number %}" aria-label="Next page">Next</a>{% else %}Next{% endif %}</li>
+              </ul>
+            </nav>
+          </div>
+        {% endif %}
       </div>
 
     </section>
@@ -89,89 +100,71 @@
       <div class="feature-block secondary text-smaller">
         <h5 class="heading-alt">Search Options</h5>
         <p>
-          <a href="">Save this search</a><br>
+          <!--a href="">Save this search</a--><br>
           <a href="/search/">Start a new search</a>
         </p>
+        {% if search_params %}
         <div class="search-facet-section">
-          <h6 class="search-facet-title">Keyword:</h6>
-          <ul class="search-facet-list">
-            <li class="search-facet-item is-active">
-              <a href="#0">khafre</a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="search-facet-section">
-          <fieldset>
-            <legend class="search-facet-title">Category:</legend>
+          {% for param in search_params %}
+            <h6 class="search-facet-title">{{ param.1 }}:</h6>
             <ul class="search-facet-list">
-              <li class="search-facet-item">
-                <input type="radio" name="Category" value="Objects" id="categoryObjects" required checked><label for="categoryObjects">Objects</label>
-              </li>
-              <li class="search-facet-item">
-                <input type="radio" name="Category" value="Videos" id="categoryVideos"><label for="categoryVideos">Videos</label>
-              </li>
-              <li class="search-facet-item">
-                <input type="radio" name="Category" value="Excavation Diaries" id="categoryExcavationDiaries"><label for="categoryExcavationDiaries">Excavation Diaries</label>
+              <li class="is-active">
+                {{ param.2 }}
               </li>
             </ul>
-          </fieldset>
+          {% endfor %}
         </div>
+        {% endif %}
 
-        <div class="search-facet-section">
-          <fieldset>
-            <legend class="search-facet-title">Material:</legend>
+        {% if total > 0 %}
+          <div class="search-facet-section">
+            <h6 class="search-facet-title">Category:</h6>
             <ul class="search-facet-list">
-              <li class="search-facet-item">
-                <input type="checkbox" name="Material" value="limestone" id="materialLimestone" checked><label for="materialLimestone">limestone</label>
-              </li>
-              <li class="search-facet-item">
-                <input type="checkbox" name="Material" value="alabaster" id="materialAlabaster"><label for="materialAlabaster">alabaster</label>
-              </li>
-              <li class="search-facet-item">
-                <input type="checkbox" name="Material" value="bronze" id="materialBronze"><label for="materialBronze">bronze</label>
-              </li>
+              <!-- Display category facets -->
+              {% for type, value in all_categories.items %}
+                {% for type_facet in value %}
+                {% if type_facet.key == current_category %}
+                  <li class="search-facet-item is-active"><a href="{% url 'results' %}?{% build_search_params search_params '' current_subfacets '' '' page %}">{% with facet=all_categories.types|array_value:current_category %}{{ facet.display_text }} ({{ facet.doc_count }}){% endwith %}</a></li>
+                {% else %}
+                    <li class="search-facet-item"><a href="{% url 'results' %}?{% build_search_params search_params type_facet.key current_subfacets '' '' page %}">{{ type_facet.display_text }} ({{ type_facet.doc_count}})</a></li>
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
             </ul>
-          </fieldset>
-        </div>
+          </div>
+        {% endif %}
 
-        <div class="search-facet-section">
-          <fieldset>
-            <legend class="search-facet-title">Year:</legend>
-            <ul class="search-facet-list">
-              <li class="search-facet-item">
-                <input type="checkbox" name="Year" value="1924" id="year1924"><label for="year1924">1924</label>
-              </li>
-              <li class="search-facet-item">
-                <input type="checkbox" name="Year" value="alabaster" id="year1925"><label for="year1925">1925</label>
-              </li>
-              <li class="search-facet-item">
-                <input type="checkbox" name="Year" value="bronze" id="year1926"><label for="year1926">1926</label>
-              </li>
-            </ul>
-          </fieldset>
-        </div>
-
-        <div class="search-facet-section">
-          <fieldset>
-            <legend class="search-facet-title">Findspot:</legend>
-            <ul class="search-facet-list">
-              <li class="search-facet-item">
-                <input type="checkbox" name="Findspot" value="G 2104" id="findspotG2104"><label for="findspotG2104">G 2104</label>
-              </li>
-              <li class="search-facet-item">
-                <input type="checkbox" name="Findspot" value="G 2109" id="findspotG2109"><label for="findspotG2109">G 2109</label>
-              </li>
-              <li class="search-facet-item">
-                <input type="checkbox" name="Findspot" value="G 2110" id="findspotG2110"><label for="findspotG2110">G 2110</label>
-              </li>
-              <li class="search-facet-item">
-                <input type="checkbox" name="Findspot" value="G 2111" id="findspotG2111"><label for="findspotG2111">G 2111</label>
-              </li>
-            </ul>
-          </fieldset>
-        </div>
-
+        <!-- Display facets when a category is selected -->
+        {% for cat_name, cat_facets in sub_facets.items %}
+          {% for facet_type in cat_facets %}
+            {% for facet_title, facet_values in facet_type.items %}
+              {% if facet_values %}
+                <div class="search-facet-section">
+                  <fieldset>
+                    <legend class="search-facet-title">{{facet_title}}:</legend>
+                    <ul class="search-facet-list">
+                      {% for f in facet_values %}
+                        {% if f.display_text %} <!-- in case a facet value is an empty string -->
+                          {% with sf_combined=cat_name|add:'_'|add:facet_title|add:'_'|add:f.display_text %}
+                           {% if sf_combined in subfacet_strings %}
+                           <li class="search-facet-item is-active">
+                             <input type="checkbox" id="{{facet_title}}_{{f.display_text}}" checked onclick="goToPage('{% url 'results' %}?{% build_search_params search_params current_category current_subfacets sf_combined '' page %}');"><label for="{{facet_title}}_{{f.display_text}}">{{f.display_text}} ({{f.doc_count}})</label>
+                           </li>
+                           {% else %}
+                            <li class="search-facet-item">
+                              <input type="checkbox" id="{{facet_title}}_{{f.display_text}}" onclick="goToPage('{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' sf_combined page %}');"><label for="{{facet_title}}_{{f.display_text}}">{{f.display_text}} ({{f.doc_count}})</label>
+                            </li>
+                            {% endif %}
+                          {% endwith %}
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  </fieldset>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        {% endfor %}
       </div>
 
     </aside>

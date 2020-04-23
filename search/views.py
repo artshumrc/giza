@@ -163,7 +163,6 @@ def library_legacy(request):
 
 # get virtual Giza tour videos
 def videos(request):
-	"""
 	results = es.search(index=ES_INDEX, doc_type='videos', body={
 		"size": 500,
 		"query": {
@@ -176,9 +175,8 @@ def videos(request):
 	hits = []
 	for r in results:
 		hits.append(r['_source'])
-	"""
 	return render(request, 'pages/videos.html', {
-		'results' : [], # hits
+		'results' : hits
 	})
 
 # get virtual Giza tour videos
@@ -200,7 +198,6 @@ def videos_legacy(request):
 	})
 
 def results(request):
-	"""
 	search_term = request.GET.get('q', '')
 	sort = request.GET.get('sort', '_score')
 	current_category = request.GET.get('category', '')
@@ -373,8 +370,6 @@ def results(request):
 		'current_page' : str(page),
 		'current_category' : current_category
 	})
-	"""
-	return render(request, 'pages/searchresults.html', {'search_results': [1, 2, 3, 4, 5, 6]})
 
 def results_legacy(request):
 	search_term = request.GET.get('q', '')

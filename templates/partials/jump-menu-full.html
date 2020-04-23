@@ -1,205 +1,120 @@
-<h5 class="heading-em">MyGiza:</h5>
+<!--h5 class="heading-em">MyGiza:</h5>
 
 <p>
   <a data-open="add_collection">
-    <span class="icon-plus-circle icon-fw"></span> Add this to a collection 
+    <span class="icon-plus-circle icon-fw"></span> Add this to a collection
   </a>
-</p>
+</p-->
 
 <h5 class="heading-em">Jump to:</h5>
 
 <ul class="vertical menu show-for-small-only">
-  <li>
-    <a href="#details">
-      <span class="icon-info-circle icon-fw"></span> Details
-    </a>
-  </li>
-  <li>
-    <a href="#objects">
-      <span class="icon-vase icon-fw"></span> Finds 
-      <span class="badge">1</span>
-    </a>
-  </li>
-  <li>
-    <a href="#diary">
-      <span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages 
-      <span class="badge">6</span>
-    </a>
-  </li>
-  <li>
-    <a href="#maps">
-      <span class="icon-map-o icon-fw"></span> Maps &amp; Plans 
-      <span class="badge">5</span>
-    </a>
-  </li>
-  <li>
-    <a href="#drawings">
-      <span class="icon-pencil-square-o icon-fw"></span> Drawings 
-      <span class="badge">9</span>
-    </a>
-  </li>
-  <li>
-    <a href="#published">
-      <span class="icon-book icon-fw"></span> Published Documents 
-      <span class="badge">12</span>
-    </a>
-  </li>
-  <li>
-    <a href="#unpublished">
-      <span class="icon-file-text-o icon-fw"></span> Unpublished Documents 
-      <span class="badge">4</span>
-    </a>
-  </li>
-  <li>
-    <a href="#biblio">
-      <span class="icon-info-circle icon-fw"></span> Full Bibliography 
-      <span class="badge">48</span>
-    </a>
-  </li>
-  <li>
-    <a href="#photos">
-      <span class="icon-camera icon-fw"></span> Photos 
-      <span class="badge">248</span>
-    </a>
-  </li>
-  <li>
-    <a href="#models">
-      <span class="icon-pyramid-3d icon-fw"></span> 3D Models 
-      <span class="badge">1</span>
-    </a>
-  </li>
-  <li>
-    <a href="#videos">
-      <span class="icon-video-camera icon-fw"></span> Videos 
-      <span class="badge">3</span>
-    </a>
-  </li>
-  <li>
-    <a href="#audio">
-      <span class="icon-volume-up icon-fw"></span> Audio 
-      <span class="badge">2</span>
-    </a>
-  </li>
-  <li>
-    <a href="#people">
-      <span class="icon-user icon-fw"></span> People 
-      <span class="badge">4</span>
-    </a>
-  </li>
-  <li>
-    <a href="#institutions">
-      <span class="icon-university icon-fw"></span> Institutions 
-      <span class="badge">4</span>
-    </a>
-  </li>
-  <li>
-    <a href="#groups">
-      <span class="icon-users icon-fw"></span> Groups 
-      <span class="badge">4</span>
-    </a>
-  </li>
-  <li>
-    <a href="#animals">
-      <span class="icon-paw icon-fw"></span> Animals 
-      <span class="badge">1</span>
-    </a>
-  </li>
+  <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
+  {% if object.relateditems.sites %}
+  <li><a href="#tombs"><span class="icon-map-marker icon-fw"></span> Tombs and Monuments <span class="badge">{{ object.relateditems.sites|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.objects %}
+  <li><a href="#objects"><span class="icon-vase icon-fw"></span> Finds <span class="badge">{{ object.relateditems.objects|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.diarypages %}
+  <li><a href="#diary"><span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages <span class="badge">{{ object.relateditems.diarypages|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.mapsandplans %}
+  <li><a href="#maps"><span class="icon-map-o icon-fw"></span> Maps &amp; Plans <span class="badge">{{ object.relateditems.mapsandplans|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.drawings %}
+  <li><a href="#drawings"><span class="icon-pencil-square-o icon-fw"></span> Drawings <span class="badge">{{ object.relateditems.drawings|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.pubdocs %}
+  <li><a href="#published"><span class="icon-book icon-fw"></span> Published Documents <span class="badge">{{ object.relateditems.pubdocs|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.unpubdocs %}
+  <li><a href="#unpublished"><span class="icon-file-text-o icon-fw"></span> Unpublished Documents <span class="badge">{{ object.relateditems.unpubdocs|length }}</span></a></li>
+  {% endif %}
+  {% if object.bibreferences %}
+  <li><a href="#biblio"><span class="icon-info-circle icon-fw"></span> Full Bibliography </a></li>
+  {% endif %}
+  {% if object.relateditems.photos %}
+  <li><a href="#photos"><span class="icon-camera icon-fw"></span> Photos <span class="badge">{{ object.relateditems.photos|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.giza3d %}
+  <li><a href="#models"><span class="icon-icon-pyramid-3d icon-fw"></span> 3D Models <span class="badge">{{ object.relateditems.giza3d|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.videos %}
+  <li><a href="#videos"><span class="icon-video-camera icon-fw"></span> Videos <span class="badge">{{ object.relateditems.videos|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.audio %}
+  <li><a href="#audio"><span class="icon-volume-up icon-fw"></span> Audio <span class="badge">{{ object.relateditems.audio|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
+  <li><a href="#people"><span class="icon-user icon-fw"></span> People <span class="badge">
+    {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+    {{ apnum|add:mpnum }}
+    {% endwith %}
+  </span></a></li>
+  {% endif %}
+  {% if object.relateditems.institutions %}
+  <li><a href="#institutions"><span class="icon-university icon-fw"></span> Institutions <span class="badge">{{ object.relateditems.institutions|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.groups %}
+  <li><a href="#groups"><span class="icon-users icon-fw"></span> Groups <span class="badge">{{ object.relateditems.groups|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.animals %}
+  <li><a href="#animals"><span class="icon-users icon-fw"></span> Animals <span class="badge">{{ object.relateditems.animals|length }}</span></a></li>
+  {% endif %}
 </ul>
-
 <ul class="vertical menu show-for-medium">
-  <li>
-    <a href="#details">
-      <span class="icon-info-circle icon-fw"></span> Details
-    </a>
-  </li>
-  <li>
-    <a href="#objects">
-      <span class="icon-vase icon-fw"></span> Finds 
-      <span class="badge">1</span>
-    </a>
-  </li>
-  <li>
-    <a href="#diary">
-      <span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages 
-      <span class="badge">6</span>
-    </a>
-  </li>
-  <li>
-    <a href="#maps">
-      <span class="icon-map-o icon-fw"></span> Maps &amp; Plans 
-      <span class="badge">5</span>
-    </a>
-  </li>
-  <li>
-    <a href="#drawings">
-      <span class="icon-pencil-square-o icon-fw"></span> Drawings 
-      <span class="badge">9</span>
-    </a>
-  </li>
-  <li>
-    <a href="#photos">
-      <span class="icon-camera icon-fw"></span> Photos 
-      <span class="badge">248</span>
-    </a>
-  </li>
-  <li>
-    <a href="#models">
-      <span class="icon-pyramid-3d icon-fw"></span> 3D Models 
-      <span class="badge">1</span>
-    </a>
-  </li>
-  <li>
-    <a href="#videos">
-      <span class="icon-video-camera icon-fw"></span> Videos 
-      <span class="badge">3</span>
-    </a>
-  </li>
-  <li>
-    <a href="#audio">
-      <span class="icon-volume-up icon-fw"></span> Audio 
-      <span class="badge">2</span>
-    </a>
-  </li>
-  <li>
-    <a href="#people">
-      <span class="icon-user icon-fw"></span> People 
-      <span class="badge">4</span>
-    </a>
-  </li>
-  <li>
-    <a href="#institutions">
-      <span class="icon-university icon-fw"></span> Institutions 
-      <span class="badge">4</span>
-    </a>
-  </li>
-  <li>
-    <a href="#groups">
-      <span class="icon-users icon-fw"></span> Groups 
-      <span class="badge">4</span>
-    </a>
-  </li>
-  <li>
-    <a href="#animals">
-      <span class="icon-paw icon-fw"></span> Animals 
-      <span class="badge">1</span>
-    </a>
-  </li>
-  <li>
-    <a href="#published">
-      <span class="icon-book icon-fw"></span> Published Documents 
-      <span class="badge">12</span>
-    </a>
-  </li>
-  <li>
-    <a href="#unpublished">
-      <span class="icon-file-text-o icon-fw"></span> Unpublished Documents 
-      <span class="badge">4</span>
-    </a>
-  </li>
-  <li>
-    <a href="#biblio">
-      <span class="icon-info-circle icon-fw"></span> Full Bibliography 
-      <span class="badge">48</span>
-    </a>
-  </li>
+  <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
+  {% if object.relateditems.sites %}
+  <li><a href="#tombs"><span class="icon-map-marker icon-fw"></span> Tombs and Monuments <span class="badge">{{ object.relateditems.sites|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.objects %}
+  <li><a href="#objects"><span class="icon-vase icon-fw"></span> Finds <span class="badge">{{ object.relateditems.objects|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.diarypages %}
+  <li><a href="#diary"><span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages <span class="badge">{{ object.relateditems.diarypages|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.mapsandplans %}
+  <li><a href="#maps"><span class="icon-map-o icon-fw"></span> Maps &amp; Plans <span class="badge">{{ object.relateditems.mapsandplans|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.drawings %}
+  <li><a href="#drawings"><span class="icon-pencil-square-o icon-fw"></span> Drawings <span class="badge">{{ object.relateditems.drawings|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.photos %}
+  <li><a href="#photos"><span class="icon-camera icon-fw"></span> Photos <span class="badge">{{ object.relateditems.photos|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.giza3d %}
+  <li><a href="#models"><span class="icon-icon-pyramid-3d icon-fw"></span> 3D Models <span class="badge">{{ object.relateditems.giza3d|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.videos %}
+  <li><a href="#videos"><span class="icon-video-camera icon-fw"></span> Videos <span class="badge">{{ object.relateditems.videos|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.audio %}
+  <li><a href="#audio"><span class="icon-volume-up icon-fw"></span> Audio <span class="badge">{{ object.relateditems.audio|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
+  <li><a href="#people"><span class="icon-user icon-fw"></span> People <span class="badge">
+    {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+    {{ apnum|add:mpnum }}
+    {% endwith %}
+  </span></a></li>
+  {% endif %}
+  {% if object.relateditems.institutions %}
+  <li><a href="#institutions"><span class="icon-university icon-fw"></span> Institutions <span class="badge">{{ object.relateditems.institutions|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.groups %}
+  <li><a href="#groups"><span class="icon-users icon-fw"></span> Groups <span class="badge">{{ object.relateditems.groups|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.animals %}
+  <li><a href="#animals"><span class="icon-users icon-fw"></span> Animals <span class="badge">{{ object.relateditems.animals|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.pubdocs %}
+  <li><a href="#published"><span class="icon-book icon-fw"></span> Published Documents <span class="badge">{{ object.relateditems.pubdocs|length }}</span></a></li>
+  {% endif %}
+  {% if object.relateditems.unpubdocs %}
+  <li><a href="#unpublished"><span class="icon-file-text-o icon-fw"></span> Unpublished Documents <span class="badge">{{ object.relateditems.unpubdocs|length }}</span></a></li>
+  {% endif %}
+  {% if object.bibreferences %}
+  <li><a href="#biblio"><span class="icon-info-circle icon-fw"></span> Full Bibliography </a></li>
+  {% endif %}
 </ul>
