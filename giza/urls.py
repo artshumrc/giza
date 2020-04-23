@@ -17,6 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from tms import views as tms_views
 from search import views as search_views
+from . import views
 
 urlpatterns = [
     url(r'^$', tms_views.index, name="index"),
@@ -42,6 +43,12 @@ urlpatterns = [
 
     url(r'^search-results/$', search_views.results, name='results'),
     url(r'^v1/search-results/$', search_views.results_legacy, name='results_legacy'),
+
+    # auth
+    # path('accounts/', include('django.contrib.auth.urls')),
+    url('sign-up/', views.sign_up, name='sign_up'),
+    url('login/', views.user_login, name='login'),
+    url('logout/', views.user_logout, name='logout'),
 
     url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html, name='get_type_html'),
     url(r'^v1/(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html_legacy, name='get_type_html_legacy'),

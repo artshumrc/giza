@@ -9109,7 +9109,7 @@ h3 {
   color: #000;
   font-size: 1rem;
   line-height: 1.21;
-  padding-top: 2.5rem; }
+  padding-top: .5rem; }
   @media (max-width: 639px) {
     .reveal .new_form {
       padding-top: 1.25rem; } }

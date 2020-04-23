@@ -3,7 +3,7 @@
 
 //
 // Landing Page Styles
-// 
+//
 
 .bg-stretch {
 	position: absolute;
@@ -245,7 +245,7 @@
 		margin-bottom: rem-calc(21px);
 
 		@include media('>=medium') {
-			margin-bottom: rem-calc(25px);			
+			margin-bottom: rem-calc(25px);
 		}
 	}
 
@@ -1099,7 +1099,7 @@ h3 {
 
 .view-switcher {
   margin: 0;
-  
+
 	li {
 		display: inline-block;
 		vertical-align: top;
@@ -1552,7 +1552,7 @@ h3 {
 				@include media('<medium') {
 					text-decoration: none;
 					color: #000;
-				}				
+				}
 			}
 
 		}
@@ -1565,7 +1565,7 @@ h3 {
 			&:before,
 			&:after {
 				@include media('<medium') {
-					display: none;					
+					display: none;
 				}
 			}
 
@@ -1636,7 +1636,7 @@ h3 {
 
 					&.active {
 						a {
-							color: #1164ad;	
+							color: #1164ad;
 						}
 					}
 
@@ -1664,9 +1664,9 @@ h3 {
 
 				a {
 					color: #6b625c;
-					
+
 					&:hover {
-						color: #1164ad;						
+						color: #1164ad;
 					}
 				}
 			}
@@ -1971,7 +1971,7 @@ h3 {
 								left: 13px;
 								right: 13px;
 								background: #ccc;
-								height: 1px;								
+								height: 1px;
 							}
 						}
 					}
@@ -2367,7 +2367,7 @@ h3 {
 		width: auto;
 
 		@include media('>=medium') {
-			padding: rem-calc(21px 48px 40px);			
+			padding: rem-calc(21px 48px 40px);
 		}
 
 		.title {
@@ -2488,7 +2488,7 @@ h3 {
 
 				&:hover {
 					text-decoration: underline;
-				}				
+				}
 			}
 		}
 
@@ -2509,7 +2509,7 @@ h3 {
 
 					&:not(.btn-white) {
 						border-color: rgba(34, 34, 34, 0.4);
-						text-shadow: 0 1px 0 rgba(34, 34, 34, 0.5);						
+						text-shadow: 0 1px 0 rgba(34, 34, 34, 0.5);
 					}
 				}
 			}
@@ -3292,7 +3292,7 @@ h3 {
   max-width: 500px; // Let's not get too extreme
   position: relative;
   overflow: hidden; // Prevents breakage if a collection title is huge
-  
+
   &:after { // Trick to keep this box square
     content: "";
     display: block;
@@ -3305,7 +3305,7 @@ h3 {
   width: 100%;
   height: 100%;
   background-color: $sand-dark;
-  
+
   .grid-image {
     float: left;
     clear: none;
@@ -3313,7 +3313,7 @@ h3 {
     display: flex;
     justify-content: center;
     // align-items: flex-start; This prevents object-fit from working.
-    
+
     img {
       height: auto;
       max-width: 100%;
@@ -3324,21 +3324,21 @@ h3 {
 }
 
 .grid-image {
-  
+
   .grid-images-1 & {
     width: 100%;
     height: 100%;
   }
-  
+
   .grid-images-4 & {
     width: 50%;
     height: 50%;
   }
-  
+
   .grid-images-9 & {
     width: 33.333333333%;
     height: 33.333333333%;
-  }  
+  }
 }
 
 .collection-thumb-caption {
@@ -3371,11 +3371,11 @@ h3 {
 //    Media-like block with collection thumb + meta info
 
 .collection-blurb {
-  
+
 }
 
 .collection-image {
-  
+
 }
 
 .collection-body {

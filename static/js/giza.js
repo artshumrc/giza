@@ -4,13 +4,14 @@ $(document).foundation();
 // Src: https://css-tricks.com/snippets/jquery/smooth-scrolling/
 
 $(function() {
-  
+
   // Variable set to accommodate fixed-top navbar.
   // Un-comment the appropriate value below.
   var topOffset;
   //topOffset = 70; // Normal, no extra banner
   topOffset = 99; // With extra under-construction banner
-  
+
+  /**
   $('a[href*="#"]:not([href="#0"])').click(function() {
     if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
       var target = $(this.hash);
@@ -22,6 +23,18 @@ $(function() {
         return false;
       }
     }
+  });
+  */
+
+
+  // toggle the signup/login forms in the auth modal
+  $(".login-toggle").on("click", function() {
+    $(".login-form").hide();
+    $(".signup-form").show();
+  });
+  $(".signup-toggle").on("click", function() {
+    $(".login-form").show();
+    $(".signup-form").hide();
   });
 });
 

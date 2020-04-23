@@ -23,40 +23,62 @@
 <!-- Modal: Login -->
 
 <div class="reveal modal login-reveal" id="login_new" data-reveal>
-  <span class="title">Sign up for My Giza <span class="separator">|</span> <a href="#">Log in</a></span>
-  <a href="#" class="button social google"><i class="fab fa-google"></i>sign up with google</a>
-  <a href="#" class="button social facebook"><i class="fab fa-facebook-f"></i>sign up with facebook</a>
-  <form class="new_form" action="#">
-    <span class="info">All * items are required.</span>
-    <label>Full Name*:
-      <input type="text" placeholder="Heather O’Neill">
-    </label>
-    <label>Email*:
-      <input type="email" placeholder="heather@pixelsforhumans.com">
-    </label>
-    <label class="password">Password*:
-      <input type="password">
-    </label>
-    <span class="info">Password must be at least 8 characters and contain at least one letter and one number.</span>
-    <label>Interest:
-      <select>
-        <option value="abc">—</option>
-        <option value="starbuck">Starbuck</option>
-        <option value="hotdog">Hot Dog</option>
-        <option value="apollo">Apollo</option>
-      </select>
-    </label>
-    <label class="custom-checkbox">
-      <input type="checkbox">
-      <span class="fake-input"></span>
-      I accept the <a href="#">Terms & Conditions</a> of the Digital Giza Website
-    </label>
-    <div class="btn-row">
-      <button type="submit" class="button btn-white">Cancel</button>
-      <button type="submit" class="button">Create Account</button>
-    </div>
-  </form>
-    {% include 'partials/close-button.html' with label="Close modal" %}
+  <div class="auth-form signup-form">
+    <span class="title">Sign up for My Giza <span class="separator">|</span> <a href="#"  class="auth-toggle signup-toggle">Log in</a></span>
+    <!--
+    Reinstate when oauth added
+    a href="#" class="button social google"><i class="fab fa-google"></i>sign up with google</a>
+    <a href="#" class="button social facebook"><i class="fab fa-facebook-f"></i>sign up with facebook</a-->
+    <form class="new_form" id="login_form" method="post" action="{% url 'sign_up' %}?redirect_to='/'" enctype="multipart/form-data">
+      {% csrf_token %}
+      <span class="info">All * items are required.</span>
+      <label>Full Name*:
+        <input placeholder="Queen Meresankh III" type="text" name="username" value="" size="50"/>
+      </label>
+      <label>Email*:
+        <input type="email" placeholder="meresankh@giza.edu">
+      </label>
+      <label class="password">Password*:
+        <input type="password">
+      </label>
+      <span class="info">Password must be at least 8 characters and contain at least one letter and one number.</span>
+      <!--label>Interest:
+        <select>
+          <option value="abc">—</option>
+          <option value="starbuck">Starbuck</option>
+          <option value="hotdog">Hot Dog</option>
+          <option value="apollo">Apollo</option>
+        </select>
+      </label-->
+      <label class="custom-checkbox">
+        <input type="checkbox">
+        <span class="fake-input"></span>
+        I accept the <a href="/terms">Terms & Conditions</a> of the Digital Giza Website
+      </label>
+      <div class="btn-row">
+        <button type="submit" class="button btn-white">Cancel</button>
+        <button type="submit" class="button">Create Account</button>
+      </div>
+    </form>
+  </div>
+  <div class="auth-form login-form" style="display: none">
+    <span class="title"><a class="auth-toggle login-toggle" href="#">Sign up</a> for My Giza <span class="separator">|</span> Log in</span>
+    <form class="new_form" id="login_form" method="post" action="{% url 'login' %}?redirect_to='/'" enctype="multipart/form-data">
+      {% csrf_token %}
+      <span class="info">All * items are required.</span>
+      <label>Username*
+        <input placeholder="Username" type="text" name="username" value="" size="50"/>
+      </label>
+      <label>Password*
+        <input placeholder="Password" type="password" name="password" value="" size="50"/>
+      </label>
+      <div class="btn-row">
+        <button type="submit" class="button btn-white">Cancel</button>
+        <button type="submit" class="button">Log In</button>
+      </div>
+    </form>
+  </div>
+  {% include 'partials/close-button.html' with label="Close modal" %}
 </div>
 
 <!-- /Modal: Login -->
