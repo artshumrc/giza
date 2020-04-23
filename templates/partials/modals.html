@@ -29,11 +29,22 @@
     Reinstate when oauth added
     a href="#" class="button social google"><i class="fab fa-google"></i>sign up with google</a>
     <a href="#" class="button social facebook"><i class="fab fa-facebook-f"></i>sign up with facebook</a-->
-    <form class="new_form" id="login_form" method="post" action="{% url 'sign_up' %}?redirect_to='/'" enctype="multipart/form-data">
+    <form id="login_form" method="post" action="{% url 'sign_up' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      <br>
+      {% endif %}
+      {{ custom_user_form.as_p }}
+    <!--form class="new_form" id="login_form" method="post" action="{% url 'sign_up' %}?redirect_to=/" enctype="multipart/form-data">
       {% csrf_token %}
       <span class="info">All * items are required.</span>
       <label>Full Name*:
-        <input placeholder="Queen Meresankh III" type="text" name="username" value="" size="50"/>
+        <input placeholder="Queen Meresankh III" type="text" name="full_name" value="" size="50"/>
       </label>
       <label>Email*:
         <input type="email" placeholder="meresankh@giza.edu">
@@ -56,24 +67,24 @@
         I accept the <a href="/terms">Terms & Conditions</a> of the Digital Giza Website
       </label>
       <div class="btn-row">
-        <button type="submit" class="button btn-white">Cancel</button>
+        <button type="button" class="button btn-white" data-close="login_new">Cancel</button>
         <button type="submit" class="button">Create Account</button>
       </div>
     </form>
   </div>
   <div class="auth-form login-form" style="display: none">
     <span class="title"><a class="auth-toggle login-toggle" href="#">Sign up</a> for My Giza <span class="separator">|</span> Log in</span>
-    <form class="new_form" id="login_form" method="post" action="{% url 'login' %}?redirect_to='/'" enctype="multipart/form-data">
+    <form class="new_form" id="login_form" method="post" action="{% url 'login' %}?redirect_to=/" enctype="multipart/form-data">
       {% csrf_token %}
       <span class="info">All * items are required.</span>
-      <label>Username*
-        <input placeholder="Username" type="text" name="username" value="" size="50"/>
+      <label>Email*
+        <input placeholder="meresankh@giza.edu" type="text" name="email" value="" size="50"/>
       </label>
       <label>Password*
         <input placeholder="Password" type="password" name="password" value="" size="50"/>
       </label>
       <div class="btn-row">
-        <button type="submit" class="button btn-white">Cancel</button>
+        <button type="button" class="button btn-white" data-close="login_new">Cancel</button>
         <button type="submit" class="button">Log In</button>
       </div>
     </form>

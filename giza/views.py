@@ -26,15 +26,18 @@ def user_login(request):
             if user.is_active:
                 login(request, user)
                 redirect_to = request.GET.get('redirect_to', None)
+                next = request.GET.get('next', None)
 
                 # no idea why the failed get is being cast to a string
                 if redirect_to is not None and redirect_to != 'None':
                     return HttpResponseRedirect(redirect_to)
+                elif next is not None and next != 'None':
+                    return HttpResponseRedirect(next)
                 return HttpResponseRedirect(reverse('index'))
             else:
                 return HttpResponse("Your account is inactivate.")
         else:
-            messages.error(request, "Invalid credentials.")
+            messages.error(request, "Wrong username or password.")
             return HttpResponseRedirect(reverse('login'))
 
     # show login form
@@ -49,20 +52,28 @@ def sign_up(request):
     if request.method == 'POST':
         custom_user = None
         custom_user_form = CustomUserCreationForm(data=request.POST)
+
         # save user
         if custom_user_form.is_valid():
             # create user
             custom_user = custom_user_form.save()
-            if 'picture' in request.FILES:
-                custom_user.picture = request.FILES['picture']
             custom_user.save()
             registered = True
+            return redirect('/')
+
+        else:
+            messages.error(request, "You were unable to create a new user account.")
+
+
+    # show reg form
+    else:
+        custom_user_form = CustomUserCreationForm()
 
     # render
     context = {
+        'custom_user_form': custom_user_form,
         'registered': registered
     }
-
     return render(request, 'pages/sign_up.html', context)
 
 @login_required

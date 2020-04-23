@@ -112,6 +112,10 @@ AUTH_USER_MODEL = 'giza.CustomUser'
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
+# NOTE: password validation is deactived for testing during development, readd when
+# ready for production 
+"""
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -126,6 +130,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+"""
+AUTH_PASSWORD_VALIDATORS = []
 
 
 # Internationalization

@@ -24,17 +24,27 @@
         <strong>You've already got an account with this email address!</strong>
         <a href="/login/">Try logging in.</a><br/>
       {% else %}
-        <form class="new_form" id="login_form" method="post" action="{% url 'sign_up' %}?redirect_to={{redirect_to}}" enctype="multipart/form-data">
+        <form id="login_form" method="post" action="{% url 'sign_up' %}" enctype="multipart/form-data">
           {% csrf_token %}
-          <span class="info">All * items are required.</span>
+          {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+          <br>
+          {% endif %}
+          {{ custom_user_form.as_p }}
+          <!--span class="info">All * items are required.</span>
           <label>Full Name*:
-            <input placeholder="Queen Meresankh III" type="text" name="username" value="" size="50"/>
+            <input placeholder="Queen Meresankh III" type="text" name="full_name" value="" size="50"/>
           </label>
           <label>Email*:
-            <input type="email" placeholder="meresankh@giza.edu">
+            <input type="email" name="email" placeholder="meresankh@giza.edu">
+            <input type="text" name="username" placeholder="meresankh@giza.edu">
           </label>
           <label class="password">Password*:
-            <input type="password">
+            <input type="password" name="password">
           </label>
           <span class="info">Password must be at least 8 characters and contain at least one letter and one number.</span>
           <!--label>Interest:
@@ -44,22 +54,21 @@
               <option value="hotdog">Hot Dog</option>
               <option value="apollo">Apollo</option>
             </select>
-          </label-->
+          </label>
           <br>
           <br>
           <label class="custom-checkbox">
             <input type="checkbox">
             <span class="fake-input"></span>
             I accept the <a href="/terms">Terms & Conditions</a> of the Digital Giza Website
-          </label>
+          </label-->
           <br>
           <br>
           <div class="btn-row">
-            <button type="submit" class="button btn-white">Cancel</button>
             <button type="submit" class="button">Create Account</button>
           </div>
         </form>
-        {% endif %}
+      {% endif %}
     </div>
   </div>
 {% endblock %}

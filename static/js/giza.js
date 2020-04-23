@@ -12,6 +12,9 @@ $(function() {
   topOffset = 99; // With extra under-construction banner
 
   /**
+   *
+   * Currently throwing errors whenever links are clicked, investigate in future releases
+   *
   $('a[href*="#"]:not([href="#0"])').click(function() {
     if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
       var target = $(this.hash);
@@ -29,12 +32,12 @@ $(function() {
 
   // toggle the signup/login forms in the auth modal
   $(".login-toggle").on("click", function() {
-    $(".login-form").hide();
-    $(".signup-form").show();
+    $(".modal .login-form").hide();
+    $(".modal .signup-form").show();
   });
   $(".signup-toggle").on("click", function() {
-    $(".login-form").show();
-    $(".signup-form").hide();
+    $(".modal .login-form").show();
+    $(".modal .signup-form").hide();
   });
 });
 
