@@ -20,7 +20,7 @@
         {% endfor %}
       </ul>
       {% endif %}
-      <form id="login_form" method="post" action="{% url 'login' %}?redirect_to={{redirect_to}}" enctype="multipart/form-data">
+      <form id="login_form" method="post" action="{% url 'login' %}?next={{request.GET.next}}" enctype="multipart/form-data">
         {% csrf_token %}
         <label>Username
           <input placeholder="Username" type="text" name="username" value="" size="50"/>

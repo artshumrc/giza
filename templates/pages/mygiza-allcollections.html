@@ -19,7 +19,7 @@
     <div class="row">
       <div class="columns">
         <div class="titles">
-      <a href="/collections" >Collections</a>
+        <a href="/collections" >Collections</a>
           <!--a href="mygiza-saved-searches.html">Saved Searches</a-->
         </div>
         {% if user.is_superuser %}
@@ -71,10 +71,10 @@
             <li><a href="#">Deselect all</a></li>
           </ul>
         {% endif %}
-        <ul class="d-inline-block view-switcher p-y-qt m-l-1 hide-for-small-only">
+        <!--ul class="d-inline-block view-switcher p-y-qt m-l-1 hide-for-small-only">
           <li><a href="#" class="switcher"><i class="fa fa-fw fa-align-justify"></i><span class="sr-only">List</span></a></li>
           <li><a href="#" class="switcher"><i class="fa fa-fw fa-th-large"></i><span class="sr-only">Grid</span></a></li>
-        </ul>
+        </ul-->
       </div>
       <ul class="collections-list">
         {% for collection in collections %}

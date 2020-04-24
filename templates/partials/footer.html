@@ -48,11 +48,16 @@
         <div class="medium-4 columns">
           <h6><a class="heading-link" href="/mygiza/">My Giza</a></h6>
           <ul class="footer-menu-list">
-            <li><a href="/mygiza-collection/">My Collections</a></li>
+
+            {% if user.is_authenticated %}
+              <li><a href="/collections/user">My Collections</a></li>
+            {% endif %}
             <!--li><a href="/mygiza-saved-searches/">My Saved Searches</a></li-->
-            <li><a href="/mygiza-collection/">Browse Collections</a></li>
-            <li><a href="#0">Log In</a></li>
-            <li><a href="#0">Create a MyGiza Account</a></li>
+            <li><a href="/collections/">Browse Collections</a></li>
+            {% if not user.is_authenticated %}
+              <li><a href="/login">Log In</a></li>
+              <li><a href="/signup">Create a MyGiza Account</a></li>
+            {% endif %}
           </ul>
         </div>
 
