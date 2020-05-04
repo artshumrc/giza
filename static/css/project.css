@@ -80,7 +80,7 @@
 }
 
 .viewerEmbed:hover .viewerCoverGradient {
-  background: linear-gradient(180deg,rgba(0,0,0,.7) 0,rgba(0,0,0,.6) 50%,rgba(0,0,0,.8) 100%);
+  background: linear-gradient(180deg,rgba(0,0,0,.75) 0,rgba(0,0,0,.6) 50%,rgba(0,0,0,.85) 100%);
 }
 
 .viewerEmbed:hover .viewerStartButton {
@@ -89,4 +89,12 @@
   text-decoration: none;
   box-shadow: 0px 0px 2px 2px rgba(0,0,0, 0.2);
   border: 2px solid #1164AD;
+}
+
+.giza3dEmbedToggle {
+  cursor: pointer;
+}
+
+.giza3dEmbed {
+  border: 1px solid #eee;
 }

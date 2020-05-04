@@ -39,6 +39,12 @@ $(function() {
     $(".modal .login-form").show();
     $(".modal .signup-form").hide();
   });
+
+  // Start 3D environment
+  $(".giza3dEmbedToggle").on("click", function() {
+    $(".giza3dEmbedToggle").hide();
+    $(".giza3dEmbed").show();
+  });
 });
 
 // Accordion menu toggletext
