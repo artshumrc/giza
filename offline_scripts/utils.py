@@ -17,11 +17,7 @@ def get_media_url(path, filename):
 def process_cursor_row(cursor_row):
 	row = []
 	for x in cursor_row:
-		if isinstance(x, int):
-			row.append(str(x))
-		elif isinstance(x, str):
-			row.append(x.encode('utf-8'))
-		elif x is None:
+		if x is None:
 			row.append("NULL")
 		else:
 			row.append(str(x))
