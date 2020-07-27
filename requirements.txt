@@ -2,7 +2,6 @@ Django==2.2.12
 django-tinymce==2.8.0
 elasticsearch==5.5.3
 Pillow==7.1.1
-psycopg2==2.8.5
 pyodbc==4.0.30
 pytz==2019.1
 sqlparse==0.3.0
