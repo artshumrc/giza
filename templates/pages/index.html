@@ -25,17 +25,13 @@
           <p class="lead text-alt" style="line-height: 1.4">The Giza Project gives you access to the largest collection of information, media, and research materials ever assembled about the Pyramids and related sites on Egypt&rsquo;s Giza Plateau. </p>
         </div>
         <div class="medium-4 columns">
-          <form>
             <p class="text-alt" style="color: #fff; margin-bottom: 0.1rem;">
               <em>Search the archives:</em>
             </p>
-            <div class="input-group" style="margin-bottom: 0.1rem;">
-              <input class="input-group-field" type="text" placeholder="Search">
-              <div class="input-group-button">
-                <button type="submit" class="button icon-search"></button>
-              </div>
-            </div>
-          </form>
+            <form id="search-form" action="/search-results/">
+              <input type="text" id="inputSimpleSearch" name="q" placeholder="Search" value="{{request.GET.q}}">
+              <button class="icon-search button" onclick="document.getElementById('search-form').submit();"></button>
+            </form>
           <small>or go to <a class="link-lighter" href="/search/">Advanced Search</a></small>
         </div>
       </div>
