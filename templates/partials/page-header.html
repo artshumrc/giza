@@ -1,0 +1,28 @@
+<div class="page-header header-bg-{{bg|default:'1'}}">
+  <div class="row title">
+    <header class="large-12 columns">
+      <h1>
+        {% if backlink_url %}
+        <a href="/{{backlink_url}}">
+          {{title}}
+        </a>
+        {% else %}
+        {{title}}
+        {% endif %}
+        <a name="top"></a>
+      </h1>
+      {% if page_header_meta_text %}
+      <h3 class="page-header__meta">
+        {{page_header_meta_text}}
+      </h3>
+      {% endif %}
+      {% if page_header_meta_link %}
+      <h3 class="page-header__meta">
+        <a href="/{{page_header_meta_link}}">
+          <i class="icon-angle-left"></i> Back
+        </a>
+      </h3>
+      {% endif %}
+    </header>
+  </div>
+</div>

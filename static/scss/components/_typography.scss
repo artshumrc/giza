@@ -1,0 +1,182 @@
+/*  Typography
+--------------------------------------*/
+
+// Basics
+
+h1, h3, h5 {
+	text-transform: uppercase;
+}
+
+h2, h3, h4, h5, h6 {
+  font-weight: 500;
+}
+
+.h7 { // h6 that mimics normal bold text
+  display: block;
+  color: $dune;
+  font-family: $body-font-family;
+  font-size: inherit;
+  font-weight: bold;
+  text-transform: none;
+  margin: 0;
+}
+
+// Alternate text style
+
+.text-heading {
+  font-family: $header-font-family;
+}
+
+.text-alt {
+  font-family: $accent-font-family;
+}
+
+// Alternate heading styles
+
+.heading-alt {
+  font-family: $body-font-family;
+  font-weight: bold;
+  text-transform: none;
+}
+
+.heading-mixedcase {
+  text-transform: none;
+}
+
+.heading-em {
+  font-family: $accent-font-family;
+  text-transform: none;
+  letter-spacing: 0;
+  font-style: italic;
+}
+
+.h2-minor {
+  font-size: rem-calc(24px);
+}
+
+.h3-minor {
+  font-size: rem-calc(18px);
+}
+
+// Text variants
+
+.accent-red {
+  color: $harvard-crimson;
+}
+
+.accent-maroon {
+  color: $maroon;
+}
+
+.text-bold {
+  font-weight: 700;
+}
+
+.text-medium, 
+.text-semibold {
+  font-weight: 500;
+}
+
+.text-regular, 
+.text-normal {
+  font-weight: 300;
+}
+
+.text-light {
+  font-weight: 100;
+}
+
+// Heading links 
+
+a.heading-link {
+  color: $maroon;
+  
+  &:hover, 
+  &:active,
+  &:focus {
+    color: $anchor-color-hover;
+  }
+}
+
+// Lighter links 
+
+.link-lighter {
+  color: lighten($anchor-color, 30%);
+  
+  &:hover, 
+  &:active,
+  &:focus {
+    color: lighten($anchor-color, 40%);
+  }
+  
+}
+
+// Text utilities
+
+.text-smaller {
+  font-size: $medium-font-size;
+}
+
+.text-muted {
+  color: $umber;
+}
+
+// Lists
+
+.dl-slim {
+  line-height: 1.5;
+  
+  dt {
+    margin-bottom: 0;
+    
+    &:after {
+      content: ':';
+    }
+    
+  }
+  
+  dd {
+  }
+  
+}
+
+.abbr-list {
+  
+  dt {
+    display: inline-block;
+    float: left;
+    clear: left;
+    margin-right: 0.5em;
+    margin-bottom: 1em;
+    
+    &:after {
+      content: ':';
+    }
+    
+  }
+  
+  dd {
+    display: inline-block;
+    float: left;
+    margin-bottom: 1em;
+  }
+  
+}
+
+// Back to Top links 
+
+.back-to-top-link {
+  @extend .text-smaller;
+  display: inline-block;
+  margin-top: -0.4em;
+  margin-bottom: 0.2em;
+  color: $umber;
+  clear: both;
+  
+  &:hover, 
+  &:active, 
+  &:focus {
+    color: $anchor-color-hover;
+  }
+}
+

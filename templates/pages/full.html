@@ -1,0 +1,534 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Digital Giza | {{ object.displaytext }}",
+  section: "explore",
+  section_explore: true,
+  bodyclasses: "header-full mode-full"
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="1" page_header_meta_text=object.displaytext %}
+{% endblock  %}
+
+
+{% block 'main_content' %}
+  <!-- row -->
+
+  <div class="row content-start">
+
+    <section class="large-8 columns content-col-primary">
+
+    {% if object.primarydisplay.main %}
+      <div class="item__featured-image">
+        {% if type == '3dmodels' %}
+        <iframe allowfullscreen height="500px" width="100%" src="{{ object.primarydisplay.main }}"></iframe>
+        {% elif type == 'pubdocs' and object.pdf %}
+          <a href="{{ object.pdf }}"><img src="{{ object.primarydisplay.main }}" alt=""></a>
+        {% elif type == 'videos' %}
+          <video width="100%" height="100%" {% if object.primarydisplay.thumbnail %}poster="{{ object.primarydisplay.thumbnail }}"{% endif %} controls>
+            <source src="{{ object.primarydisplay.main }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        {% else %}
+          <img src="{{ object.primarydisplay.main }}" alt="">
+        {% endif %}
+        {% if object.primarydisplay.displaytext %}
+        <p class="item__featured-image__caption">
+          {{ object.primarydisplay.displaytext }}
+        </p>
+        {% endif %}
+      </div>
+    {% endif %}
+      {% if object.diarytranscription %}
+      <div class="item__overview text-alt">
+            <h5>Diary Transcription:</h5>
+            {{ object.diarytranscription|linebreaks }}
+          </div>
+      {% elif object.description %}
+
+      <div class="item__overview">
+
+        <p class="lead text-alt">
+          {{ object.description }}
+        </p>
+
+      </div>
+      {% endif %}
+
+
+      {% include 'partials/feature-block-start.html' with  feature_title="Details" feature_block_class="collapsible" feature_icon="info-circle" feature_anchor="details" %}
+        {% with template_name="tms/"|add:type|add:".html" %}
+          {% include template_name %}
+        {% endwith %}
+      {% include 'partials/feature-block-end.html' %}
+
+      {% if object.relateditems.sites %}
+      <section id="featureBlock_tombs" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-map-marker icon-padded"></i> Tombs and Monuments
+            <a name="tombs"></a>
+            <span class="badge">{{ object.relateditems.sites|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_tombs">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.sites %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'sites' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'sites' item.id 'full' %}">{{item.displaytext}}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-property">Site Name</span> <span class="item-value">{{item.sitename}}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.objects %}
+        {% include 'partials/feature-block-start.html' with feature_title="Finds" feature_block_class="collapsible" feature_icon="vase" feature_counter=object.relateditems.objects|length feature_anchor="objects" %}
+          <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.objects %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'objects' item.id 'full' %}"><img src= "{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'objects' item.id 'full' %}">{{item.displaytext}}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-value">{{item.number}}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.diarypages %}
+        {% include 'partials/feature-block-start.html' with feature_title="Excavation Diary Pages" feature_block_class="collapsible" feature_icon="sticky-note-o" feature_counter=object.relateditems.diarypages|length  feature_anchor="diary" %}
+          <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.diarypages %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'diarypages' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'diarypages' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-property">Diary page dates</span> <span class="item-value">{{ item.date }}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.mapsandplans %}
+        {% include 'partials/feature-block-start.html' with feature_title="Maps & Plans" feature_block_class="collapsible" feature_icon="map-o" feature_counter=object.relateditems.mapsandplans|length feature_anchor="maps" %}
+          <ul class="feature-block__list item-grid thumbsize-lg thumbs-square">
+            {% for item in object.relateditems.mapsandplans %}
+            <li>
+              <div class="media-object list-item list-item-thumbcaption">
+                {% if item.thumbnail %}
+                <div class="thumbnail">
+                  <a href="{% url 'get_type_html' 'mapsandplans' item.id 'full' %}"><img src="{{ item.thumbnail }}" alt=""></a>
+                </div>
+                {% endif %}
+                <p class="media-object-title"><a href="{% url 'get_type_html' 'mapsandplans' item.id 'full' %}">{{ item.displaytext }}</a></p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.drawings %}
+        {% include 'partials/feature-block-start.html' with feature_title="Drawings" feature_block_class="collapsible" feature_icon="pencil-square-o" feature_counter=object.relateditems.drawings|length feature_anchor="drawings" %}
+          <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.drawings %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'drawings' item.id 'full' %}"><img src= "{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'drawings' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-property">ID</span> <span class="item-value">{{ item.number }}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.pubdocs %}
+        {% include 'partials/feature-block-start.html' with feature_title="Published Documents" feature_block_class="collapsible" feature_icon="book" feature_counter=object.relateditems.pubdocs|length feature_anchor="published" %}
+          <ul class="feature-block__list multicol-2">
+            {% for item in object.relateditems.pubdocs %}
+            <li>
+              <div class="media-object list-item list-item-document">
+                <div class="media-object-section">
+                  <a class="icon-large icon-file-text-o" href="{% url 'get_type_html' 'pubdocs' item.id 'full' %}"></a>
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'pubdocs' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                  {% if item.date %}
+                  <ul class="subheader">
+                    <li>Date: {{ item.date }}</li>
+                  </ul>
+                  {% endif %}
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.unpubdocs %}
+        {% include 'partials/feature-block-start.html' with feature_title="Unpublished Documents" feature_block_class="collapsible" feature_icon="file-text-o" feature_counter=object.relateditems.unpubdocs|length feature_anchor="unpublished" %}
+          <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.unpubdocs %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'unpubdocs' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'unpubdocs' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                  <ul class="subheader">
+                    <li>ID: {{ item.number }}</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.bibreferences %}
+        {% include 'partials/feature-block-start.html' with feature_title="Full Bibliography" feature_block_class="collapsible" feature_icon="bookmark" feature_counter="48" feature_anchor="biblio" %}
+          <ul class="feature-block__list">
+            <li>
+              <div class="media-object list-item list-item-textblob">
+                <p>
+                  {{ object.bibreferences|linebreaks }}
+                </p>
+              </div>
+            </li>
+          </ul>
+        {% include 'partials/feature-block-end.html' %}
+    {% endif %}
+
+    </section>
+
+    <section class="large-4 columns content-col-secondary">
+      <div class="page-navigation">
+
+        <div class="title-bar" data-responsive-toggle="jumpmenu" data-hide-for="medium">
+          <button class="icon-bars icon-padded title-bar-title" type="button" data-toggle>Jump to...</button>
+        </div>
+
+        <div class="feature-block secondary" id="jumpmenu">
+          <div class="feature-block__body">
+
+            {% include 'partials/jump-menu-full.html' %}
+
+            <div class="border-top-light m-t-1 p-t-1">
+              {% include 'partials/share-links.html' %}
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      {% if object.relateditems.photos %}
+        {% include 'partials/feature-block-start.html' with feature_title="Photos" feature_block_class="secondary collapsible" feature_icon="camera" feature_counter=object.relateditems.photos|length feature_anchor="photos" feature_subpg="true" feature_footer="true" %}
+          <ul class="feature-block__list item-grid thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.photos|slice:":10" %}
+            <li>
+              <div class="media-object list-item list-item-thumbonly">
+                <div class="media-object-section">
+                  <div class="thumbnail">
+                    <a data-open="gallery{{ item.id }}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                </div>
+                <!-- <div class="media-object-section">
+                  <p class="media-object-title"><a href="#0"></a></p>
+                  <ul class="subheader">
+                  </ul>
+                </div> -->
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="feature-block__footer">
+            <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'allphotos' %}">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
+          </div>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.3dmodels %}
+        {% include 'partials/feature-block-start.html' with feature_title="3D Models" feature_block_class="secondary collapsible" feature_icon="pyramid-3d" feature_counter=object.relateditems.3dmodels|length feature_anchor="models" %}
+          <ul class="feature-block__list thumbsize-full">
+            {% for item in object.relateditems.3dmodels %}
+            <li>
+              <div class="media-object list-item list-item-thumbcaption">
+                <div class="thumbnail">
+                  <a href="{% url 'get_type_html' '3dmodels' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                </div>
+                <p class="media-object-title"><a href="{% url 'get_type_html' '3dmodels' item.id 'full' %}">{{ item.displaytext }}</a></p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.videos %}
+        {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="secondary collapsible" feature_icon="video-camera" feature_counter="3" feature_anchor="videos" %}
+          <ul class="feature-block__list multicol-2 thumbsize-lg">
+            {% for item in object.relateditems.videos %}
+            <li>
+              <div class="media-object list-item list-item-thumbcaption">
+                <!-- <div class="thumbnail">
+                <a href="#0"><img src="assets/img/video1.png"></a>
+              </div> -->
+              <video width="100%" height="100%" {% if item.thumbnail %}poster="{{ item.thumbnail }}"{% endif %} controls>
+                <source src="{{ item.main }}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                <p class="media-object-title"><a href="{% url 'get_type_html' 'videos' item.id 'full' %}">{{ item.displaytext }}</a></p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.audios %}
+        {% include 'partials/feature-block-start.html' with feature_title="Audio" feature_block_class="secondary collapsible" feature_icon="volume-up" feature_counter=object.relateditems.audios|length feature_anchor="audio" %}
+          <ul class="feature-block__list multicol-2 thumbsize-lg">
+            {% for item in object.relateditems.audios %}
+            <li>
+              <div class="media-object list-item list-item-thumbcaption">
+                <!-- <div class="thumbnail">
+                <a href="#0"><img src="assets/img/video1.png"></a>
+              </div> -->
+              <audio width="100%" height="100%" {% if item.thumbnail %}poster="{{ item.thumbnail }}"{% endif %} controls>
+                <source src="{{ item.main }}" type="audio/mp3">
+                  Your browser does not support the audio tag.
+                </audio>
+                <p class="media-object-title"><a href="{% url 'get_type_html' 'videos' item.id 'full' %}">{{ item.displaytext }}</a></p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
+        {% include 'partials/feature-block-start.html' with feature_title="People" feature_block_class="secondary collapsible" feature_icon="user" feature_counter="4" feature_anchor="people" %}
+            {% if object.relateditems.ancientpeople %}
+            <h4>Ancient People</h4>
+
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+              {% for item in object.relateditems.ancientpeople %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'ancientpeople' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'ancientpeople' item.id 'full' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description|truncatewords_html:12}}</span></li>{% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if object.relateditems.modernpeople %}
+            <h4>Modern People</h4>
+
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+              {% for item in object.relateditems.modernpeople %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'modernpeople' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'modernpeople' item.id 'full' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      <li><span class="item-property">Nationality &amp; Dates</span> <span class="item-value">{{item.displaydate}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>{% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.institutions %}
+        {% include 'partials/feature-block-start.html' with feature_title="Institutions" feature_block_class="secondary collapsible" feature_icon="university" feature_counter=object.relateditems.institutions|length feature_anchor="institutions" %}
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+              {% for item in object.relateditems.institutions %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'institutions' item.id 'full' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'institutions' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li> {% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.groups %}
+        {% include 'partials/feature-block-start.html' with feature_title="Groups" feature_block_class="secondary collapsible" feature_icon="users" feature_counter="1" feature_anchor="groups" %}
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+              {% for item in object.relateditems.groups %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'groups' item.id 'full' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'groups' item.id 'full' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description|truncatewords_html:12}}</span></li>{% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+      {% if object.relateditems.animals %}
+        {% include 'partials/feature-block-start.html' with feature_title="Animals" feature_block_class="secondary collapsible" feature_icon="paw" feature_counter="1" feature_anchor="animals" %}
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+              {% for item in object.relateditems.groups %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'animals' item.id 'full' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'animals' item.id 'full' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description|truncatewords_html:12}}</span></li>{% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+        {% include 'partials/feature-block-end.html' %}
+      {% endif %}
+
+
+    </section>
+
+  </div>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

@@ -1,0 +1,216 @@
+/*  Headers
+--------------------------------------*/
+
+//  Page Header component styles
+//  and subheader component styles
+
+// Page Header Layout
+
+.page-header {
+  
+  .title {
+  	min-height: 72px;
+  	
+  	@include breakpoint(medium) {
+  	  min-height: 86px;
+  	}
+  }
+  
+  h1 {
+    padding-top: 22px;
+    padding-left: 0px; // Was 6px - unnecessary
+    
+    a { // Preserve title text color if it's a link
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+  }
+  
+  .page-header__meta {
+    color: $umber;
+    text-transform: none;
+    padding-left: 0px; // Was 6px - unnecessary
+    margin-top: -0.4em;
+    margin-bottom: 0.8rem;
+    text-shadow: 0 1px 4px rgba(255,255,255,0.8);
+  }
+}
+
+// Feature intro/full pages
+.header-full {
+  
+  .page-header {
+    margin-bottom: 0;
+    
+    .title {
+      min-height: 228px;
+    }
+  }
+  
+  .content-start {
+    position: relative;
+    margin-top: -9rem;
+  }
+  
+  @include breakpoint(medium) {
+    
+    .content-col-secondary {
+      margin-top: 44rem; // Clear the height of the full jump menu
+    }
+  }
+  
+  .page-navigation-container {
+    
+    @include breakpoint(large) {
+      position: absolute;
+      width: 100%;
+    }
+  }
+  
+  // Intro only
+  &.mode-intro {
+    
+    @include breakpoint(medium) {
+      
+      .content-col-secondary {
+        margin-top: 6rem; // Clear the height of the toggle switch
+      }
+      
+      .view-mode-toggle {
+        padding-left: 6px;
+        
+        @include breakpoint(large) {
+          padding-left: 0;
+        }
+      }
+    }
+  }
+}
+
+
+// Page Header Look & Feel
+
+// Background & Image defaults for all pages
+.page-header {
+  background-color: $sand-medium;
+  
+  .title {
+  	background-repeat: no-repeat;
+  	background-position: 50% top;
+  }
+}
+
+// Title text color variants
+%h1-title-dark {
+  text-shadow: 0 1px 4px rgba(255,255,255,0.8);
+}
+%h1-title-light {
+  color: $white;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+%h1-title-light-mixedcase {
+  @extend %h1-title-light;
+  text-transform: none;
+}
+@mixin h1-title-style($variant) {
+  @extend %h1-title-#{$variant};
+}
+
+// Header image/color mapping
+$header-images: (
+  1: ( // Blue sky pyramid rendering (Giza3D)
+    size:   "tall",
+    title:  "dark",
+    bg:     #c6ddeb
+  ), 
+	2: ( // Small dithered hieroglyphs (--)
+    size:   "slim",
+    title:  "light",
+    bg:     #945d3f
+  ), 
+  3: ( // Monochrome carvings (--)
+    size:   "slim",
+    title:  "light",
+    bg:     #8C704C
+  ),
+  4: ( // Sunset pyramid (Donate)
+    size:   "slim",
+    title:  "light",
+    bg:     #ff894f
+  ),
+  5: ( // Yellow slits (Search)
+    size:   "slim",
+    title:  "light",
+    bg:     #e4b05a
+  ),
+  6: ( // Gray sky Sphinx (About)
+    size:   "slim",
+    title:  "dark",
+    bg:     #cdcacb
+  ),
+  7: ( // Colorful cartouche (MyGiza)
+    size:   "slim",
+    title:  "light-mixedcase",
+    bg:     #b48d78
+  ),
+  8: ( // Lit tomb interior (Library)
+    size:   "slim",
+    title:  "light",
+    bg:     #3F3429
+  ),
+  9: ( // Row of feet (Giza @ School)
+    size:   "slim",
+    title:  "light",
+    bg:     #7A5B40
+  )
+);
+
+// Mixin for header background variants
+@mixin header-image-variant($num, $size, $title, $bg) {
+  
+  .header-bg-#{$num} {
+    background-color: $bg;
+    
+    .title {
+      background-image: url('../images/pageheader-bg-#{$size}#{$num}.jpg');
+    }
+    
+    h1 {
+      @include h1-title-style($title);
+    }
+  }
+}
+
+// Apply header background variants
+@each $num in map-keys($header-images) {
+  $map:   map-get($header-images, $num);
+  $size:  map-get($map, size);
+  $title: map-get($map, title);
+  $bg:    map-get($map, bg);
+  
+  @include header-image-variant($num, $size, $title, $bg);
+}
+
+
+// Page Subheader
+
+.page-subheader {
+  background-color: $sand-light;
+  border-bottom: solid 1px $sand-medium;
+  padding-top: spacer(1);
+  padding-bottom: spacer(1);
+}
+
+// Background sand/gray utilities
+
+.bg-sand-light {
+  background-color: $sand-light;
+}
+
+.bg-sand-medium {
+  background-color: $sand-medium;
+}
+
+.bg-sand-dark {
+  background-color: $sand-dark;
+}

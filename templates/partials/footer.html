@@ -1,0 +1,132 @@
+{% load static %}
+
+<!-- BEGIN FOOTER -->
+
+<nav class="footer">
+  <div class="row">
+
+    <section class="large-6 columns">
+      <div class="row">
+
+        <div class="medium-4 columns">
+          <h6><a class="heading-link" href="/library/">Library</a></h6>
+        </div>
+
+        <div class="medium-4 columns">
+          <h6><a class="heading-link" href="/gizaatschool/">Giza @ School</a></h6>
+          <ul class="footer-menu-list">
+            <li><a href="/lessons/">Lesson Topics</a></li>
+            <li><a href="/commontopics/">People and Places of Giza</a></li>
+            <li><a href="/faq/">Glossary and FAQ</a></li>
+            <li><a href="/videos/">Video Library</a></li>
+          </ul>
+        </div>
+
+        <div class="medium-4 columns">
+          <h6><a class="heading-link" href="/giza3d/">Giza 3D</a></h6>
+          <ul class="footer-menu-list vertical menu accordion-slim" data-accordion-menu>
+            <li>
+              <a href="#0" class="accordion-toggletext" data-closed-text="Show models" data-open-text="Hide models">Show models</a>
+              <ul class="no-bullet menu vertical nested">
+                <li><a href="/giza3d/">Giza Plateau</a></li>
+                <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=neZZCDSf5">A Walking Tour of the Giza Plateau</a></li>
+                <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=neZZCDSf5">Khafre Pyramid and Temples</a></li>
+                <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=neZZCDSf5">Khufu Pyramid</a></li>
+                <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=neZZCDSf5">Menkaure Pyramid</a></li>
+                <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=neZZCDSf5">Great Sphinx</a></li>
+                <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=nGQi15GpZ">Great Sphinx Interactive Video</a></li>
+              </ul>
+            </li>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="large-6 columns">
+      <div class="row">
+
+        <div class="medium-4 columns">
+          <h6><a class="heading-link" href="/mygiza/">My Giza</a></h6>
+          <ul class="footer-menu-list">
+
+            {% if user.is_authenticated %}
+              <li><a href="/collections/user">My Collections</a></li>
+            {% endif %}
+            <!--li><a href="/mygiza-saved-searches/">My Saved Searches</a></li-->
+            <li><a href="/collections/">Browse Collections</a></li>
+            {% if not user.is_authenticated %}
+              <li><a href="/login">Log In</a></li>
+              <li><a href="/signup">Create a MyGiza Account</a></li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <div class="medium-4 columns">
+          <h6><a class="heading-link" href="/gizaintro/">About the Project</a></h6>
+          <ul class="footer-menu-list">
+            <li><a href="/gizaintro/">Introduction to Giza</a></li>
+            <li><a href="/about/">What is the Giza Project?</a></li>
+            <li><a href="/archaeology/">Archaeology at Giza</a></li>
+          </ul>
+        </div>
+
+        <div class="medium-4 columns">
+          <h6><a class="heading-link" href="https://community.alumni.harvard.edu/give/34086571">Donate</a></h6>
+          <h6><a class="heading-link" href="/search/">Search</a></h6>
+          <h6><a class="heading-link" data-open="modal_contact">Contact</a></h6>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</nav>
+
+<footer class="legal-social" data-equalizer data-equalize-on="medium">
+  <div class="row">
+    <div class="large-6 large-push-6 columns text-md-right" data-equalizer-watch>
+      <img src="{% static 'images/footerlogo.png' %}" alt="Giza Project at Harvard University" class="image-spacer" style="max-width: 200px;">
+      <img src="{% static 'images/neh_logo_web.svg' %}" alt="National Endowment for the Humanities" class="image-spacer" style="margin-top: -0.2em; max-width: 200px;">
+      <p class="medium-9 columns text-smaller text-muted text-center">Digital Giza has been made possible in part by the <a href="http://www.neh.gov/">National Endowment for the Humanities</a>: Exploring the human endeavor</p>
+    </div>
+    <div class="large-6 large-pull-6 columns" data-equalizer-watch>
+      <div class="row" data-equalizer>
+        <div class="medium-6 columns" data-equalizer-watch>
+          <p class="text-smaller text-muted" style="margin-top: 0.25em;">&copy; {% now "Y" %} Giza Project at Harvard University. <br> All rights reserved.</p>
+        </div>
+        <div class="medium-6 columns text-md-right" data-equalizer-watch>
+          <p class="stat" style="margin-top: 0.0em;">
+            <a class="icon-facebook-square text-muted" href="https://www.facebook.com/The-Giza-Project-at-Harvard-University-1872145656335515/" target="_blank"></a>
+            <!-- <a class="icon-twitter text-muted" href="http://www.twitter.com" target="_blank"></a>
+            <a class="icon-google-plus-square text-muted" href="https://plus.google.com" target="_blank"></a>
+            <a class="icon-instagram text-muted" href="http://www.instagram.com" target="_blank"></a> -->
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- END FOOTER -->
+
+{% if section_home %}
+<!--
+    TODO: reinstate with https://github.com/osano/cookieconsent
+
+<div class="callout primary callout-banner-bottom" data-closable>
+  <div class="row">
+    <div class="columns">
+      <span class="m-r-half">
+        <strong>Cookie use:</strong> This site uses cookies to allow you to save items without an account.
+      </span>
+      <span class="text-nowrap">
+        <a href="https://gdpr.harvard.edu/eeaprivacydisclosures">Privacy Policy</a> <span class="p-x-qt">|</span> <a href="https://www.harvard.edu/privacy-statement">Opt Out</a>
+      </span>
+      <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</div>
+-->
+{% endif %}

@@ -1,0 +1,52 @@
+/*  Tooltips & Modals (Reveal)
+--------------------------------------*/
+
+// Tooltips
+
+.tooltip {
+  max-width: 20em !important; // was 10
+}
+
+// Modals
+
+.reveal-overlay {
+  background-color: rgba(0,0,0,0.6);
+}
+
+.photo-gallery-modal {
+  top: 55px !important;
+  margin-bottom: 0px;
+  
+  @include breakpoint(medium) {
+    top: 65px !important;
+    margin-bottom: 65px;
+  }
+  
+}
+
+.modal-inverse {
+  background-color: #111;
+  border: none;
+  border-radius: 6px;
+  padding: 20px 15px 20px;
+  
+  @include breakpoint(medium) {
+    padding: 40px 80px 80px;
+  }
+  
+  &, 
+  h1, 
+  h2, 
+  h3, 
+  h4 {
+    color: #eee;
+  }
+}
+
+.modal-img-container {
+  text-align: center;
+  
+  img {
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,43 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Login"
+  section: "authentication",
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'content' %}
+  <div class="auth-layout ">
+    <div class="auth-form login-form" >
+      <h1 class="title">Create a new collection</h1>
+      <br>
+      <br>
+      {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <form id="collection_create_form" method="post" action="{% url 'collections_create' %}?redirect_to={{redirect_to}}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>
+          Creating and editing collections is restricted to admin users currently. We hope to add this functionality in soon.
+        </p>
+        <div class="jcf-scrollable">
+          <form class="new_form" action="#">
+            <label>
+              Name your new collection:
+              <input type="text" disabled>
+            </label>
+          </form>
+        </div>
+        <br>
+        <div class="btn-row">
+          <button type="submit" class="button" disabled>Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock  %}

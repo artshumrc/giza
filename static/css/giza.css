@@ -4577,7 +4577,7 @@ select, input, textarea {
     font-weight: bold;
     text-transform: uppercase;
     font-size: 15px;
-    font-family: Montserrat, “Helvetica Neue”, Helvetica, Arial, sans-serif; 
+    font-family: Montserrat, “Helvetica Neue”, Helvetica, Arial, sans-serif;
     color: white }
   .nav-menu-primary li .icon-home .hide-for-medium {
     display: inline-block;
@@ -4595,7 +4595,7 @@ select, input, textarea {
       .nav-menu-primary li.active > a {
         border-left: 0;
         border-bottom: solid 5px #A51C30;
-        padding-left: 1rem; 
+        padding-left: 1rem;
         /*background-color: #A51C30*/ } }
   .nav-menu-primary li .is-dropdown-submenu {
     width: 330px;
@@ -5379,7 +5379,7 @@ footer.legal-social {
 @media screen and (min-width: 64em) {
   .text-lg-left {
     text-align: left; } }
-    
+
 .top-banner {
     background-color: #ffffcc;
     text-align: center;

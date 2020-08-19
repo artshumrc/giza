@@ -25,7 +25,12 @@ SECRET_KEY = '9w)eu)4tj*v(x%8^tz$fsc8^t@jj66_7_!_w2wo@9lcs)^xf6='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '.local',
+    '.archimedes.digital',
+    '.fas.harvard.edu',
+]
 
 
 # Application definition
@@ -33,6 +38,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'search',
     'tms',
+    'giza',
     'utils',
 
     'django.contrib.admin',
@@ -68,6 +74,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
+                'giza.context_processors.user_collections',
             ],
         },
     },
@@ -95,9 +103,19 @@ SEARCH_BACKENDS = {
     }
 }
 
+# Custom User and auth settings
+# https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-LOGIN_URL
+LOGIN_URL = '/login'
+
+# custom user model registration
+AUTH_USER_MODEL = 'giza.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
+
+# NOTE: password validation is deactived for testing during development, readd when
+# ready for production
+"""
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -113,6 +131,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+"""
+AUTH_PASSWORD_VALIDATORS = []
 
 
 # Internationalization

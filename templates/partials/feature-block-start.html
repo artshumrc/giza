@@ -1,0 +1,14 @@
+<section id="featureBlock_{{feature_anchor}}" class="feature-block {{feature_block_class}}" data-toggler=".is-collapsed">
+  {% if feature_title %}
+  <div class="feature-block__header">
+    <h3 class="feature-block__title {{heading_class}}">
+      <i class="icon-{{feature_icon}} icon-padded"></i> {{feature_title}}
+      <a name="{{feature_anchor}}"></a>
+      {% if feature_counter %}<span class="badge">{{feature_counter}}</span>{% endif %}
+    </h3>
+    <button class="toggler" data-toggle="featureBlock_{{feature_anchor}}">
+      <span class="sr-only">Collapse or Expand</span>
+    </button>
+  </div>
+  {% endif %}
+  <div class="feature-block__body">
