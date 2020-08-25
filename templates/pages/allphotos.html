@@ -1,4 +1,4 @@
-{% extends 'layouts/default.html' %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block body_class %}section-explore-body header-full mode-intro{% endblock %}
@@ -48,21 +48,34 @@
             <div class="media-object list-item list-item-thumbonly">
               <div class="media-object-section">
                 <div class="thumbnail">
-                  <a href="{{ item.main }}" title="{{ item.displaytext }}" data-title="<p><b>ID:</b> <a href=&quot;{% url 'get_type_html' 'photos' item.id 'full' %}&quot;>{{ item.number }}</a></p>
-                      <p><b>Subjects:</b> {{ item.displaytext }}</p>
-                      <p><b>Description:</b> {{ item.description }}</p>">
-                      <img src="{{ item.thumbnail }}" alt="{{ item.displaytext }}">
+                {% if item.drs_id and item.drs_id != '' %}
+                  <a>
+                    <img src="{{ item.thumbnail }}" alt="{{ item.displaytext }}" data-drs-id="{{ item.drs_id }}">
                   </a>
+                {% else %}
+                  <a href="{{ item.main }}" title="{{ item.displaytext }}" data-title="<p><b>ID:</b> <a href=&quot;{% url 'get_type_html' 'photos' item.id 'full' %}&quot;>{{ item.number }}</a></p>
+                    <p><b>Subjects:</b> {{ item.displaytext }}</p>
+                    <p><b>Description:</b> {{ item.description }}</p>">
+                    <img src="{{ item.thumbnail }}" alt="{{ item.displaytext }}">
+                  </a>
+                {% endif %}
                 </div>
               </div>
             </div>
-            </li>
-            {% endfor %}
+          </li>
+          {% endfor %}
         </ul>
         </div>
       </section>
     </section>
 
+</div>
+
+
+<div id="miradorModal" class="reveal-modal photo-gallery-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+  <div class="row">
+      <div id="mirador"></div>
+  </div>
 </div>
 
       <!-- END MAIN CONTENT ROWS -->
@@ -76,10 +89,26 @@ $('#links').click(function(event) {
   if (!$(target).is('img')) {
     target = $(target).find('img')[0];
   }
-  var link = target.src ? target.parentNode : target,
-  options = {index: link, event: event, titleElement: 'div.title'},
-  links = $(this).find('a');
-  blueimp.Gallery(links, options);
+  if (target.dataset.drsId) {
+    let v = target.dataset.drsId;
+    let url = "{% url 'iiif-manifest' 1 %}"; // the '1' here is a placeholder
+    $('#miradorModal').foundation('open');
+    let miradorInstance = Mirador.viewer({
+      id: 'mirador',
+      windows: [
+        { manifestId: url.replace('1', v) }
+      ]
+    });
+    let closeButton = document.getElementsByClassName("mirador-window-close");
+    closeButton[0].addEventListener("click", function() {
+      $('#miradorModal').foundation('close');
+    });
+  } else {
+    var link = target.src ? target.parentNode : target;
+    options = {index: link, event: event, titleElement: 'div.title'},
+    links = $(this).find('a');
+    blueimp.Gallery(links, options);
+  }
 });
 </script>
 {% endblock %}
