@@ -1,5 +1,6 @@
 {% extends 'layouts/default.html' %}
 {% load static %}
+{% load search_tags %}
 {% set
   title: "Search the Archives",
   section: "search",
@@ -29,32 +30,27 @@
 
       <hr>
 
-      <form>
+      <form id="advanced-search-form" action="/search-results/">
         <div class="row">
 
           <section class="medium-5 medium-push-7 columns">
 
-            <fieldset>
+            <fieldset id = "temp">
               <legend>Search within the selected category:</legend>
 
               <div class="feature-block tertiary">
                 <input id="objects" value="objects" type="radio" name="category"><label for="objects">Objects</label><br>
-                <input id="videos" type="radio" name="category"><label for="videos">Videos</label><br>
-                <input id="exdiaries" value="exdiaries" type="radio" name="category"><label for="exdiaries">Excavation Diaries</label><br>
-                <input id="maps" value="maps" type="radio" name="category"><label for="maps">Maps &amp; Plans, Drawings</label><br>
-                <input id="people" value="people" type="radio" name="category"><label for="people">People</label><br>
-                <input id="tombs" value="tombs" type="radio" name="category"><label for="tombs">Tombs and Monuments</label><br>
-                <input id="photos" value="photos" type="radio" name="category"><label for="photos">Photos</label><br>
-                <input id="pubdoc" value="pubdoc" type="radio" name="category"><label for="pubdoc">Published Documentation</label><br>
-                <input id="unpubdoc" value="unpubdoc" type="radio" name="category"><label for="unpubdoc">Unpublished Documentation</label>
+                <input id="tombs" value="sites" type="radio" name="category"><label for="tombs">Tombs and Monuments</label><br>
+                <input id="diary" value="diarypages" type="radio" name="category"><label for="tombs">Diary Pages</label><br>
+                <input id="unpubdocs" value="unpubdocs" type="radio" name="category"><label for="tombs">Unpublished Documents</label><br>
+                <input id="mapsandplans" value="mapsandplans" type="radio" name="category"><label for="tombs">Maps and Plans</label><br>
               </div>
             </fieldset>
 
           </section>
           <section class="medium-7 medium-pull-5 columns">
-
               <label>Object title or name:
-                <input type="text" placeholder="Example: 'royal statue' or 'Khafre'">
+                <input type="text" id="inputMainText" name="q" placeholder="Example: 'royal statue' or 'Khafre'" value="{{request.GET.q}}">
               </label>
 
               <label>Object or ID number:
@@ -85,14 +81,13 @@
                   What is MET?
                 </span>
               </p>
-
           </section>
         </div>
 
         <div class="row">
           <div class="large-12 columns">
             <!-- This should be a <button> in real life -->
-            <a class="button primary" href="/search-results/">Search</a>
+            <button class="button primary" onclick="document.getElementById('advanced-search-form').submit();">Search</button>
           </div>
         </div>
 
