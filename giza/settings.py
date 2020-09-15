@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from .secure import SECURE_SETTINGS
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -89,10 +90,15 @@ WSGI_APPLICATION = 'giza.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': SECURE_SETTINGS.get('DB_NAME', 'giza'),
+        'USER': SECURE_SETTINGS.get('DB_USER', 'postgres'),
+        'PASSWORD': SECURE_SETTINGS.get('DB_PASSWORD'),
+        'HOST': SECURE_SETTINGS.get('DB_HOST', '127.0.0.1'),
+        'PORT': SECURE_SETTINGS.get('DB_PORT', 5432),  # Default postgres port
     }
 }
+
 
 SEARCH_BACKENDS = {
     'default': {
