@@ -1,0 +1,14 @@
+
+    {% if feature_footer %}
+    <div class="feature-block__footer">
+      <p class="content-footer-info">
+        {% if feature_subpg %}
+          <a href="/item-{{feature_anchor}}/">View all {{feature_counter}} {{feature_title}} <i class="icon-angle-right"></i></a>
+        {% else %}
+          <a href="/full.html#{{feature_anchor}}">View all {{feature_counter}} {{feature_title}} <i class="icon-angle-right"></i></a>
+        {% endif %}
+        </p>
+    </div>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,124 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Giza @ School",
+  section: "school",
+  section_school: true
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="9" %}
+
+  {% include 'partials/page-subheader--gizaatschool.html' %}
+
+{% endblock  %}
+
+{% block 'main_content' %}
+  <div class="row">
+
+    <section class="large-8 columns">
+
+      {% include 'partials/school-hilite-item--lessontopics.html' with  primary="true" hilite_title="Lesson Topics" hilite_link="/lessons/" hilite_img="lessontopics" hilite_link_text="View Topics" %}
+
+      {% include 'partials/school-hilite-item--commontopics.html' with hilite_title="People and Places of Giza" hilite_link="/commontopics/" hilite_img="people" hilite_link_text="View People and Places" %}
+
+      {% include 'partials/school-hilite-item--faq.html' with hilite_title="Glossary and FAQ" hilite_link="/faq/" hilite_img="faq" hilite_link_text="View Glossary and FAQ" %}
+
+      {% include 'partials/school-hilite-item--videos.html' with  hilite_title="Video Library" hilite_link="/videos/" hilite_img="videos" hilite_link_text="View All Videos" %}
+
+      <div class="p-y-1">
+        <p>
+          These resources are just the beginning. For more, search the
+          Digital Giza archive:
+        </p>
+        <form class="form-search-joined" action="/search-results/">
+          <input type="text" name="" placeholder="Search">
+          <button class="icon-search button"></button>
+        </form>
+      </div>
+
+    </section>
+    <section class="large-4 columns">
+
+      {% include 'partials/feature-block-start.html' with feature_block_class="secondary" %}
+        <div class="m-b-half">
+          <span class="badge secondary">
+            <span class="text-smaller p-x-qt">
+              Spotlight on Video
+            </span>
+          </span>
+        </div>
+        <div class="m-b-1">
+          <a href="/videos/">
+            <img class="img-fluid img-fluid-md-mw50"
+              src="{% static 'images/video-feature-thumb.png' %}"
+              alt="Video thumbnail">
+          </a>
+        </div>
+        <p>
+          See the Giza Plateau in a whole new way:
+        </p>
+        <ul>
+          <li>
+            <a href="/videos/">Videos</a>
+          </li>
+          <!-- Not live yet
+          <li>
+            <a href="/videos/">Interactive Videos</a>
+          </li>
+          -->
+          <li>
+            <a href="/giza3d/">Giza 3D Models</a>
+          </li>
+        </ul>
+      {% include 'partials/feature-block-end.html' %}
+
+      {% include 'partials/feature-block-start.html' with feature_title="More Resources" feature_block_class="secondary" feature_icon="list" %}
+        <div class="m-b-1">
+          <p>
+            Explore further with some of The Giza Project's favorite places
+            online.
+          </p>
+          <p class="text-smaller text-muted">
+            <em>Clicking these links will open a new browser tab.</em>
+          </p>
+        </div>
+
+        {% include 'partials/list-item-resourcelink-start.html' with
+          resource_title="EDSITEment!"
+          resource_link="https://edsitement.neh.gov/"
+        %}
+          Lesson plans and study activities from the National Endowment for
+          the Humanities (NEH). Check out their modules on Ancient Egypt's
+          <a target="_blank" href="https://edsitement.neh.gov/lesson-plan/egypts-pyramids-monuments-message#sect-thelesson">pyramids</a>
+          and <a target="_blank" href="https://edsitement.neh.gov/lesson-plan/egyptian-symbols-and-figures-scroll-paintings#sect-thelesson">scroll paintings</a>.
+        {% include 'partials/list-item-resourcelink-end.html' %}
+
+        {% include 'partials/list-item-resourcelink-start.html' with resource_title="Voices of Ancient Egypt" resource_link="http://www.voicesofancientegypt.com/" %}
+          Features a YouTube video channel as well as articles on popular
+          topics such as hieroglyphs.
+        {% include 'partials/list-item-resourcelink-end.html' %}
+
+        {% include 'partials/list-item-resourcelink-start.html' with resource_title="NileScribes" resource_link="https://nilescribes.org/" %}
+          Weekly posts on the latest in Egyptology, in both English and Arabic.
+        {% include 'partials/list-item-resourcelink-end.html' %}
+
+        {% include 'partials/list-item-resourcelink-start.html' with resource_title="Ancient Egypt Research Associates (AERA)" resource_link="http://www.aeraweb.org/" %}
+          Professional group with a mission to advance archaeological research,
+          conservation, and training in Egypt.
+        {% include 'partials/list-item-resourcelink-end.html' %}
+
+        {% include 'partials/list-item-resourcelink-start.html' with resource_title="Egyptology Resources" resource_link="https://www.fitzmuseum.cam.ac.uk/er/" %}
+          Long-standing online resource for those interested in Egyptology,
+          professionals or not. Hosted by the Fitzwilliam Museum.
+        {% include 'partials/list-item-resourcelink-end.html' %}
+
+      {% include 'partials/feature-block-end.html' %}
+
+    </section>
+
+  </div>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

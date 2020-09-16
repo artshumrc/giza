@@ -1,0 +1,227 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Khafre Valley Temple"
+  section: "explore",
+  section_explore: true,
+  bodyclasses: "header-full mode-intro"
+%}
+
+{% block 'page_headers' %}
+{% endblock  %}
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'main_content' %}
+  <div class="page-header header-bg-1" id="content">
+    <div class="row title">
+      <header class="large-8 columns">
+        <h1>{{title}} <a name="top"></a></h1>
+        <h3 class="page-header__meta">Khafre Pyramid Complex</h3>
+      </header>
+    </div>
+  </div>
+
+  <!-- row -->
+
+  <div class="row content-start">
+
+    <section class="large-8 columns content-col-primary">
+
+      <div class="row page-navigation-container">
+        <div class="large-4 columns large-push-8">
+          <div class="page-navigation">
+
+            <div class="view-mode-toggle">
+              <h5 class="heading-em">Show:</h5>
+              <div class="button-group">
+                <a class="primary button">Intro View</a>
+                <a class="secondary button" href="/full/">Full View</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="item__featured-image">
+        <img src="{% static 'img/full-khafre.jpg" alt="appropriate alt' %}">
+        <p class="item__featured-image__caption">
+          Caption for this photo.
+        </p>
+      </div>
+
+      <div class="item__overview">
+
+        <p class="lead text-alt">
+          Khafre was king during the Fourth Dynasty of ancient Egypt’s Old Kingdom; builder of the Second Pyramid at Giza. and probably of the Great Sphinx as well. Known two thousand years later by the Greeks as King Chephren.
+        </p>
+
+      </div>
+
+      <!-- nested row -->
+
+      <div class="row">
+        <div class="medium-6 columns">
+
+          {% include 'partials/feature-block-start.html' with feature_title="Finds" feature_block_class="" feature_icon="vase" feature_counter="11" feature_anchor="objects" feature_footer="true" %}
+            <ul class="feature-block__list thumbsize-sm thumbs-square">
+            {{#limit objects limit="5"}}
+              <li>
+                {% include 'partials/list-item-thumbnail.html' %}
+              </li>
+            {{/limit}}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+
+          {% include 'partials/feature-block-start.html' with feature_title="Excavation Diary Pages" feature_block_class="" feature_icon="sticky-note-o" feature_counter="9" feature_anchor="diary" feature_footer="true" %}
+            <ul class="feature-block__list thumbsize-sm thumbs-square">
+            {{#limit diary-pages limit="5"}}
+              <li>
+                {% include 'partials/list-item-thumbnail.html' %}
+              </li>
+            {{/limit}}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+
+          {% include 'partials/feature-block-start.html' with feature_title="Maps & Plans" feature_block_class="" feature_icon="map-o" feature_counter="5" feature_anchor="maps" feature_footer="true" %}
+            <ul class="feature-block__list item-grid thumbsize-lg thumbs-square">
+            {{#limit maps-plans limit="2"}}
+              <li>
+                {% include 'partials/list-item-thumbcaption.html' %}
+              </li>
+            {{/limit}}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+
+          {% include 'partials/feature-block-start.html' with feature_title="Drawings" feature_block_class="" feature_icon="pencil-square-o" feature_counter="11" feature_anchor="drawings" feature_footer="true" %}
+            <ul class="feature-block__list thumbsize-sm thumbs-square">
+            {{#limit drawings limit="5"}}
+              <li>
+                {% include 'partials/list-item-thumbnail.html' %}
+              </li>
+            {{/limit}}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+
+        </div>
+        <div class="medium-6 columns">
+
+
+          {% include 'partials/feature-block-start.html' with feature_title="Photos" feature_block_class="" feature_icon="camera" feature_counter="248" feature_anchor="photos" feature-subpg="true" feature_footer="true" %}
+            <ul class="feature-block__list item-grid thumbsize-sm thumbs-square">
+            {{#limit photos limit="15"}}
+              <li>
+                {% include 'partials/list-item-thumbonly.html' %}
+              </li>
+            {{/limit}}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+
+          {% include 'partials/feature-block-start.html' with feature_title="3D Models" feature_block_class="" feature_icon="pyramid-3d" feature_counter="1" feature_anchor="models" feature_footer="true" %}
+            <ul class="feature-block__list thumbsize-full">
+            {{#limit 3d-models limit="3"}}
+              <li>
+                {% include 'partials/list-item-thumbcaption.html' %}
+              </li>
+            {{/limit}}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+          {% include 'partials/feature-block-start.html' with feature_title="Published Document" feature_block_class="" feature_icon="book" feature_counter="12" feature_anchor="published" feature_footer="true" %}
+            <ul class="feature-block__list">
+            {{#limit published-docs limit="5"}}
+              <li>
+                {% include 'partials/list-item-document.html' %}
+              </li>
+            {{/limit}}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+
+          {% include 'partials/feature-block-start.html' with feature_title="Unpublished Documents" feature_block_class="" feature_icon="file-text-o" feature_counter="4" feature_anchor="unpublished" feature_footer="true" %}
+            <ul class="feature-block__list">
+            {{#limit unpublished-docs}}
+              <li>
+                {% include 'partials/list-item-document.html' %}
+              </li>
+            {{/limit}}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+
+        </div>
+      </div> <!-- end nested row -->
+    </section>
+
+    <section class="large-4 columns content-col-secondary">
+      <div class="row small-up-1 medium-up-2 large-up-1">
+        <div class="column">
+
+
+          {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="secondary" feature_icon="video-camera" feature_counter="3" feature_anchor="videos" feature_footer="true" %}
+            <ul class="feature-block__list multicol-2 thumbsize-lg">
+            {% for x in videos %}
+              <li>
+                {% include 'partials/list-item-thumbcaption.html' %}
+              </li>
+            {% endfor %}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+
+          {% include 'partials/feature-block-start.html' with
+            feature_title="Audio"
+            feature_block_class="secondary"
+            feature_icon="volume-up"
+            feature_counter="2"
+            feature_anchor="audio"
+            feature_footer="true"
+          }}
+            <ul class="feature-block__list">
+            {% for x in audio %}
+              <li>
+                {% include 'partials/list-item-mediacaption.html' %}
+              </li>
+            {% endfor %}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+
+          {% include 'partials/feature-block-start.html' with feature_title="People" feature_block_class="secondary collapsible" feature_icon="user" feature_counter="4" feature_anchor="people" feature_footer="true" %}
+            <h4>Ancient People</h4>
+
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+            {% for x in ancient-people %}
+              <li>
+                {% include 'partials/list-item-thumbnail.html' %}
+              </li>
+            {% endfor %}
+            </ul>
+
+            <h4>Modern People</h4>
+
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+            {% for x in modern-people %}
+              <li>
+                {% include 'partials/list-item-thumbnail.html' %}
+              </li>
+            {% endfor %}
+            </ul>
+          {% include 'partials/feature-block-end.html' %}
+
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- END MAIN CONTENT ROWS -->
+
+  {% include 'partials/gallery-modal.html' %}
+{% endblock  %}

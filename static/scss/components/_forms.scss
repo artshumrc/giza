@@ -1,0 +1,105 @@
+/*  Forms
+--------------------------------------*/
+
+legend {
+  font-family: $body-font-family;
+  font-weight: bold;
+  text-transform: none;
+}
+
+textarea {
+  resize: none;
+}
+
+select, input, textarea {
+	background-color: #fff;
+	border: solid 1px $sand-dark;
+	border-radius: 3px;
+}
+
+// Search facets radios/checkboxes
+
+.search-facet-item {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  position: relative;
+  
+  > [type="radio"], 
+  > [type="checkbox"] {
+    position: absolute;
+    top: 0.35em;
+  }
+  
+  > label {
+    line-height: 1.5;
+    margin-left: 1.5em;
+  }
+  
+}
+
+// Navbar search form
+
+#search-form {
+  display: flex;
+  
+  input {
+    margin: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  
+  button {
+    margin: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    color: $white;
+    display: inline-block;
+  }
+  
+  .icon-search::before {
+    top: -0.1em;
+  }
+}
+
+// Reusable version of the joined search form above
+.form-search-joined {
+  display: flex;
+  
+  input[type="text"] {
+    flex: 1;
+    margin: 0;
+  }
+  
+  .button, 
+  input[type="submit"] {
+    flex: 0;
+    margin: 0;
+    padding-top: 0.5em; // Match input padding
+    padding-bottom: 0.5em; // Match input padding
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    display: inline-block;
+  }
+}
+
+
+// Special case for Advanced Search: MET tooltip
+
+#tooltipMetMobile {
+}
+  
+  // Custom template class
+  
+  .tooltip.narrow {
+    width: 170px !important;
+  
+    @media (min-width: 330px) {
+      width: 220px !important;
+    }
+  
+  }
+
+// New for MyGiza
+input[type="radio"] {
+	border-radius: 50% !important;
+}

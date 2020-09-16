@@ -1,0 +1,159 @@
+/*  Giza @ School
+--------------------------------------*/
+
+// Hilite content items (G@S landing page)
+//    Layout/appearance switches at 'medium'
+
+// Map of hilite items (for looping through classes/image URLs)
+$hilite-items: (
+  'lessontopics',   // Lesson Topics
+	'people',         // People and Places of Giza
+	'faq',            // Glossary and FAQ
+	'videos'          // Video Library
+);
+
+// Default
+.content-hilite {
+  display: flex;
+  flex-direction: row;
+  padding-top: spacer(2);
+  padding-bottom: spacer(2);
+  border-bottom: solid 1px $sand-medium;
+  margin-bottom: spacer(1);
+}
+
+.content-hilite-content {
+  flex: 1 1 auto;
+  
+  @include breakpoint(medium) {
+    order: 2;
+  }
+}
+
+.content-hilite-header {
+}
+
+.content-hilite-body {
+  padding-right: spacer(1);
+}
+
+.content-hilite-footer {  
+}
+
+.content-hilite-image {
+  flex: 0 0 50px;
+  height: 50px;
+  border-radius: 75px; // Circle mask
+  background-color: $sand-medium;
+  background-image: url('../images/school-hilite-default.png');
+  background-size: 50px;
+  background-repeat: no-repeat;
+  
+  @include breakpoint(medium) {
+    order: 1;
+    flex: 0 0 150px;
+    height: 150px;
+    background-size: 150px;
+    margin-right: spacer(2);
+  }
+  
+  @each $item in $hilite-items {
+    &.img-#{$item} {
+      background-image: url('../images/school-hilite-#{$item}.png');
+    }
+  }
+}
+
+// Primary (lead) item
+.content-hilite-primary {
+  
+  @include breakpoint(medium) {
+    background-color: $body-background;
+    border: solid 1px $sand-medium;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    padding: 0;
+  }
+  
+  .content-hilite-content {
+    
+    @include breakpoint(medium) {
+      padding-top: spacer(2);
+      padding-bottom: spacer(2);
+    }
+  }
+  
+  .content-hilite-body {
+    
+    @include breakpoint(medium) {
+      font-size: 106.25%; // 17px
+    }
+  }
+  
+  .content-hilite-footer {
+    
+    @include breakpoint(medium) {
+      padding-top: spacer(1);
+    }
+  }
+  
+  .content-hilite-image {
+    
+    @include breakpoint(medium) {
+      flex: 0 0 160px;
+      height: auto;
+      background-size: 160px;
+      border-radius: 0;
+      
+      @each $item in $hilite-items {
+        &.img-#{$item} {
+          background-image: url('../images/school-hilite-#{$item}-primary.png');
+        }
+      }
+    }
+  }
+}
+
+
+// Lesson Topics
+//
+
+.topic-blurb {
+  padding-top: spacer("half");
+  padding-bottom: spacer(2);
+  border-bottom: solid 1px $sand-medium;
+  margin-bottom: spacer(2);
+}
+
+.topic-blurb-header {
+  padding-bottom: spacer(1);
+}
+
+.topic-blurb-body {
+  
+  @include breakpoint(medium) {
+    display: flex;
+  }
+}
+
+.topic-blurb-image {
+  margin-bottom: spacer(1);
+  max-width: 200px;
+  
+  @include breakpoint(medium) {
+    flex: 0 0 150px;
+    height: 150px;
+    margin-right: spacer(2);
+  }
+}
+
+.topic-blurb-text {
+  
+  @include breakpoint(medium) {
+    flex: 1 1 auto;
+  }
+}
+
+.topic-blurb-footer {
+  padding-bottom: spacer("half");
+}
