@@ -355,7 +355,7 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				}
 			}
 		},
-		"iiif_manifest" : {
+		"iiifmanifest" : {
 			"properties": {
 				"displaytext": {
 					"type" : "text",

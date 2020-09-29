@@ -21,12 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9w)eu)4tj*v(x%8^tz$fsc8^t@jj66_7_!_w2wo@9lcs)^xf6='
+SECRET_KEY = SECURE_SETTINGS.get("DJANGO_SECRET_KEY", '9w)eu)4tj*v(x%8^tz$fsc8^t@jj66_7_!_w2wo@9lcs)^xf6=')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '127.0.0.1',
     'localhost',
     '.local',
     '.archimedes.digital',
@@ -95,7 +96,7 @@ DATABASES = {
         'USER': SECURE_SETTINGS.get('DB_USER', 'postgres'),
         'PASSWORD': SECURE_SETTINGS.get('DB_PASSWORD'),
         'HOST': SECURE_SETTINGS.get('DB_HOST', '127.0.0.1'),
-        'PORT': SECURE_SETTINGS.get('DB_PORT', 5432),  # Default postgres port
+        'PORT': SECURE_SETTINGS.get('DB_PORT', '5432'),  # Default postgres port
     }
 }
 

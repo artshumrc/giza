@@ -69,10 +69,10 @@ def static_pages(request, page_name):
 def get_type_html(request, type, id, view):
 	# get site in elasticsearch and render or return 404
 	# try:
-		if view == "intro":
-			view = "full"
-		type_object = models.get_item(id, type)
-		return render(request, 'pages/'+view+'.html', {'object': type_object, 'type': type})
+	if view == "intro":
+		view = "full"
+	type_object = models.get_item(id, type)
+	return render(request, 'pages/'+view+'.html', {'object': type_object, 'type': type})
 	# except:
 	# 	raise Http404("There was an error getting this item")
 

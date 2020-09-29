@@ -239,7 +239,7 @@ def compile_resources_by_site():
 	
 def save(manifest):
 	if manifest and 'id' in manifest:
-		elasticsearch_connection.add_or_update_item(manifest['id'], json.dumps(manifest), 'iiif_manifest')
+		elasticsearch_connection.add_or_update_item(manifest['id'], json.dumps(manifest), 'iiifmanifest')
 
 def main():
 	process_sites_media_related_manifests()
