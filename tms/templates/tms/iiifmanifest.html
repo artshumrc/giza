@@ -1,0 +1,22 @@
+<div class="feature-block__body">
+  <ul class="feature-block__list multicol-2">
+    {% if object.display_text %}
+
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Description</dt>
+          <dd>{{ object.display_text }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.manifest %}
+    <li>
+      <div style="height:500px;width:100%;">
+        <div id="mirador"></div>
+      </div>
+    </li>
+    {% endif %}
+  </ul>
+</div>
