@@ -53,7 +53,7 @@
                  </div>
             <div class="top-bar-left nav-menu-primary">
               <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown" data-alignment="left">
-                <li {% if request.resolver_match.url_name == 'explore' or request.resolver_match.url_name == 'get_type_html' or request.resolver_match.url_name == 'library' or request.resolver_match.url_name == 'explorevideos' %}class="active"{% endif %}>
+                <li {% if request.resolver_match.url_name == 'explore' or request.resolver_match.url_name == 'get_type_html' or request.resolver_match.url_name == 'library' or request.resolver_match.url_name == 'videos' %}class="active"{% endif %}>
                   <a href="{% url 'explore' 'gizaintro' %}">Explore</a>
                     <ul class="vertical menu">
                       <li><a href="{% url 'explore' 'gizaintro' %}">Introduction to Giza</a></li>
@@ -61,7 +61,7 @@
                       <li><a href="{% url 'explore' 'commontopics' %}">Common Topics</a></li>
                       <!-- <li><a href="#0">Giza Maps &amp; Plans</a></li> -->
                       <li><a href="{% url 'library' %}">Digital Giza Library</a></li>
-                      <li><a href="{% url 'explorevideos' %}">Videos</a></li>
+                      <li><a href="{% url 'videos' %}">Videos</a></li>
                       <li><a href="{% url 'explore' 'faq' %}">Glossary &amp; FAQs</a></li>
                     </ul>
                   </li>
@@ -149,7 +149,7 @@
                 <li><a href="{% url 'explore' 'commontopics' %}">Common Topics</a></li>
                 <!-- <li><a href="#0">Giza Maps &amp; Plans</a></li> -->
                 <li><a href="{% url 'library' %}">Digital Giza Library</a></li>
-                <li><a href="{% url 'explorevideos' %}">Videos</a></li>
+                <li><a href="{% url 'videos' %}">Videos</a></li>
                 <li><a href="{% url 'explore' 'faq' %}">Glossary &amp; FAQs</a></li>
               </ul>
             </div>
