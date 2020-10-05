@@ -524,7 +524,7 @@ def create_library():
 
 				author_data['docs'].append({
 					'displaytext' : result['boilertext'],
-					'sorttext' : result['notes'],
+					'sorttext' : result['notes'] if result['notes'] is not None else result['title'],
 					'format' : result['format'],
 					# add file size
 					'url' : result['pdf']

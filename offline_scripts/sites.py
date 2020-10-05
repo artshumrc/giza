@@ -669,12 +669,9 @@ def save(site):
 def main(CURSOR=None):
 	if not CURSOR:
 		try:
-			print("trying to connect")
 			import pyodbc
-			print("imported pyodbc")
 			dsn = 'gizadatasource'
 			user = 'RC\\rsinghal'
-			print("trying to get password")
 			password = getpass.getpass()
 			database = 'gizacardtms'
 
