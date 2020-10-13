@@ -159,7 +159,7 @@
             <source src="{{ object.primarydisplay.main }}" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-        {% elif type == 'sites' %}
+        {% elif type == 'sites' or type == 'photos' %}
           <div style="height:500px;width:100%;">
             <div id="mirador"></div>
           </div>
@@ -835,8 +835,9 @@
 <script>
   $(document).ready(function(){
     let miradorDiv = $('#mirador');
+    let type = "{{ type }}";
     if(miradorDiv) {
-      let url = "{% url 'iiif-manifest' object.id %}";
+      let url = type === 'iiifmanifest' ? "{% url 'iiif-manifest' object.id %}" : "{% url 'iiif-manifest' object.drsId %}";
       Mirador.viewer({
         id: 'mirador',
         windows: [

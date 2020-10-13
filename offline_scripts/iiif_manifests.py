@@ -4,6 +4,7 @@ import json
 import os
 
 from utils import generate_IIIF_manifest, generate_site_IIIF_manifest
+from classifications import MEDIATYPES
 
 ARCH_IDS = {}
 SITE_RELATIONS = {}
@@ -85,6 +86,8 @@ def process_sites_media_related_manifests():
 			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
+
+    
 	
 	with open(os.path.join(DIRNAME, '..', 'data', 'sites_media_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
@@ -96,6 +99,7 @@ def process_sites_media_related_manifests():
 	
 		rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 		object = {}
+        
 		for row in rows:
 			if row[indices['drs_id']].lower() == "null":
 				continue
@@ -124,6 +128,20 @@ def process_sites_media_related_manifests():
 				SITE_RELATIONS[row[indices['site_id_index']]]['resources'].append(
 					ARCH_IDS[row[indices['drs_id']]]
 				)
+
+			# try to get the media document and append the drs_id
+			media_id = row[indices['media_master_id_index']]
+			media_type_key = int(row[indices['media_type_id_index']])
+			media_type = MEDIATYPES.get(media_type_key)
+
+			media = {}
+			if elasticsearch_connection.item_exists(media_id, media_type):
+				media = elasticsearch_connection.get_item(media_id, media_type)
+				media['drsId'] = row[indices['drs_id']]
+				save_media(media)
+			else:
+				print("%s could not be found!" % media_id)
+                        
 
 
 def process_object_sites_related_manifests():
@@ -225,6 +243,19 @@ def process_object_media_related_manifests():
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 				ARCH_IDS[row[indices['drs_id']]] = resource
+			elif not row[indices['drs_id']].lower() == "null":
+				# try to get the media document and append the drs_id
+				media_id = row[indices['media_master_id_index']]
+				media_type_key = int(row[indices['media_type_id_index']])
+				media_type = MEDIATYPES.get(media_type_key)
+
+				media = {}
+				if elasticsearch_connection.item_exists(media_id, media_type):
+					media = elasticsearch_connection.get_item(media_id, media_type)
+					media['drsId'] = row[indices['drs_id']]
+					save_media(media)
+				else:
+					print("%s could not be found!" % media_id)
 				
 def compile_resources_by_site():
 	print("Compiling associated site media for manifests.")
@@ -240,6 +271,15 @@ def compile_resources_by_site():
 def save(manifest):
 	if manifest and 'id' in manifest:
 		elasticsearch_connection.add_or_update_item(manifest['id'], json.dumps(manifest), 'iiifmanifest')
+
+def save_media(media):
+	if media and 'id' in media:
+		if not media['mediatype']:
+			# ignore for now, but this should send an email notification that there is missing data
+			# so that the classifications.py file can be updated
+			print("%s is missing a media type, ignoring for now" % (media['id']))
+			return
+		elasticsearch_connection.add_or_update_item(media['id'], json.dumps(media), media['mediatype'])
 
 def main():
 	process_sites_media_related_manifests()
