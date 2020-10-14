@@ -835,16 +835,17 @@
 <script>
   $(document).ready(function(){
     let miradorDiv = $('#mirador');
-    let type = "{{ type }}";
     if(miradorDiv) {
-      let url = type === 'iiifmanifest' ? "{% url 'iiif-manifest' object.id %}" : "{% url 'iiif-manifest' object.drsId %}";
+      let type = "{{ type }}";
+      let id = type === 'sites' || type === 'iiifmanifest' ? "{{ object.id }}" : "{{ object.drsId }}"; 
+      let url = "{% url 'iiif-manifest' 1 %}".replace('1', id); // the 1 is a placeholder
       Mirador.viewer({
         id: 'mirador',
         windows: [
           { manifestId: url }
         ]
       });    
-    }  
+    }
   });    
 </script>
 {% endblock %}
