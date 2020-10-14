@@ -83,6 +83,9 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				"relateditems": {
 					"type": "nested",
 					"include_in_all" : false
+				},
+				"drsId": {
+					"type": "text"
 				}
 			}
 		},
@@ -119,6 +122,9 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 							"index":"not_analyzed"
 						}
 					}
+				},
+				"drsId": {
+					"type": "text"
 				}
 			}
 		},
@@ -175,6 +181,9 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				},
 				"entrydate": {
 					"type": "text"
+				},
+				"drsId": {
+					"type": "text"
 				}
 			}
 		},
@@ -212,6 +221,9 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				},
 				"entrydate": {
 					"type": "text"
+				},
+				"drsId": {
+					"type": "text"
 				}
 			}
 		},
@@ -239,6 +251,9 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 					"index":"not_analyzed"
 				},
 				"entrydate": {
+					"type": "text"
+				},
+				"drsId": {
 					"type": "text"
 				}
 			}
@@ -297,6 +312,9 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 							"type" : "keyword"
 						}
 					}
+				},
+				"drsId": {
+					"type": "text"
 				}
 			}
 		},
