@@ -159,7 +159,7 @@
             <source src="{{ object.primarydisplay.main }}" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-        {% elif type == 'sites' or type == 'photos' %}
+        {% elif type == 'photos' and object.drsId or type == 'sites' %}
           <div style="height:500px;width:100%;">
             <div id="mirador"></div>
           </div>
