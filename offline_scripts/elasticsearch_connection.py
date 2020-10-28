@@ -7,7 +7,7 @@ ELASTICSEARCH_INDEX = 'giza'
 
 # Connect to elasticsearch db
 def get_connection():
-    return Elasticsearch(ELASTICSEARCH_URL)
+    return Elasticsearch(ELASTICSEARCH_URL, timeout=30, max_retries=10, retry_on_timeout=True)
 
 # Gets the content of an item, returns JSON
 def get_item(item_id, source):
