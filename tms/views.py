@@ -5,11 +5,6 @@ from django.template.exceptions import TemplateDoesNotExist
 from tms import models
 import json
 
-
-
-def index_legacy(request):
-	return static_pages_legacy(request, 'index')
-
 def about_legacy(request, page_name):
 	return static_pages_legacy(request, page_name)
 
@@ -80,7 +75,7 @@ def add_headers(response):
 	response["Access-Control-Allow-Origin"] = "*"
 	response["Content-Type"] = "application/ld+json"
 	return response
-		
+
 
 def get_manifest_data(request, id):
 	try:
@@ -94,11 +89,11 @@ def get_manifest_data(request, id):
 			canvas['@id'] = base_uri + canvas['@id']
 			for image in canvas['images']:
 				image['@id'] = base_uri + image['@id']
-				image['on'] = canvas['@id']	
+				image['on'] = canvas['@id']
 		return manifest
 	except:
 		return None
-		
+
 
 def get_manifest(request, id):
 	manifest = get_manifest_data(request, id)
@@ -116,15 +111,15 @@ def get_sequence(request, id):
 		return JsonResponse(manifest['sequences'][0])
 	else:
 		raise Http404("There was an error getting this manifest")
-	
-	
+
+
 def get_canvas(request, id, canvas_index):
 	manifest = get_manifest_data(request, id)
 	if manifest:
 		return JsonResponse(manifest['sequences'][0]['canvases'][canvas_index])
 	else:
 		raise Http404("There was an error getting this manifest")
-	
+
 
 def get_annotation(request, id, canvas_index):
 	manifest = get_manifest_data(request, id)

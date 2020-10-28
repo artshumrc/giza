@@ -22,7 +22,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', tms_views.index, name="index"),
-    url(r'^v1/$', tms_views.index_legacy, name="index_legacy"),
 
     url(r'^(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', tms_views.about, name="about"),
     url(r'^v1/(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', tms_views.about_legacy, name="about_legacy"),
@@ -59,7 +58,7 @@ urlpatterns = [
     url('sign-up/', views.sign_up, name='sign_up'),
     url('login/', views.user_login, name='login'),
     url('logout/', views.user_logout, name='logout'),
-	
+
 	path('manifests/<int:id>/', tms_views.get_manifest, name="iiif-manifest"),
 	path('manifests/<int:id>/sequence/0', tms_views.get_sequence, name="iiif-manifest-sequence"),
 	path('manifests/<int:id>/canvas/<int:canvas_index>', tms_views.get_canvas, name="iiif-manifest-canvas"),
