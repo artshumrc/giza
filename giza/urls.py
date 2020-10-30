@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^(?P<page_name>donate)/$', tms_views.donate, name="donate"),
 
     url(r'^(?P<page_name>archaeology|commontopics|faq|gizaintro|gizaatschool|giza3d)/$', tms_views.explore, name="explore"),
-    url(r'^v1/(?P<page_name>faq|gizaintro)/$', tms_views.explore_legacy, name="explore_legacy"),
+    url(r'^v1/(?P<page_name>gizaintro)/$', tms_views.explore_legacy, name="explore_legacy"),
 
     url(r'^lessons/(?P<slug>[\w-]+)$', views.lesson, name="lesson"),
     url(r'^lessons/$', views.lessons, name="lessons"),

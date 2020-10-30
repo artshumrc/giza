@@ -9,7 +9,7 @@
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {% block 'page_headers' %}
-  {% include 'partials/page-header.html' with bg="6" %}
+  {% include 'partials/page-header.html' with bg="6" title="Introduction to Giza" %}
 {% endblock  %}
 
 {% block 'main_content' %}
@@ -21,10 +21,10 @@
     <section class="medium-8 medium-pull-4 columns">
 
       <p class="lead text-alt m-b-2">
-        <em>This brief summary describes the basic history of the Giza Plateau. For a closer look at some of the most popular topics, people, and places related to ancient Giza, check out <a href="/gizaatschool/">Giza @ School</a>.</em>
+        <em>This brief summary describes the basic history of the Giza Plateau. For a closer look at some of the most popular topics, people, and places related to ancient Giza, check out <a href="{% url 'explore' 'gizaatschool' %}">Giza @ School</a>.</em>
       </p>
 
-      <p>The Giza Plateau of Egypt. Located about 15 miles southwest of modern Cairo, Giza is home to <a href="http://giza.fas.harvard.edu/sites/1782/full/">the Great Pyramid</a>, the only one of the Seven Wonders of the Ancient World still standing.</p>
+      <p>The Giza Plateau of Egypt. Located about 15 miles southwest of modern Cairo, Giza is home to <a href="{% url 'get_type_html' type='sites' id='1782' view='full' %}">the Great Pyramid</a>, the only one of the Seven Wonders of the Ancient World still standing.</p>
 
       <p>Built by <a href="http://giza.fas.harvard.edu/ancientpeople/202/full/">King Khufu</a> (also known as Cheops) in the Fourth Dynasty of ancient Egypt’s Old Kingdom (around 2550 BCE), the Great Pyramid was the largest ever constructed in Egypt, originally reaching a height of 481 feet.</p>
 
