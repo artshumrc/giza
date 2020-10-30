@@ -24,12 +24,11 @@ urlpatterns = [
     url(r'^$', tms_views.index, name="index"),
 
     url(r'^(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', tms_views.about, name="about"),
-    url(r'^v1/(?P<page_name>gizacard|news|resources|sampleblog)/$', tms_views.about_legacy, name="about_legacy"),
+    url(r'^v1/(?P<page_name>news|resources|sampleblog)/$', tms_views.about_legacy, name="about_legacy"),
 
     url(r'^(?P<page_name>donate)/$', tms_views.donate, name="donate"),
 
     url(r'^(?P<page_name>archaeology|commontopics|faq|gizaintro|gizaatschool|giza3d)/$', tms_views.explore, name="explore"),
-    url(r'^v1/(?P<page_name>gizaintro)/$', tms_views.explore_legacy, name="explore_legacy"),
 
     url(r'^lessons/(?P<slug>[\w-]+)$', views.lesson, name="lesson"),
     url(r'^lessons/$', views.lessons, name="lessons"),
@@ -41,7 +40,6 @@ urlpatterns = [
     url(r'^mygiza/$', views.mygiza, name="mygiza"),
 
     url(r'^library/$', search_views.library, name="library"),
-    url(r'^v1/library/$', search_views.library_legacy, name="library_legacy"),
 
     url(r'^videos/$', search_views.videos, name="videos"),
     url(r'^v1/videos/$', search_views.videos_legacy, name="videos_legacy"),

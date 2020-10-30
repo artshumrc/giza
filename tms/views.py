@@ -11,9 +11,6 @@ def about_legacy(request, page_name):
 def donate_legacy(request, page_name):
 	return static_pages_legacy(request, page_name)
 
-def explore_legacy(request, page_name):
-	return static_pages_legacy(request, page_name)
-
 def static_pages_legacy(request, page_name):
 	template = 'tms/%s.html' % page_name
 	try:
