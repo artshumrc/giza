@@ -94,10 +94,10 @@ def videos(request):
 		"size": 500,
 		"query": {
 			"wildcard" : {
-				"number" : "GPH_3DP*"
+				"number" : "gph_3dp*"
 			}
 		},
-		"sort" : "displaytext"
+		"sort" : "displaytext.keyword"
 	})['hits']['hits']
 	hits = []
 	for r in results:
@@ -112,10 +112,10 @@ def videos_legacy(request):
 		"size": 500,
 		"query": {
 			"wildcard" : {
-				"number" : "GPH_3DP*"
+				"number" : "gph_3dp*"
 			}
 		},
-		"sort" : "displaytext"
+		"sort" : "displaytext.keyword"
 	})['hits']['hits']
 	hits = []
 	for r in results:
