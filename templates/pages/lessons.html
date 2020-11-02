@@ -9,7 +9,7 @@
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {% block 'page_headers' %}
-  {% include 'partials/page-header.html' with bg="9" %}
+  {% include 'partials/page-header.html' with bg="9" title="Giza @ School"%}
 
   {% include 'partials/page-subheader.html' with backlink_url="/gizaatschool/" backlink_text="Back to Giza @ School" %}
 {% endblock  %}
@@ -31,7 +31,7 @@
     <section class="large-8 large-pull-4 columns">
 
       {% for lesson in lessons %}
-        {% include 'partials/lesson-topic-blurb.html' %} 
+        {% include 'partials/lesson-topic-blurb.html' %}
       {% endfor %}
 
     </section>
