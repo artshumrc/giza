@@ -106,24 +106,6 @@ def videos(request):
 		'results' : hits
 	})
 
-# get virtual Giza tour videos
-def videos_legacy(request):
-	results = es.search(index=ES_INDEX, doc_type='videos', body={
-		"size": 500,
-		"query": {
-			"wildcard" : {
-				"number" : "gph_3dp*"
-			}
-		},
-		"sort" : "displaytext.keyword"
-	})['hits']['hits']
-	hits = []
-	for r in results:
-		hits.append(r['_source'])
-	return render(request, 'search/explorevideos.html', {
-		'results' : hits
-	})
-
 def results(request):
 	search_term = request.GET.get('q', '')
 	sort = request.GET.get('sort', '_score')

@@ -42,7 +42,6 @@ urlpatterns = [
     url(r'^library/$', search_views.library, name="library"),
 
     url(r'^videos/$', search_views.videos, name="videos"),
-    url(r'^v1/videos/$', search_views.videos_legacy, name="videos_legacy"),
 
     url(r'^search/$', search_views.search, name='search'),
     url(r'^v1/search/$', search_views.search_legacy, name='search_legacy'),
