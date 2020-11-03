@@ -320,9 +320,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		},
 		"videos" : {
 			"properties": {
-				"displaytext": {
-					"include_in_all" : false
-				},
 				"allnumbers": {
 					"type" : "text",
 					"analyzer":"lowercase_keyword"
