@@ -24,7 +24,6 @@ urlpatterns = [
     url(r'^$', tms_views.index, name="index"),
 
     url(r'^(?P<page_name>about|blog|contact|gizacard|news|resources|sampleblog)/$', tms_views.about, name="about"),
-    url(r'^v1/(?P<page_name>news|resources|sampleblog)/$', tms_views.about_legacy, name="about_legacy"),
 
     url(r'^(?P<page_name>donate)/$', tms_views.donate, name="donate"),
 

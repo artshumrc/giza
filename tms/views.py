@@ -5,9 +5,6 @@ from django.template.exceptions import TemplateDoesNotExist
 from tms import models
 import json
 
-def about_legacy(request, page_name):
-	return static_pages_legacy(request, page_name)
-
 def donate_legacy(request, page_name):
 	return static_pages_legacy(request, page_name)
 
