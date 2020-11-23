@@ -595,7 +595,7 @@ def process_site_related_media(CURSOR):
 		display_text = ": ".join([mediaview, caption])
 		media_master_id = row[indices['media_master_id_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
-		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']]),
+		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
