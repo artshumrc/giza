@@ -832,6 +832,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script charset="utf-8" type="text/javascript" src="{% static 'js/mirador-giza.js' %}"></script>
 <script>
   $(document).ready(function(){
     let miradorDiv = $('#mirador');
@@ -839,12 +840,16 @@
       let type = "{{ type }}";
       let id = type === 'sites' || type === 'iiifmanifest' ? "{{ object.id }}" : "{{ object.drsId }}";
       let url = "{% url 'iiif-manifest' 1 %}".replace('1', id); // the 1 is a placeholder
-      Mirador.viewer({
-        id: 'mirador',
-        windows: [
-          { manifestId: url }
-        ]
-      });
+      
+      const config = {
+        windows: [{
+          imageToolsEnabled: true,
+          manifestId: url,
+          loadedManifest: url,
+        }]
+      }
+      var addConfig = Mirador.actions.importConfig(config);
+      miradorInstance.store.dispatch(addConfig);
     }
   });
 </script>
