@@ -148,7 +148,7 @@
       </div>
     </div>
 
-    {% if object.primarydisplay.main %}
+    {% if object.primarydisplay.main or object.drsId %}
       <div class="item__featured-image">
         {% if type == '3dmodels' %}
         <iframe allowfullscreen height="500px" width="100%" src="{{ object.primarydisplay.main }}"></iframe>
@@ -837,15 +837,15 @@
     let miradorDiv = $('#mirador');
     if(miradorDiv) {
       let type = "{{ type }}";
-      let id = type === 'sites' || type === 'iiifmanifest' ? "{{ object.id }}" : "{{ object.drsId }}"; 
+      let id = type === 'sites' || type === 'iiifmanifest' ? "{{ object.id }}" : "{{ object.drsId }}";
       let url = "{% url 'iiif-manifest' 1 %}".replace('1', id); // the 1 is a placeholder
       Mirador.viewer({
         id: 'mirador',
         windows: [
           { manifestId: url }
         ]
-      });    
+      });
     }
-  });    
+  });
 </script>
 {% endblock %}
