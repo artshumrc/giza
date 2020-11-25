@@ -83,6 +83,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script type="text/javascript" src="{% static 'js/mirador-giza.js' %}"></script>
 <script>
 $('#links').click(function(event) {
   var target = event.target;
@@ -93,12 +94,17 @@ $('#links').click(function(event) {
     let v = target.dataset.drsId;
     let url = "{% url 'iiif-manifest' 1 %}"; // the '1' here is a placeholder
     $('#miradorModal').foundation('open');
-    let miradorInstance = Mirador.viewer({
-      id: 'mirador',
-      windows: [
-        { manifestId: url.replace('1', v) }
-      ]
-    });
+
+    const config = {
+      windows: [{
+        imageToolsEnabled: true,
+        manifestId: url.replace('1', v),
+        loadedManifest: url.replace('1', v),
+      }]
+    }
+    var addConfig = Mirador.actions.importConfig(config);
+    miradorInstance.store.dispatch(addConfig);
+
     let closeButton = document.getElementsByClassName("mirador-window-close");
     closeButton[0].addEventListener("click", function() {
       $('#miradorModal').foundation('close');
