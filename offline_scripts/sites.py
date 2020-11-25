@@ -11,8 +11,10 @@ import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import sites_sql
-from utils import get_media_url, process_cursor_row
+from utils import get_media_url, process_cursor_row, generate_IIIF_manifest, generate_site_IIIF_manifest
 
+ARCH_IDS = {}
+SITE_RELATIONS = {}
 
 DIRNAME = os.path.dirname(__file__)
 
@@ -613,7 +615,8 @@ def process_site_related_media(CURSOR):
 			'main' : main_url,
 			'displaytext' : display_text,
 			'number' : number,
-			'description' : description
+			'description' : description,
+			'drs_id' : drs_id
 			}
 		site['relateditems'][media_type].append({
 			'id' : media_master_id,
@@ -625,6 +628,35 @@ def process_site_related_media(CURSOR):
 			'description' : description,
 			'drs_id' : drs_id
 			})
+
+		if drs_id != "":
+			if drs_id not in ARCH_IDS.keys():
+				manifest_ob = {
+					"ArchIDNum": drs_id,
+					"Description": description,
+					"MediaView": mediaview
+				}
+				object = {
+					"id": drs_id,
+					"manifest": generate_IIIF_manifest(manifest_ob)
+				}
+				save_manifest(object, drs_id)
+				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
+				ARCH_IDS[drs_id] = resource
+
+			if site_id not in SITE_RELATIONS.keys():
+				SITE_RELATIONS[row[indices['site_id_index']]] = {
+					'description': description,
+					'label': mediaview,
+					'resources': [
+						ARCH_IDS[drs_id]
+					]
+				}
+			else:
+				SITE_RELATIONS[site_id]['resources'].append(
+					ARCH_IDS[drs_id]
+				)
+
 		return(site, current_id)
 
 	print("Starting Sites Related Media...")
@@ -662,9 +694,24 @@ def process_site_related_media(CURSOR):
 
 	print("Finished Sites Related Media...")
 
+# create manifests for all IIIF images per site
+def compile_resources_by_site():
+	print("Compiling associated site media for manifests.")
+	for k, v in SITE_RELATIONS.items():
+		object = {
+		    "id": k,
+			"manifest": generate_site_IIIF_manifest(k, v)
+		}
+		save_manifest(object, 'sites-' + k)
+	print(f"Compiled resources for {len(SITE_RELATIONS)} sites.")
+
 def save(site):
 	if site and 'id' in site:
 		elasticsearch_connection.add_or_update_item(site['id'], json.dumps(site), 'sites')
+
+def save_manifest(manifest, id):
+	if manifest and 'id' in manifest:
+		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest')
 
 def main(CURSOR=None):
 	if not CURSOR:
@@ -689,6 +736,7 @@ def main(CURSOR=None):
 	process_site_related_constituents(CURSOR)
 	process_site_related_published(CURSOR)
 	process_site_related_media(CURSOR)
+	compile_resources_by_site()
 
 if __name__ == "__main__":
 	main()

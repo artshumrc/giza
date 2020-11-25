@@ -54,10 +54,10 @@ urlpatterns = [
     url('login/', views.user_login, name='login'),
     url('logout/', views.user_logout, name='logout'),
 
-	path('manifests/<int:id>/', tms_views.get_manifest, name="iiif-manifest"),
-	path('manifests/<int:id>/sequence/0', tms_views.get_sequence, name="iiif-manifest-sequence"),
-	path('manifests/<int:id>/canvas/<int:canvas_index>', tms_views.get_canvas, name="iiif-manifest-canvas"),
-	path('manifests/<int:id>/annotation/canvas/<int:canvas_index>', tms_views.get_annotation, name="iiif-manifest-annotation"),
+	path('manifests/<slug:id>/', tms_views.get_manifest, name="iiif-manifest"),
+	path('manifests/<slug:id>/sequence/0', tms_views.get_sequence, name="iiif-manifest-sequence"),
+	path('manifests/<slug:id>/canvas/<int:canvas_index>', tms_views.get_canvas, name="iiif-manifest-canvas"),
+	path('manifests/<slug:id>/annotation/canvas/<int:canvas_index>', tms_views.get_annotation, name="iiif-manifest-annotation"),
 
     url(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html, name='get_type_html'),
     url(r'^v1/(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html_legacy, name='get_type_html_legacy'),
