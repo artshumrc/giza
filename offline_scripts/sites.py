@@ -599,6 +599,7 @@ def process_site_related_media(CURSOR):
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		primary_display = True if row[indices['primary_display_index']] == '1' else False
 
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
 		# so, make sure we are only using videos that are mp4s
@@ -609,7 +610,7 @@ def process_site_related_media(CURSOR):
 		if media_type not in site['relateditems']:
 			site['relateditems'][media_type] = []
 		# add primary photo as a top level item as well
-		if row[indices['primary_display_index']] == '1':
+		if primary_display:
 			site['primarydisplay'] = {
 			'thumbnail' : thumbnail_url,
 			'main' : main_url,
@@ -621,7 +622,7 @@ def process_site_related_media(CURSOR):
 		site['relateditems'][media_type].append({
 			'id' : media_master_id,
 			'displaytext' : display_text,
-			'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
+			'primarydisplay' : primary_display,
 			'thumbnail' : thumbnail_url,
 			'main' : main_url,
 			'number' : number,
@@ -645,7 +646,7 @@ def process_site_related_media(CURSOR):
 				ARCH_IDS[drs_id] = resource
 
 			if site_id not in SITE_RELATIONS.keys():
-				SITE_RELATIONS[row[indices['site_id_index']]] = {
+				SITE_RELATIONS[site_id] = {
 					'description': description,
 					'label': mediaview,
 					'resources': [
@@ -656,6 +657,8 @@ def process_site_related_media(CURSOR):
 				SITE_RELATIONS[site_id]['resources'].append(
 					ARCH_IDS[drs_id]
 				)
+			if primary_display:
+				SITE_RELATIONS[site_id]['startCanvas'] = drs_id
 
 		return(site, current_id)
 

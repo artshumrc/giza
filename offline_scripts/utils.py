@@ -36,7 +36,7 @@ def get_height_and_width(id):
 	r.raise_for_status()
 	j = r.json()
 	return j["height"], j["width"]
-	
+
 
 def generate_IIIF_manifest(row):
 	""" returns json representation of a IIIF manifest """
@@ -50,6 +50,10 @@ def generate_site_IIIF_manifest(key, data):
 	""" Compile all the resources associated with a site into one manifest """
 	manifest = build_base_manifest(key, data['description'], data['label'])
 	manifest["sequences"] = build_multi_image_sequence(key, data['resources'])
+	for canvas in manifest["sequences"][0]["canvases"]:
+		if "startCanvas" in data and data["startCanvas"] in canvas["images"][0]["resource"]["service"]["@id"]:
+			manifest["startCanvas"] = canvas["@id"]
+			print (manifest)
 	return manifest
 
 
@@ -63,8 +67,8 @@ def build_base_manifest(id, description, label):
 		"@type": "sc:Manifest"
 	}
 	return ob
-	
-	
+
+
 def build_manifest_sequences(id):
 	""" return sequence list for IIIF manifest """
 	seq_id = "{}/sequence/0".format(id)
@@ -92,8 +96,8 @@ def build_multi_image_sequence(id, resources_list):
 	for idx, resource in enumerate(resources_list):
 		seq[0]['canvases'].append(build_manifest_canvas(id, idx, resource))
 	return seq
-	
-	
+
+
 def build_manifest_canvas(id, idx, resource):
 	if resource is None:
 		resource = build_resource(id)
@@ -115,8 +119,8 @@ def build_manifest_canvas(id, idx, resource):
 		]
 	}
 	return canvas
-	
-		
+
+
 def build_resource(id):
 	height, width = get_height_and_width(id)
 	service = {
@@ -132,4 +136,3 @@ def build_resource(id):
 	    "service": service
 	}
 	return resource
-	
