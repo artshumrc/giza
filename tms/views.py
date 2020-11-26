@@ -77,6 +77,7 @@ def get_manifest_data(request, id):
 		data = models.get_item(id, "iiifmanifest")
 		manifest = data['manifest']
 		manifest['@id'] = base_uri + manifest['@id']
+		manifest['startCanvas'] = base_uri + manifest['startCanvas']
 		manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
 		canvases = manifest['sequences'][0]['canvases']
 		for canvas in canvases:
