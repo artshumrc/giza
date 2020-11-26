@@ -52,7 +52,7 @@ def generate_site_IIIF_manifest(key, data):
 	manifest["sequences"] = build_multi_image_sequence(key, data['resources'])
 	for canvas in manifest["sequences"][0]["canvases"]:
 		if "startCanvas" in data and data["startCanvas"] in canvas["images"][0]["resource"]["service"]["@id"]:
-			manifest["startCanvas"] = canvas["@id"]
+			manifest["sequences"][0]["startCanvas"] = canvas["@id"]
 			print (manifest)
 	return manifest
 
