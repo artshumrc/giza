@@ -2,7 +2,7 @@ import json
 
 from unittest import mock
 from django.test import TestCase
-from offline_scripts.utils import generate_IIIF_manifest, generate_site_IIIF_manifest
+from offline_scripts.utils import generate_IIIF_manifest, generate_multi_canvas_iiif_manifest
 from .views import get_manifest, get_sequence, get_canvas, get_annotation
 
 
@@ -142,7 +142,7 @@ class UtilsTestCase(TestCase):
 		}
 		self.assertEqual(generate_IIIF_manifest(row), MANIFEST)
 		
-	def test_generate_site_IIIF_manifest(self):
+	def test_generate_multi_canvas_iiif_manifest(self):
 		data = {
 		    '1' : {
 				'description': "A description of a manifest.",
@@ -173,7 +173,7 @@ class UtilsTestCase(TestCase):
 				]
 			}
 		}
-		self.assertEqual(generate_site_IIIF_manifest(1, data['1']), MULTI_MANIFEST)
+		self.assertEqual(generate_multi_canvas_iiif_manifest(1, data['1']), MULTI_MANIFEST)
 		
 class ViewsTestCase(TestCase):
 	

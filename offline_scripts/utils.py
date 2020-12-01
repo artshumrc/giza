@@ -46,7 +46,7 @@ def generate_IIIF_manifest(row):
 	return manifest
 
 
-def generate_site_IIIF_manifest(key, data):
+def generate_multi_canvas_iiif_manifest(key, data):
 	""" Compile all the resources associated with a site into one manifest """
 	manifest = build_base_manifest(key, data['description'], data['label'])
 	manifest["sequences"] = build_multi_image_sequence(key, data['resources'])

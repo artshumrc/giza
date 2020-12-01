@@ -3,7 +3,7 @@ import elasticsearch_connection
 import json
 import os
 
-from utils import generate_IIIF_manifest, generate_site_IIIF_manifest
+from utils import generate_IIIF_manifest, generate_multi_canvas_iiif_manifest
 from classifications import MEDIATYPES
 
 ARCH_IDS = {}
@@ -26,7 +26,7 @@ def process_sites_objects_related_manifests():
 			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
-		
+
 	with open(os.path.join(DIRNAME, '..', 'data', 'sites_objects_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
@@ -34,7 +34,7 @@ def process_sites_objects_related_manifests():
 		headers = headers.replace('\n','')
 		columns = headers.split(',')
 		indices = get_indices()
-	
+
 		rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 		object = {}
 		for row in rows:
@@ -65,7 +65,7 @@ def process_sites_objects_related_manifests():
 				SITE_RELATIONS[row[indices['site_id_index']]]['resources'].append(
 					ARCH_IDS[row[indices['drs_id']]]
 				)
-					
+
 
 
 def process_sites_media_related_manifests():
@@ -87,8 +87,8 @@ def process_sites_media_related_manifests():
 		}
 		return indices
 
-    
-	
+
+
 	with open(os.path.join(DIRNAME, '..', 'data', 'sites_media_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
@@ -96,10 +96,10 @@ def process_sites_media_related_manifests():
 		headers = headers.replace('\n','')
 		columns = headers.split(',')
 		indices = get_indices()
-	
+
 		rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 		object = {}
-        
+
 		for row in rows:
 			if row[indices['drs_id']].lower() == "null":
 				continue
@@ -129,6 +129,7 @@ def process_sites_media_related_manifests():
 					ARCH_IDS[row[indices['drs_id']]]
 				)
 
+			## MOVE TO media.py ##
 			# try to get the media document and append the drs_id
 			media_id = row[indices['media_master_id_index']]
 			media_type_key = int(row[indices['media_type_id_index']])
@@ -141,7 +142,8 @@ def process_sites_media_related_manifests():
 				save_media(media)
 			else:
 				print("%s could not be found!" % media_id)
-                        
+			## MOVE TO media.py ##
+
 
 
 def process_object_sites_related_manifests():
@@ -157,8 +159,8 @@ def process_object_sites_related_manifests():
 			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
-		
-	
+
+
 	with open(os.path.join(DIRNAME, '..', 'data', 'objects_sites_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
@@ -166,7 +168,7 @@ def process_object_sites_related_manifests():
 		headers = headers.replace('\n','')
 		columns = headers.split(',')
 		indices = get_indices()
-	
+
 		rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 		object = {}
 		for row in rows:
@@ -218,7 +220,7 @@ def process_object_media_related_manifests():
 			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
-		
+
 	with open(os.path.join(DIRNAME, '..', 'data', 'objects_media_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 		# Get the query headers to use as keys in the JSON
 		headers = next(csvfile)
@@ -226,7 +228,7 @@ def process_object_media_related_manifests():
 		headers = headers.replace('\n','')
 		columns = headers.split(',')
 		indices = get_indices()
-	
+
 		rows = csv.reader(csvfile, delimiter=',', quotechar='"')
 		object = {}
 		for row in rows:
@@ -256,18 +258,18 @@ def process_object_media_related_manifests():
 					save_media(media)
 				else:
 					print("%s could not be found!" % media_id)
-				
+
 def compile_resources_by_site():
 	print("Compiling associated site media for manifests.")
 	for k, v in SITE_RELATIONS.items():
 		object = {
 		    "id": k,
-			"manifest": generate_site_IIIF_manifest(k, v)
+			"manifest": generate_multi_canvas_iiif_manifest(k, v)
 		}
 		save(object)
 	print(f"Compiled resources for {len(SITE_RELATIONS)} sites.")
-				
-	
+
+
 def save(manifest):
 	if manifest and 'id' in manifest:
 		elasticsearch_connection.add_or_update_item(manifest['id'], json.dumps(manifest), 'iiifmanifest')

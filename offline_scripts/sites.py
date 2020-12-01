@@ -11,7 +11,7 @@ import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import sites_sql
-from utils import get_media_url, process_cursor_row, generate_IIIF_manifest, generate_site_IIIF_manifest
+from utils import get_media_url, process_cursor_row, generate_IIIF_manifest, generate_multi_canvas_iiif_manifest
 
 ARCH_IDS = {}
 SITE_RELATIONS = {}
@@ -703,7 +703,7 @@ def compile_resources_by_site():
 	for k, v in SITE_RELATIONS.items():
 		object = {
 		    "id": k,
-			"manifest": generate_site_IIIF_manifest(k, v)
+			"manifest": generate_multi_canvas_iiif_manifest(k, v)
 		}
 		save_manifest(object, 'sites-' + k)
 	print(f"Compiled resources for {len(SITE_RELATIONS)} sites.")
