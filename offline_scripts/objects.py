@@ -804,7 +804,7 @@ def process_object_related_media(CURSOR):
 				resource = ob['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 				ARCH_IDS[drs_id] = resource
 
-			if site_id not in OBJECT_RELATIONS.keys():
+			if id not in OBJECT_RELATIONS.keys():
 				OBJECT_RELATIONS[id] = {
 					'description': description,
 					'label': mediaview,
