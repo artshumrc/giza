@@ -11,8 +11,10 @@ import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import objects_sql
-from utils import get_media_url, process_cursor_row
+from utils import get_media_url, process_cursor_row, generate_IIIF_manifest, generate_multi_canvas_iiif_manifest
 
+ARCH_IDS = {}
+OBJECT_RELATIONS = {}
 
 DIRNAME = os.path.dirname(__file__)
 
@@ -752,6 +754,8 @@ def process_object_related_media(CURSOR):
 		caption = "" if row[indices['caption_index']].lower() == "null" else row[indices['caption_index']]
 		display_text = ": ".join([mediaview, caption])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		primary_display = True if row[indices['primary_display_index']] == '1' else False
+
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
 		# so, make sure we are only using videos that are mp4s
 		if media_type_key == 3:
@@ -764,25 +768,58 @@ def process_object_related_media(CURSOR):
 		if media_type == 'photos':
 			object['hasphoto'] = "Yes"
 		# add primary photo as a top level item as well
-		if row[indices['primary_display_index']] == '1':
+		if primary_display:
 			object['primarydisplay'] = {
 			'thumbnail' : thumbnail_url,
 			'main' : main_url,
 			'displaytext' : display_text,
 			'number' : number,
-			'description' : description
+			'description' : description,
+			'drs_id' : drs_id
 			}
 		if not (classification == '3dmodels' and media_type == '3dmodels'):
 			object['relateditems'][media_type].append({
 				'id' : media_master_id,
 				'displaytext' : display_text,
-				'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
+				'primarydisplay' : primary_display,
 				'thumbnail' : thumbnail_url,
 				'main' : main_url,
 				'number' : number,
 				'description' : description,
-				'iiif_manifest': drs_id
+				'drs_id': drs_id
 				})
+
+		if drs_id != "":
+			if drs_id not in ARCH_IDS.keys():
+				manifest_ob = {
+					"ArchIDNum": drs_id,
+					"Description": description,
+					"MediaView": mediaview
+				}
+				ob = {
+					"id": drs_id,
+					"manifest": generate_IIIF_manifest(manifest_ob)
+				}
+				save_manifest(ob, drs_id)
+				resource = ob['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
+				ARCH_IDS[drs_id] = resource
+
+			if site_id not in OBJECT_RELATIONS.keys():
+				OBJECT_RELATIONS[id] = {
+					'description': description,
+					'label': mediaview,
+					'resources': [
+						ARCH_IDS[drs_id]
+					],
+					'classification': classification
+				}
+			else:
+				OBJECT_RELATIONS[id]['resources'].append(
+					ARCH_IDS[drs_id]
+				)
+			if primary_display:
+				OBJECT_RELATIONS[id]['startCanvas'] = drs_id
+
 		return(object, current_id)
 
 	print("Starting Objects Related Media...")
@@ -820,6 +857,17 @@ def process_object_related_media(CURSOR):
 
 	print("Finished Objects Related Media...")
 
+# create manifests for all IIIF images per object
+def compile_resources_by_object():
+	print("Compiling associated object media for manifests.")
+	for k, v in OBJECT_RELATIONS.items():
+		object = {
+		    "id": k,
+			"manifest": generate_multi_canvas_iiif_manifest(k, v)
+		}
+		save_manifest(object, v['classification'] + '-' + k)
+	print(f"Compiled resources for {len(OBJECT_RELATIONS)} objects.")
+
 def save(object):
 	if object and 'id' in object:
 		if not object['classification']:
@@ -828,6 +876,10 @@ def save(object):
 			print("%s is missing a classification, ignoring for now" % (object['id']))
 			return
 		elasticsearch_connection.add_or_update_item(object['id'], json.dumps(object), object['classification'])
+
+def save_manifest(manifest, id):
+	if manifest and 'id' in manifest:
+		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest')
 
 def main(CURSOR=None):
 	if not CURSOR:
@@ -854,6 +906,7 @@ def main(CURSOR=None):
 	process_object_related_published(CURSOR)
 	process_object_related_unpublished(CURSOR)
 	process_object_related_media(CURSOR)
+	compile_resources_by_object()
 
 if __name__ == "__main__":
 	main()
