@@ -38,7 +38,7 @@ def get_height_and_width(id):
 	return j["height"], j["width"]
 
 
-def generate_IIIF_manifest(row):
+def generate_iiif_manifest(row):
 	""" returns json representation of a IIIF manifest """
 	manifest = build_base_manifest(row['ArchIDNum'], row['Description'], row['MediaView'])
 	manifest["sequences"] = build_manifest_sequences(row['ArchIDNum'])

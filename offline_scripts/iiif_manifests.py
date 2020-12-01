@@ -3,7 +3,7 @@ import elasticsearch_connection
 import json
 import os
 
-from utils import generate_IIIF_manifest, generate_multi_canvas_iiif_manifest
+from utils import generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 from classifications import MEDIATYPES
 
 ARCH_IDS = {}
@@ -48,7 +48,7 @@ def process_sites_objects_related_manifests():
 				}
 				object = {
 					"id": row[indices['drs_id']],
-					"manifest": generate_IIIF_manifest(manifest_ob)
+					"manifest": generate_iiif_manifest(manifest_ob)
 				}
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
@@ -111,7 +111,7 @@ def process_sites_media_related_manifests():
 				}
 				object = {
 					"id": row[indices['drs_id']],
-					"manifest": generate_IIIF_manifest(manifest_ob)
+					"manifest": generate_iiif_manifest(manifest_ob)
 				}
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
@@ -182,7 +182,7 @@ def process_object_sites_related_manifests():
 				}
 				object = {
 					"id": row[indices['drs_id']],
-					"manifest": generate_IIIF_manifest(manifest_ob)
+					"manifest": generate_iiif_manifest(manifest_ob)
 				}
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
@@ -240,7 +240,7 @@ def process_object_media_related_manifests():
 				}
 				object = {
 					"id": row[indices['drs_id']],
-					"manifest": generate_IIIF_manifest(manifest_ob)
+					"manifest": generate_iiif_manifest(manifest_ob)
 				}
 				save(object)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']

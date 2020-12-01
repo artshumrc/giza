@@ -2,7 +2,7 @@ import json
 
 from unittest import mock
 from django.test import TestCase
-from offline_scripts.utils import generate_IIIF_manifest, generate_multi_canvas_iiif_manifest
+from offline_scripts.utils import generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 from .views import get_manifest, get_sequence, get_canvas, get_annotation
 
 
@@ -134,13 +134,13 @@ class UtilsTestCase(TestCase):
 	def tearDown(self):
 		pass
 		
-	def test_generate_IIIF_manifest(self):
+	def test_generate_iiif_manifest(self):
 		row = {
 			"ArchIDNum": 459673218,
 			"Description": "A description of a manifest.",
 			"MediaView": "Some label"
 		}
-		self.assertEqual(generate_IIIF_manifest(row), MANIFEST)
+		self.assertEqual(generate_iiif_manifest(row), MANIFEST)
 		
 	def test_generate_multi_canvas_iiif_manifest(self):
 		data = {

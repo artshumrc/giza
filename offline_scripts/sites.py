@@ -11,7 +11,7 @@ import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import sites_sql
-from utils import get_media_url, process_cursor_row, generate_IIIF_manifest, generate_multi_canvas_iiif_manifest
+from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 
 ARCH_IDS = {}
 SITE_RELATIONS = {}
@@ -639,7 +639,7 @@ def process_site_related_media(CURSOR):
 				}
 				object = {
 					"id": drs_id,
-					"manifest": generate_IIIF_manifest(manifest_ob)
+					"manifest": generate_iiif_manifest(manifest_ob)
 				}
 				save_manifest(object, drs_id)
 				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
