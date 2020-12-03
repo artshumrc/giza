@@ -8,6 +8,7 @@ import getpass
 import json
 import operator
 import os
+from datetime import datetime
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import sites_sql
@@ -74,7 +75,11 @@ def process_sites(CURSOR):
 	print("Starting Sites...")
 	if CURSOR:
 		sql_command = sites_sql.SITES
+		print("Going to execute sql command")
+    	print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+    	print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		site_id_index = get_indices()
 
@@ -83,7 +88,11 @@ def process_sites(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process site row")
+	    	print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
+			print("Finished processing site row")
+	    	print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(site)
@@ -147,7 +156,11 @@ def process_site_dates(CURSOR):
 	print("Starting Sites Dates...")
 	if CURSOR:
 		sql_command = sites_sql.SITEDATES
+		print("Going to execute sql command")
+    	print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+    	print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -156,7 +169,11 @@ def process_site_dates(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process site row")
+	    	print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
+			print("Finished processing site row")
+	    	print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(site)
@@ -221,7 +238,11 @@ def process_site_altnums(CURSOR):
 	print("Starting Sites AltNums...")
 	if CURSOR:
 		sql_command = sites_sql.ALTNUMS
+		print("Going to execute sql command")
+    	print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+    	print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -230,7 +251,11 @@ def process_site_altnums(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process site row")
+	    	print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
+			print("Finished processing site row")
+	    	print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(site)
@@ -319,7 +344,11 @@ def process_site_related_objects(CURSOR):
 	print("Starting Sites Related Objects...")
 	if CURSOR:
 		sql_command = sites_sql.RELATED_OBJECTS
+		print("Going to execute sql command")
+    	print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+    	print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -328,7 +357,11 @@ def process_site_related_objects(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process site row")
+	    	print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
+			print("Finished processing site row")
+	    	print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(site)
@@ -430,7 +463,11 @@ def process_site_related_constituents(CURSOR):
 	print("Starting Sites Related Constituents...")
 	if CURSOR:
 		sql_command = sites_sql.RELATED_CONSTITUENTS
+		print("Going to execute sql command")
+    	print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+    	print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -439,7 +476,11 @@ def process_site_related_constituents(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process site row")
+	    	print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
+			print("Finished processing site row")
+	    	print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(site)
@@ -518,7 +559,11 @@ def process_site_related_published(CURSOR):
 	print("Starting Sites Related Published...")
 	if CURSOR:
 		sql_command = sites_sql.RELATED_PUBLISHED
+		print("Going to execute sql command")
+    	print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+    	print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -527,7 +572,11 @@ def process_site_related_published(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process site row")
+	    	print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
+			print("Finished processing site row")
+	    	print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(site)
@@ -665,7 +714,11 @@ def process_site_related_media(CURSOR):
 	print("Starting Sites Related Media...")
 	if CURSOR:
 		sql_command = sites_sql.RELATED_MEDIA
+		print("Going to execute sql command")
+    	print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+    	print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -674,7 +727,11 @@ def process_site_related_media(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process site row")
+	    	print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
+			print("Finished processing site row")
+	    	print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(site)
