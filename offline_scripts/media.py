@@ -86,6 +86,7 @@ def process_media(CURSOR):
 		return (media, current_id)
 
 	print("Starting Media...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = media_sql.MEDIA
 		print("Going to execute sql command")
@@ -128,6 +129,7 @@ def process_media(CURSOR):
 			save(media)
 
 	print("Finished Media...")
+	print(datetime.now())
 
 def process_media_related_sites(CURSOR):
 	def get_indices():
@@ -184,6 +186,7 @@ def process_media_related_sites(CURSOR):
 		return(media, current_id)
 
 	print("Starting Media Related Sites...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = media_sql.RELATED_SITES
 		print("Going to execute sql command")
@@ -199,10 +202,10 @@ def process_media_related_sites(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process media row")
+			print("Going to process media related sites row")
 			print(datetime.now())
 			(media, current_id) = process_media_row(media, current_id)
-			print("Finished processing media row")
+			print("Finished processing media related sites row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last media to elasticsearch
@@ -225,6 +228,7 @@ def process_media_related_sites(CURSOR):
 			save(media)
 
 	print("Finished Media Related Sites...")
+	print(datetime.now())
 
 # Update all related items from the Objects table
 def process_media_related_objects(CURSOR):
@@ -293,6 +297,7 @@ def process_media_related_objects(CURSOR):
 		return (media, current_id)
 
 	print("Starting Media Related Objects...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = media_sql.RELATED_OBJECTS
 		print("Going to execute sql command")
@@ -308,10 +313,10 @@ def process_media_related_objects(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process media row")
+			print("Going to process media related objects row")
 			print(datetime.now())
 			(media, current_id) = process_media_row(media, current_id)
-			print("Finished processing media row")
+			print("Finished processing media related objects row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -333,6 +338,7 @@ def process_media_related_objects(CURSOR):
 			# save last object to elasticsearch
 			save(media)
 	print("Finished Media Related Objects...")
+	print(datetime.now())
 
 def process_media_related_constituents(CURSOR):
 	def get_indices():
@@ -410,6 +416,7 @@ def process_media_related_constituents(CURSOR):
 		return(media, current_id)
 
 	print("Starting Media Related Constituents...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = media_sql.RELATED_CONSTITUENTS
 		print("Going to execute sql command")
@@ -425,10 +432,10 @@ def process_media_related_constituents(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process media row")
+			print("Going to process media related constituents row")
 			print(datetime.now())
 			(media, current_id) = process_media_row(media, current_id)
-			print("Finished processing media row")
+			print("Finished processing media related constituents row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last media to elasticsearch
@@ -451,6 +458,7 @@ def process_media_related_constituents(CURSOR):
 			save(media)
 
 	print("Finished Media Related Constituents...")
+	print(datetime.now())
 
 def process_media_related_published(CURSOR):
 	def get_indices():
@@ -507,6 +515,7 @@ def process_media_related_published(CURSOR):
 		return(media, current_id)
 
 	print("Starting Media Related Published...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = media_sql.RELATED_PUBLISHED
 		print("Going to execute sql command")
@@ -522,10 +531,10 @@ def process_media_related_published(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process media row")
+			print("Going to process media related published row")
 			print(datetime.now())
 			(media, current_id) = process_media_row(media, current_id)
-			print("Finished processing media row")
+			print("Finished processing media related published row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last media to elasticsearch
@@ -548,6 +557,7 @@ def process_media_related_published(CURSOR):
 			save(media)
 
 	print("Finished Media Related Published...")
+	print(datetime.now())
 
 def save(media):
 	if media and 'id' in media:

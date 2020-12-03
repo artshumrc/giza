@@ -65,6 +65,7 @@ def process_constituents(CURSOR):
 		return (constituent, current_id)
 
 	print("Starting Constituents...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.CONSTITUENTS
 		print("Going to execute sql command")
@@ -107,6 +108,8 @@ def process_constituents(CURSOR):
 			save(constituent)
 
 	print("Finished Constituents...")
+	print(datetime.now())
+
 
 # Update relevant constituents with alternate names
 def process_constituents_altnames(CURSOR):
@@ -147,6 +150,7 @@ def process_constituents_altnames(CURSOR):
 		return (constituent, current_id)
 
 	print("Starting Constituents AltNames...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.ALT_NAMES
 		print("Going to execute sql command")
@@ -162,10 +166,10 @@ def process_constituents_altnames(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process constituent row")
+			print("Going to process constituent altname row")
 			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
-			print("Finished processing constituent row")
+			print("Finished processing constituent altname row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -187,6 +191,7 @@ def process_constituents_altnames(CURSOR):
 			# save last object to elasticsearch
 			save(constituent)
 	print("Finished Constituents AltNames...")
+	print(datetime.now())
 
 # Update all related items from the Objects table
 def process_constituents_related_objects(CURSOR):
@@ -253,6 +258,7 @@ def process_constituents_related_objects(CURSOR):
 		return (constituent, current_id)
 
 	print("Starting Constituents Related Objects...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_OBJECTS
 		print("Going to execute sql command")
@@ -268,10 +274,10 @@ def process_constituents_related_objects(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process constituent row")
+			print("Going to process constituent related object row")
 			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
-			print("Finished processing constituent row")
+			print("Finished processing constituent related object row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -293,6 +299,7 @@ def process_constituents_related_objects(CURSOR):
 			# save last object to elasticsearch
 			save(constituent)
 	print("Finished Constituents Related Objects...")
+	print(datetime.now())
 
 # Next, update constituent with all related Sites
 def process_constituents_related_sites(CURSOR):
@@ -348,6 +355,7 @@ def process_constituents_related_sites(CURSOR):
 		return(constituent, current_id)
 
 	print("Starting Constituents Related Sites...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_SITES
 		print("Going to execute sql command")
@@ -363,10 +371,10 @@ def process_constituents_related_sites(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process constituent row")
+			print("Going to process constituent related site row")
 			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
-			print("Finished processing constituent row")
+			print("Finished processing constituent related site row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -389,6 +397,7 @@ def process_constituents_related_sites(CURSOR):
 			save(constituent)
 
 	print("Finished Constituents Related Sites...")
+	print(datetime.now())
 
 # Next, update constituent with all related Published Documents
 def process_constituents_related_published(CURSOR):
@@ -443,6 +452,7 @@ def process_constituents_related_published(CURSOR):
 		return(constituent, current_id)
 
 	print("Starting Constituents Related Published...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_PUBLISHED
 		print("Going to execute sql command")
@@ -458,10 +468,10 @@ def process_constituents_related_published(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process constituent row")
+			print("Going to process constituent related published row")
 			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
-			print("Finished processing constituent row")
+			print("Finished processing constituent related published row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -484,6 +494,7 @@ def process_constituents_related_published(CURSOR):
 			save(constituent)
 
 	print("Finished Constituents Related Published...")
+	print(datetime.now())
 
 # Update constituent with all related media
 def process_constituents_related_media(CURSOR):
@@ -599,6 +610,7 @@ def process_constituents_related_media(CURSOR):
 		return(constituent, current_id)
 
 	print("Starting Constituents Related Media...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_MEDIA
 		print("Going to execute sql command")
@@ -614,10 +626,10 @@ def process_constituents_related_media(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process constituent row")
+			print("Going to process constituent related media row")
 			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
-			print("Finished processing constituent row")
+			print("Finished processing constituent related media row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -640,6 +652,7 @@ def process_constituents_related_media(CURSOR):
 			save(constituent)
 
 	print("Finished Constituents Related Media...")
+	print(datetime.now())
 
 # create manifests for all IIIF images per constituent
 def compile_resources_by_constituent():

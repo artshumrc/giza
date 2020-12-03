@@ -81,6 +81,7 @@ def process_objects(CURSOR):
 		return (object, current_id)
 
 	print("Starting Objects...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.OBJECTS
 		print("Going to execute sql command")
@@ -123,6 +124,7 @@ def process_objects(CURSOR):
 			save(object)
 
 	print("Finished Objects...")
+	print(datetime.now())
 
 def process_object_geocodes(CURSOR):
 	def get_indices():
@@ -162,6 +164,7 @@ def process_object_geocodes(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Geocodes...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.GEOCODES
 		print("Going to execute sql command")
@@ -177,10 +180,10 @@ def process_object_geocodes(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process object row")
+			print("Going to process object geocodes row")
 			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
-			print("Finished processing object row")
+			print("Finished processing object geocodes row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -203,6 +206,7 @@ def process_object_geocodes(CURSOR):
 			save(object)
 
 	print("Finished Objects Geocodes...")
+	print(datetime.now())
 
 # Update relevant objects with alternate numbers
 def process_object_altnums(CURSOR):
@@ -242,6 +246,7 @@ def process_object_altnums(CURSOR):
 		return (object, current_id)
 
 	print("Starting Objects AltNums...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.ALTNUMS
 		print("Going to execute sql command")
@@ -257,10 +262,10 @@ def process_object_altnums(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process object row")
+			print("Going to process object altnums row")
 			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
-			print("Finished processing object row")
+			print("Finished processing object altnums row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -282,6 +287,7 @@ def process_object_altnums(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 	print("Finished Objects AltNums...")
+	print(datetime.now())
 
 # Update relevant objects with alternate numbers
 def process_object_flexfields(CURSOR):
@@ -324,6 +330,7 @@ def process_object_flexfields(CURSOR):
 		return (object, current_id)
 
 	print("Starting Objects Flex Fields...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.FLEXFIELDS
 		print("Going to execute sql command")
@@ -339,10 +346,10 @@ def process_object_flexfields(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process object row")
+			print("Going to process object flex fields row")
 			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
-			print("Finished processing object row")
+			print("Finished processing object flex fields row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -364,6 +371,7 @@ def process_object_flexfields(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 	print("Finished Objects Flex Fields...")
+	print(datetime.now())
 
 def process_object_related_sites(CURSOR):
 	def get_indices():
@@ -428,6 +436,7 @@ def process_object_related_sites(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Related Sites...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_SITES
 		print("Going to execute sql command")
@@ -443,10 +452,10 @@ def process_object_related_sites(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process object row")
+			print("Going to process object related sites row")
 			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
-			print("Finished processing object row")
+			print("Finished processing object related sites row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -469,6 +478,7 @@ def process_object_related_sites(CURSOR):
 			save(object)
 
 	print("Finished Objects Related Sites...")
+	print(datetime.now())
 
 def process_object_related_constituents(CURSOR):
 	def get_indices():
@@ -539,6 +549,7 @@ def process_object_related_constituents(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Related Constituents...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_CONSTITUENTS
 		print("Going to execute sql command")
@@ -554,10 +565,10 @@ def process_object_related_constituents(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process object row")
+			print("Going to process object related constituents row")
 			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
-			print("Finished processing object row")
+			print("Finished processing object related constituents row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -580,6 +591,7 @@ def process_object_related_constituents(CURSOR):
 			save(object)
 
 	print("Finished Objects Related Constituents...")
+	print(datetime.now())
 
 def process_object_related_published(CURSOR):
 	def get_indices():
@@ -633,6 +645,7 @@ def process_object_related_published(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Related Published...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_PUBLISHED
 		print("Going to execute sql command")
@@ -648,10 +661,10 @@ def process_object_related_published(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process object row")
+			print("Going to process object related published row")
 			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
-			print("Finished processing object row")
+			print("Finished processing object related published row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -674,6 +687,7 @@ def process_object_related_published(CURSOR):
 			save(object)
 
 	print("Finished Objects Related Published...")
+	print(datetime.now())
 
 def process_object_related_unpublished(CURSOR):
 	def get_indices():
@@ -728,6 +742,7 @@ def process_object_related_unpublished(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Related Unpublished...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_UNPUBLISHED
 		print("Going to execute sql command")
@@ -743,10 +758,10 @@ def process_object_related_unpublished(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process object row")
+			print("Going to process object related unpublished row")
 			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
-			print("Finished processing object row")
+			print("Finished processing object related unpublished row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -769,6 +784,7 @@ def process_object_related_unpublished(CURSOR):
 			save(object)
 
 	print("Finished Objects Related Unpublished...")
+	print(datetime.now())
 
 def process_object_related_media(CURSOR):
 	def get_indices():
@@ -888,6 +904,7 @@ def process_object_related_media(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Related Media...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_MEDIA
 		print("Going to execute sql command")
@@ -903,10 +920,10 @@ def process_object_related_media(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process object row")
+			print("Going to process object related media row")
 			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
-			print("Finished processing object row")
+			print("Finished processing object related media row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -929,6 +946,7 @@ def process_object_related_media(CURSOR):
 			save(object)
 
 	print("Finished Objects Related Media...")
+	print(datetime.now())
 
 # create manifests for all IIIF images per object
 def compile_resources_by_object():

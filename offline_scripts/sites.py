@@ -73,6 +73,7 @@ def process_sites(CURSOR):
 		return (site, current_id)
 
 	print("Starting Sites...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.SITES
 		print("Going to execute sql command")
@@ -115,6 +116,7 @@ def process_sites(CURSOR):
 			save(site)
 
 	print("Finished Sites...")
+	print(datetime.now())
 
 def process_site_dates(CURSOR):
 	def get_indices():
@@ -154,6 +156,7 @@ def process_site_dates(CURSOR):
 		return (site, current_id)
 
 	print("Starting Sites Dates...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.SITEDATES
 		print("Going to execute sql command")
@@ -169,10 +172,10 @@ def process_site_dates(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process site row")
+			print("Going to process site dates row")
 			print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
-			print("Finished processing site row")
+			print("Finished processing site dates row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -194,6 +197,7 @@ def process_site_dates(CURSOR):
 			# save last object to elasticsearch
 			save(site)
 	print("Finished Sites Dates...")
+	print(datetime.now())
 
 # Update relevant sites with alternate numbers
 def process_site_altnums(CURSOR):
@@ -236,6 +240,7 @@ def process_site_altnums(CURSOR):
 		return (site, current_id)
 
 	print("Starting Sites AltNums...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.ALTNUMS
 		print("Going to execute sql command")
@@ -251,10 +256,10 @@ def process_site_altnums(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process site row")
+			print("Going to process site altnums row")
 			print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
-			print("Finished processing site row")
+			print("Finished processing site altnums row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -276,6 +281,7 @@ def process_site_altnums(CURSOR):
 			# save last object to elasticsearch
 			save(site)
 	print("Finished Sites AltNums...")
+	print(datetime.now())
 
 # Update all related items from the Objects table
 def process_site_related_objects(CURSOR):
@@ -342,6 +348,7 @@ def process_site_related_objects(CURSOR):
 		return (site, current_id)
 
 	print("Starting Sites Related Objects...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.RELATED_OBJECTS
 		print("Going to execute sql command")
@@ -357,10 +364,10 @@ def process_site_related_objects(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process site row")
+			print("Going to process site related objects row")
 			print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
-			print("Finished processing site row")
+			print("Finished processing site related objects row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -382,6 +389,7 @@ def process_site_related_objects(CURSOR):
 			# save last object to elasticsearch
 			save(site)
 	print("Finished Sites Related Objects...")
+	print(datetime.now())
 
 # Next, update site with all related Constituents
 def process_site_related_constituents(CURSOR):
@@ -461,6 +469,7 @@ def process_site_related_constituents(CURSOR):
 		return(site, current_id)
 
 	print("Starting Sites Related Constituents...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.RELATED_CONSTITUENTS
 		print("Going to execute sql command")
@@ -476,10 +485,10 @@ def process_site_related_constituents(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process site row")
+			print("Going to process site related constituents row")
 			print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
-			print("Finished processing site row")
+			print("Finished processing site related constituents row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -502,6 +511,7 @@ def process_site_related_constituents(CURSOR):
 			save(site)
 
 	print("Finished Sites Related Constituents...")
+	print(datetime.now())
 
 # Next, update site with all related Published Documents
 def process_site_related_published(CURSOR):
@@ -557,6 +567,7 @@ def process_site_related_published(CURSOR):
 		return(site, current_id)
 
 	print("Starting Sites Related Published...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.RELATED_PUBLISHED
 		print("Going to execute sql command")
@@ -572,10 +583,10 @@ def process_site_related_published(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process site row")
+			print("Going to process site related published row")
 			print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
-			print("Finished processing site row")
+			print("Finished processing site related published row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -598,6 +609,7 @@ def process_site_related_published(CURSOR):
 			save(site)
 
 	print("Finished Sites Related Published...")
+	print(datetime.now())
 
 # Update site with all related media
 def process_site_related_media(CURSOR):
@@ -712,6 +724,7 @@ def process_site_related_media(CURSOR):
 		return(site, current_id)
 
 	print("Starting Sites Related Media...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.RELATED_MEDIA
 		print("Going to execute sql command")
@@ -727,10 +740,10 @@ def process_site_related_media(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
-			print("Going to process site row")
+			print("Going to process site related media row")
 			print(datetime.now())
 			(site, current_id) = process_site_row(site, current_id)
-			print("Finished processing site row")
+			print("Finished processing site related media row")
 			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
@@ -753,6 +766,7 @@ def process_site_related_media(CURSOR):
 			save(site)
 
 	print("Finished Sites Related Media...")
+	print(datetime.now())
 
 # create manifests for all IIIF images per site
 def compile_resources_by_site():
