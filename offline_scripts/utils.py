@@ -53,7 +53,6 @@ def generate_multi_canvas_iiif_manifest(key, data):
 	for canvas in manifest["sequences"][0]["canvases"]:
 		if "startCanvas" in data and data["startCanvas"] in canvas["images"][0]["resource"]["service"]["@id"]:
 			manifest["sequences"][0]["startCanvas"] = canvas["@id"]
-			print (manifest)
 	return manifest
 
 
