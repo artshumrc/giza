@@ -84,10 +84,10 @@ def process_objects(CURSOR):
 	if CURSOR:
 		sql_command = objects_sql.OBJECTS
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -97,10 +97,10 @@ def process_objects(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
 			print("Finished processing object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
@@ -165,10 +165,10 @@ def process_object_geocodes(CURSOR):
 	if CURSOR:
 		sql_command = objects_sql.GEOCODES
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -178,10 +178,10 @@ def process_object_geocodes(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
 			print("Finished processing object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
@@ -245,10 +245,10 @@ def process_object_altnums(CURSOR):
 	if CURSOR:
 		sql_command = objects_sql.ALTNUMS
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -258,10 +258,10 @@ def process_object_altnums(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
 			print("Finished processing object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
@@ -327,10 +327,10 @@ def process_object_flexfields(CURSOR):
 	if CURSOR:
 		sql_command = objects_sql.FLEXFIELDS
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -340,10 +340,10 @@ def process_object_flexfields(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
 			print("Finished processing object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
@@ -431,10 +431,10 @@ def process_object_related_sites(CURSOR):
 	if CURSOR:
 		sql_command = objects_sql.RELATED_SITES
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -444,10 +444,10 @@ def process_object_related_sites(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
 			print("Finished processing object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
@@ -542,10 +542,10 @@ def process_object_related_constituents(CURSOR):
 	if CURSOR:
 		sql_command = objects_sql.RELATED_CONSTITUENTS
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -555,10 +555,10 @@ def process_object_related_constituents(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
 			print("Finished processing object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
@@ -636,10 +636,10 @@ def process_object_related_published(CURSOR):
 	if CURSOR:
 		sql_command = objects_sql.RELATED_PUBLISHED
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -649,10 +649,10 @@ def process_object_related_published(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
 			print("Finished processing object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
@@ -731,10 +731,10 @@ def process_object_related_unpublished(CURSOR):
 	if CURSOR:
 		sql_command = objects_sql.RELATED_UNPUBLISHED
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -744,10 +744,10 @@ def process_object_related_unpublished(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
 			print("Finished processing object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
@@ -891,10 +891,10 @@ def process_object_related_media(CURSOR):
 	if CURSOR:
 		sql_command = objects_sql.RELATED_MEDIA
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -904,10 +904,10 @@ def process_object_related_media(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
 			print("Finished processing object row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
@@ -935,7 +935,7 @@ def compile_resources_by_object():
 	print("Compiling associated object media for manifests.")
 	for k, v in OBJECT_RELATIONS.items():
 		object = {
-		    "id": k,
+			"id": k,
 			"manifest": generate_multi_canvas_iiif_manifest(k, v)
 		}
 		save_manifest(object, v['classification'] + '-' + k)

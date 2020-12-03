@@ -68,10 +68,10 @@ def process_constituents(CURSOR):
 	if CURSOR:
 		sql_command = constituents_sql.CONSTITUENTS
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -81,10 +81,10 @@ def process_constituents(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			print("Finished processing constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(constituent)
@@ -150,10 +150,10 @@ def process_constituents_altnames(CURSOR):
 	if CURSOR:
 		sql_command = constituents_sql.ALT_NAMES
 		print("Going to execute sql command")
-	    print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-	    print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -163,10 +163,10 @@ def process_constituents_altnames(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			print("Finished processing constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(constituent)
@@ -256,10 +256,10 @@ def process_constituents_related_objects(CURSOR):
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_OBJECTS
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -269,10 +269,10 @@ def process_constituents_related_objects(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			print("Finished processing constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(constituent)
@@ -351,10 +351,10 @@ def process_constituents_related_sites(CURSOR):
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_SITES
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -364,10 +364,10 @@ def process_constituents_related_sites(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			print("Finished processing constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(constituent)
@@ -446,10 +446,10 @@ def process_constituents_related_published(CURSOR):
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_PUBLISHED
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -459,10 +459,10 @@ def process_constituents_related_published(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			print("Finished processing constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(constituent)
@@ -602,10 +602,10 @@ def process_constituents_related_media(CURSOR):
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_MEDIA
 		print("Going to execute sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		CURSOR.execute(sql_command)
 		print("Finished executing sql command")
-    	print(datetime.now())
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -615,10 +615,10 @@ def process_constituents_related_media(CURSOR):
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
 			print("Going to process constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			(constituent, current_id) = process_constituent_row(constituent, current_id)
 			print("Finished processing constituent row")
-	    	print(datetime.now())
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(constituent)
@@ -646,7 +646,7 @@ def compile_resources_by_constituent():
 	print("Compiling associated constituent media for manifests.")
 	for k, v in CONSTITUENT_RELATIONS.items():
 		object = {
-		    "id": k,
+			"id": k,
 			"manifest": generate_multi_canvas_iiif_manifest(k, v)
 		}
 		save_manifest(object, v['type'] + '-' + k)
