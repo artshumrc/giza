@@ -11,8 +11,10 @@ import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import constituents_sql
-from utils import get_media_url, process_cursor_row
+from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 
+ARCH_IDS = {}
+CONSTITUENT_RELATIONS = {}
 
 DIRNAME = os.path.dirname(__file__)
 
@@ -458,7 +460,8 @@ def process_constituents_related_media(CURSOR):
 			'thumb_path_index' : columns.index('ThumbPathName'),
 			'thumb_file_index' : columns.index('ThumbFileName'),
 			'main_path_index' : columns.index('MainPathName'),
-			'main_file_index' : columns.index('MainFileName')
+			'main_file_index' : columns.index('MainFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -491,6 +494,8 @@ def process_constituents_related_media(CURSOR):
 		mediaview = "" if row[indices['media_view_index']].lower() == "null" else row[indices['media_view_index']]
 		caption = "" if row[indices['caption_index']].lower() == "null" else row[indices['caption_index']]
 		display_text = ": ".join([mediaview, caption])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		primary_display = True if row[indices['primary_display_index']] == '1' else False
 
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
 		# so, make sure we are only using videos that are mp4s
@@ -518,6 +523,38 @@ def process_constituents_related_media(CURSOR):
 			'number' : number,
 			'description' : description
 			})
+
+		if drs_id != "":
+			if drs_id not in ARCH_IDS.keys():
+				manifest_ob = {
+					"ArchIDNum": drs_id,
+					"Description": description,
+					"MediaView": mediaview
+				}
+				object = {
+					"id": drs_id,
+					"manifest": generate_iiif_manifest(manifest_ob)
+				}
+				save_manifest(object, drs_id)
+				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
+				ARCH_IDS[drs_id] = resource
+
+			if constituent_id not in CONSTITUENT_RELATIONS.keys():
+				CONSTITUENT_RELATIONS[constituent_id] = {
+					'description': description,
+					'label': mediaview,
+					'resources': [
+						ARCH_IDS[drs_id]
+					],
+					'type': type
+				}
+			else:
+				CONSTITUENT_RELATIONS[constituent_id]['resources'].append(
+					ARCH_IDS[drs_id]
+				)
+			if primary_display:
+				CONSTITUENT_RELATIONS[constituent_id]['startCanvas'] = drs_id
+
 		return(constituent, current_id)
 
 	print("Starting Constituents Related Media...")
@@ -555,12 +592,27 @@ def process_constituents_related_media(CURSOR):
 
 	print("Finished Constituents Related Media...")
 
+# create manifests for all IIIF images per constituent
+def compile_resources_by_constituent():
+	print("Compiling associated constituent media for manifests.")
+	for k, v in CONSTITUENT_RELATIONS.items():
+		object = {
+		    "id": k,
+			"manifest": generate_multi_canvas_iiif_manifest(k, v)
+		}
+		save_manifest(object, v['type'] + '-' + k)
+	print(f"Compiled resources for {len(CONSTITUENT_RELATIONS)} constituents.")
+
 def save(constituent):
 	if constituent and 'id' in constituent:
 		if not constituent['type']:
 			print("%s is missing a type, ignoring for now" % (constituent['id']))
 			return
 		elasticsearch_connection.add_or_update_item(constituent['id'], json.dumps(constituent), constituent['type'])
+
+def save_manifest(manifest, id):
+	if manifest and 'id' in manifest:
+		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest')
 
 def main(CURSOR=None):
 	if not CURSOR:
@@ -584,6 +636,7 @@ def main(CURSOR=None):
 	process_constituents_related_sites(CURSOR)
 	process_constituents_related_published(CURSOR)
 	process_constituents_related_media(CURSOR)
+	compile_resources_by_constituent()
 
 if __name__ == "__main__":
 	main()
