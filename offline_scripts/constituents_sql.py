@@ -30,7 +30,7 @@ ORDER BY Constituents.ConstituentID
 RELATED_OBJECTS = """
 SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConXrefs.ID AS ObjectID, replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber,
 Objects.ClassificationID, Objects.Dated AS ObjectDate,
-MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName
+MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM ConXrefs
 JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
 JOIN Constituents ON ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0 AND Constituents.Active=1
@@ -47,7 +47,7 @@ ORDER BY Constituents.ConstituentID
 # Related Sites for all Constituents
 RELATED_SITES = """
 SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConXrefs.ID AS SiteID, Sites.SiteName, Sites.SiteNumber,
-MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName
+MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM ConXrefs
 JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
 JOIN Constituents ON ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0 AND Constituents.Active=1
@@ -85,7 +85,7 @@ SELECT MediaXrefs.ID AS ID, Constituents.ConstituentTypeID,  MediaMaster.MediaMa
 MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description,
 MediaMaster.MediaView, replace(replace(MediaMaster.PublicCaption, char(10), ''), char(13), ' ') AS PublicCaption,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
-MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
+MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName, MediaFiles.ArchIDNum
 FROM MediaXrefs
 JOIN Constituents ON MediaXrefs.ID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
