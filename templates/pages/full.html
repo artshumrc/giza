@@ -159,7 +159,7 @@
             <source src="{{ object.primarydisplay.main }}" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-        {% elif type == 'photos' and object.drsId or type == 'sites' %}
+        {% elif object.primarydisplay.drs_id %}
           <div style="height:500px;width:100%;">
             <div id="mirador"></div>
           </div>
@@ -840,7 +840,7 @@
       let type = "{{ type }}";
       let id = type === 'sites' || type === 'iiifmanifest' ? "{{ type }}-{{ object.id }}" : "{{ object.drsId }}";
       let url = "{% url 'iiif-manifest' 1 %}".replace('1', id); // the 1 is a placeholder
-      
+
       const config = {
         windows: [{
           imageToolsEnabled: true,

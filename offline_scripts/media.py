@@ -34,7 +34,8 @@ def process_media(CURSOR):
 			'thumb_path_index' : columns.index('ThumbPathName'),
 			'thumb_file_index' : columns.index('ThumbFileName'),
 			'main_path_index' : columns.index('MainPathName'),
-			'main_file_index' : columns.index('MainFileName')
+			'main_file_index' : columns.index('MainFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -71,11 +72,14 @@ def process_media(CURSOR):
 		media['problemsquestions'] = "" if row[indices['problems_index']].lower() == "null" else row[indices['problems_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		media['primarydisplay'] = {
 		'thumbnail' : thumbnail_url,
-		'main' : main_url
+		'main' : main_url,
+		'drs_id' : drs_id
 		}
 		media['roles'] = []
+		media['drsId'] = drs_id
 
 		return (media, current_id)
 
