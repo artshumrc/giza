@@ -76,11 +76,7 @@ def process_sites(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.SITES
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		site_id_index = get_indices()
 
@@ -159,11 +155,7 @@ def process_site_dates(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.SITEDATES
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -243,11 +235,7 @@ def process_site_altnums(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.ALTNUMS
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -351,11 +339,7 @@ def process_site_related_objects(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.RELATED_OBJECTS
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -472,11 +456,7 @@ def process_site_related_constituents(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.RELATED_CONSTITUENTS
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -570,11 +550,7 @@ def process_site_related_published(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.RELATED_PUBLISHED
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -727,11 +703,7 @@ def process_site_related_media(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = sites_sql.RELATED_MEDIA
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 

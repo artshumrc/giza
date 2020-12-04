@@ -68,11 +68,7 @@ def process_constituents(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.CONSTITUENTS
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -153,11 +149,7 @@ def process_constituents_altnames(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.ALT_NAMES
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -261,11 +253,7 @@ def process_constituents_related_objects(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_OBJECTS
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -358,11 +346,7 @@ def process_constituents_related_sites(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_SITES
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -455,11 +439,7 @@ def process_constituents_related_published(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_PUBLISHED
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -558,22 +538,24 @@ def process_constituents_related_media(CURSOR):
 		if media_type not in constituent['relateditems']:
 			constituent['relateditems'][media_type] = []
 		# add primary photo as a top level item as well
-		if row[indices['primary_display_index']] == '1':
+		if primary_display:
 			constituent['primarydisplay'] = {
 			'thumbnail' : thumbnail_url,
 			'main' : main_url,
 			'displaytext' : display_text,
 			'number' : number,
-			'description' : description
+			'description' : description,
+			'drs_id' : drs_id
 			}
 		constituent['relateditems'][media_type].append({
 			'id' : media_master_id,
 			'displaytext' : display_text,
-			'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
+			'primarydisplay' : primary_display,
 			'thumbnail' : thumbnail_url,
 			'main' : main_url,
 			'number' : number,
-			'description' : description
+			'description' : description,
+			'drs_id': drs_id
 			})
 
 		if drs_id != "":
@@ -613,11 +595,7 @@ def process_constituents_related_media(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = constituents_sql.RELATED_MEDIA
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 

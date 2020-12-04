@@ -84,11 +84,7 @@ def process_objects(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.OBJECTS
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -167,11 +163,7 @@ def process_object_geocodes(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.GEOCODES
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -249,11 +241,7 @@ def process_object_altnums(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.ALTNUMS
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -333,11 +321,7 @@ def process_object_flexfields(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.FLEXFIELDS
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -439,11 +423,7 @@ def process_object_related_sites(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_SITES
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -552,11 +532,7 @@ def process_object_related_constituents(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_CONSTITUENTS
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -648,11 +624,7 @@ def process_object_related_published(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_PUBLISHED
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -745,11 +717,7 @@ def process_object_related_unpublished(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_UNPUBLISHED
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -907,11 +875,7 @@ def process_object_related_media(CURSOR):
 	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_MEDIA
-		print("Going to execute sql command")
-		print(datetime.now())
 		CURSOR.execute(sql_command)
-		print("Finished executing sql command")
-		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
