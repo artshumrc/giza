@@ -27,19 +27,19 @@ true
       {% elif request.GET.mode == 'sketchfab' %}
         <iframe class="viewerEmbed sketchfabEmbed" src="https://sketchfab.com/models/{{request.GET.id}}/embed?preload=1&amp;ui_controls=1&amp;ui_infos=1&amp;ui_inspector=1&amp;ui_stop=1&amp;ui_watermark=1&amp;ui_watermark_link=1" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
       {% else %}
-        <iframe class="viewerEmbed giza3dEmbed" src="http://sfa.giza.archimedes.digital/?mode={{ request.GET.mode|default:'FreeExplore'}}{% if request.GET.guidedTourId %}&guidedTourId={{request.GET.guidedTourId}}{% endif %}" frameborder='0' allowfullscreen allow='vr' style="display: none;"></iframe>
+        <iframe class="viewerEmbed giza3dEmbed" src="http://sfa.giza.archimedes.digital/?mode={{ request.GET.mode|default:'FreeExplore'}}{% if request.GET.guidedTourId %}&guidedTourId={{request.GET.guidedTourId}}{% endif %}{% if request.GET.itemID %}&itemID={{request.GET.itemID}}{% endif %}" frameborder='0' allowfullscreen allow='vr' style="display: none;"></iframe>
         <div class="viewerEmbed giza3dEmbedToggle" >
           <div class="gizaViewer">
             <div class="viewerCover"></div>
             <div class="viewerCoverGradient"></div>
             <button class="viewerStartButton">
-                Start Tour 
+                Start Tour
             </button>
           </div>
         </div>
       {% endif %}
       <br>
-      <p>Explore the models and tours; you will find links to other models throughout. Or choose from individual tours below.</p>
+      <p>Explore the models and tours; you will find links to other models throughout. Or choose from individual tours below. You may also use the arrow keys and WASD to navigate.</p>
       <br>
     </div>
   </div>
