@@ -32,9 +32,7 @@
       <form id="advanced-search-form" action="{% url 'results' %}">
         <div class="row">
 
-          <section class="medium-5 medium-push-7 columns">
-
-            <fieldset id = "temp">
+            <fieldset id="category-radio-selector" class="medium-4 medium-push-8 columns">
               <legend>Search within the selected category:</legend>
 
               <div class="feature-block tertiary">
@@ -46,8 +44,7 @@
               </div>
             </fieldset>
 
-          </section>
-          <section class="medium-7 medium-pull-5 columns">
+          <section id="section-objects" class="medium-8 medium-pull-4 columns category-section">
             <label>Object title or name:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="The name or kind of Object that you are looking for."></span>
               <input name="objects_title" type="text" placeholder="Example: 'royal statue' or 'Khafre'">
             </label>
@@ -107,8 +104,7 @@
       </form>
 
     </section>
-    <section class="large-4 columns">
-      <!-- My Saved Searches -->
+    <!-- <section class="large-4 columns">
       {% include 'partials/feature-block-start.html' with feature_title="My Saved Searches" feature_block_class="secondary" %}
         <ul class="feature-block__list">
         {% for x in saved_searches_sb %}
@@ -123,7 +119,7 @@
         {% endfor %}
         </ul>
       {% include 'partials/feature-block-end.html' %}
-    </section>
+    </section> -->
   </div>
 {% endblock %}
 
