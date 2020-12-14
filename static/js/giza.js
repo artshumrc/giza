@@ -88,3 +88,10 @@ var fnAdjustRightColMargin = function() {
 if ($('#jumpmenu').length) {
   fnAdjustRightColMargin();
 }
+
+// on Advanced Search page, switch between search fields for different categories
+$('fieldset#category-radio-selector input').click(function() {
+  $('.category-section').hide();
+  var section_id = $(this).attr('data-for-id');
+  $('#'+section_id).show();
+});
