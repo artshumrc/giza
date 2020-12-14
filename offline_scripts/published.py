@@ -9,10 +9,14 @@ import json
 import operator
 import time
 import unicodedata
+import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import published_sql
 from utils import get_media_url, process_cursor_row
+
+
+DIRNAME = os.path.dirname(__file__)
 
 def delete_pubs():
 	print("Deleting Pub Docs...")
@@ -88,7 +92,7 @@ def process_pubs(CURSOR):
 		save(pub)
 
 	else:
-		with open('../data/pubdocs.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'pubdocs.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -170,7 +174,7 @@ def process_pub_related_sites(CURSOR):
 		   # save last pub to elasticsearch
 		save(pub)
 	else:
-		with open('../data/pubdocs_sites_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'pubdocs_sites_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -264,7 +268,7 @@ def process_pub_related_objects(CURSOR):
 		   # save last object to elasticsearch
 		save(pub)
 	else:
-		with open('../data/pubdocs_objects_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'pubdocs_objects_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -368,7 +372,7 @@ def process_pub_related_constituents(CURSOR):
 		   # save last object to elasticsearch
 		save(pub)
 	else:
-		with open('../data/pubdocs_constituents_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'pubdocs_constituents_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -439,7 +443,7 @@ def process_pub_related_media(CURSOR):
 		   # save last object to elasticsearch
 		save(pub)
 	else:
-		with open('../data/pubdocs_media_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'pubdocs_media_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -520,7 +524,7 @@ def create_library():
 
 				author_data['docs'].append({
 					'displaytext' : result['boilertext'],
-					'sorttext' : result['notes'],
+					'sorttext' : result['notes'] if result['notes'] is not None else result['title'],
 					'format' : result['format'],
 					# add file size
 					'url' : result['pdf']

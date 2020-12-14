@@ -7,10 +7,17 @@ import elasticsearch_connection
 import getpass
 import json
 import operator
+import os
+from datetime import datetime
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import objects_sql
-from utils import get_media_url, process_cursor_row
+from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
+
+ARCH_IDS = {}
+OBJECT_RELATIONS = {}
+
+DIRNAME = os.path.dirname(__file__)
 
 # SAMPLE_OBJECTS = ('61198', '15332', '15059', '52264', '50823', '35634', '5614', '46942', '48325', '3461', '25389', '25501')
 
@@ -74,6 +81,7 @@ def process_objects(CURSOR):
 		return (object, current_id)
 
 	print("Starting Objects...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.OBJECTS
 		CURSOR.execute(sql_command)
@@ -85,13 +93,17 @@ def process_objects(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process object row")
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
+			print("Finished processing object row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
 
 	else:
-		with open('../data/objects.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -108,6 +120,7 @@ def process_objects(CURSOR):
 			save(object)
 
 	print("Finished Objects...")
+	print(datetime.now())
 
 def process_object_geocodes(CURSOR):
 	def get_indices():
@@ -147,6 +160,7 @@ def process_object_geocodes(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Geocodes...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.GEOCODES
 		CURSOR.execute(sql_command)
@@ -158,12 +172,16 @@ def process_object_geocodes(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process object geocodes row")
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
+			print("Finished processing object geocodes row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_geocodes.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_geocodes.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -180,6 +198,7 @@ def process_object_geocodes(CURSOR):
 			save(object)
 
 	print("Finished Objects Geocodes...")
+	print(datetime.now())
 
 # Update relevant objects with alternate numbers
 def process_object_altnums(CURSOR):
@@ -219,6 +238,7 @@ def process_object_altnums(CURSOR):
 		return (object, current_id)
 
 	print("Starting Objects AltNums...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.ALTNUMS
 		CURSOR.execute(sql_command)
@@ -230,12 +250,16 @@ def process_object_altnums(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process object altnums row")
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
+			print("Finished processing object altnums row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_altnums.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_altnums.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -251,6 +275,7 @@ def process_object_altnums(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 	print("Finished Objects AltNums...")
+	print(datetime.now())
 
 # Update relevant objects with alternate numbers
 def process_object_flexfields(CURSOR):
@@ -293,6 +318,7 @@ def process_object_flexfields(CURSOR):
 		return (object, current_id)
 
 	print("Starting Objects Flex Fields...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.FLEXFIELDS
 		CURSOR.execute(sql_command)
@@ -304,12 +330,16 @@ def process_object_flexfields(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process object flex fields row")
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
+			print("Finished processing object flex fields row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_flexfields.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_flexfields.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -325,6 +355,7 @@ def process_object_flexfields(CURSOR):
 			# save last object to elasticsearch
 			save(object)
 	print("Finished Objects Flex Fields...")
+	print(datetime.now())
 
 def process_object_related_sites(CURSOR):
 	def get_indices():
@@ -335,7 +366,8 @@ def process_object_related_sites(CURSOR):
 			'site_number_index' : columns.index('SiteNumber'),
 			'classification_id_index' : columns.index('ClassificationID'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -361,6 +393,7 @@ def process_object_related_sites(CURSOR):
 		site_name = row[indices['site_name_index']]
 		site_number = row[indices['site_number_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 
 		site_dict = {}
 		site_dict['id'] = site_id
@@ -368,6 +401,7 @@ def process_object_related_sites(CURSOR):
 		site_dict['sitenumber'] = site_number
 		site_dict['displaytext'] = site_number
 		site_dict['thumbnail'] = thumbnail_url
+		site_dict['drs_id'] = drs_id
 
 		if 'sites' not in object['relateditems']:
 			object['relateditems']['sites'] = []
@@ -386,6 +420,7 @@ def process_object_related_sites(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Related Sites...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_SITES
 		CURSOR.execute(sql_command)
@@ -397,12 +432,16 @@ def process_object_related_sites(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process object related sites row")
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
+			print("Finished processing object related sites row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_sites_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_sites_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -419,6 +458,7 @@ def process_object_related_sites(CURSOR):
 			save(object)
 
 	print("Finished Objects Related Sites...")
+	print(datetime.now())
 
 def process_object_related_constituents(CURSOR):
 	def get_indices():
@@ -489,6 +529,7 @@ def process_object_related_constituents(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Related Constituents...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_CONSTITUENTS
 		CURSOR.execute(sql_command)
@@ -500,12 +541,16 @@ def process_object_related_constituents(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process object related constituents row")
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
+			print("Finished processing object related constituents row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_constituents_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_constituents_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -522,6 +567,7 @@ def process_object_related_constituents(CURSOR):
 			save(object)
 
 	print("Finished Objects Related Constituents...")
+	print(datetime.now())
 
 def process_object_related_published(CURSOR):
 	def get_indices():
@@ -575,6 +621,7 @@ def process_object_related_published(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Related Published...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_PUBLISHED
 		CURSOR.execute(sql_command)
@@ -586,12 +633,16 @@ def process_object_related_published(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process object related published row")
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
+			print("Finished processing object related published row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_published_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_published_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -608,6 +659,7 @@ def process_object_related_published(CURSOR):
 			save(object)
 
 	print("Finished Objects Related Published...")
+	print(datetime.now())
 
 def process_object_related_unpublished(CURSOR):
 	def get_indices():
@@ -662,6 +714,7 @@ def process_object_related_unpublished(CURSOR):
 		return(object, current_id)
 
 	print("Starting Objects Related Unpublished...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_UNPUBLISHED
 		CURSOR.execute(sql_command)
@@ -673,12 +726,16 @@ def process_object_related_unpublished(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process object related unpublished row")
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
+			print("Finished processing object related unpublished row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_unpublished_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_unpublished_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -695,6 +752,7 @@ def process_object_related_unpublished(CURSOR):
 			save(object)
 
 	print("Finished Objects Related Unpublished...")
+	print(datetime.now())
 
 def process_object_related_media(CURSOR):
 	def get_indices():
@@ -711,7 +769,8 @@ def process_object_related_media(CURSOR):
 			'thumb_path_index' : columns.index('ThumbPathName'),
 			'thumb_file_index' : columns.index('ThumbFileName'),
 			'main_path_index' : columns.index('MainPathName'),
-			'main_file_index' : columns.index('MainFileName')
+			'main_file_index' : columns.index('MainFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -743,6 +802,9 @@ def process_object_related_media(CURSOR):
 		mediaview = "" if row[indices['media_view_index']].lower() == "null" else row[indices['media_view_index']]
 		caption = "" if row[indices['caption_index']].lower() == "null" else row[indices['caption_index']]
 		display_text = ": ".join([mediaview, caption])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		primary_display = True if row[indices['primary_display_index']] == '1' else False
+
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
 		# so, make sure we are only using videos that are mp4s
 		if media_type_key == 3:
@@ -755,27 +817,62 @@ def process_object_related_media(CURSOR):
 		if media_type == 'photos':
 			object['hasphoto'] = "Yes"
 		# add primary photo as a top level item as well
-		if row[indices['primary_display_index']] == '1':
+		if primary_display:
 			object['primarydisplay'] = {
 			'thumbnail' : thumbnail_url,
 			'main' : main_url,
 			'displaytext' : display_text,
 			'number' : number,
-			'description' : description
+			'description' : description,
+			'drs_id' : drs_id
 			}
 		if not (classification == '3dmodels' and media_type == '3dmodels'):
 			object['relateditems'][media_type].append({
 				'id' : media_master_id,
 				'displaytext' : display_text,
-				'primarydisplay' : True if row[indices['primary_display_index']] == '1' else False,
+				'primarydisplay' : primary_display,
 				'thumbnail' : thumbnail_url,
 				'main' : main_url,
 				'number' : number,
-				'description' : description
+				'description' : description,
+				'drs_id': drs_id
 				})
+
+		if drs_id != "":
+			if drs_id not in ARCH_IDS.keys():
+				manifest_ob = {
+					"ArchIDNum": drs_id,
+					"Description": description,
+					"MediaView": mediaview
+				}
+				ob = {
+					"id": drs_id,
+					"manifest": generate_iiif_manifest(manifest_ob)
+				}
+				save_manifest(ob, drs_id)
+				resource = ob['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
+				ARCH_IDS[drs_id] = resource
+
+			if id not in OBJECT_RELATIONS.keys():
+				OBJECT_RELATIONS[id] = {
+					'description': description,
+					'label': mediaview,
+					'resources': [
+						ARCH_IDS[drs_id]
+					],
+					'classification': classification
+				}
+			else:
+				OBJECT_RELATIONS[id]['resources'].append(
+					ARCH_IDS[drs_id]
+				)
+			if primary_display:
+				OBJECT_RELATIONS[id]['startCanvas'] = drs_id
+
 		return(object, current_id)
 
 	print("Starting Objects Related Media...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = objects_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
@@ -787,12 +884,16 @@ def process_object_related_media(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process object related media row")
+			print(datetime.now())
 			(object, current_id) = process_object_row(object, current_id)
+			print("Finished processing object related media row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(object)
 	else:
-		with open('../data/objects_media_related.csv', 'r', encoding="utf-8-sig") as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'objects_media_related.csv'), 'r', encoding="utf-8-sig") as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -809,6 +910,18 @@ def process_object_related_media(CURSOR):
 			save(object)
 
 	print("Finished Objects Related Media...")
+	print(datetime.now())
+
+# create manifests for all IIIF images per object
+def compile_resources_by_object():
+	print("Compiling associated object media for manifests.")
+	for k, v in OBJECT_RELATIONS.items():
+		object = {
+			"id": k,
+			"manifest": generate_multi_canvas_iiif_manifest(k, v)
+		}
+		save_manifest(object, v['classification'] + '-' + k)
+	print(f"Compiled resources for {len(OBJECT_RELATIONS)} objects.")
 
 def save(object):
 	if object and 'id' in object:
@@ -818,6 +931,10 @@ def save(object):
 			print("%s is missing a classification, ignoring for now" % (object['id']))
 			return
 		elasticsearch_connection.add_or_update_item(object['id'], json.dumps(object), object['classification'])
+
+def save_manifest(manifest, id):
+	if manifest and 'id' in manifest:
+		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest')
 
 def main(CURSOR=None):
 	if not CURSOR:
@@ -844,6 +961,7 @@ def main(CURSOR=None):
 	process_object_related_published(CURSOR)
 	process_object_related_unpublished(CURSOR)
 	process_object_related_media(CURSOR)
+	compile_resources_by_object()
 
 if __name__ == "__main__":
 	main()

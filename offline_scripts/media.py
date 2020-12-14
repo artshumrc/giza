@@ -7,10 +7,15 @@ import elasticsearch_connection
 import getpass
 import json
 import operator
+import os
+from datetime import datetime
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import media_sql
 from utils import get_media_url, process_cursor_row
+
+
+DIRNAME = os.path.dirname(__file__)
 
 # First update each Media with the latest data
 # This is the basic information/metadata that comprises a Object
@@ -30,7 +35,8 @@ def process_media(CURSOR):
 			'thumb_path_index' : columns.index('ThumbPathName'),
 			'thumb_file_index' : columns.index('ThumbFileName'),
 			'main_path_index' : columns.index('MainPathName'),
-			'main_file_index' : columns.index('MainFileName')
+			'main_file_index' : columns.index('MainFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -67,18 +73,27 @@ def process_media(CURSOR):
 		media['problemsquestions'] = "" if row[indices['problems_index']].lower() == "null" else row[indices['problems_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		media['primarydisplay'] = {
 		'thumbnail' : thumbnail_url,
-		'main' : main_url
+		'main' : main_url,
+		'drs_id' : drs_id
 		}
 		media['roles'] = []
+		media['drsId'] = drs_id
+		## TO DO: create manifest if it doesn't exist ##
 
 		return (media, current_id)
 
 	print("Starting Media...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = media_sql.MEDIA
+		print("Going to execute sql command")
+		print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -87,13 +102,17 @@ def process_media(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process media row")
+			print(datetime.now())
 			(media, current_id) = process_media_row(media, current_id)
+			print("Finished processing media row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last media to elasticsearch
 		save(media)
 
 	else:
-		with open('../data/media.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'media.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -110,6 +129,7 @@ def process_media(CURSOR):
 			save(media)
 
 	print("Finished Media...")
+	print(datetime.now())
 
 def process_media_related_sites(CURSOR):
 	def get_indices():
@@ -166,9 +186,14 @@ def process_media_related_sites(CURSOR):
 		return(media, current_id)
 
 	print("Starting Media Related Sites...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = media_sql.RELATED_SITES
+		print("Going to execute sql command")
+		print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -177,12 +202,16 @@ def process_media_related_sites(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process media related sites row")
+			print(datetime.now())
 			(media, current_id) = process_media_row(media, current_id)
+			print("Finished processing media related sites row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last media to elasticsearch
 		save(media)
 	else:
-		with open('../data/media_sites_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'media_sites_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -199,6 +228,7 @@ def process_media_related_sites(CURSOR):
 			save(media)
 
 	print("Finished Media Related Sites...")
+	print(datetime.now())
 
 # Update all related items from the Objects table
 def process_media_related_objects(CURSOR):
@@ -267,9 +297,14 @@ def process_media_related_objects(CURSOR):
 		return (media, current_id)
 
 	print("Starting Media Related Objects...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = media_sql.RELATED_OBJECTS
+		print("Going to execute sql command")
+		print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -278,12 +313,16 @@ def process_media_related_objects(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process media related objects row")
+			print(datetime.now())
 			(media, current_id) = process_media_row(media, current_id)
+			print("Finished processing media related objects row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last object to elasticsearch
 		save(media)
 	else:
-		with open('../data/media_objects_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'media_objects_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -299,6 +338,7 @@ def process_media_related_objects(CURSOR):
 			# save last object to elasticsearch
 			save(media)
 	print("Finished Media Related Objects...")
+	print(datetime.now())
 
 def process_media_related_constituents(CURSOR):
 	def get_indices():
@@ -376,9 +416,14 @@ def process_media_related_constituents(CURSOR):
 		return(media, current_id)
 
 	print("Starting Media Related Constituents...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = media_sql.RELATED_CONSTITUENTS
+		print("Going to execute sql command")
+		print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -387,12 +432,16 @@ def process_media_related_constituents(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process media related constituents row")
+			print(datetime.now())
 			(media, current_id) = process_media_row(media, current_id)
+			print("Finished processing media related constituents row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last media to elasticsearch
 		save(media)
 	else:
-		with open('../data/media_constituents_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'media_constituents_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -409,6 +458,7 @@ def process_media_related_constituents(CURSOR):
 			save(media)
 
 	print("Finished Media Related Constituents...")
+	print(datetime.now())
 
 def process_media_related_published(CURSOR):
 	def get_indices():
@@ -465,9 +515,14 @@ def process_media_related_published(CURSOR):
 		return(media, current_id)
 
 	print("Starting Media Related Published...")
+	print(datetime.now())
 	if CURSOR:
 		sql_command = media_sql.RELATED_PUBLISHED
+		print("Going to execute sql command")
+		print(datetime.now())
 		CURSOR.execute(sql_command)
+		print("Finished executing sql command")
+		print(datetime.now())
 		columns = [column[0] for column in CURSOR.description]
 		indices = get_indices()
 
@@ -476,12 +531,16 @@ def process_media_related_published(CURSOR):
 		cursor_row = CURSOR.fetchone()
 		while cursor_row is not None:
 			row = process_cursor_row(cursor_row)
+			print("Going to process media related published row")
+			print(datetime.now())
 			(media, current_id) = process_media_row(media, current_id)
+			print("Finished processing media related published row")
+			print(datetime.now())
 			cursor_row = CURSOR.fetchone()
 		   # save last media to elasticsearch
 		save(media)
 	else:
-		with open('../data/media_published_related.csv', 'r', encoding='utf-8-sig') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'media_published_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
 			headers = headers.replace('\r\n','')
@@ -498,6 +557,7 @@ def process_media_related_published(CURSOR):
 			save(media)
 
 	print("Finished Media Related Published...")
+	print(datetime.now())
 
 def save(media):
 	if media and 'id' in media:

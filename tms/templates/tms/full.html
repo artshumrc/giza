@@ -159,6 +159,10 @@
             <source src="{{ object.primarydisplay.main }}" type="video/mp4">
             Your browser does not support the video tag.
           </video>
+        {% elif type == 'sites' %}
+          <div style="height:500px;width:100%;">
+            <div id="mirador"></div>
+          </div>
         {% else %}
           <img src="{{ object.primarydisplay.main }}" alt="">
         {% endif %}
@@ -825,4 +829,21 @@
 
     <!-- /Modal -->
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function(){
+    let miradorDiv = $('#mirador');
+    if(miradorDiv) {
+      let url = "{% url 'iiif-manifest' object.id %}";
+      Mirador.viewer({
+        id: 'mirador',
+        windows: [
+          { manifestId: url }
+        ]
+      });    
+    }  
+  });    
+</script>
 {% endblock %}

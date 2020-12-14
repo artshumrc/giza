@@ -17,7 +17,8 @@ CATEGORIES = {
 	'videos'			: 'Videos',
 	'audio'				: 'Audio',
 	'microfilm'			: 'Microfilm',
-	'document'			: 'Document'
+	'document'			: 'Document',
+	'iiifmanifest'		: 'IIIF Manifest'
 }
 
 FIELDS_PER_CATEGORY = {
@@ -478,6 +479,7 @@ FACETS_PER_CATEGORY = {
 			}
 		}
 	},
+	'iiifmanifest' : {},
 	'microfilm' : {},
 	'document' : {}
 }
