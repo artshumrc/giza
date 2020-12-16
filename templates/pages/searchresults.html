@@ -77,7 +77,7 @@
 
       <div class="row">
         {% if total > 0 %}
-          <div class=" columns p-t-1">
+          <div class="text-center columns p-t-1">
             <nav aria-label="Pagination">
               <ul class="pagination m-l-neghalf">
                 <li class="pagination-previous {% if not has_previous%}disabled{% endif %}">{% if has_previous%}<a href="{% url 'results' %}?{% build_search_params search_params current_category current_subfacets '' '' previous_page_number %}" aria-label="Previous page">Previous</a>{% else %}Previous{% endif %}</li>

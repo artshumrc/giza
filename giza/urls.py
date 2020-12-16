@@ -43,10 +43,8 @@ urlpatterns = [
     url(r'^videos/$', search_views.videos, name="videos"),
 
     url(r'^search/$', search_views.search, name='search'),
-    url(r'^v1/search/$', search_views.search_legacy, name='search_legacy'),
 
     url(r'^search-results/$', search_views.results, name='results'),
-    url(r'^v1/search-results/$', search_views.results_legacy, name='results_legacy'),
 
     # auth
     # path('accounts/', include('django.contrib.auth.urls')),
