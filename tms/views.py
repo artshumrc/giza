@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonRespons
 from django.template.exceptions import TemplateDoesNotExist
 
 from tms import models
+from utils.elastic_backend import ES_INDEX
 import json
 
 def donate_legacy(request, page_name):
@@ -20,14 +21,14 @@ def get_type_html_legacy(request, type, id, view):
 	# try:
 		if view == "intro":
 			view = "full"
-		type_object = models.get_item(id, type)
+		type_object = models.get_item(id, type, ES_INDEX)
 		return render(request, 'tms/'+view+'.html', {'object': type_object, 'type': type})
 	# except:
 	# 	raise Http404("There was an error getting this item")
 
 def get_type_json(request, type, id):
 	try:
-		type_json = json.dumps(models.get_item(id, type))
+		type_json = json.dumps(models.get_item(id, type, ES_INDEX))
 		response = HttpResponse(type_json)
 		add_headers(response)
 		return response
@@ -60,7 +61,7 @@ def get_type_html(request, type, id, view):
 	# try:
 	if view == "intro":
 		view = "full"
-	type_object = models.get_item(id, type)
+	type_object = models.get_item(id, type, ES_INDEX)
 	return render(request, 'pages/'+view+'.html', {'object': type_object, 'type': type})
 	# except:
 	# 	raise Http404("There was an error getting this item")
@@ -74,7 +75,7 @@ def add_headers(response):
 def get_manifest_data(request, id):
 	try:
 		base_uri = request.build_absolute_uri('/manifests/')
-		data = models.get_item(id, "iiifmanifest")
+		data = models.get_item(id, "iiifmanifest", ES_INDEX)
 		manifest = data['manifest']
 		manifest['@id'] = base_uri + manifest['@id']
 		manifest["sequences"][0]['startCanvas'] = base_uri + manifest["sequences"][0]['startCanvas']

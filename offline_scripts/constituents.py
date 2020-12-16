@@ -14,6 +14,7 @@ from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import constituents_sql
 from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 
+ELASTICSEARCH_INDEX = 'giza'
 ARCH_IDS = {}
 CONSTITUENT_RELATIONS = {}
 
@@ -130,7 +131,7 @@ def process_constituents_altnames(CURSOR):
 			current_id = constituent_id
 			constituent = {}
 			if elasticsearch_connection.item_exists(constituent_id, type):
-				constituent = elasticsearch_connection.get_item(constituent_id, type)
+				constituent = elasticsearch_connection.get_item(constituent_id, type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % constituent_id)
 				return (constituent, current_id)
@@ -213,7 +214,7 @@ def process_constituents_related_objects(CURSOR):
 			current_id = constituent_id
 			constituent = {}
 			if elasticsearch_connection.item_exists(constituent_id, type):
-				constituent = elasticsearch_connection.get_item(constituent_id, type)
+				constituent = elasticsearch_connection.get_item(constituent_id, type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % constituent_id)
 				return (constituent, current_id)
@@ -315,7 +316,7 @@ def process_constituents_related_sites(CURSOR):
 			current_id = constituent_id
 			constituent = {}
 			if elasticsearch_connection.item_exists(constituent_id, type):
-				constituent = elasticsearch_connection.get_item(constituent_id, type)
+				constituent = elasticsearch_connection.get_item(constituent_id, type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % constituent_id)
 				return(constituent, current_id)
@@ -410,7 +411,7 @@ def process_constituents_related_published(CURSOR):
 			current_id = constituent_id
 			constituent = {}
 			if elasticsearch_connection.item_exists(constituent_id, type):
-				constituent = elasticsearch_connection.get_item(constituent_id, type)
+				constituent = elasticsearch_connection.get_item(constituent_id, type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % constituent_id)
 				return(constituent, current_id)
@@ -509,7 +510,7 @@ def process_constituents_related_media(CURSOR):
 			current_id = constituent_id
 			constituent = {}
 			if elasticsearch_connection.item_exists(constituent_id, type):
-				constituent = elasticsearch_connection.get_item(constituent_id, type)
+				constituent = elasticsearch_connection.get_item(constituent_id, type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % constituent_id)
 				return(constituent, current_id)

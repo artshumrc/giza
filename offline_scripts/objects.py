@@ -14,6 +14,7 @@ from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import objects_sql
 from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 
+ELASTICSEARCH_INDEX = 'giza'
 ARCH_IDS = {}
 OBJECT_RELATIONS = {}
 
@@ -145,7 +146,7 @@ def process_object_geocodes(CURSOR):
 			current_id = id
 			object = {}
 			if elasticsearch_connection.item_exists(id, classification):
-				object = elasticsearch_connection.get_item(id, classification)
+				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return(object, current_id)
@@ -222,7 +223,7 @@ def process_object_altnums(CURSOR):
 			current_id = object_id
 			object = {}
 			if elasticsearch_connection.item_exists(object_id, classification):
-				object = elasticsearch_connection.get_item(object_id, classification)
+				object = elasticsearch_connection.get_item(object_id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % object_id)
 				return (object, current_id)
@@ -300,7 +301,7 @@ def process_object_flexfields(CURSOR):
 			current_id = object_id
 			object = {}
 			if elasticsearch_connection.item_exists(object_id, classification):
-				object = elasticsearch_connection.get_item(object_id, classification)
+				object = elasticsearch_connection.get_item(object_id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % object_id)
 				return (object, current_id)
@@ -382,7 +383,7 @@ def process_object_related_sites(CURSOR):
 			current_id = id
 			object = {}
 			if elasticsearch_connection.item_exists(id, classification):
-				object = elasticsearch_connection.get_item(id, classification)
+				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return(object, current_id)
@@ -488,7 +489,7 @@ def process_object_related_constituents(CURSOR):
 			current_id = id
 			object = {}
 			if elasticsearch_connection.item_exists(id, classification):
-				object = elasticsearch_connection.get_item(id, classification)
+				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return(object, current_id)
@@ -594,7 +595,7 @@ def process_object_related_published(CURSOR):
 			current_id = id
 			object = {}
 			if elasticsearch_connection.item_exists(id, classification):
-				object = elasticsearch_connection.get_item(id, classification)
+				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return(object, current_id)
@@ -686,7 +687,7 @@ def process_object_related_unpublished(CURSOR):
 			current_id = id
 			object = {}
 			if elasticsearch_connection.item_exists(id, classification):
-				object = elasticsearch_connection.get_item(id, classification)
+				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return(object, current_id)
@@ -785,7 +786,7 @@ def process_object_related_media(CURSOR):
 			current_id = id
 			object = {}
 			if elasticsearch_connection.item_exists(id, classification):
-				object = elasticsearch_connection.get_item(id, classification)
+				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return(object, current_id)

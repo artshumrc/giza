@@ -14,6 +14,7 @@ from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import sites_sql
 from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 
+ELASTICSEARCH_INDEX = 'giza'
 ARCH_IDS = {}
 SITE_RELATIONS = {}
 
@@ -133,7 +134,7 @@ def process_site_dates(CURSOR):
 			current_id = site_id
 			site = {}
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
-				site = elasticsearch_connection.get_item(site_id, 'sites')
+				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
 				return (site, current_id)
@@ -213,7 +214,7 @@ def process_site_altnums(CURSOR):
 			current_id = site_id
 			site = {}
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
-				site = elasticsearch_connection.get_item(site_id, 'sites')
+				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
 				return (site, current_id)
@@ -298,7 +299,7 @@ def process_site_related_objects(CURSOR):
 			current_id = site_id
 			site = {}
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
-				site = elasticsearch_connection.get_item(site_id, 'sites')
+				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
 				return (site, current_id)
@@ -402,7 +403,7 @@ def process_site_related_constituents(CURSOR):
 			current_id = site_id
 			site = {}
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
-				site = elasticsearch_connection.get_item(site_id, 'sites')
+				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
 				return(site, current_id)
@@ -519,7 +520,7 @@ def process_site_related_published(CURSOR):
 			current_id = site_id
 			site = {}
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
-				site = elasticsearch_connection.get_item(site_id, 'sites')
+				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
 				return(site, current_id)
@@ -618,7 +619,7 @@ def process_site_related_media(CURSOR):
 			current_id = site_id
 			site = {}
 			if elasticsearch_connection.item_exists(site_id, 'sites'):
-				site = elasticsearch_connection.get_item(site_id, 'sites')
+				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
 				return(site, current_id)

@@ -14,6 +14,7 @@ from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import media_sql
 from utils import get_media_url, process_cursor_row
 
+ELASTICSEARCH_INDEX = 'giza'
 
 DIRNAME = os.path.dirname(__file__)
 
@@ -158,7 +159,7 @@ def process_media_related_sites(CURSOR):
 			current_id = id
 			media = {}
 			if elasticsearch_connection.item_exists(id, media_type):
-				media = elasticsearch_connection.get_item(id, media_type)
+				media = elasticsearch_connection.get_item(id, media_type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return(media, current_id)
@@ -260,7 +261,7 @@ def process_media_related_objects(CURSOR):
 			current_id = id
 			media = {}
 			if elasticsearch_connection.item_exists(id, media_type):
-				media = elasticsearch_connection.get_item(id, media_type)
+				media = elasticsearch_connection.get_item(id, media_type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return (media, current_id)
@@ -371,7 +372,7 @@ def process_media_related_constituents(CURSOR):
 			current_id = id
 			media = {}
 			if elasticsearch_connection.item_exists(id, media_type):
-				media = elasticsearch_connection.get_item(id, media_type)
+				media = elasticsearch_connection.get_item(id, media_type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return(media, current_id)
@@ -488,7 +489,7 @@ def process_media_related_published(CURSOR):
 			current_id = id
 			media = {}
 			if elasticsearch_connection.item_exists(id, media_type):
-				media = elasticsearch_connection.get_item(id, media_type)
+				media = elasticsearch_connection.get_item(id, media_type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return(media, current_id)

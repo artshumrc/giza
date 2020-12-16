@@ -15,6 +15,7 @@ from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import published_sql
 from utils import get_media_url, process_cursor_row
 
+ELASTICSEARCH_INDEX = 'giza'
 
 DIRNAME = os.path.dirname(__file__)
 
@@ -130,7 +131,7 @@ def process_pub_related_sites(CURSOR):
 			current_id = id
 			pub = {}
 			if elasticsearch_connection.item_exists(id, 'pubdocs'):
-				pub = elasticsearch_connection.get_item(id, 'pubdocs')
+				pub = elasticsearch_connection.get_item(id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
 				return(pub, current_id)
@@ -215,7 +216,7 @@ def process_pub_related_objects(CURSOR):
 			current_id = pub_id
 			pub = {}
 			if elasticsearch_connection.item_exists(pub_id, 'pubdocs'):
-				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs')
+				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % pub_id)
 				return (pub, current_id)
@@ -312,7 +313,7 @@ def process_pub_related_constituents(CURSOR):
 			current_id = pub_id
 			pub = {}
 			if elasticsearch_connection.item_exists(pub_id, 'pubdocs'):
-				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs')
+				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % pub_id)
 				return(pub, current_id)
@@ -410,7 +411,7 @@ def process_pub_related_media(CURSOR):
 			current_id = pub_id
 			pub = {}
 			if elasticsearch_connection.item_exists(pub_id, 'pubdocs'):
-				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs')
+				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % pub_id)
 				return(pub, current_id)
@@ -514,7 +515,7 @@ def create_library():
 				sortauthor = str(unicodedata.normalize('NFD', sortauthor).encode('ascii', 'ignore').decode("utf-8"))
 				# see if this author already exists
 				if author_id in author_ids:
-					author_data = elasticsearch_connection.get_item(author_id, 'library')
+					author_data = elasticsearch_connection.get_item(author_id, 'library', ELASTICSEARCH_INDEX)
 				else:
 					author_ids.append(author_id)
 					author_data = {}

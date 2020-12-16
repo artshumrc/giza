@@ -6,6 +6,7 @@ import os
 from utils import generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 from classifications import MEDIATYPES
 
+ELASTICSEARCH_INDEX = 'giza'
 ARCH_IDS = {}
 SITE_RELATIONS = {}
 
@@ -137,7 +138,7 @@ def process_sites_media_related_manifests():
 
 			media = {}
 			if elasticsearch_connection.item_exists(media_id, media_type):
-				media = elasticsearch_connection.get_item(media_id, media_type)
+				media = elasticsearch_connection.get_item(media_id, media_type, ELASTICSEARCH_INDEX)
 				media['drsId'] = row[indices['drs_id']]
 				save_media(media)
 			else:
@@ -253,7 +254,7 @@ def process_object_media_related_manifests():
 
 				media = {}
 				if elasticsearch_connection.item_exists(media_id, media_type):
-					media = elasticsearch_connection.get_item(media_id, media_type)
+					media = elasticsearch_connection.get_item(media_id, media_type, ELASTICSEARCH_INDEX)
 					media['drsId'] = row[indices['drs_id']]
 					save_media(media)
 				else:

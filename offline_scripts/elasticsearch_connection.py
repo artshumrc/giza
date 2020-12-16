@@ -10,8 +10,8 @@ def get_connection():
     return Elasticsearch(ELASTICSEARCH_URL, timeout=30, max_retries=10, retry_on_timeout=True)
 
 # Gets the content of an item, returns JSON
-def get_item(item_id, source):
-    return es.get(index=ELASTICSEARCH_INDEX, doc_type=source, id=item_id)["_source"]
+def get_item(item_id, source, index):
+    return es.get(index=index, doc_type=source, id=item_id)["_source"]
 
 # Inserts JSON document into elasticsearch with the given item_id
 # Either adds new document or replaces existing document
