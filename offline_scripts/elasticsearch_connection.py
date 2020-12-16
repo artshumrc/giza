@@ -3,7 +3,6 @@ from elasticsearch import Elasticsearch
 
 # TODO: this needs to come from settings
 ELASTICSEARCH_URL = 'localhost:9200'
-ELASTICSEARCH_INDEX = 'giza'
 
 # Connect to elasticsearch db
 def get_connection():
@@ -24,7 +23,7 @@ def item_exists(item_id, source, index):
         return False
     return es.exists(index=index, doc_type=source, id=item_id)
 
-def delete(item_id, source):
-    return es.delete(index=ELASTICSEARCH_INDEX, doc_type=source, id=item_id)
+def delete(item_id, source, index):
+    return es.delete(index=index, doc_type=source, id=item_id)
 
 es = get_connection()

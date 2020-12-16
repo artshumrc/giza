@@ -32,7 +32,7 @@ def delete_pubs():
 		}
 	})['hits']['hits']
 	for r in results:
-		elasticsearch_connection.delete(r['_id'], 'pubdocs')
+		elasticsearch_connection.delete(r['_id'], 'pubdocs', ELASTICSEARCH_INDEX)
 	print("Finished Deleting Pub Docs...")
 
 # First update each Published doc with the latest data
@@ -482,7 +482,7 @@ def create_library():
 		}
 	})['hits']['hits']
 	for r in results:
-		elasticsearch_connection.delete(r['_id'], 'library')
+		elasticsearch_connection.delete(r['_id'], 'library', ELASTICSEARCH_INDEX)
 
 	total = es.search(index=es_index, doc_type='pubdocs', body={
 		"size" : 0,
