@@ -137,7 +137,7 @@ def process_sites_media_related_manifests():
 			media_type = MEDIATYPES.get(media_type_key)
 
 			media = {}
-			if elasticsearch_connection.item_exists(media_id, media_type):
+			if elasticsearch_connection.item_exists(media_id, media_type, ELASTICSEARCH_INDEX):
 				media = elasticsearch_connection.get_item(media_id, media_type, ELASTICSEARCH_INDEX)
 				media['drsId'] = row[indices['drs_id']]
 				save_media(media)
@@ -253,7 +253,7 @@ def process_object_media_related_manifests():
 				media_type = MEDIATYPES.get(media_type_key)
 
 				media = {}
-				if elasticsearch_connection.item_exists(media_id, media_type):
+				if elasticsearch_connection.item_exists(media_id, media_type, ELASTICSEARCH_INDEX):
 					media = elasticsearch_connection.get_item(media_id, media_type, ELASTICSEARCH_INDEX)
 					media['drsId'] = row[indices['drs_id']]
 					save_media(media)

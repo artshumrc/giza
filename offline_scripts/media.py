@@ -158,7 +158,7 @@ def process_media_related_sites(CURSOR):
 			save(media)
 			current_id = id
 			media = {}
-			if elasticsearch_connection.item_exists(id, media_type):
+			if elasticsearch_connection.item_exists(id, media_type, ELASTICSEARCH_INDEX):
 				media = elasticsearch_connection.get_item(id, media_type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
@@ -260,7 +260,7 @@ def process_media_related_objects(CURSOR):
 			save(media)
 			current_id = id
 			media = {}
-			if elasticsearch_connection.item_exists(id, media_type):
+			if elasticsearch_connection.item_exists(id, media_type, ELASTICSEARCH_INDEX):
 				media = elasticsearch_connection.get_item(id, media_type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
@@ -371,7 +371,7 @@ def process_media_related_constituents(CURSOR):
 			save(media)
 			current_id = id
 			media = {}
-			if elasticsearch_connection.item_exists(id, media_type):
+			if elasticsearch_connection.item_exists(id, media_type, ELASTICSEARCH_INDEX):
 				media = elasticsearch_connection.get_item(id, media_type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
@@ -488,7 +488,7 @@ def process_media_related_published(CURSOR):
 			save(media)
 			current_id = id
 			media = {}
-			if elasticsearch_connection.item_exists(id, media_type):
+			if elasticsearch_connection.item_exists(id, media_type, ELASTICSEARCH_INDEX):
 				media = elasticsearch_connection.get_item(id, media_type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)

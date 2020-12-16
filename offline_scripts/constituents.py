@@ -130,7 +130,7 @@ def process_constituents_altnames(CURSOR):
 			save(constituent)
 			current_id = constituent_id
 			constituent = {}
-			if elasticsearch_connection.item_exists(constituent_id, type):
+			if elasticsearch_connection.item_exists(constituent_id, type, ELASTICSEARCH_INDEX):
 				constituent = elasticsearch_connection.get_item(constituent_id, type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % constituent_id)
@@ -213,7 +213,7 @@ def process_constituents_related_objects(CURSOR):
 			save(constituent)
 			current_id = constituent_id
 			constituent = {}
-			if elasticsearch_connection.item_exists(constituent_id, type):
+			if elasticsearch_connection.item_exists(constituent_id, type, ELASTICSEARCH_INDEX):
 				constituent = elasticsearch_connection.get_item(constituent_id, type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % constituent_id)
@@ -315,7 +315,7 @@ def process_constituents_related_sites(CURSOR):
 			save(constituent)
 			current_id = constituent_id
 			constituent = {}
-			if elasticsearch_connection.item_exists(constituent_id, type):
+			if elasticsearch_connection.item_exists(constituent_id, type, ELASTICSEARCH_INDEX):
 				constituent = elasticsearch_connection.get_item(constituent_id, type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % constituent_id)
@@ -410,7 +410,7 @@ def process_constituents_related_published(CURSOR):
 			save(constituent)
 			current_id = constituent_id
 			constituent = {}
-			if elasticsearch_connection.item_exists(constituent_id, type):
+			if elasticsearch_connection.item_exists(constituent_id, type, ELASTICSEARCH_INDEX):
 				constituent = elasticsearch_connection.get_item(constituent_id, type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % constituent_id)
@@ -509,7 +509,7 @@ def process_constituents_related_media(CURSOR):
 			save(constituent)
 			current_id = constituent_id
 			constituent = {}
-			if elasticsearch_connection.item_exists(constituent_id, type):
+			if elasticsearch_connection.item_exists(constituent_id, type, ELASTICSEARCH_INDEX):
 				constituent = elasticsearch_connection.get_item(constituent_id, type, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % constituent_id)

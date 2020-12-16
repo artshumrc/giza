@@ -130,7 +130,7 @@ def process_pub_related_sites(CURSOR):
 			save(pub)
 			current_id = id
 			pub = {}
-			if elasticsearch_connection.item_exists(id, 'pubdocs'):
+			if elasticsearch_connection.item_exists(id, 'pubdocs', ELASTICSEARCH_INDEX):
 				pub = elasticsearch_connection.get_item(id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
@@ -215,7 +215,7 @@ def process_pub_related_objects(CURSOR):
 			save(pub)
 			current_id = pub_id
 			pub = {}
-			if elasticsearch_connection.item_exists(pub_id, 'pubdocs'):
+			if elasticsearch_connection.item_exists(pub_id, 'pubdocs', ELASTICSEARCH_INDEX):
 				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % pub_id)
@@ -312,7 +312,7 @@ def process_pub_related_constituents(CURSOR):
 			save(pub)
 			current_id = pub_id
 			pub = {}
-			if elasticsearch_connection.item_exists(pub_id, 'pubdocs'):
+			if elasticsearch_connection.item_exists(pub_id, 'pubdocs', ELASTICSEARCH_INDEX):
 				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % pub_id)
@@ -410,7 +410,7 @@ def process_pub_related_media(CURSOR):
 			save(pub)
 			current_id = pub_id
 			pub = {}
-			if elasticsearch_connection.item_exists(pub_id, 'pubdocs'):
+			if elasticsearch_connection.item_exists(pub_id, 'pubdocs', ELASTICSEARCH_INDEX):
 				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % pub_id)

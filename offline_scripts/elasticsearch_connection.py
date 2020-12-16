@@ -19,10 +19,10 @@ def add_or_update_item(item_id, document, source, index):
     es.index(index=index, doc_type=source, id=item_id, body=document)
 
 # Checks if item exists in elasticsearch, returns boolean
-def item_exists(item_id, source):
+def item_exists(item_id, source, index):
     if (item_id is None or source is None):
         return False
-    return es.exists(index=ELASTICSEARCH_INDEX, doc_type=source, id=item_id)
+    return es.exists(index=index, doc_type=source, id=item_id)
 
 def delete(item_id, source):
     return es.delete(index=ELASTICSEARCH_INDEX, doc_type=source, id=item_id)

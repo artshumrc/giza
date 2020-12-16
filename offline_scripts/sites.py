@@ -133,7 +133,7 @@ def process_site_dates(CURSOR):
 			save(site)
 			current_id = site_id
 			site = {}
-			if elasticsearch_connection.item_exists(site_id, 'sites'):
+			if elasticsearch_connection.item_exists(site_id, 'sites', ELASTICSEARCH_INDEX):
 				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
@@ -213,7 +213,7 @@ def process_site_altnums(CURSOR):
 			save(site)
 			current_id = site_id
 			site = {}
-			if elasticsearch_connection.item_exists(site_id, 'sites'):
+			if elasticsearch_connection.item_exists(site_id, 'sites', ELASTICSEARCH_INDEX):
 				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
@@ -298,7 +298,7 @@ def process_site_related_objects(CURSOR):
 			save(site)
 			current_id = site_id
 			site = {}
-			if elasticsearch_connection.item_exists(site_id, 'sites'):
+			if elasticsearch_connection.item_exists(site_id, 'sites', ELASTICSEARCH_INDEX):
 				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
@@ -402,7 +402,7 @@ def process_site_related_constituents(CURSOR):
 			save(site)
 			current_id = site_id
 			site = {}
-			if elasticsearch_connection.item_exists(site_id, 'sites'):
+			if elasticsearch_connection.item_exists(site_id, 'sites', ELASTICSEARCH_INDEX):
 				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
@@ -519,7 +519,7 @@ def process_site_related_published(CURSOR):
 			save(site)
 			current_id = site_id
 			site = {}
-			if elasticsearch_connection.item_exists(site_id, 'sites'):
+			if elasticsearch_connection.item_exists(site_id, 'sites', ELASTICSEARCH_INDEX):
 				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)
@@ -618,7 +618,7 @@ def process_site_related_media(CURSOR):
 			save(site)
 			current_id = site_id
 			site = {}
-			if elasticsearch_connection.item_exists(site_id, 'sites'):
+			if elasticsearch_connection.item_exists(site_id, 'sites', ELASTICSEARCH_INDEX):
 				site = elasticsearch_connection.get_item(site_id, 'sites', ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % site_id)

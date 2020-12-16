@@ -145,7 +145,7 @@ def process_object_geocodes(CURSOR):
 			save(object)
 			current_id = id
 			object = {}
-			if elasticsearch_connection.item_exists(id, classification):
+			if elasticsearch_connection.item_exists(id, classification, ELASTICSEARCH_INDEX):
 				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
@@ -222,7 +222,7 @@ def process_object_altnums(CURSOR):
 			save(object)
 			current_id = object_id
 			object = {}
-			if elasticsearch_connection.item_exists(object_id, classification):
+			if elasticsearch_connection.item_exists(object_id, classification, ELASTICSEARCH_INDEX):
 				object = elasticsearch_connection.get_item(object_id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % object_id)
@@ -300,7 +300,7 @@ def process_object_flexfields(CURSOR):
 			save(object)
 			current_id = object_id
 			object = {}
-			if elasticsearch_connection.item_exists(object_id, classification):
+			if elasticsearch_connection.item_exists(object_id, classification, ELASTICSEARCH_INDEX):
 				object = elasticsearch_connection.get_item(object_id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % object_id)
@@ -382,7 +382,7 @@ def process_object_related_sites(CURSOR):
 			save(object)
 			current_id = id
 			object = {}
-			if elasticsearch_connection.item_exists(id, classification):
+			if elasticsearch_connection.item_exists(id, classification, ELASTICSEARCH_INDEX):
 				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
@@ -488,7 +488,7 @@ def process_object_related_constituents(CURSOR):
 			save(object)
 			current_id = id
 			object = {}
-			if elasticsearch_connection.item_exists(id, classification):
+			if elasticsearch_connection.item_exists(id, classification, ELASTICSEARCH_INDEX):
 				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
@@ -594,7 +594,7 @@ def process_object_related_published(CURSOR):
 			save(object)
 			current_id = id
 			object = {}
-			if elasticsearch_connection.item_exists(id, classification):
+			if elasticsearch_connection.item_exists(id, classification, ELASTICSEARCH_INDEX):
 				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
@@ -686,7 +686,7 @@ def process_object_related_unpublished(CURSOR):
 			save(object)
 			current_id = id
 			object = {}
-			if elasticsearch_connection.item_exists(id, classification):
+			if elasticsearch_connection.item_exists(id, classification, ELASTICSEARCH_INDEX):
 				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
@@ -785,7 +785,7 @@ def process_object_related_media(CURSOR):
 			save(object)
 			current_id = id
 			object = {}
-			if elasticsearch_connection.item_exists(id, classification):
+			if elasticsearch_connection.item_exists(id, classification, ELASTICSEARCH_INDEX):
 				object = elasticsearch_connection.get_item(id, classification, ELASTICSEARCH_INDEX)
 			else:
 				print("%s could not be found!" % id)
