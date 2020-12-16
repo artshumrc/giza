@@ -754,11 +754,11 @@ def compile_resources_by_site():
 
 def save(site):
 	if site and 'id' in site:
-		elasticsearch_connection.add_or_update_item(site['id'], json.dumps(site), 'sites')
+		elasticsearch_connection.add_or_update_item(site['id'], json.dumps(site), 'sites', ELASTICSEARCH_INDEX)
 
 def save_manifest(manifest, id):
 	if manifest and 'id' in manifest:
-		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest')
+		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest', ELASTICSEARCH_INDEX)
 
 def main(CURSOR=None):
 	if not CURSOR:

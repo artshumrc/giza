@@ -273,7 +273,7 @@ def compile_resources_by_site():
 
 def save(manifest):
 	if manifest and 'id' in manifest:
-		elasticsearch_connection.add_or_update_item(manifest['id'], json.dumps(manifest), 'iiifmanifest')
+		elasticsearch_connection.add_or_update_item(manifest['id'], json.dumps(manifest), 'iiifmanifest', ELASTICSEARCH_INDEX)
 
 def save_media(media):
 	if media and 'id' in media:
@@ -282,7 +282,7 @@ def save_media(media):
 			# so that the classifications.py file can be updated
 			print("%s is missing a media type, ignoring for now" % (media['id']))
 			return
-		elasticsearch_connection.add_or_update_item(media['id'], json.dumps(media), media['mediatype'])
+		elasticsearch_connection.add_or_update_item(media['id'], json.dumps(media), media['mediatype'], ELASTICSEARCH_INDEX)
 
 def main():
 	process_sites_media_related_manifests()

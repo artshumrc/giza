@@ -15,8 +15,8 @@ def get_item(item_id, source, index):
 
 # Inserts JSON document into elasticsearch with the given item_id
 # Either adds new document or replaces existing document
-def add_or_update_item(item_id, document, source):
-    es.index(index=ELASTICSEARCH_INDEX, doc_type=source, id=item_id, body=document)
+def add_or_update_item(item_id, document, source, index):
+    es.index(index=index, doc_type=source, id=item_id, body=document)
 
 # Checks if item exists in elasticsearch, returns boolean
 def item_exists(item_id, source):

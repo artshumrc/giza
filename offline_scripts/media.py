@@ -567,7 +567,7 @@ def save(media):
 			# so that the classifications.py file can be updated
 			print("%s is missing a media type, ignoring for now" % (media['id']))
 			return
-		elasticsearch_connection.add_or_update_item(media['id'], json.dumps(media), media['mediatype'])
+		elasticsearch_connection.add_or_update_item(media['id'], json.dumps(media), media['mediatype'], ELASTICSEARCH_INDEX)
 
 def main(CURSOR=None):
 	if not CURSOR:

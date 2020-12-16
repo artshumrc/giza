@@ -649,11 +649,11 @@ def save(constituent):
 		if not constituent['type']:
 			print("%s is missing a type, ignoring for now" % (constituent['id']))
 			return
-		elasticsearch_connection.add_or_update_item(constituent['id'], json.dumps(constituent), constituent['type'])
+		elasticsearch_connection.add_or_update_item(constituent['id'], json.dumps(constituent), constituent['type'], ELASTICSEARCH_INDEX)
 
 def save_manifest(manifest, id):
 	if manifest and 'id' in manifest:
-		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest')
+		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest', ELASTICSEARCH_INDEX)
 
 def main(CURSOR=None):
 	if not CURSOR:

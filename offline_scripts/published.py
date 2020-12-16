@@ -533,14 +533,14 @@ def create_library():
 				author_data['docs'].sort(key=operator.itemgetter('sorttext'))
 
 				data = json.dumps(author_data)
-				elasticsearch_connection.add_or_update_item(author_id, data, 'library')
+				elasticsearch_connection.add_or_update_item(author_id, data, 'library', ELASTICSEARCH_INDEX)
 
 		results_from = results_from + size
 	print("Finished Digital Library...")
 
 def save(pub):
 	if pub and 'id' in pub:
-		elasticsearch_connection.add_or_update_item(pub['id'], json.dumps(pub), 'pubdocs')
+		elasticsearch_connection.add_or_update_item(pub['id'], json.dumps(pub), 'pubdocs', ELASTICSEARCH_INDEX)
 
 def main(CURSOR=None):
 	if not CURSOR:

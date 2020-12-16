@@ -931,11 +931,11 @@ def save(object):
 			# so that the classifications.py file can be updated
 			print("%s is missing a classification, ignoring for now" % (object['id']))
 			return
-		elasticsearch_connection.add_or_update_item(object['id'], json.dumps(object), object['classification'])
+		elasticsearch_connection.add_or_update_item(object['id'], json.dumps(object), object['classification'], ELASTICSEARCH_INDEX)
 
 def save_manifest(manifest, id):
 	if manifest and 'id' in manifest:
-		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest')
+		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest', ELASTICSEARCH_INDEX)
 
 def main(CURSOR=None):
 	if not CURSOR:
