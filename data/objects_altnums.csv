@@ -68,6 +68,7 @@
 10207,84,HUMFA_25-3-256,Harvard University-Boston Museum of Fine Arts excavation number
 10212,57,HUMFA_25-3-261,Harvard University-Boston Museum of Fine Arts excavation number
 10212,57,EMC_SR_2/571,Cairo Special Register number
+11386,116,48.183a-d,Accession Number
 11798,18,HUMFA_26-1-132,Harvard University-Boston Museum of Fine Arts excavation number
 11798,18,EMC_SR_2/15708,Cairo Special Register number
 11798,18,EMC_JE_72142,Journal d'Entree number
@@ -6074,12 +6075,12 @@
 55208,34,HJ_exc_153,Hermann Junker excavation number
 55209,87,527,Abd El-Qader Kermany excavation number
 55210,87,528,Abd El-Qader Kermany excavation number
-55212,34,EMC_JE_67584,Journal d'Entree number
-55212,34,EMC_SR_2/1161,Cairo Special Register number
-55212,34,HUMFA_36-12-24,Harvard University-Boston Museum of Fine Arts excavation number
-55213,34,EMC_JE_67585,Journal d'Entree number
-55213,34,EMC_SR_2/1162,Cairo Special Register number
-55213,34,HUMFA_36-12-24,Harvard University-Boston Museum of Fine Arts excavation number
+55212,100,EMC_JE_67584,Journal d'Entree number
+55212,100,EMC_SR_2/1161,Cairo Special Register number
+55212,100,HUMFA_36-12-24,Harvard University-Boston Museum of Fine Arts excavation number
+55213,100,EMC_JE_67585,Journal d'Entree number
+55213,100,EMC_SR_2/1162,Cairo Special Register number
+55213,100,HUMFA_36-12-24,Harvard University-Boston Museum of Fine Arts excavation number
 55214,38,EMC_JE_52439,Journal d'Entree number
 55214,38,EMC_SR_1/10115,Cairo Special Register number
 55214,38,HH_1204(18),Hetepheres findspot number

@@ -13,7 +13,7 @@ ORDER BY ReferenceMaster.ReferenceID
 
 RELATED_SITES = """
 SELECT ReferenceMaster.ReferenceID, RefXrefs.ID AS SiteID, Sites.SiteName, Sites.SiteNumber,
-ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName
+ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM ReferenceMaster
 JOIN RefXRefs ON ReferenceMaster.ReferenceID=RefXRefs.ReferenceID AND RefXRefs.TableID=189
 JOIN Sites ON Sites.SiteID=RefXRefs.ID AND Sites.IsPublic=1
@@ -21,6 +21,7 @@ LEFT JOIN MediaXrefs ON Sites.SiteID=MediaXrefs.ID AND MediaXrefs.PrimaryDisplay
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 LEFT JOIN MediaRenditions ON MediaXrefs.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths AS ThumbPath ON MediaRenditions.ThumbPathID=ThumbPath.PathID
+LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ReferenceMaster.PublicAccess=1
 ORDER BY ReferenceMaster.ReferenceID
 """
@@ -28,7 +29,7 @@ ORDER BY ReferenceMaster.ReferenceID
 RELATED_OBJECTS = """
 SELECT ReferenceMaster.ReferenceID, RefXrefs.ID AS ObjectID,
 replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber, Objects.ClassificationID, Objects.Dated AS ObjectDate,
-MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName
+MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM ReferenceMaster
 JOIN RefXRefs ON ReferenceMaster.ReferenceID=RefXRefs.ReferenceID AND RefXRefs.TableID=108
 JOIN Objects ON Objects.ObjectID=RefXRefs.ID AND Objects.PublicAccess=1
@@ -37,13 +38,14 @@ LEFT JOIN MediaXrefs ON Objects.ObjectID=MediaXrefs.ID AND MediaXrefs.PrimaryDis
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
+LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ReferenceMaster.PublicAccess=1
 ORDER BY ReferenceMaster.ReferenceID
 """
 
 RELATED_CONSTITUENTS = """
 SELECT ReferenceMaster.ReferenceID, Constituents.ConstituentID,
-MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
+MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum,
 Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
 Constituents.DisplayName, Constituents.DisplayDate, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks, Constituents.AlphaSort
 from ReferenceMaster
@@ -55,6 +57,7 @@ LEFT JOIN MediaXrefs ON Constituents.ConstituentID=MediaXrefs.ID AND MediaXrefs.
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID AND MediaMaster.PublicAccess=1
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
+LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ReferenceMaster.PublicAccess=1
 ORDER BY ReferenceMaster.ReferenceID
 """

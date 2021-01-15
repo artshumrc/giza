@@ -15,7 +15,7 @@ import constituents_sql
 from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 
 ELASTICSEARCH_INDEX = 'giza'
-ARCH_IDS = {}
+ELASTICSEARCH_IIIF_INDEX = 'iiif'
 CONSTITUENT_RELATIONS = {}
 
 DIRNAME = os.path.dirname(__file__)
@@ -198,7 +198,8 @@ def process_constituents_related_objects(CURSOR):
 			'classification_id_index' : columns.index('ClassificationID'),
 			'object_date_index' : columns.index('ObjectDate'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -225,6 +226,8 @@ def process_constituents_related_objects(CURSOR):
 		classification = CLASSIFICATIONS.get(classification_key)
 		object_id = int(row[indices['object_id_index']])
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 
 		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
 		object_title = row[indices['object_title_index']]
@@ -244,7 +247,8 @@ def process_constituents_related_objects(CURSOR):
 			'classificationid' : classification_key,
 			'number' : object_number,
 			'date' : date,
-			'thumbnail' : thumbnail_url})
+			'thumbnail' : thumbnail_url,
+			'has_manifest' : has_manifest})
 		# keep the related items sorted
 		constituent['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
 
@@ -300,7 +304,8 @@ def process_constituents_related_sites(CURSOR):
 			'site_name_index' : columns.index('SiteName'),
 			'site_number_index' : columns.index('SiteNumber'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -327,6 +332,8 @@ def process_constituents_related_sites(CURSOR):
 		site_name = row[indices['site_name_index']]
 		site_number = row[indices['site_number_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 
 		site_dict = {}
 		site_dict['id'] = site_id
@@ -334,6 +341,7 @@ def process_constituents_related_sites(CURSOR):
 		site_dict['sitenumber'] = site_number
 		site_dict['displaytext'] = "%s, %s" % (site_name, site_number)
 		site_dict['thumbnail'] = thumbnail_url
+		site_dict['has_manifest'] = has_manifest
 
 		if 'sites' not in constituent['relateditems']:
 			constituent['relateditems']['sites'] = []
@@ -528,6 +536,7 @@ def process_constituents_related_media(CURSOR):
 		caption = "" if row[indices['caption_index']].lower() == "null" else row[indices['caption_index']]
 		display_text = ": ".join([mediaview, caption])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 		primary_display = True if row[indices['primary_display_index']] == '1' else False
 
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
@@ -546,7 +555,8 @@ def process_constituents_related_media(CURSOR):
 			'displaytext' : display_text,
 			'number' : number,
 			'description' : description,
-			'drs_id' : drs_id
+			'has_manifest' : has_manifest,
+			'media_id' : media_master_id
 			}
 		constituent['relateditems'][media_type].append({
 			'id' : media_master_id,
@@ -556,37 +566,25 @@ def process_constituents_related_media(CURSOR):
 			'main' : main_url,
 			'number' : number,
 			'description' : description,
+			'has_manifest' : has_manifest,
 			'drs_id': drs_id
 			})
 
-		if drs_id != "":
-			if drs_id not in ARCH_IDS.keys():
-				manifest_ob = {
-					"ArchIDNum": drs_id,
-					"Description": description,
-					"MediaView": mediaview
-				}
-				object = {
-					"id": drs_id,
-					"manifest": generate_iiif_manifest(manifest_ob)
-				}
-				save_manifest(object, drs_id)
-				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
-				ARCH_IDS[drs_id] = resource
+		if has_manifest:
+			object = elasticsearch_connection.get_item(media_type+'-'+media_master_id, 'manifest', ELASTICSEARCH_IIIF_INDEX)
+			resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 
 			if constituent_id not in CONSTITUENT_RELATIONS.keys():
 				CONSTITUENT_RELATIONS[constituent_id] = {
 					'description': description,
 					'label': mediaview,
-					'resources': [
-						ARCH_IDS[drs_id]
-					],
-					'type': type
+					'resources': [resource],
+					'type': type,
+					'drs_ids' : [drs_id]
 				}
 			else:
-				CONSTITUENT_RELATIONS[constituent_id]['resources'].append(
-					ARCH_IDS[drs_id]
-				)
+				CONSTITUENT_RELATIONS[constituent_id]['resources'].append(resource)
+				CONSTITUENT_RELATIONS[constituent_id]['drs_ids'].append(drs_id)
 			if primary_display:
 				CONSTITUENT_RELATIONS[constituent_id]['startCanvas'] = drs_id
 
@@ -637,11 +635,12 @@ def process_constituents_related_media(CURSOR):
 def compile_resources_by_constituent():
 	print("Compiling associated constituent media for manifests.")
 	for k, v in CONSTITUENT_RELATIONS.items():
+		manifest_id = v['type'] + '-' + k
 		object = {
-			"id": k,
-			"manifest": generate_multi_canvas_iiif_manifest(k, v)
+			"id": manifest_id,
+			"manifest": generate_multi_canvas_iiif_manifest(manifest_id, v)
 		}
-		save_manifest(object, v['type'] + '-' + k)
+		save_manifest(object, manifest_id)
 	print(f"Compiled resources for {len(CONSTITUENT_RELATIONS)} constituents.")
 
 def save(constituent):
@@ -653,7 +652,7 @@ def save(constituent):
 
 def save_manifest(manifest, id):
 	if manifest and 'id' in manifest:
-		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest', ELASTICSEARCH_INDEX)
+		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'manifest', ELASTICSEARCH_IIIF_INDEX)
 
 def main(CURSOR=None):
 	if not CURSOR:

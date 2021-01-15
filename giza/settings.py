@@ -101,6 +101,12 @@ SEARCH_BACKENDS = {
         'URLS': ['http://localhost:9200'],
         'INDEX': 'giza',
         'TIMEOUT': 5,
+    },
+    'iiif': {
+        'BACKEND': 'elasticsearch',
+        'URLS': ['http://localhost:9200'],
+        'INDEX': 'iiif',
+        'TIMEOUT': 5,
     }
 }
 

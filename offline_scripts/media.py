@@ -75,14 +75,16 @@ def process_media(CURSOR):
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 		media['primarydisplay'] = {
 		'thumbnail' : thumbnail_url,
 		'main' : main_url,
-		'drs_id' : drs_id
+		'drs_id' : drs_id,
+		'has_manifest' : has_manifest,
+		'media_id' : id
 		}
 		media['roles'] = []
 		media['drsId'] = drs_id
-		## TO DO: create manifest if it doesn't exist ##
 
 		return (media, current_id)
 
@@ -141,7 +143,8 @@ def process_media_related_sites(CURSOR):
 			'site_number_index' : columns.index('SiteNumber'),
 			'media_type_id_index' : columns.index('MediaTypeID'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -170,6 +173,7 @@ def process_media_related_sites(CURSOR):
 		site_name = row[indices['site_name_index']]
 		site_number = row[indices['site_number_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 
 		site_dict = {}
 		site_dict['id'] = site_id

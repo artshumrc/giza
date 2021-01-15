@@ -22,6 +22,20 @@ AND (MediaRenditions.PrimaryFileID = -1 OR MediaRenditions.PrimaryFileID=MediaFi
 ORDER BY MediaMaster.MediaMasterID
 """
 
+MEDIA_IIIF = """
+SELECT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID,
+replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description, MediaMaster.MediaView,
+replace(replace(MediaMaster.PublicCaption, char(10), ''), char(13), ' ') AS PublicCaption,
+MediaFiles.ArchIDNum
+FROM MediaMaster
+LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
+LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
+WHERE MediaMaster.PublicAccess=1
+AND (MediaRenditions.PrimaryFileID = -1 OR MediaRenditions.PrimaryFileID=MediaFiles.FileID)
+AND MediaFiles.ArchIDNum IS NOT NULL
+ORDER BY MediaMaster.MediaMasterID
+"""
+
 MET = """
 SELECT DISTINCT CN, t.*
 FROM gizaCARDTMSThes.dbo.TermMaster tm
@@ -44,8 +58,8 @@ AND MediaMaster.MediaMasterID=21706
 # Related Media for all Sites
 RELATED_SITES = """
 SELECT MediaMaster.MediaMasterID, MediaXrefs.ID AS SiteID, MediaRenditions.MediaTypeID,
-Sites.SiteName, Sites.SiteNumber,
-ThumbPath.Path AS ThumbPathName, SiteRenditions.ThumbFileName
+Sites.SiteName, Sites.SiteNumber, Sites.Description + ',,' AS Description,
+ThumbPath.Path AS ThumbPathName, SiteRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM MediaMaster
 JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
 JOIN MediaXrefs ON MediaMaster.MediaMasterID=MediaXrefs.MediaMasterID AND MediaXrefs.TableID=189

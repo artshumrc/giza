@@ -73,9 +73,10 @@ def add_headers(response):
 
 
 def get_manifest_data(request, id):
+	ES_INDEX_IIIF = 'iiif'
 	try:
 		base_uri = request.build_absolute_uri('/manifests/')
-		data = models.get_item(id, "iiifmanifest", ES_INDEX)
+		data = models.get_item(id, "manifest", ES_INDEX_IIIF)
 		manifest = data['manifest']
 		manifest['@id'] = base_uri + manifest['@id']
 		manifest["sequences"][0]['startCanvas'] = base_uri + manifest["sequences"][0]['startCanvas']

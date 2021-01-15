@@ -23,7 +23,7 @@ def delete_pubs():
 	print("Deleting Pub Docs...")
 	# delete pubs
 	es = elasticsearch_connection.get_connection()
-	es_index = elasticsearch_connection.ELASTICSEARCH_INDEX
+	es_index = ELASTICSEARCH_INDEX
 	results = es.search(index=es_index, doc_type='pubdocs', body={
 		"size" : 1000,
 		"stored_fields" : ["_id"],
@@ -119,7 +119,8 @@ def process_pub_related_sites(CURSOR):
 			'site_name_index' : columns.index('SiteName'),
 			'site_number_index' : columns.index('SiteNumber'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -142,6 +143,8 @@ def process_pub_related_sites(CURSOR):
 		site_name = row[indices['site_name_index']]
 		site_number = row[indices['site_number_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 
 		site_dict = {}
 		site_dict['id'] = site_id
@@ -149,6 +152,7 @@ def process_pub_related_sites(CURSOR):
 		site_dict['sitenumber'] = site_number
 		site_dict['displaytext'] = site_number
 		site_dict['thumbnail'] = thumbnail_url
+		site_dict['has_manifest'] = has_manifest
 
 		if 'sites' not in pub['relateditems']:
 			pub['relateditems']['sites'] = []
@@ -204,7 +208,8 @@ def process_pub_related_objects(CURSOR):
 			'object_number_index' : columns.index('ObjectNumber'),
 			'object_date_index' : columns.index('ObjectDate'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -227,6 +232,8 @@ def process_pub_related_objects(CURSOR):
 		classification = CLASSIFICATIONS.get(classification_key)
 		object_id = int(row[indices['object_id_index']])
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 
 		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
 		object_title = row[indices['object_title_index']]
@@ -246,7 +253,8 @@ def process_pub_related_objects(CURSOR):
 			'classificationid' : classification_key,
 			'number' : object_number,
 			'date' : date,
-			'thumbnail' : thumbnail_url})
+			'thumbnail' : thumbnail_url,
+			'has_manifest' : has_manifest})
 		# keep the related items sorted
 		pub['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
 
@@ -299,7 +307,8 @@ def process_pub_related_constituents(CURSOR):
 			'display_date_index' : columns.index('DisplayDate'),
 			'remarks_index' : columns.index('Remarks'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -327,6 +336,8 @@ def process_pub_related_constituents(CURSOR):
 			display_date = row[indices['display_date_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		alpha_sort = row[indices['alpha_sort_index']]
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 
 		constituent_dict = {}
 		role = row[indices['role_index']]
@@ -345,6 +356,7 @@ def process_pub_related_constituents(CURSOR):
 		constituent_dict['displaytext'] = display_name
 		constituent_dict['description'] = description
 		constituent_dict['thumbnail'] = thumbnail_url
+		constituent_dict['has_manifest'] = has_manifest
 
 		constituent_type_key = int(row[indices['constituent_type_id_index']])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
@@ -471,7 +483,7 @@ def create_library():
 	size = 20
 	results_from = 0
 	es = elasticsearch_connection.get_connection()
-	es_index = elasticsearch_connection.ELASTICSEARCH_INDEX
+	es_index = ELASTICSEARCH_INDEX
 
 	# delete library
 	results = es.search(index=es_index, doc_type='library', body={

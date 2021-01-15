@@ -15,7 +15,7 @@ import sites_sql
 from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 
 ELASTICSEARCH_INDEX = 'giza'
-ARCH_IDS = {}
+ELASTICSEARCH_IIIF_INDEX = 'iiif'
 SITE_RELATIONS = {}
 
 DIRNAME = os.path.dirname(__file__)
@@ -311,6 +311,7 @@ def process_site_related_objects(CURSOR):
 		object_id = int(row[indices['object_id_index']])
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 
 		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
 		object_title = row[indices['object_title_index']]
@@ -331,7 +332,7 @@ def process_site_related_objects(CURSOR):
 			'number' : object_number,
 			'date' : date,
 			'thumbnail' : thumbnail_url,
-			'drs_id' : drs_id})
+			'has_manifest' : has_manifest})
 		# keep the related items sorted
 		site['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
 		return (site, current_id)
@@ -388,7 +389,8 @@ def process_site_related_constituents(CURSOR):
 			'display_date_index' : columns.index('DisplayDate'),
 			'remarks_index' : columns.index('Remarks'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -416,6 +418,8 @@ def process_site_related_constituents(CURSOR):
 		if row[indices['display_date_index']] != "NULL":
 			display_date = row[indices['display_date_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 
 		constituent_dict = {}
 		role = row[indices['role_index']]
@@ -435,6 +439,7 @@ def process_site_related_constituents(CURSOR):
 		constituent_dict['displaytext'] = display_name
 		constituent_dict['description'] = description
 		constituent_dict['thumbnail'] = thumbnail_url
+		constituent_dict['has_manifest'] = has_manifest
 
 		constituent_type_key = int(row[indices['constituent_type_id_index']])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
@@ -637,6 +642,7 @@ def process_site_related_media(CURSOR):
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 		primary_display = True if row[indices['primary_display_index']] == '1' else False
 
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
@@ -655,7 +661,8 @@ def process_site_related_media(CURSOR):
 			'displaytext' : display_text,
 			'number' : number,
 			'description' : description,
-			'drs_id' : drs_id
+			'has_manifest' : has_manifest,
+			'media_id' : media_master_id
 			}
 		site['relateditems'][media_type].append({
 			'id' : media_master_id,
@@ -665,36 +672,24 @@ def process_site_related_media(CURSOR):
 			'main' : main_url,
 			'number' : number,
 			'description' : description,
+			'has_manifest' : has_manifest,
 			'drs_id' : drs_id
 			})
 
-		if drs_id != "":
-			if drs_id not in ARCH_IDS.keys():
-				manifest_ob = {
-					"ArchIDNum": drs_id,
-					"Description": description,
-					"MediaView": mediaview
-				}
-				object = {
-					"id": drs_id,
-					"manifest": generate_iiif_manifest(manifest_ob)
-				}
-				save_manifest(object, drs_id)
-				resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
-				ARCH_IDS[drs_id] = resource
+		if has_manifest:
+			object = elasticsearch_connection.get_item(media_type+'-'+media_master_id, 'manifest', ELASTICSEARCH_IIIF_INDEX)
+			resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 
 			if site_id not in SITE_RELATIONS.keys():
 				SITE_RELATIONS[site_id] = {
 					'description': description,
 					'label': mediaview,
-					'resources': [
-						ARCH_IDS[drs_id]
-					]
+					'resources': [resource],
+					'drs_ids' : [drs_id]
 				}
 			else:
-				SITE_RELATIONS[site_id]['resources'].append(
-					ARCH_IDS[drs_id]
-				)
+				SITE_RELATIONS[site_id]['resources'].append(resource)
+				SITE_RELATIONS[site_id]['drs_ids'].append(drs_id)
 			if primary_display:
 				SITE_RELATIONS[site_id]['startCanvas'] = drs_id
 
@@ -745,11 +740,12 @@ def process_site_related_media(CURSOR):
 def compile_resources_by_site():
 	print("Compiling associated site media for manifests.")
 	for k, v in SITE_RELATIONS.items():
+		manifest_id = 'sites-' + k
 		object = {
-			"id": k,
-			"manifest": generate_multi_canvas_iiif_manifest(k, v)
+			"id": manifest_id,
+			"manifest": generate_multi_canvas_iiif_manifest(manifest_id, v)
 		}
-		save_manifest(object, 'sites-' + k)
+		save_manifest(object, manifest_id)
 	print(f"Compiled resources for {len(SITE_RELATIONS)} sites.")
 
 def save(site):
@@ -758,7 +754,7 @@ def save(site):
 
 def save_manifest(manifest, id):
 	if manifest and 'id' in manifest:
-		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'iiifmanifest', ELASTICSEARCH_INDEX)
+		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'manifest', ELASTICSEARCH_IIIF_INDEX)
 
 def main(CURSOR=None):
 	if not CURSOR:

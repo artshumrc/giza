@@ -368,22 +368,6 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 				}
 			}
 		},
-		"iiifmanifest" : {
-			"properties": {
-				"displaytext": {
-					"type" : "text",
-					"analyzer" : "case_insensitive_sort",
-					"include_in_all" : false
-				},
-				"relateditems" : {
-					"type" : "nested",
-					"include_in_all" : false
-				},
-				"manifest": {
-				    "type" : "object"
-				}
-			}
-		},
 		"document" : {
 			"properties": {
 				"displaytext": {
