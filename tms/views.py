@@ -93,29 +93,13 @@ def get_manifest_data(request, id):
 
 
 def get_manifest(request, id):
-	ES_INDEX_IIIF = 'iiif'
-	base_uri = request.build_absolute_uri('/manifests/')
-	data = models.get_item(id, "manifest", ES_INDEX_IIIF)
-	manifest = data['manifest']
-	manifest['@id'] = base_uri + manifest['@id']
-	manifest["sequences"][0]['startCanvas'] = base_uri + manifest["sequences"][0]['startCanvas']
-	manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
-	canvases = manifest['sequences'][0]['canvases']
-	for canvas in canvases:
-		canvas['@id'] = base_uri + canvas['@id']
-		for image in canvas['images']:
-			image['@id'] = base_uri + image['@id']
-			image['on'] = canvas['@id']
-	response = JsonResponse(manifest)
-	response["Access-Control-Allow-Origin"] = "*"
-	return response
-	# manifest = get_manifest_data(request, id)
-	# if manifest:
-	# 	response = JsonResponse(manifest)
-	# 	response["Access-Control-Allow-Origin"] = "*"
-	# 	return response
-	# else:
-	# 	raise Http404("There was an error getting this manifest")
+	manifest = get_manifest_data(request, id)
+	if manifest:
+		response = JsonResponse(manifest)
+		response["Access-Control-Allow-Origin"] = "*"
+		return response
+	else:
+		raise Http404("There was an error getting this manifest")
 
 
 def get_sequence(request, id):
