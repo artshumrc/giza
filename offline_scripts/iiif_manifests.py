@@ -6,7 +6,7 @@ from datetime import datetime
 import getpass
 
 import media_sql
-from utils import generate_iiif_manifest, generate_multi_canvas_iiif_manifest
+from utils import process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
 from classifications import MEDIATYPES
 
 ELASTICSEARCH_INDEX = 'iiif'
