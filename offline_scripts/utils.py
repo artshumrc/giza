@@ -1,8 +1,11 @@
 import requests
 import json
+import os
+import csv
 
 from builtins import str
 
+DIRNAME = os.path.dirname(__file__)
 
 def get_media_url(path, filename):
 	idx = path.find('images')
@@ -31,11 +34,26 @@ def process_cursor_row(cursor_row):
 
 def get_height_and_width(id):
 	""" return height and width from info.json """
-	url = "https://ids.lib.harvard.edu/ids/iiif/{}/info.json".format(id)
-	r = requests.get(url)
-	r.raise_for_status()
-	j = r.json()
-	return j["height"], j["width"]
+	# first check height/width csv file if we can avoid a network call
+	width = 0
+	height = 0
+	with open(os.path.join(DIRNAME, '..', 'data', 'drs_ids_height_width.csv'), 'r', encoding='utf-8-sig') as csvfile:
+		headers = next(csvfile)
+		rows = csv.reader(csvfile, delimiter=",")
+		for row in rows:
+			if id in row[0]:
+				#print("Found DRS ID in CSV file")
+				height = int(row[1])
+				width = int(row[2])
+	if width == 0 and height == 0:
+		print("DRS ID not found in CSV file, requesting from IIIF server")
+		url = "https://ids.lib.harvard.edu/ids/iiif/{}/info.json".format(id)
+		r = requests.get(url)
+		r.raise_for_status()
+		j = r.json()
+		return j["height"], j["width"]
+	else:
+		return height, width
 
 
 def generate_iiif_manifest(row):
