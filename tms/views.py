@@ -79,7 +79,8 @@ def get_manifest_data(request, id):
 		data = models.get_item(id, "manifest", ES_INDEX_IIIF)
 		manifest = data['manifest']
 		manifest['@id'] = base_uri + manifest['@id']
-		manifest["sequences"][0]['startCanvas'] = base_uri + manifest["sequences"][0]['startCanvas']
+		if 'startCanvas' in manifest["sequences"][0]:
+			manifest["sequences"][0]['startCanvas'] = base_uri + manifest["sequences"][0]['startCanvas']
 		manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
 		canvases = manifest['sequences'][0]['canvases']
 		for canvas in canvases:
