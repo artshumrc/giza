@@ -36,7 +36,7 @@ def process_cursor_row(cursor_row):
 	return row
 
 def create_thumbnail_url(id):
-	return {}{}{}.format(IIIF_IMAGE_SERVER_PREFIX, id, IIIF_THUMBNAIL_SYNTAX) 
+	return "{}{}{}".format(IIIF_IMAGE_SERVER_PREFIX, id, IIIF_THUMBNAIL_SYNTAX)
 
 def get_height_and_width(id):
 	""" return height and width from info.json """
