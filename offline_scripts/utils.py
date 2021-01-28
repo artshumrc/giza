@@ -5,6 +5,10 @@ import csv
 
 from builtins import str
 
+# January 2021: this URL pattern will change
+IIIF_IMAGE_SERVER_PREFIX = "https://ids.lib.harvard.edu/ids/iiif/"
+IIIF_THUMBNAIL_SYNTAX = "/full/200,/0/default.jpg"
+
 DIRNAME = os.path.dirname(__file__)
 
 def get_media_url(path, filename):
@@ -31,6 +35,8 @@ def process_cursor_row(cursor_row):
 			row.append(str(x))
 	return row
 
+def create_thumbnail_url(id):
+	return {}{}{}.format(IIIF_IMAGE_SERVER_PREFIX, id, IIIF_THUMBNAIL_SYNTAX) 
 
 def get_height_and_width(id):
 	""" return height and width from info.json """
