@@ -12,7 +12,7 @@ from datetime import datetime
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import objects_sql
-from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
+from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest, create_thumbnail_url
 
 ELASTICSEARCH_INDEX = 'giza'
 ELASTICSEARCH_IIIF_INDEX = 'iiif'
@@ -393,9 +393,11 @@ def process_object_related_sites(CURSOR):
 		site_id = row[indices['site_id_index']]
 		site_name = row[indices['site_name_index']]
 		site_number = row[indices['site_number_index']]
-		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		has_manifest = False if drs_id == "" else True
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		site_dict = {}
 		site_dict['id'] = site_id
@@ -504,9 +506,11 @@ def process_object_related_constituents(CURSOR):
 		display_date = ""
 		if row[indices['display_date_index']] != "NULL":
 			display_date = row[indices['display_date_index']]
-		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		has_manifest = False if drs_id == "" else True
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		constituent_dict = {}
 		role = row[indices['role_index']]
@@ -677,7 +681,8 @@ def process_object_related_unpublished(CURSOR):
 			'object_date_index' : columns.index('ObjectDate'),
 			'object_number_index' : columns.index('ObjectNumber'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -703,7 +708,11 @@ def process_object_related_unpublished(CURSOR):
 		unpublished_title = row[indices['unpublished_title_index']]
 		number = row[indices['object_number_index']]
 		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		if 'unpubdocs' not in object['relateditems']:
 			object['relateditems']['unpubdocs'] = []
@@ -713,7 +722,8 @@ def process_object_related_unpublished(CURSOR):
 			'displaytext' : unpublished_title,
 			'date' : date,
 			'number' : number,
-			'thumbnail' : thumbnail_url})
+			'thumbnail' : thumbnail_url,
+			'has_manifest' : has_manifest})
 		# keep the related items sorted
 		object['relateditems']['unpubdocs'].sort(key=operator.itemgetter('displaytext'))
 
@@ -802,7 +812,6 @@ def process_object_related_media(CURSOR):
 		media_type = MEDIATYPES.get(media_type_key)
 		number = "" if row[indices['rendition_number_index']].lower() == "null" else row[indices['rendition_number_index']]
 		media_master_id = row[indices['media_master_id_index']]
-		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 		description = "" if row[indices['description_index']].lower() == "null" else row[indices['description_index']]
 		mediaview = "" if row[indices['media_view_index']].lower() == "null" else row[indices['media_view_index']]
@@ -811,7 +820,9 @@ def process_object_related_media(CURSOR):
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		has_manifest = False if drs_id == "" else True
 		primary_display = True if row[indices['primary_display_index']] == '1' else False
-
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
 		# so, make sure we are only using videos that are mp4s
 		if media_type_key == 3:

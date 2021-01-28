@@ -113,7 +113,7 @@ ORDER BY Objects.ObjectID
 RELATED_UNPUBLISHED = """
 SELECT Associations.ID1 AS ID, Associations.ID2 AS UnpublishedID, Objects.ObjectNumber,
 replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS UnpublishedTitle, Objects.ClassificationID, Objects.Dated AS ObjectDate,
-MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName
+MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM Associations
 LEFT JOIN ObjTitles ON Associations.ID2=ObjTitles.ObjectID
 LEFT JOIN Objects ON Associations.ID1=Objects.ObjectID AND Objects.PublicAccess=1
@@ -121,6 +121,7 @@ LEFT JOIN MediaXrefs ON Associations.ID2=MediaXrefs.ID AND MediaXrefs.PrimaryDis
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
+LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE Associations.TableID=108
 AND RelationshipID=6
 ORDER BY ID1

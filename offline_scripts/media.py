@@ -12,7 +12,7 @@ from datetime import datetime
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import media_sql
-from utils import get_media_url, process_cursor_row
+from utils import get_media_url, process_cursor_row, create_thumbnail_url
 
 ELASTICSEARCH_INDEX = 'giza'
 
@@ -72,10 +72,13 @@ def process_media(CURSOR):
 		media['department'] = "" if row[indices['department_index']].lower() == "null" else row[indices['department_index']]
 		media['date'] = "" if row[indices['date_index']].lower() == "null" else row[indices['date_index']]
 		media['problemsquestions'] = "" if row[indices['problems_index']].lower() == "null" else row[indices['problems_index']]
-		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		has_manifest = False if drs_id == "" else True
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
+
 		media['primarydisplay'] = {
 		'thumbnail' : thumbnail_url,
 		'main' : main_url,
@@ -170,6 +173,8 @@ def process_media_related_sites(CURSOR):
 		site_number = row[indices['site_number_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		site_dict = {}
 		site_dict['id'] = site_id
@@ -239,7 +244,8 @@ def process_media_related_objects(CURSOR):
 			'classification_id_index' : columns.index('ClassificationID'),
 			'object_date_index' : columns.index('ObjectDate'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -267,7 +273,11 @@ def process_media_related_objects(CURSOR):
 		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
 		object_id = int(row[indices['object_id_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
 		object_title = row[indices['object_title_index']]
@@ -287,7 +297,8 @@ def process_media_related_objects(CURSOR):
 			'classificationid' : classification_key,
 			'number' : object_number,
 			'date' : date,
-			'thumbnail' : thumbnail_url})
+			'thumbnail' : thumbnail_url,
+			'has_manifest' : has_manifest})
 		# keep the related items sorted
 		media['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
 
@@ -346,7 +357,8 @@ def process_media_related_constituents(CURSOR):
 			'display_date_index' : columns.index('DisplayDate'),
 			'remarks_index' : columns.index('Remarks'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -377,7 +389,11 @@ def process_media_related_constituents(CURSOR):
 		display_date = ""
 		if row[indices['display_date_index']] != "NULL":
 			display_date = row[indices['display_date_index']]
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		constituent_dict = {}
 		role = row[indices['role_index']]

@@ -13,7 +13,7 @@ import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import published_sql
-from utils import get_media_url, process_cursor_row
+from utils import get_media_url, process_cursor_row, create_thumbnail_url
 
 ELASTICSEARCH_INDEX = 'giza'
 
@@ -145,6 +145,8 @@ def process_pub_related_sites(CURSOR):
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		has_manifest = False if drs_id == "" else True
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		site_dict = {}
 		site_dict['id'] = site_id
@@ -234,6 +236,8 @@ def process_pub_related_objects(CURSOR):
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		has_manifest = False if drs_id == "" else True
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
 		object_title = row[indices['object_title_index']]
@@ -338,6 +342,8 @@ def process_pub_related_constituents(CURSOR):
 		alpha_sort = row[indices['alpha_sort_index']]
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		has_manifest = False if drs_id == "" else True
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		constituent_dict = {}
 		role = row[indices['role_index']]

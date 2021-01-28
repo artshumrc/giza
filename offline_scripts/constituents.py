@@ -12,7 +12,7 @@ from datetime import datetime
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import constituents_sql
-from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest
+from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest, create_thumbnail_url
 
 ELASTICSEARCH_INDEX = 'giza'
 ELASTICSEARCH_IIIF_INDEX = 'iiif'
@@ -225,9 +225,11 @@ def process_constituents_related_objects(CURSOR):
 		classification_key = int(row[indices['classification_id_index']])
 		classification = CLASSIFICATIONS.get(classification_key)
 		object_id = int(row[indices['object_id_index']])
-		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		has_manifest = False if drs_id == "" else True
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
 		object_title = row[indices['object_title_index']]
@@ -331,9 +333,11 @@ def process_constituents_related_sites(CURSOR):
 		site_id = row[indices['site_id_index']]
 		site_name = row[indices['site_name_index']]
 		site_number = row[indices['site_number_index']]
-		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		has_manifest = False if drs_id == "" else True
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		site_dict = {}
 		site_dict['id'] = site_id
@@ -529,7 +533,6 @@ def process_constituents_related_media(CURSOR):
 		media_type = MEDIATYPES.get(media_type_key)
 		number = "" if row[indices['rendition_number_index']].lower() == "null" else row[indices['rendition_number_index']]
 		media_master_id = row[indices['media_master_id_index']]
-		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		main_url = get_media_url(row[indices['main_path_index']], row[indices['main_file_index']])
 		description = "" if row[indices['description_index']].lower() == "null" else row[indices['description_index']]
 		mediaview = "" if row[indices['media_view_index']].lower() == "null" else row[indices['media_view_index']]
@@ -538,6 +541,9 @@ def process_constituents_related_media(CURSOR):
 		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
 		has_manifest = False if drs_id == "" else True
 		primary_display = True if row[indices['primary_display_index']] == '1' else False
+		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		# this is a bit of a hack because the MediaFormats for videos (in the TMS database) does not correctly identify the type of video
 		# so, make sure we are only using videos that are mp4s

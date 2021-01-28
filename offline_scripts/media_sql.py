@@ -76,7 +76,7 @@ ORDER BY MediaMaster.MediaMasterID
 RELATED_OBJECTS = """
 SELECT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID, MediaXrefs.ID AS ObjectID, Objects.ClassificationID,
 replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber, Objects.Dated AS ObjectDate,
-ThumbPath.Path AS ThumbPathName, ObjectRenditions.ThumbFileName
+ThumbPath.Path AS ThumbPathName, ObjectRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM MediaMaster
 JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
 JOIN MediaXrefs ON MediaMaster.MediaMasterID=MediaXrefs.MediaMasterID AND MediaXrefs.TableID=108
@@ -117,7 +117,7 @@ RELATED_CONSTITUENTS = """
 SELECT DISTINCT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID, Constituents.ConstituentID, Constituents.ConstituentTypeID,
 Roles.Role, Roles.RoleID,
 Constituents.DisplayName, Constituents.DisplayDate, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks,
-ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName
+ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM MediaMaster
 JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
 JOIN ConXrefs on MediaRenditions.RenditionID=ConXrefs.ID AND ConXrefs.TableID=322
