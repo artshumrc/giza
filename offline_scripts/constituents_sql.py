@@ -36,12 +36,13 @@ JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDe
 JOIN Constituents ON ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0 AND Constituents.Active=1
 JOIN Objects ON ConXrefs.ID=Objects.ObjectID AND Objects.PublicAccess=1
 JOIN ObjTitles ON Objects.ObjectID=ObjTitles.ObjectID AND ObjTitles.DisplayOrder=1
-LEFT JOIN MediaXrefs ON Objects.ObjectID=MediaXrefs.ID AND MediaXrefs.TableID=23 AND MediaXrefs.PrimaryDisplay=1
+LEFT JOIN MediaXrefs ON Objects.ObjectID=MediaXrefs.ID AND MediaXrefs.TableID=108 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ConXrefs.TableID=108
+AND MediaFiles.ArchIDNum IS NOT NULL
 ORDER BY Constituents.ConstituentID
 """
 
@@ -53,12 +54,13 @@ FROM ConXrefs
 JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
 JOIN Constituents ON ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0 AND Constituents.Active=1
 JOIN Sites ON ConXrefs.ID=Sites.SiteID AND Sites.IsPublic=1
-LEFT JOIN MediaXrefs ON Sites.SiteID=MediaXrefs.ID AND MediaXrefs.TableID=23 AND MediaXrefs.PrimaryDisplay=1
+LEFT JOIN MediaXrefs ON Sites.SiteID=MediaXrefs.ID AND MediaXrefs.TableID=189 AND MediaXrefs.PrimaryDisplay=1
 LEFT JOIN MediaMaster ON MediaXrefs.MediaMasterID=MediaMaster.MediaMasterID
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ConXrefs.TableID=189
+AND MediaFiles.ArchIDNum IS NOT NULL
 ORDER BY Constituents.ConstituentID
 """
 
