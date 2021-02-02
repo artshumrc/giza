@@ -12,6 +12,8 @@ IIIF_THUMBNAIL_SYNTAX = "/full/200,/0/default.jpg"
 DIRNAME = os.path.dirname(__file__)
 
 def get_media_url(path, filename):
+	if 'nrs.harvard.edu' in path:
+		return path + '/' + filename
 	idx = path.find('images')
 	if idx == -1:
 		idx = path.find('documents')
