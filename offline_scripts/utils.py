@@ -64,33 +64,35 @@ def get_height_and_width(id):
 		return height, width
 
 
-def generate_iiif_manifest(row):
+def generate_iiif_manifest(data):
 	""" returns json representation of a IIIF manifest """
-	manifest = build_base_manifest(row['ManifestID'], row['Description'], row['MediaView'])
-	manifest["sequences"] = build_manifest_sequences(row['ManifestID'])
-	manifest["sequences"][0]["canvases"] = [build_manifest_canvas(row['ManifestID'], row['ArchIDNum'], 0, None)]
+	manifest = build_base_manifest(data['manifest_id'], data)
+	manifest["sequences"] = build_manifest_sequences(data['manifest_id'])
+	manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['manifest_id'], manifest_id['drs_id'], 0, None, None)]
 	return manifest
 
 
 def generate_multi_canvas_iiif_manifest(manifest_id, data):
 	""" Compile all the resources associated with a site into one manifest """
-	manifest = build_base_manifest(manifest_id, data['description'], data['label'])
-	manifest["sequences"] = build_multi_image_sequence(manifest_id, data['resources'], data['drs_ids'])
+	manifest = build_base_manifest(manifest_id, data)
+	manifest["sequences"] = build_multi_image_sequence(manifest_id, data['resources'], data['drs_ids'], data['canvas_labels'])
 	for canvas in manifest["sequences"][0]["canvases"]:
 		if "startCanvas" in data and data["startCanvas"] in canvas["images"][0]["resource"]["service"]["@id"]:
 			manifest["sequences"][0]["startCanvas"] = canvas["@id"]
 	return manifest
 
 
-def build_base_manifest(manifest_id, description, label):
+def build_base_manifest(manifest_id, data):
 	""" return the base IIIF manifest for the sequence to be added to """
 	ob = {
-	    "description": description,
+	    "description": data['description'],
 		"@context": "https://iiif.io/api/presentation/2/context.json",
 		"@id": "{}".format(manifest_id),
-		"label": label,
+		"label": data['label'],
 		"@type": "sc:Manifest"
 	}
+	if 'metadata' in data:
+		ob['metadata'] = data['metadata']
 	return ob
 
 
@@ -107,7 +109,7 @@ def build_manifest_sequences(id):
 	return seq
 
 
-def build_multi_image_sequence(manifest_id, resources_list, drs_ids):
+def build_multi_image_sequence(manifest_id, resources_list, drs_ids, canvas_labels):
 	""" return sequence list of canvases each with one image """
 	seq_id = "{}/sequence/0".format(manifest_id)
 	seq = [
@@ -119,17 +121,17 @@ def build_multi_image_sequence(manifest_id, resources_list, drs_ids):
 		}
 	]
 	for idx, resource in enumerate(resources_list):
-		seq[0]['canvases'].append(build_manifest_canvas(manifest_id, drs_ids[idx], idx, resource))
+		seq[0]['canvases'].append(build_manifest_canvas(manifest_id, drs_ids[idx], idx, resource, canvas_labels[idx]))
 	return seq
 
 
-def build_manifest_canvas(manifest_id, drs_id, idx, resource):
+def build_manifest_canvas(manifest_id, drs_id, idx, resource, label):
 	if resource is None:
 		resource = build_resource(drs_id)
 	canvas_id = "{}/canvas/{}".format(manifest_id, idx)
 	canvas = {
 	    "@id": canvas_id,
-		"label": str(idx+1),
+		"label": label if label else str(idx+1),
 		"@type": "sc:Canvas",
 		"width": resource['width'],
 		"height": resource['height'],

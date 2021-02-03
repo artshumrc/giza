@@ -44,10 +44,10 @@ def process_media_iiif(CURSOR):
 			description = caption
 
 		manifest_ob = {
-			"ManifestID": manifest_id,
-			"ArchIDNum": drs_id,
-			"Description": description,
-			"MediaView": mediaview
+			"manifest_id": manifest_id,
+			"drs_id": drs_id,
+			"description": description,
+			"label": mediaview
 		}
 		object = {
 			"id": manifest_id,

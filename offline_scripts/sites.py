@@ -12,7 +12,7 @@ from datetime import datetime
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import sites_sql
-from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest, create_thumbnail_url
+from utils import get_media_url, process_cursor_row, generate_multi_canvas_iiif_manifest, create_thumbnail_url
 
 ELASTICSEARCH_INDEX = 'giza'
 ELASTICSEARCH_IIIF_INDEX = 'iiif'
@@ -685,17 +685,23 @@ def process_site_related_media(CURSOR):
 		if has_manifest:
 			object = elasticsearch_connection.get_item(media_type+'-'+media_master_id, 'manifest', ELASTICSEARCH_IIIF_INDEX)
 			resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
+			canvas_label = object['manifest']['description']
 
 			if site_id not in SITE_RELATIONS.keys():
+				metadata = add_metadata_to_manifest(site)
+
 				SITE_RELATIONS[site_id] = {
-					'description': description,
-					'label': mediaview,
+					'description': site['description'],
+					'label': site['displaytext'],
 					'resources': [resource],
-					'drs_ids' : [drs_id]
+					'drs_ids' : [drs_id],
+					'canvas_labels' : [canvas_label],
+					'metadata' : metadata
 				}
 			else:
 				SITE_RELATIONS[site_id]['resources'].append(resource)
 				SITE_RELATIONS[site_id]['drs_ids'].append(drs_id)
+				SITE_RELATIONS[site_id]['canvas_labels'].append(canvas_label)
 			if primary_display:
 				SITE_RELATIONS[site_id]['startCanvas'] = drs_id
 
@@ -761,6 +767,93 @@ def save(site):
 def save_manifest(manifest, id):
 	if manifest and 'id' in manifest:
 		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'manifest', ELASTICSEARCH_IIIF_INDEX)
+
+def add_metadata_to_manifest(site):
+	metadata = []
+	for role in site['roles']:
+		m = {}
+		value = []
+		m['label'] = role
+		if 'modernpeople' in site['relateditems']:
+			for item in site['relateditems']['modernpeople']:
+				if item['role'] == role:
+					v = item['displaytext']
+					if item['displaydate']:
+						v = v + ', ' + item['displaydate']
+					value.append(v)
+		if 'ancientpeople' in site['relateditems']:
+			for item in site['relateditems']['ancientpeople']:
+				if item['role'] == role:
+					v = item['displaytext']
+					if item['displaydate']:
+						v = v + ', ' + item['displaydate']
+					value.append(v)
+		if 'institutions' in site['relateditems']:
+			for item in site['relateditems']['institutions']:
+				if item['role'] == role:
+					v = item['displaytext']
+					if item['displaydate']:
+						v = v + ', ' + item['displaydate']
+					value.append(v)
+		if 'groups' in site['relateditems']:
+			for item in site['relateditems']['groups']:
+				if item['role'] == role:
+					v = item['displaytext']
+					if item['displaydate']:
+						v = v + ', ' + item['displaydate']
+					value.append(v)
+		if 'animals' in site['relateditems']:
+			for item in site['relateditems']['animals']:
+				if item['role'] == role:
+					v = item['displaytext']
+					if item['displaydate']:
+						v = v + ', ' + item['displaydate']
+					value.append(v)
+		m['value'] = value
+		metadata.append(m)
+
+	if 'altnum_types' in site:
+		for altnumtype in site['altnum_types']:
+			m = {}
+			value = []
+			m['label'] = altnumtype
+			for altnum in site['altnums']:
+				if altnum['description'] == altnumtype:
+					value.append(altnum['altnum'])
+			m['value'] = value
+			metadata.append(m)
+
+	if 'sitedates' in site:
+		for sitedate in site['sitedates']:
+			m = {}
+			m['label'] = sitedate['type']
+			m['value'] = sitedate['date']
+			metadata.append(m)
+
+	if 'sitetype' in site:
+		m = {}
+		m['label'] = 'Site Type'
+		m['value'] = site['sitetype']['sitetype']
+		metadata.append(m)
+
+	if 'shafts' in site and site['shafts']:
+		m = {}
+		m['label'] = 'Shafts'
+		m['value'] = site['shafts']
+		metadata.append(m)
+
+	if 'remarks' in site and site['remarks']:
+		m = {}
+		m['label'] = 'Remarks'
+		m['value'] = site['remarks']
+		metadata.append(m)
+
+	if 'problemsquestions' in site and site['problemsquestions']:
+		m = {}
+		m['label'] = 'Problems/Questions'
+		m['value'] = site['problemsquestions']
+		metadata.append(m)
+	return metadata
 
 def main(CURSOR=None):
 	if not CURSOR:
