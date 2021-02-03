@@ -830,7 +830,7 @@ def add_metadata_to_manifest(site):
 			m['value'] = sitedate['date']
 			metadata.append(m)
 
-	if 'sitetype' in site:
+	if 'sitetype' in site and 'sitetype' in site['sitetype']:
 		m = {}
 		m['label'] = 'Site Type'
 		m['value'] = site['sitetype']['sitetype']
