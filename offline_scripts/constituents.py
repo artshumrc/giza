@@ -12,7 +12,7 @@ from datetime import datetime
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import constituents_sql
-from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest, create_thumbnail_url
+from utils import get_media_url, process_cursor_row, generate_multi_canvas_iiif_manifest, create_thumbnail_url
 
 ELASTICSEARCH_INDEX = 'giza'
 ELASTICSEARCH_IIIF_INDEX = 'iiif'
@@ -579,18 +579,24 @@ def process_constituents_related_media(CURSOR):
 		if has_manifest:
 			object = elasticsearch_connection.get_item(media_type+'-'+media_master_id, 'manifest', ELASTICSEARCH_IIIF_INDEX)
 			resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
+			canvas_label = object['manifest']['description']
 
 			if constituent_id not in CONSTITUENT_RELATIONS.keys():
+				metadata = add_metadata_to_manifest(constituent)
+
 				CONSTITUENT_RELATIONS[constituent_id] = {
 					'description': description,
 					'label': mediaview,
 					'resources': [resource],
 					'type': type,
-					'drs_ids' : [drs_id]
+					'drs_ids' : [drs_id],
+					'canvas_labels' : [canvas_label],
+					'metadata' : metadata
 				}
 			else:
 				CONSTITUENT_RELATIONS[constituent_id]['resources'].append(resource)
 				CONSTITUENT_RELATIONS[constituent_id]['drs_ids'].append(drs_id)
+				CONSTITUENT_RELATIONS[constituent_id]['canvas_labels'].append(canvas_label)
 			if primary_display:
 				CONSTITUENT_RELATIONS[constituent_id]['startCanvas'] = drs_id
 
@@ -659,6 +665,50 @@ def save(constituent):
 def save_manifest(manifest, id):
 	if manifest and 'id' in manifest:
 		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'manifest', ELASTICSEARCH_IIIF_INDEX)
+
+def add_metadata_to_manifest(constituent):
+	metadata = []
+
+	if 'constituenttype' in constituent and constituent['constituenttype']:
+		m = {}
+		m['label'] = 'Type'
+		m['value'] = constituent['constituenttype']
+		metadata.append(m)
+
+	if 'gender' in constituent and constituent['gender']:
+		m = {}
+		m['label'] = 'Gender'
+		m['value'] = constituent['gender']
+		metadata.append(m)
+
+	if 'institution' in constituent and constituent['institution']:
+		m = {}
+		m['label'] = 'Institution'
+		m['value'] = constituent['institution']
+		metadata.append(m)
+
+	if 'displaydate' in constituent and constituent['displaydate']:
+		m = {}
+		m['label'] = 'Nationality and Dates'
+		m['value'] = constituent['displaydate']
+		metadata.append(m)
+
+	if 'altnames' in constituent and constituent['altnames']:
+		m = {}
+		m['label'] = 'Also Known As'
+		value = []
+		for altname in constituent['altnames']:
+			value.append(altname['type'] + ':' + altname['name'] )
+		m['value'] = value
+		metadata.append(m)
+
+	if 'remarks' in constituent and constituent['remarks']:
+		m = {}
+		m['label'] = 'Remarks'
+		m['value'] = constituent['remarks']
+		metadata.append(m)
+
+	return metadata
 
 def main(CURSOR=None):
 	if not CURSOR:
