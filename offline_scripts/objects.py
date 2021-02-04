@@ -12,7 +12,7 @@ from datetime import datetime
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import objects_sql
-from utils import get_media_url, process_cursor_row, generate_iiif_manifest, generate_multi_canvas_iiif_manifest, create_thumbnail_url
+from utils import get_media_url, process_cursor_row, generate_multi_canvas_iiif_manifest, create_thumbnail_url
 
 ELASTICSEARCH_INDEX = 'giza'
 ELASTICSEARCH_IIIF_INDEX = 'iiif'
@@ -861,18 +861,24 @@ def process_object_related_media(CURSOR):
 		if has_manifest:
 			manifest_object = elasticsearch_connection.get_item(media_type+'-'+media_master_id, 'manifest', ELASTICSEARCH_IIIF_INDEX)
 			resource = manifest_object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
+			canvas_label = manifest_object['manifest']['description']
 
 			if id not in OBJECT_RELATIONS.keys():
+				metadata = add_metadata_to_manifest(object)
+
 				OBJECT_RELATIONS[id] = {
 					'description': description,
 					'label': mediaview,
 					'resources': [resource],
 					'classification': classification,
-					'drs_ids' : [drs_id]
+					'drs_ids' : [drs_id],
+					'canvas_labels' : [canvas_label],
+					'metadata' : metadata
 				}
 			else:
 				OBJECT_RELATIONS[id]['resources'].append(resource)
 				OBJECT_RELATIONS[id]['drs_ids'].append(drs_id)
+				OBJECT_RELATIONS[id]['canvas_labels'].append(canvas_label)
 			if primary_display:
 				OBJECT_RELATIONS[id]['startCanvas'] = drs_id
 
@@ -943,6 +949,156 @@ def save(object):
 def save_manifest(manifest, id):
 	if manifest and 'id' in manifest:
 		elasticsearch_connection.add_or_update_item(id, json.dumps(manifest), 'manifest', ELASTICSEARCH_IIIF_INDEX)
+
+def add_metadata_to_manifest(object):
+	metadata = []
+
+	if 'number' in object and object['number']:
+		m = {}
+		m['label'] = 'ID'
+		m['value'] = object['number']
+		metadata.append(m)
+
+	if 'department' in object and object['department']:
+		m = {}
+		m['label'] = 'Department'
+		m['value'] = object['department']
+		metadata.append(m)
+
+	if 'classificationtext' in object and object['classificationtext']:
+		m = {}
+		m['label'] = 'Classification'
+		m['value'] = object['classificationtext']
+		metadata.append(m)
+
+	if 'provenance' in object and object['provenance']:
+		m = {}
+		m['label'] = 'Findspot'
+		m['value'] = object['provenance']
+		metadata.append(m)
+
+	if 'medium' in object and object['medium']:
+		m = {}
+		m['label'] = 'Material'
+		m['value'] = object['medium']
+		metadata.append(m)
+
+	if 'dimensions' in object and object['dimensions']:
+		m = {}
+		m['label'] = 'Dimensions'
+		m['value'] = object['dimensions']
+		metadata.append(m)
+
+	if 'creditline' in object and object['creditline']:
+		m = {}
+		m['label'] = 'Credit Line'
+		m['value'] = object['creditline']
+		metadata.append(m)
+
+	if 'altnums' in object:
+		for altnum in object['altnums']:
+			m = {}
+			m['label'] = altnum['description']
+			m['value'] = altnum['altnum']
+			metadata.append(m)
+
+	if 'objectownerdetails' in object and object['objectownerdetails']:
+		m = {}
+		m['label'] = 'Object Ownership Information'
+		m['value'] = object['objectownerdetails']
+		metadata.append(m)
+
+	if 'period' in object and object['period']:
+		m = {}
+		m['label'] = 'Period'
+		m['value'] = object['period']
+		metadata.append(m)
+
+	if 'entrydate' in object and object['entrydate']:
+		m = {}
+		m['label'] = 'Date of Register Entry'
+		m['value'] = object['entrydate']
+		metadata.append(m)
+
+	for role in object['roles']:
+		m = {}
+		value = []
+		m['label'] = role
+		if 'modernpeople' in object['relateditems']:
+			for item in object['relateditems']['modernpeople']:
+				if item['role'] == role:
+					v = item['displaytext']
+					if item['displaydate']:
+						v = v + ', ' + item['displaydate']
+					value.append(v)
+		if 'ancientpeople' in object['relateditems']:
+			for item in object['relateditems']['ancientpeople']:
+				if item['role'] == role:
+					v = item['displaytext']
+					if item['displaydate']:
+						v = v + ', ' + item['displaydate']
+					value.append(v)
+		if 'institutions' in object['relateditems']:
+			for item in object['relateditems']['institutions']:
+				if item['role'] == role:
+					v = item['displaytext']
+					if item['displaydate']:
+						v = v + ', ' + item['displaydate']
+					value.append(v)
+		if 'groups' in object['relateditems']:
+			for item in object['relateditems']['groups']:
+				if item['role'] == role:
+					v = item['displaytext']
+					if item['displaydate']:
+						v = v + ', ' + item['displaydate']
+					value.append(v)
+		if 'animals' in object['relateditems']:
+			for item in object['relateditems']['animals']:
+				if item['role'] == role:
+					v = item['displaytext']
+					if item['displaydate']:
+						v = v + ', ' + item['displaydate']
+					value.append(v)
+		m['value'] = value
+		metadata.append(m)
+
+	if 'notes' in object and object['notes']:
+		m = {}
+		m['label'] = 'Notes'
+		m['value'] = object['notes']
+		metadata.append(m)
+
+	if 'remarks' in object and object['remarks']:
+		m = {}
+		m['label'] = 'Remarks'
+		m['value'] = object['remarks']
+		metadata.append(m)
+
+	if 'problemsquestions' in object and object['problemsquestions']:
+		m = {}
+		m['label'] = 'Problems/Questions'
+		m['value'] = object['problemsquestions']
+		metadata.append(m)
+
+	if 'subjects' in object and object['subjects']:
+		m = {}
+		m['label'] = 'Subjects'
+		m['value'] = object['subjects']
+		metadata.append(m)
+
+	if 'date' in object and object['date']:
+		m = {}
+		m['label'] = 'Date'
+		m['value'] = object['date']
+		metadata.append(m)
+
+	if 'entrydate' in object and object['entrydate']:
+		m = {}
+		m['label'] = 'Date'
+		m['value'] = object['entrydate']
+		metadata.append(m)
+
+	return metadata
 
 def main(CURSOR=None):
 	if not CURSOR:
