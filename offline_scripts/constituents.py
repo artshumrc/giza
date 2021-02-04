@@ -585,8 +585,8 @@ def process_constituents_related_media(CURSOR):
 				metadata = add_metadata_to_manifest(constituent)
 
 				CONSTITUENT_RELATIONS[constituent_id] = {
-					'description': description,
-					'label': mediaview,
+					'description': constituent['remarks'],
+					'label': constituent['displaytext'],
 					'resources': [resource],
 					'type': type,
 					'drs_ids' : [drs_id],

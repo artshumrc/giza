@@ -867,8 +867,8 @@ def process_object_related_media(CURSOR):
 				metadata = add_metadata_to_manifest(object)
 
 				OBJECT_RELATIONS[id] = {
-					'description': description,
-					'label': mediaview,
+					'description': object['description'],
+					'label': object['displaytext'],
 					'resources': [resource],
 					'classification': classification,
 					'drs_ids' : [drs_id],
