@@ -686,6 +686,7 @@ def process_site_related_media(CURSOR):
 			object = elasticsearch_connection.get_item(media_type+'-'+media_master_id, 'manifest', ELASTICSEARCH_IIIF_INDEX)
 			resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 			canvas_label = object['manifest']['description']
+			canvas_metadata = object['manifest']['metadata'] #add photo manifest-level metadata as canvas-level metadata for site
 
 			if site_id not in SITE_RELATIONS.keys():
 				metadata = add_metadata_to_manifest(site)
@@ -696,12 +697,14 @@ def process_site_related_media(CURSOR):
 					'resources': [resource],
 					'drs_ids' : [drs_id],
 					'canvas_labels' : [canvas_label],
+					'canvas_metadatas' : [canvas_metadata],
 					'metadata' : metadata
 				}
 			else:
 				SITE_RELATIONS[site_id]['resources'].append(resource)
 				SITE_RELATIONS[site_id]['drs_ids'].append(drs_id)
 				SITE_RELATIONS[site_id]['canvas_labels'].append(canvas_label)
+				SITE_RELATIONS[site_id]['canvas_metadatas'].append(canvas_metadata)
 			if primary_display:
 				SITE_RELATIONS[site_id]['startCanvas'] = drs_id
 

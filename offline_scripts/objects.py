@@ -862,6 +862,7 @@ def process_object_related_media(CURSOR):
 			manifest_object = elasticsearch_connection.get_item(media_type+'-'+media_master_id, 'manifest', ELASTICSEARCH_IIIF_INDEX)
 			resource = manifest_object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 			canvas_label = manifest_object['manifest']['description']
+			canvas_metadata = manifest_object['manifest']['metadata'] #add photo manifest-level metadata as canvas-level metadata for object
 
 			if id not in OBJECT_RELATIONS.keys():
 				metadata = add_metadata_to_manifest(object)
@@ -873,12 +874,14 @@ def process_object_related_media(CURSOR):
 					'classification': classification,
 					'drs_ids' : [drs_id],
 					'canvas_labels' : [canvas_label],
+					'canvas_metadatas' : [canvas_metadata],
 					'metadata' : metadata
 				}
 			else:
 				OBJECT_RELATIONS[id]['resources'].append(resource)
 				OBJECT_RELATIONS[id]['drs_ids'].append(drs_id)
 				OBJECT_RELATIONS[id]['canvas_labels'].append(canvas_label)
+				OBJECT_RELATIONS[id]['canvas_metadatas'].append(canvas_metadatas)
 			if primary_display:
 				OBJECT_RELATIONS[id]['startCanvas'] = drs_id
 

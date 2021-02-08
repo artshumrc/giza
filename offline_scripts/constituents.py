@@ -580,6 +580,7 @@ def process_constituents_related_media(CURSOR):
 			object = elasticsearch_connection.get_item(media_type+'-'+media_master_id, 'manifest', ELASTICSEARCH_IIIF_INDEX)
 			resource = object['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
 			canvas_label = object['manifest']['description']
+			canvas_metadata = object['manifest']['metadata'] #add photo manifest-level metadata as canvas-level metadata for constituent
 
 			if constituent_id not in CONSTITUENT_RELATIONS.keys():
 				metadata = add_metadata_to_manifest(constituent)
@@ -591,12 +592,14 @@ def process_constituents_related_media(CURSOR):
 					'type': type,
 					'drs_ids' : [drs_id],
 					'canvas_labels' : [canvas_label],
+					'canvas_metadatas' : [canvas_metadata],
 					'metadata' : metadata
 				}
 			else:
 				CONSTITUENT_RELATIONS[constituent_id]['resources'].append(resource)
 				CONSTITUENT_RELATIONS[constituent_id]['drs_ids'].append(drs_id)
 				CONSTITUENT_RELATIONS[constituent_id]['canvas_labels'].append(canvas_label)
+				CONSTITUENT_RELATIONS[constituent_id]['canvas_metadatas'].append(canvas_metadatas)
 			if primary_display:
 				CONSTITUENT_RELATIONS[constituent_id]['startCanvas'] = drs_id
 

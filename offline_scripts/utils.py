@@ -68,14 +68,14 @@ def generate_iiif_manifest(data):
 	""" returns json representation of a IIIF manifest """
 	manifest = build_base_manifest(data['manifest_id'], data)
 	manifest["sequences"] = build_manifest_sequences(data['manifest_id'])
-	manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['manifest_id'], data['drs_id'], 0, None, None)]
+	manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['manifest_id'], data['drs_id'], 0, None, None, None)]
 	return manifest
 
 
 def generate_multi_canvas_iiif_manifest(manifest_id, data):
 	""" Compile all the resources associated with a site into one manifest """
 	manifest = build_base_manifest(manifest_id, data)
-	manifest["sequences"] = build_multi_image_sequence(manifest_id, data['resources'], data['drs_ids'], data['canvas_labels'])
+	manifest["sequences"] = build_multi_image_sequence(manifest_id, data['resources'], data['drs_ids'], data['canvas_labels'], data['canvas_metadatas'])
 	for canvas in manifest["sequences"][0]["canvases"]:
 		if "startCanvas" in data and data["startCanvas"] in canvas["images"][0]["resource"]["service"]["@id"]:
 			manifest["sequences"][0]["startCanvas"] = canvas["@id"]
@@ -109,7 +109,7 @@ def build_manifest_sequences(id):
 	return seq
 
 
-def build_multi_image_sequence(manifest_id, resources_list, drs_ids, canvas_labels):
+def build_multi_image_sequence(manifest_id, resources_list, drs_ids, canvas_labels, canvas_metadatas):
 	""" return sequence list of canvases each with one image """
 	seq_id = "{}/sequence/0".format(manifest_id)
 	seq = [
@@ -121,11 +121,11 @@ def build_multi_image_sequence(manifest_id, resources_list, drs_ids, canvas_labe
 		}
 	]
 	for idx, resource in enumerate(resources_list):
-		seq[0]['canvases'].append(build_manifest_canvas(manifest_id, drs_ids[idx], idx, resource, canvas_labels[idx]))
+		seq[0]['canvases'].append(build_manifest_canvas(manifest_id, drs_ids[idx], idx, resource, canvas_labels[idx], canvas_metadatas[idx]))
 	return seq
 
 
-def build_manifest_canvas(manifest_id, drs_id, idx, resource, label):
+def build_manifest_canvas(manifest_id, drs_id, idx, resource, label, metadata):
 	if resource is None:
 		resource = build_resource(drs_id)
 	canvas_id = "{}/canvas/{}".format(manifest_id, idx)
@@ -145,6 +145,8 @@ def build_manifest_canvas(manifest_id, drs_id, idx, resource, label):
 			}
 		]
 	}
+	if metadata:
+		canvas['metadata'] = metadata
 	return canvas
 
 
