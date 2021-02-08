@@ -23,16 +23,32 @@ ORDER BY MediaMaster.MediaMasterID
 """
 
 MEDIA_IIIF = """
-SELECT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID,
+SELECT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber,
 replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description, MediaMaster.MediaView,
 replace(replace(MediaMaster.PublicCaption, char(10), ''), char(13), ' ') AS PublicCaption,
-MediaFiles.ArchIDNum
+MediaFiles.ArchIDNum, Departments.Department, replace(replace(Date.TextEntry, char(10), ''), char(13), ' ') AS DateOfCapture, replace(replace(Problems.TextEntry, char(10), ''), char(13), ' ') AS ProblemsQuestions
 FROM MediaMaster
+LEFT JOIN Departments ON MediaMaster.DepartmentID=Departments.DepartmentID
 LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
+LEFT JOIN TextEntries AS Date ON MediaMaster.MediaMasterID=Date.ID AND Date.TableID=318 AND Date.TextTypeID=3
+LEFT JOIN TextEntries AS Problems ON MediaMaster.MediaMasterID=Problems.ID AND Problems.TableID=318 AND Problems.TextTypeID=5
 WHERE MediaMaster.PublicAccess=1
 AND (MediaRenditions.PrimaryFileID = -1 OR MediaRenditions.PrimaryFileID=MediaFiles.FileID)
 AND MediaFiles.ArchIDNum IS NOT NULL
+ORDER BY MediaMaster.MediaMasterID
+"""
+
+MEDIA_IIIF_PHOTOGRAPHERS = """
+SELECT DISTINCT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID, Roles.Role, Constituents.DisplayName, Constituents.DisplayDate
+FROM MediaMaster
+JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMasterID AND MediaRenditions.MediaTypeID IS NOT NULL AND MediaRenditions.MediaTypeID != 4
+JOIN ConXrefs on MediaRenditions.RenditionID=ConXrefs.ID AND ConXrefs.TableID=322
+JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
+JOIN Constituents ON ConXrefDetails.ConstituentID=Constituents.ConstituentID AND Constituents.PublicAccess=1 AND Constituents.ConstituentTypeID>0
+JOIN Roles ON ConXrefs.RoleID=Roles.RoleID
+WHERE MediaMaster.PublicAccess=1
+AND Roles.RoleID = 11
 ORDER BY MediaMaster.MediaMasterID
 """
 
@@ -130,6 +146,7 @@ LEFT JOIN MediaRenditions AS ConstituentRenditions ON ConstituentMaster.MediaMas
 LEFT JOIN MediaFiles ON ConstituentRenditions.RenditionID=MediaFiles.RenditionID
 LEFT JOIN MediaPaths AS ThumbPath ON ConstituentRenditions.ThumbPathID=ThumbPath.PathID
 WHERE MediaMaster.PublicAccess=1
+AND MediaFiles.ArchIDNum IS NOT NULL
 ORDER BY MediaMaster.MediaMasterID
 """
 

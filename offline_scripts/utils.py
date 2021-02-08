@@ -68,7 +68,7 @@ def generate_iiif_manifest(data):
 	""" returns json representation of a IIIF manifest """
 	manifest = build_base_manifest(data['manifest_id'], data)
 	manifest["sequences"] = build_manifest_sequences(data['manifest_id'])
-	manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['manifest_id'], manifest_id['drs_id'], 0, None, None)]
+	manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['manifest_id'], data['drs_id'], 0, None, None)]
 	return manifest
 
 
