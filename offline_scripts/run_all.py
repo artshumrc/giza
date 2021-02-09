@@ -1,5 +1,5 @@
 
-
+import argparse
 import getpass
 import constituents
 import iiif_manifests
@@ -9,14 +9,21 @@ import published
 import sites
 import sys
 
-def main(argv):
+def main():
 	CURSOR = None
+
+	parser = argparse.ArgumentParser(description='Run all TMS data ingest scripts')
+	parser.add_argument('-u','--username', help='TMS Username', required=False, default='RC\\rsinghal')
+	parser.add_argument('-p','--password', help='TMS Password', required=False)
+	parser.add_argument('-i','--iiif', help='Run IIIF Manifests script', required=False, default=False)
+	args = vars(parser.parse_args())
+
 	try:
 		import pyodbc
 		dsn = 'gizadatasource'
-		user = 'RC\\rsinghal'
-		if len(sys.argv) == 2:
-			password = sys.argv[1]
+		user = args['username']
+		if args['password']:
+			password = args['password']
 		else:
 			password = getpass.getpass()
 		database = 'gizacardtms'
@@ -27,7 +34,7 @@ def main(argv):
 	except:
 		print("Could not connect, no cursor")
 
-	if argv and argv[0] == 'iiif':
+	if args['iiif']:
 		iiif_manifests.main(CURSOR)
 	sites.main(CURSOR)
 	objects.main(CURSOR)
@@ -36,4 +43,4 @@ def main(argv):
 	media.main(CURSOR)
 
 if __name__ == "__main__":
-   main(sys.argv[1:])
+   main()
