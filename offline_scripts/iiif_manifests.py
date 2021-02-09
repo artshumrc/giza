@@ -135,7 +135,7 @@ def process_media_photographers(CURSOR):
 
 		# ignore non-photos, if they somehow managed to show up in the query results
 		if media_type_key != 1:
-			return
+			return(manifest, current_id)
 
 		if manifest_id != current_id:
 			save(manifest)
