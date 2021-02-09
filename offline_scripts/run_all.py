@@ -2,14 +2,15 @@
 
 import getpass
 import constituents
+import iiif_manifests
 import media
 import objects
 import published
 import sites
 import sys
 
-CURSOR = None
-if __name__ == "__main__":
+def main(argv):
+	CURSOR = None
 	try:
 		import pyodbc
 		dsn = 'gizadatasource'
@@ -26,8 +27,13 @@ if __name__ == "__main__":
 	except:
 		print("Could not connect, no cursor")
 
+	if argv and argv[0] == 'iiif':
+		iiif_manifests.main(CURSOR)
 	sites.main(CURSOR)
 	objects.main(CURSOR)
 	constituents.main(CURSOR)
 	published.main(CURSOR)
 	media.main(CURSOR)
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
