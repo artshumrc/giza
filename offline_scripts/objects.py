@@ -881,7 +881,7 @@ def process_object_related_media(CURSOR):
 				OBJECT_RELATIONS[id]['resources'].append(resource)
 				OBJECT_RELATIONS[id]['drs_ids'].append(drs_id)
 				OBJECT_RELATIONS[id]['canvas_labels'].append(canvas_label)
-				OBJECT_RELATIONS[id]['canvas_metadatas'].append(canvas_metadatas)
+				OBJECT_RELATIONS[id]['canvas_metadatas'].append(canvas_metadata)
 			if primary_display:
 				OBJECT_RELATIONS[id]['startCanvas'] = drs_id
 

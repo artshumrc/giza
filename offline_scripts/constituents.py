@@ -599,7 +599,7 @@ def process_constituents_related_media(CURSOR):
 				CONSTITUENT_RELATIONS[constituent_id]['resources'].append(resource)
 				CONSTITUENT_RELATIONS[constituent_id]['drs_ids'].append(drs_id)
 				CONSTITUENT_RELATIONS[constituent_id]['canvas_labels'].append(canvas_label)
-				CONSTITUENT_RELATIONS[constituent_id]['canvas_metadatas'].append(canvas_metadatas)
+				CONSTITUENT_RELATIONS[constituent_id]['canvas_metadatas'].append(canvas_metadata)
 			if primary_display:
 				CONSTITUENT_RELATIONS[constituent_id]['startCanvas'] = drs_id
 
