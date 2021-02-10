@@ -9,18 +9,28 @@ import published
 import sites
 import sys
 
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 def main():
 	CURSOR = None
 
 	parser = argparse.ArgumentParser(description='Run all TMS data ingest scripts')
 	parser.add_argument('-u','--username', help='TMS Username', required=False, default='RC\\rsinghal')
 	parser.add_argument('-p','--password', help='TMS Password', required=False)
-	parser.add_argument('-i','--iiif', help='Run IIIF Manifests script', required=False, default=False)
-	parser.add_argument('-s','--sites', help='Run Sites script', required=False, default=True)
-	parser.add_argument('-o','--objects', help='Run Objects script', required=False, default=True)
-	parser.add_argument('-c','--constituents', help='Run Constituents script', required=False, default=True)
-	parser.add_argument('-b','--published', help='Run Published script', required=False, default=True)
-	parser.add_argument('-m','--media', help='Run Media script', required=False, default=True)
+	parser.add_argument('-i','--iiif', type=str2bool, help='Run IIIF Manifests script', required=False, default=False)
+	parser.add_argument('-s','--sites', type=str2bool, help='Run Sites script', required=False, default=True)
+	parser.add_argument('-o','--objects', type=str2bool, help='Run Objects script', required=False, default=True)
+	parser.add_argument('-c','--constituents', type=str2bool, help='Run Constituents script', required=False, default=True)
+	parser.add_argument('-b','--published', type=str2bool, help='Run Published script', required=False, default=True)
+	parser.add_argument('-m','--media', type=str2bool, help='Run Media script', required=False, default=True)
 	args = vars(parser.parse_args())
 
 	try:
