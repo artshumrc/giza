@@ -5,5 +5,11 @@
       {{resource.title}}
     </a>
   </h4>
+  {% elif resource_title %}
+  <h4 class="text-medium">
+    <a {% if not internal %} target="_blank" {% endif %} href="{% if internal %}/{% endif %}{{resource_url}}{% if resource_slug %}/{{resource_slug}}{% endif %}">
+      {{resource_title}}
+    </a>
+  </h4>
   {% endif %}
   <p>
