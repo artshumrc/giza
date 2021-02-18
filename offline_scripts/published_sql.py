@@ -62,7 +62,7 @@ WHERE ReferenceMaster.PublicAccess=1
 AND (
 (MediaPaths.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
 OR (MediaPaths.Path LIKE 'Y:%')
-OR (MediaPaths.Path IS Null AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
+OR (MediaPaths.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
 ORDER BY ReferenceMaster.ReferenceID, ConXrefDetails.ConstituentID
 """
 

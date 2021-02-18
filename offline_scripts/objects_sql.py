@@ -73,7 +73,7 @@ ORDER BY Objects.ObjectID
 # Related Constituents (Modern and Ancient) for all Objects
 # Eventually switch from using ArchIDNum (DRS ID) to Library URN
 RELATED_CONSTITUENTS = """
-SELECT ConXrefs.ID AS ID, Roles.Role, Roles.RoleID, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
+SELECT DISTINCT ConXrefs.ID AS ID, Roles.Role, Roles.RoleID, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
 Constituents.DisplayName, Constituents.DisplayDate, Objects.ClassificationID, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM ConXrefs
@@ -87,7 +87,10 @@ LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMast
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ConXrefs.TableID=108
-AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
+AND (
+(MediaPaths.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (MediaPaths.Path LIKE 'Y:%')
+OR (MediaPaths.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
 ORDER BY ConXrefs.ID
 """
 

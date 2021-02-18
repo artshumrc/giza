@@ -56,7 +56,7 @@ ORDER BY Sites.SiteID
 # Related Constituents for all Sites
 # Also grab the primary thumbnail photo for each Constituent
 RELATED_CONSTITUENTS = """
-SELECT ConXrefs.ID AS SiteID, Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
+SELECT DISTINCT ConXrefs.ID AS SiteID, Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
 Constituents.DisplayName, Constituents.DisplayDate, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM ConXrefs
@@ -70,7 +70,10 @@ LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMast
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ConXrefs.TableID=189
-AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
+AND (
+(MediaPaths.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (MediaPaths.Path LIKE 'Y:%')
+OR (MediaPaths.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
 ORDER BY ConXrefs.ID
 """
 
