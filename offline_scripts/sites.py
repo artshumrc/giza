@@ -548,7 +548,7 @@ def process_site_related_published(CURSOR):
 		site['relateditems']["pubdocs"].append({
 			'id' : reference_id,
 			'boilertext' : boiler_text,
-			'displaytext' : title,
+			'displaytext' : boiler_text,
 			'date' : date,
 			'url' : main_url,
 			'thumbnail' : thumbnail_url})

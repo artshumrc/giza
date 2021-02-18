@@ -441,7 +441,7 @@ def process_constituents_related_published(CURSOR):
 		constituent['relateditems']["pubdocs"].append({
 			'id' : reference_id,
 			'boilertext' : boiler_text,
-			'displaytext' : title,
+			'displaytext' : boiler_text,
 			'date' : date,
 			'url' : main_url})
 		# keep the related items sorted

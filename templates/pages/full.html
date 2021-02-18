@@ -426,7 +426,7 @@
                   <a class="icon-large icon-file-text-o" href="{% url 'get_type_html' 'pubdocs' item.id 'full' %}"></a>
                 </div>
                 <div class="media-object-section">
-                  <p class="media-object-title"><a href="{% url 'get_type_html' 'pubdocs' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'pubdocs' item.id 'full' %}">{{ item.displaytext|safe }}</a></p>
                   {% if item.date %}
                   <ul class="subheader">
                     <li>Date: {{ item.date }}</li>
