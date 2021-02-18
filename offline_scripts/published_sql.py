@@ -12,7 +12,7 @@ ORDER BY ReferenceMaster.ReferenceID
 """
 
 RELATED_SITES = """
-SELECT ReferenceMaster.ReferenceID, RefXrefs.ID AS SiteID, Sites.SiteName, Sites.SiteNumber,
+SELECT DISTINCT ReferenceMaster.ReferenceID, RefXrefs.ID AS SiteID, Sites.SiteName, Sites.SiteNumber,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM ReferenceMaster
 JOIN RefXRefs ON ReferenceMaster.ReferenceID=RefXRefs.ReferenceID AND RefXRefs.TableID=189
@@ -23,11 +23,15 @@ LEFT JOIN MediaRenditions ON MediaXrefs.MediaMasterID=MediaRenditions.MediaMaste
 LEFT JOIN MediaPaths AS ThumbPath ON MediaRenditions.ThumbPathID=ThumbPath.PathID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ReferenceMaster.PublicAccess=1
-ORDER BY ReferenceMaster.ReferenceID
+AND (
+(ThumbPath.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (ThumbPath.Path LIKE 'Y:%')
+OR (ThumbPath.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
+ORDER BY ReferenceMaster.ReferenceID, RefXrefs.ID
 """
 
 RELATED_OBJECTS = """
-SELECT ReferenceMaster.ReferenceID, RefXrefs.ID AS ObjectID,
+SELECT DISTINCT ReferenceMaster.ReferenceID, RefXrefs.ID AS ObjectID,
 replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber, Objects.ClassificationID, Objects.Dated AS ObjectDate,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM ReferenceMaster
@@ -40,7 +44,11 @@ LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMast
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ReferenceMaster.PublicAccess=1
-ORDER BY ReferenceMaster.ReferenceID
+AND (
+(MediaPaths.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (MediaPaths.Path LIKE 'Y:%')
+OR (MediaPaths.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
+ORDER BY ReferenceMaster.ReferenceID, RefXrefs.ID
 """
 
 RELATED_CONSTITUENTS = """
