@@ -23,7 +23,7 @@ def main():
 	CURSOR = None
 
 	parser = argparse.ArgumentParser(description='Run all TMS data ingest scripts')
-	parser.add_argument('-u','--username', help='TMS Username', required=False, default='RC\\rsinghal')
+	parser.add_argument('-u','--username', help='TMS Username', required=False, default='RC\\svc-giza')
 	parser.add_argument('-p','--password', help='TMS Password', required=False)
 	parser.add_argument('-i','--iiif', type=str2bool, help='Run IIIF Manifests script', required=False, default=False)
 	parser.add_argument('-s','--sites', type=str2bool, help='Run Sites script', required=False, default=True)

@@ -718,7 +718,7 @@ def main(CURSOR=None):
 		try:
 			import pyodbc
 			dsn = 'gizadatasource'
-			user = 'RC\\rsinghal'
+			user = 'RC\\svc-giza'
 			password = getpass.getpass()
 			database = 'gizacardtms'
 
