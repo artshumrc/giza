@@ -73,7 +73,7 @@ AND MediaMaster.MediaMasterID=21706
 
 # Related Media for all Sites
 RELATED_SITES = """
-SELECT MediaMaster.MediaMasterID, MediaXrefs.ID AS SiteID, MediaRenditions.MediaTypeID,
+SELECT DISTINCT MediaMaster.MediaMasterID, MediaXrefs.ID AS SiteID, MediaRenditions.MediaTypeID,
 Sites.SiteName, Sites.SiteNumber, Sites.Description + ',,' AS Description,
 ThumbPath.Path AS ThumbPathName, SiteRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM MediaMaster
@@ -86,11 +86,15 @@ LEFT JOIN MediaRenditions AS SiteRenditions ON SiteMaster.MediaMasterID=SiteRend
 LEFT JOIN MediaFiles ON SiteRenditions.RenditionID=MediaFiles.RenditionID AND SiteRenditions.PrimaryFileID=MediaFiles.FileID
 LEFT JOIN MediaPaths AS ThumbPath ON SiteRenditions.ThumbPathID=ThumbPath.PathID
 WHERE MediaMaster.PublicAccess=1
-ORDER BY MediaMaster.MediaMasterID
+AND (
+(ThumbPath.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (ThumbPath.Path LIKE 'Y:%')
+OR (ThumbPath.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
+ORDER BY MediaMaster.MediaMasterID, MediaXrefs.ID
 """
 
 RELATED_OBJECTS = """
-SELECT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID, MediaXrefs.ID AS ObjectID, Objects.ClassificationID,
+SELECT DISTINCT MediaMaster.MediaMasterID, MediaRenditions.MediaTypeID, MediaXrefs.ID AS ObjectID, Objects.ClassificationID,
 replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber, Objects.Dated AS ObjectDate,
 ThumbPath.Path AS ThumbPathName, ObjectRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM MediaMaster
@@ -104,7 +108,11 @@ LEFT JOIN MediaRenditions AS ObjectRenditions ON ObjectMaster.MediaMasterID=Obje
 LEFT JOIN MediaFiles ON ObjectRenditions.RenditionID=MediaFiles.RenditionID AND ObjectRenditions.PrimaryFileID=MediaFiles.FileID
 LEFT JOIN MediaPaths AS ThumbPath ON ObjectRenditions.ThumbPathID=ThumbPath.PathID
 WHERE MediaMaster.PublicAccess=1
-ORDER BY MediaMaster.MediaMasterID
+AND (
+(ThumbPath.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (ThumbPath.Path LIKE 'Y:%')
+OR (ThumbPath.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
+ORDER BY MediaMaster.MediaMasterID, MediaXrefs.ID
 """
 
 # This ends up creating duplicates due to many roles for the same constituent if a person is depicted in a photograph. Don't use
@@ -146,7 +154,10 @@ LEFT JOIN MediaRenditions AS ConstituentRenditions ON ConstituentMaster.MediaMas
 LEFT JOIN MediaFiles ON ConstituentRenditions.RenditionID=MediaFiles.RenditionID
 LEFT JOIN MediaPaths AS ThumbPath ON ConstituentRenditions.ThumbPathID=ThumbPath.PathID
 WHERE MediaMaster.PublicAccess=1
-AND MediaFiles.ArchIDNum IS NOT NULL
+AND (
+(ThumbPath.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (ThumbPath.Path LIKE 'Y:%')
+OR (ThumbPath.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
 ORDER BY MediaMaster.MediaMasterID
 """
 
@@ -165,5 +176,5 @@ LEFT JOIN MediaPaths AS MainPath ON MediaFiles.PathID=MainPath.PathID
 WHERE MediaRenditions.PrimaryFileID=MediaFiles.FileID
 AND MediaRenditions.MediaTypeID=4
 AND MediaMaster.PublicAccess=1
-ORDER BY MediaMaster.MediaMasterID
+ORDER BY MediaMaster.MediaMasterID, ReferenceMaster.ReferenceID
 """

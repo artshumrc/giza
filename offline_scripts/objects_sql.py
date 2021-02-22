@@ -54,7 +54,7 @@ ORDER BY Objects.ObjectID
 # Related Sites for all Objects
 # Eventually switch from using ArchIDNum (DRS ID) to Library URN
 RELATED_SITES = """
-SELECT Objects.ObjectID AS ID, SiteObjXrefs.SiteID,
+SELECT DISTINCT Objects.ObjectID AS ID, SiteObjXrefs.SiteID,
 Sites.SiteName, Sites.SiteNumber, Objects.ClassificationID,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM Objects
@@ -67,7 +67,11 @@ LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE Objects.PublicAccess = 1
 AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
-ORDER BY Objects.ObjectID
+AND (
+(MediaPaths.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (MediaPaths.Path LIKE 'Y:%')
+OR (MediaPaths.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
+ORDER BY Objects.ObjectID, SiteObjXrefs.SiteID
 """
 
 # Related Constituents (Modern and Ancient) for all Objects
@@ -91,7 +95,7 @@ AND (
 (MediaPaths.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
 OR (MediaPaths.Path LIKE 'Y:%')
 OR (MediaPaths.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
-ORDER BY ConXrefs.ID
+ORDER BY ConXrefs.ID, ConXrefDetails.ConstituentID
 """
 
 # Related Published Documents for all Objects
@@ -110,11 +114,11 @@ JOIN MediaPaths AS MainPath ON MediaFiles.PathID=MainPath.PathID
 WHERE MediaRenditions.PrimaryFileID=MediaFiles.FileID
 AND MediaTypeID=4
 AND Objects.PublicAccess=1
-ORDER BY Objects.ObjectID
+ORDER BY Objects.ObjectID, ReferenceMaster.ReferenceID
 """
 
 RELATED_UNPUBLISHED = """
-SELECT Associations.ID1 AS ID, Associations.ID2 AS UnpublishedID, Objects.ObjectNumber,
+SELECT DISTINCT Associations.ID1 AS ID, Associations.ID2 AS UnpublishedID, Objects.ObjectNumber,
 replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS UnpublishedTitle, Objects.ClassificationID, Objects.Dated AS ObjectDate,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM Associations
@@ -127,7 +131,11 @@ LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE Associations.TableID=108
 AND RelationshipID=6
-ORDER BY ID1
+AND (
+(MediaPaths.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (MediaPaths.Path LIKE 'Y:%')
+OR (MediaPaths.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
+ORDER BY ID1, Associations.ID2
 """
 
 # Related Media for all Objects
@@ -146,5 +154,5 @@ LEFT JOIN MediaPaths AS ThumbPath ON MediaRenditions.ThumbPathID=ThumbPath.PathI
 LEFT JOIN MediaPaths AS MainPath ON MediaFiles.PathID=MainPath.PathID
 WHERE MediaXrefs.TableID=108
 AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
-ORDER BY MediaXrefs.ID
+ORDER BY MediaXrefs.ID, MediaMaster.MediaMasterID
 """

@@ -28,7 +28,7 @@ ORDER BY Constituents.ConstituentID
 
 # Related Objects for all Constituents
 RELATED_OBJECTS = """
-SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConXrefs.ID AS ObjectID, replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber,
+SELECT DISTINCT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConXrefs.ID AS ObjectID, replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber,
 Objects.ClassificationID, Objects.Dated AS ObjectDate,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM ConXrefs
@@ -42,13 +42,16 @@ LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMast
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ConXrefs.TableID=108
-AND MediaFiles.ArchIDNum IS NOT NULL
-ORDER BY Constituents.ConstituentID
+AND (
+(MediaPaths.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (MediaPaths.Path LIKE 'Y:%')
+OR (MediaPaths.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
+ORDER BY Constituents.ConstituentID, ConXrefs.ID
 """
 
 # Related Sites for all Constituents
 RELATED_SITES = """
-SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConXrefs.ID AS SiteID, Sites.SiteName, Sites.SiteNumber,
+SELECT DISTINCT Constituents.ConstituentID, Constituents.ConstituentTypeID, ConXrefs.ID AS SiteID, Sites.SiteName, Sites.SiteNumber,
 MediaPaths.Path AS ThumbPathName, MediaRenditions.ThumbFileName, MediaFiles.ArchIDNum
 FROM ConXrefs
 JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
@@ -60,13 +63,16 @@ LEFT JOIN MediaRenditions ON MediaMaster.MediaMasterID=MediaRenditions.MediaMast
 LEFT JOIN MediaPaths ON MediaRenditions.ThumbPathID=MediaPaths.PathID
 LEFT JOIN MediaFiles ON MediaRenditions.RenditionID=MediaFiles.RenditionID
 WHERE ConXrefs.TableID=189
-AND MediaFiles.ArchIDNum IS NOT NULL
-ORDER BY Constituents.ConstituentID
+AND (
+(MediaPaths.Path IS NOT NULL AND MediaRenditions.ThumbFileName IS NOT NULL AND MediaFiles.ArchIDNum IS NOT NULL)
+OR (MediaPaths.Path LIKE 'Y:%')
+OR (MediaPaths.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
+ORDER BY Constituents.ConstituentID, ConXrefs.ID
 """
 
 # Related Published Documents for all Constituents
 RELATED_PUBLISHED = """
-SELECT Constituents.ConstituentID, Constituents.ConstituentTypeID, ReferenceMaster.ReferenceID, ReferenceMaster.Title, ReferenceMaster.BoilerText, ReferenceMaster.DisplayDate,
+SELECT DISTINCT Constituents.ConstituentID, Constituents.ConstituentTypeID, ReferenceMaster.ReferenceID, ReferenceMaster.Title, ReferenceMaster.BoilerText, ReferenceMaster.DisplayDate,
 MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
 FROM ConXrefs
 JOIN ConXrefDetails ON ConXrefs.ConXrefID=ConXrefDetails.ConXrefID AND ConXrefDetails.Unmasked=1
@@ -85,7 +91,7 @@ ORDER BY Constituents.ConstituentID
 
 # Related Media for all Constituents
 RELATED_MEDIA = """
-SELECT MediaXrefs.ID AS ID, Constituents.ConstituentTypeID,  MediaMaster.MediaMasterID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
+SELECT DISTINCT MediaXrefs.ID AS ID, Constituents.ConstituentTypeID,  MediaMaster.MediaMasterID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
 MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description,
 MediaMaster.MediaView, replace(replace(MediaMaster.PublicCaption, char(10), ''), char(13), ' ') AS PublicCaption,
 ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
@@ -100,5 +106,5 @@ LEFT JOIN MediaPaths AS ThumbPath ON MediaRenditions.ThumbPathID=ThumbPath.PathI
 LEFT JOIN MediaPaths AS MainPath ON MediaFiles.PathID=MainPath.PathID
 WHERE MediaXrefs.TableID=23
 AND MediaRenditions.PrimaryFileID=MediaFiles.FileID
-ORDER BY MediaXrefs.ID
+ORDER BY MediaXrefs.ID, MediaMaster.MediaMasterID
 """
