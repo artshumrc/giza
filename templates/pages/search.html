@@ -1,0 +1,125 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Search the Archives",
+  section: "search",
+  section_search: true,
+  met-tooltip-text: 'The "Multilingual Egyptological Thesaurus" (MET) allows users to search any image on the website using keywords and descriptions of the image itself. The MET applies to two-dimensional wall scene photos, as well as three-dimensional object photos. Start typing your search term to get a menu of available options.'
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="5" title="Search the Archives" %}
+{% endblock  %}
+
+{% block 'main_content' %}
+  <div class="row">
+    <section class="large-12 columns">
+
+      <h3>Advanced Search</h3>
+      <p>
+        Narrow your search results using the advanced search fields below.
+      </p>
+      <p class="text-smaller">
+        Need help with abbreviations? Check out our
+        <a href="{% url 'explore' 'faq' %}#abbr">list of abbreviations on the FAQ page.</a>
+      </p>
+
+      <hr>
+
+      <form id="advanced-search-form" action="{% url 'results' %}">
+        <div class="row">
+
+            <fieldset id="category-radio-selector" class="medium-4 medium-push-8 columns">
+              <legend>Search within the selected category:</legend>
+
+              <div class="feature-block tertiary">
+                <input id="objects" data-for-id="section-objects" value="objects" type="radio" name="category" checked><label for="objects">Objects</label><br>
+                <input id="tombs" data-for-id="section-sites" value="sites" type="radio" name="category"><label for="tombs">Tombs and Monuments</label><br>
+                <input id="diary" data-for-id="section-objects" value="diarypages" type="radio" name="category"><label for="tombs">Diary Pages</label><br>
+                <input id="unpubdocs" data-for-id="section-objects" value="unpubdocs" type="radio" name="category"><label for="tombs">Unpublished Documents</label><br>
+                <input id="mapsandplans" data-for-id="section-objects" value="mapsandplans" type="radio" name="category"><label for="tombs">Maps and Plans</label><br>
+              </div>
+            </fieldset>
+
+          <section id="section-objects" class="medium-8 medium-pull-4 columns category-section">
+            <label>Object title or name:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="The name or kind of Object that you are looking for."></span>
+              <input name="objects_title" type="text" placeholder="Example: 'royal statue' or 'Khafre'">
+            </label>
+            <label>Object or ID number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="The museum number, expedition number, or other unique identifier of an artifact or document."></span>
+              <input name="objects_allnumbers" type="text" placeholder="Example: 'HUMFA_14-11-206'">
+            </label>
+            <label>Material:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="What an Object is made of."></span>
+              <input name="objects_medium" type="text" placeholder="Example: 'alabaster'">
+            </label>
+            <label>Findspot:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="The location (e.g. monument, tomb, etc.) where an Object was discovered."></span>
+              <input name="objects_provenance" type="text" placeholder="Example: 'G 2110'">
+            </label>
+            <label>Date of register entry:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="The date an Object was recorded in the official artifact register (usually soon after discovery)."></span>
+              <input name="objects_entrydate" type="text" placeholder="Example: 05/23/1924">
+            </label>
+
+              <!-- <label>MET (Multilingual Egyptological Thesaurus) search: <span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="{{met_tooltip_text}}"></span>
+                <span class="input-wrap"><input type="text" placeholder="No items selected"><a href="#" class="select-btn" data-open="MET-search">Select MET terms</a></span>
+              </label>
+
+              <p class="hide-for-medium text-smaller" style="margin-top: -0.75em;">
+                <span id="tooltipMetMobile" class="icon-info-circle has-tip right"
+                  data-tooltip aria-haspopup="true" data-disable-hover="false"
+                  data-position-class="right" data-template-classes="narrow"
+                  tabindex="2" title="{{met_tooltip_text}}">
+                  What is MET?
+                </span>
+              </p> -->
+          </section>
+
+          <section id="section-sites" style="display: none;" id="section-objects" class="medium-8 medium-pull-4 columns category-section">
+            <!-- <label>All Fields:
+              <input name="q" type="text" placeholder="Example: 'Sphinx'">
+            </label> -->
+              <label>Tomb/Monument number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="Official unique number or name of a Tomb/Monument."></span>
+                <input name="sites_number" type="text" placeholder="Example: 'G 7000 X'">
+              </label>
+              <label>Tomb/Monument name:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="The area of Giza where a Tomb/Monument is located."></span>
+                <input name="sites_sitename" type="text" placeholder="Example: 'Eastern Cemetery'">
+              </label>
+              <label>Site Dates:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="Date(s) or time period(s) when a Tomb/Monument was originally in use."></span>
+                <input name="sites_datevalues" type="text" placeholder="Example: 'Khufu to Shepseskaf'">
+              </label>
+              <label>People:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2" title="Ancient and modern individuals (or institutions, or animals) who are associated with a Tomb/Monument."></span>
+                <input name="sites_people" type="text" placeholder="Example: 'George Reisner'">
+              </label>
+          </section>
+        </div>
+
+        <div class="row">
+          <div class="large-12 columns">
+            <!-- This should be a <button> in real life -->
+            <button class="button primary" onclick="document.getElementById('advanced-search-form').submit();">Search</button>
+          </div>
+        </div>
+
+      </form>
+
+    </section>
+    <!-- <section class="large-4 columns">
+      {% include 'partials/feature-block-start.html' with feature_title="My Saved Searches" feature_block_class="secondary" %}
+        <ul class="feature-block__list">
+        {% for x in saved_searches_sb %}
+          <li>
+            <div class="media-object list-item list-item-textblob">
+              <h6 class="h7">{{li_search_title}}</h6>
+              <div>
+                <a href="#">View Details</a> <span class="text-muted m-x-qt">|</span> <a href="#">Run Search</a>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+        </ul>
+      {% include 'partials/feature-block-end.html' %}
+    </section> -->
+  </div>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

@@ -1,0 +1,74 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Sign up"
+  section: "authentication",
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'content' %}
+  <div class="auth-layout ">
+    <div class="auth-form signup-form">
+      <span class="title">Sign up for My Giza <span class="separator">|</span> <a href="/login" >Log in</a></span>
+      <br>
+      <br>
+      <!--
+      Reinstate when oauth added
+      a href="#" class="button social google"><i class="fab fa-google"></i>sign up with google</a>
+      <a href="#" class="button social facebook"><i class="fab fa-facebook-f"></i>sign up with facebook</a-->
+      {% if success %}
+        <strong>Success.</strong>
+        <a href="/login/">Try logging in.</a><br/>
+      {% elif registered %}
+        <strong>You've already got an account with this email address!</strong>
+        <a href="/login/">Try logging in.</a><br/>
+      {% else %}
+        <form id="login_form" method="post" action="{% url 'sign_up' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+          <br>
+          {% endif %}
+          {{ custom_user_form.as_p }}
+          <!--span class="info">All * items are required.</span>
+          <label>Full Name*:
+            <input placeholder="Queen Meresankh III" type="text" name="full_name" value="" size="50"/>
+          </label>
+          <label>Email*:
+            <input type="email" name="email" placeholder="meresankh@giza.edu">
+            <input type="text" name="username" placeholder="meresankh@giza.edu">
+          </label>
+          <label class="password">Password*:
+            <input type="password" name="password">
+          </label>
+          <span class="info">Password must be at least 8 characters and contain at least one letter and one number.</span>
+          <!--label>Interest:
+            <select>
+              <option value="abc">—</option>
+              <option value="starbuck">Starbuck</option>
+              <option value="hotdog">Hot Dog</option>
+              <option value="apollo">Apollo</option>
+            </select>
+          </label>
+          <br>
+          <br>
+          <label class="custom-checkbox">
+            <input type="checkbox">
+            <span class="fake-input"></span>
+            I accept the <a href="/terms">Terms & Conditions</a> of the Digital Giza Website
+          </label-->
+          <br>
+          <br>
+          <div class="btn-row">
+            <button type="submit" class="button">Create Account</button>
+          </div>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

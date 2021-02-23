@@ -17,7 +17,8 @@ CATEGORIES = {
 	'videos'			: 'Videos',
 	'audio'				: 'Audio',
 	'microfilm'			: 'Microfilm',
-	'document'			: 'Document'
+	'document'			: 'Document',
+	'iiifmanifest'		: 'IIIF Manifest'
 }
 
 FIELDS_PER_CATEGORY = {
@@ -41,17 +42,24 @@ FACETS_PER_CATEGORY = {
 	'sites' : {
 		'Site Type' : {
 	    	"terms": {
-				'field' : 'sitetype.sitetype.raw'
+				'field' : 'sitetype.sitetype.keyword'
 			}
 		},
 		'Site Name' : {
 	    	"terms": {
-				'field' : 'sitename.raw'
+				'field' : 'sitename.keyword'
 			}
 		},
 		'Site Date' : {
-	    	"terms": {
-				'field' : 'sitedates.date.raw'
+			"nested": {
+               "path": "sitedates"
+            },
+			"aggregations": {
+	             "Site Date": {
+	                "terms": {
+	                   "field": "sitedates.date.keyword"
+	                }
+	             }
 			}
 		},
 		'Has Tomb Owner' : {
@@ -59,16 +67,23 @@ FACETS_PER_CATEGORY = {
 				'field' : 'tombowner'
 			}
 		},
-		"Excavator": {
-         "filter": {
-            "term": {
-               "relateditems.modernpeople.role.raw" : "Excavator"
-            }
+      "Excavator": {
+         "nested": {
+            "path": "relateditems"
          },
          "aggregations": {
-            "Excavator": {
-               "terms": {
-                  "field": "relateditems.modernpeople.displayname.raw"
+            "excavator_aggs": {
+               "filter": {
+                  "term": {
+                     "relateditems.modernpeople.role.keyword": "Excavator"
+                  }
+               },
+               "aggregations": {
+                  "Excavator": {
+                     "terms": {
+                        "field": "relateditems.modernpeople.displayname.keyword"
+                     }
+                  }
                }
             }
          }
@@ -84,14 +99,14 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				"Classification": {
 			    	"terms": {
-			        	"field": 'classificationtext.raw'
+			        	"field": 'classificationtext.keyword'
 					}
 				}
 			}
 		},
 		'Findspot' : {
 	    	"terms": {
-	        	"field": "provenance.raw"
+	        	"field": "provenance.keyword"
 	     	}
 		},
 		"Material": {
@@ -103,7 +118,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				"Material": {
 				   "terms": {
-				      "field": "medium.raw"
+				      "field": "medium.keyword"
 				   }
 				}
 			}
@@ -117,19 +132,19 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
 		},
 		'Period' : {
 	    	"terms": {
-	        	"field": 'period.raw'
+	        	"field": 'period.keyword'
 			}
 		},
 		'Date' : {
 	    	"terms": {
-	        	"field": 'entrydate.raw'
+	        	"field": 'entrydate.keyword'
 			}
 		},
 		'Has Related Photo' : {
@@ -148,7 +163,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				"Classification": {
 			    	"terms": {
-			        	"field": 'classificationtext.raw'
+			        	"field": 'classificationtext.keyword'
 					}
 				}
 			}
@@ -162,7 +177,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
@@ -179,7 +194,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
@@ -193,7 +208,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				"Material": {
 				   "terms": {
-				      "field": "medium.raw"
+				      "field": "medium.keyword"
 				   }
 				}
 			}
@@ -209,7 +224,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
@@ -223,7 +238,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				"Material": {
 				   "terms": {
-				      "field": "medium.raw"
+				      "field": "medium.keyword"
 				   }
 				}
 			}
@@ -239,7 +254,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
@@ -248,46 +263,60 @@ FACETS_PER_CATEGORY = {
 	'pubdocs' : {
 		'Format' : {
 			'terms' : {
-				'field' : 'format.raw'
+				'field' : 'format.keyword'
 			}
 		},
 		'Language' : {
 			'terms' : {
-				'field' : 'language.raw'
+				'field' : 'language.keyword'
 			}
 		},
 		'Year Published' : {
 			'terms' : {
-				'field' : 'yearpublished.raw'
+				'field' : 'yearpublished.keyword'
 			}
 		},
 		"Author": {
-	         "filter": {
-	            "term": {
-	               "relateditems.modernpeople.role.raw" : "Author"
-	            }
+	         "nested": {
+	            "path": "relateditems"
 	         },
-	         "aggregations": {
-	            "Author": {
-	               "terms": {
-	                  "field": "relateditems.modernpeople.displayname.raw"
-	               }
-	            }
-	         }
+			  "aggregations": {
+	             "author_aggs": {
+			         "filter": {
+			            "term": {
+			               "relateditems.modernpeople.role.keyword" : "Author"
+			            }
+			         },
+			         "aggregations": {
+			            "Author": {
+			               "terms": {
+			                  "field": "relateditems.modernpeople.displayname.keyword"
+			               }
+			            }
+			         }
+				}
+			}
       	},
 	  	"Publisher": {
-	         "filter": {
-	            "term": {
-	               "relateditems.modernpeople.role.raw" : "Publisher"
-	            }
+	         "nested": {
+	            "path": "relateditems"
 	         },
-	         "aggregations": {
-	            "Publisher": {
-	               "terms": {
-	                  "field": "relateditems.modernpeople.displayname.raw"
-	               }
-	            }
-	         }
+			 "aggregations": {
+				"publisher_aggs": {
+			         "filter": {
+			            "term": {
+			               "relateditems.institutions.role.keyword" : "Publisher"
+			            }
+			         },
+			         "aggregations": {
+			            "Publisher": {
+			               "terms": {
+			                  "field": "relateditems.institutions.displayname.keyword"
+			               }
+			            }
+			         }
+				}
+			}
       	},
 		'Number of Pages' : {
 			'terms' : {
@@ -296,12 +325,12 @@ FACETS_PER_CATEGORY = {
 		},
 		'Journal' : {
 			'terms' : {
-				'field' : 'journal.raw'
+				'field' : 'journal.keyword'
 			}
 		},
 		'Series' : {
 			'terms' : {
-				'field' : 'series.raw'
+				'field' : 'series.keyword'
 			}
 		}
 	},
@@ -315,35 +344,42 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
 		},
 		'Media View' : {
 	    	"terms": {
-				'field' : 'mediaview.raw'
+				'field' : 'mediaview.keyword'
 			}
 		},
 		'Date' : {
 	    	"terms": {
-				'field' : 'date.raw'
+				'field' : 'date.keyword'
 			}
 		},
 		"Photographer": {
-         "filter": {
-            "term": {
-               "relateditems.modernpeople.role.raw" : "Photographer"
-            }
-         },
-         "aggregations": {
-            "Photographer": {
-               "terms": {
-                  "field": "relateditems.modernpeople.displayname.raw"
-               }
-            }
-         }
-      }
+			"nested": {
+			   "path": "relateditems"
+			},
+			"aggregations": {
+	            "photographer_aggs": {
+			         "filter": {
+			            "term": {
+			               "relateditems.modernpeople.role.keyword" : "Photographer"
+			            }
+			         },
+			         "aggregations": {
+			            "Photographer": {
+			               "terms": {
+			                  "field": "relateditems.modernpeople.displayname.keyword"
+			               }
+			            }
+			         }
+				}
+			}
+      	}
 	},
 	'ancientpeople' : {
 		'Gender' : {
@@ -355,7 +391,7 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Gender' : {
 					'terms' : {
-						'field' : 'gender.raw'
+						'field' : 'gender.keyword'
 					}
 				}
 			}
@@ -371,29 +407,29 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Gender' : {
 					'terms' : {
-						'field' : 'gender.raw'
+						'field' : 'gender.keyword'
 					}
 				}
 			}
 		},
 		'Nationality' : {
 			'terms' : {
-				'field' : 'nationality.raw'
+				'field' : 'nationality.keyword'
 			}
 		},
 		'Institution' : {
 			'terms' : {
-				'field' : 'institution.raw'
+				'field' : 'institution.keyword'
 			}
 		},
 		'Year of Birth' : {
 			'terms' : {
-				'field' : 'begindate'
+				'field' : 'begindate.keyword'
 			}
 		},
 		'Year of Death' : {
 			'terms' : {
-				'field' : 'enddate'
+				'field' : 'enddate.keyword'
 			}
 		}
 	},
@@ -411,14 +447,14 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
 		},
 		'Media View' : {
 	    	"terms": {
-				'field' : 'mediaview.raw'
+				'field' : 'mediaview.keyword'
 			}
 		}
 	},
@@ -432,17 +468,18 @@ FACETS_PER_CATEGORY = {
 			"aggregations": {
 				'Owning Institution' : {
 			    	"terms": {
-			        	"field": 'department.raw'
+			        	"field": 'department.keyword'
 					}
 				}
 			}
 		},
 		'Media View' : {
 	    	"terms": {
-				'field' : 'mediaview.raw'
+				'field' : 'mediaview.keyword'
 			}
 		}
 	},
+	'iiifmanifest' : {},
 	'microfilm' : {},
 	'document' : {}
 }

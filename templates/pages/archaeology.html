@@ -1,0 +1,52 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Archaeology at Giza",
+  section: "about",
+  section_about: true
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="6" title="Archaeology at Giza"%}
+{% endblock  %}
+
+{% block 'main_content' %}
+  <div id='timeline-embed' style="width: 100%; height: 750px"></div>
+  <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+  <script type="text/javascript">
+    var options = {
+      start_at_end: false,
+      default_bg_color: {r:255, g:250, b:245},
+      timenav_height: 300,
+      initial_zoom: 6
+    }
+
+    timeline = new TL.Timeline('timeline-embed',
+    // Local dev version
+    //'https://docs.google.com/spreadsheets/d/1fjHNruPyT7ydVx93NSL95VI5nCG9MB2sjQ_lte7LkHs/edit#gid=0',
+    // Prod version from Giza team
+    'https://docs.google.com/spreadsheets/d/1YL2WjtESR9lo7fIDoqbaDIhhaoOYLod9R1MFDGjWx7c/edit#gid=0',
+    options);
+
+    var resizeTimer;
+
+    if ($(window).width() > 1400){
+      $('.tl-slide-content').css({"padding-left": ($(window).width()-1200)/2, "padding-right": ($(window).width()-1200)/2});
+    }
+
+    $(window).on('resize', function(e) {
+      clearTimeout(resizeTimer);
+
+      resizeTimer = setTimeout(function() {
+        if ($(window).width() > 1400){
+          $('.tl-slide-content').animate({"padding-left": ($(window).width()-1200)/2, "padding-right": ($(window).width()-1200)/2});
+        }
+      }, 250);
+
+    });
+  </script>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

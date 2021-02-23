@@ -1,0 +1,216 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "About the Giza Project",
+  section: "about",
+  section_about: true
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="6" title="About the Giza Project" %}
+{% endblock  %}
+
+{% block 'main_content' %}
+  <div class="row">
+
+    <aside class="medium-4 medium-push-8 columns">
+      {% include 'partials/feature-block-start.html' with feature_title="Contents" feature_block_class="secondary" feature_icon="list" %}
+        <ul class="menu vertical">
+          <li><a href="#about">About the Giza Project</a></li>
+          <li><a href="#staff">Giza Project Staff</a></li>
+          <li><a href="#partner">Partner Institutions</a></li>
+          <li><a href="#ack">Acknowledgements</a></li>
+          <li><a href="#card">The Digital Brain behind Digital Giza</a></li>
+          <li><a href="#abbrev">Database Abbreviations</a></li>
+        </ul>
+      {% include 'partials/feature-block-end.html' %}
+    </aside>
+
+
+    <section class="medium-8 medium-pull-4 columns">
+      <h3>About the Giza Project<a name="about"></a></h3>
+
+      <p>The Giza Project is non-profit international initiative based at Harvard University. Through digital archaeology, we assemble, curate, and present archaeological records about one of the most famous archaeological sites in the world, the Giza Pyramids and surrounding cemeteries and settlements. The Project manages arguably the world’s largest digital archive of Giza material. We use this data to build immersive 3D model reconstructions and other media as we develop powerful new teaching technologies and research tools.</p>
+
+      <p>Digital Giza, is the Project's online digital repository of all archaeological documentation from <a href="#partner">multiple institutions</a>, presented free to all, alongside <a href="/giza3d">Giza 3D</a>, a virtual environment based on some of that documentation. Anyone can easily access real, detailed information about Giza and its archaeological history while also “experiencing” some of it as well!</p>
+
+      <p>The Giza Project opened at Harvard in 2011. The small original staff already had a long, proven track record of mastering methods of archaeological information management with the Giza Archives Project of the Museum of Fine Arts, Boston. From 2000–2011, major support from the Andrew W. Mellon Foundation helped this visionary project to realize the goal of digitizing and posting for free online all of the archaeological documentation from the Harvard University—Boston Museum of Fine Arts Expedition to Giza, Egypt (about 1904–1947).</p>
+
+      <p>The Giza Project at Harvard expanded this scope beyond just the Harvard–MFA Expedition. By partnering with many other institutions around the world with Giza-related collections, we continue to consolidate as much archival data as possible about this complex site. The massive process of integrating and standardizing all of this information is ongoing. Read more about how the data records are created and organized.</p>
+
+      <p>In addition, the Project is developing how this vast quantity of information can contribute to 3D virtual reconstructions of Giza monuments as they may have looked in ancient times. These models provide new ways to engage with Giza, allowing visitors to sightsee, explore, and interact with the Pyramids and their surrounding cemeteries and settlements, all from a computer or other digital device. </p>
+
+      <p>To date, the Giza Project has released approximately 20 tombs and monuments in detail, with many hundreds more still to be done.</p>
+
+      <p>Through generous support from the National Endowment for the Humanities in several important aspects of our work, we continue to integrate this virtual environment with more than a hundred years of scholarly research about Giza, using cutting-edge technology to study the distant past and preserve knowledge about this important cultural heritage site for the future. </p>
+
+      <p>We also continue to explore and develop new ways to experience ancient Giza interactively, including virtual and augmented reality apps, 3D scanning and printing of ancient artifacts, and online teaching initiatives.</p>
+
+      <p>For more information about how you can support the Giza Project, please see our <a href="https://community.alumni.harvard.edu/give/34086571">support page</a>.</p>
+
+      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+
+      <h3>Giza Project Staff<a name="staff"></a></h3>
+
+      <p><strong>Peter Der Manuelian</strong>, Barbara Bell Professor of Egyptology and Giza Project Director</p>
+      <p><strong>Nicholas Picardo</strong>, Research Associate</p>
+      <p><strong>Luke Hollis</strong>, Lead Technical Artist</p>
+
+      <h3 class="m-t-2">Staff Emeritus</h3>
+
+      <p><strong>Rachel Aronin</strong>, Research Associate</p>
+      <p><strong>Jeremy Kisala</strong>, Research Assistant</p>
+      <p><strong>Rus Gant</strong>, Lead Technical Artist</p>
+      <p><strong>David Hopkins</strong>, Technical Artist</p>
+
+      <h3 class="m-t-2">Giza Project Volunteers &amp; Interns</h3>
+
+      <p>The Giza Project has benefitted immensely from the dedicated work of almost one thousand volunteers and interns through the years. The time, knowledge, and positive attitude they have contributed to the Project have advanced its mission and progress in innumerable and much-appreciated ways.</p>
+
+      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+
+      <h3>Partner Institutions<a name="partner"></a></h3>
+
+      <p>The Giza Project brings together archival holdings from a number of institutions, including:</p>
+
+      <ul>
+			  <li><a href="http://www.gko.uni-leipzig.de/aegyptisches-museum/">&Auml;gyptisches Museum der Universit&auml;t Leipzig (Germany)</a></li>
+			  <li>Akademie der Wissenschaften in Wien (Austria)</li>
+			  <li><a href="http://www.smb.museum/en/museums-institutions/aegyptisches-museum-und-papyrussammlung/home.html">Berlin &Auml;gyptisches Museum (Germany)</a></li>
+			  <li>Cairo University&ndash;Brown University Expedition</li>
+			  <li><a href="http://www.sca-egypt.org/eng/MUS_Egyptian_Museum.htm">Egyptian Museum, Cairo (Egypt)</a></li>
+			  <li><a href="http://www.gem.gov.eg/">Grand Egyptian Museum (Egypt)</a></li>
+			  <li><a href="http://www.khm.at/en/">Kunsthistorisches Museum, Vienna (Austria)</a></li>
+			  <li><a href="http://www.museoegizio.it/en/">Museo Egizio, Turin (Italy)</a></li>
+			  <li><a href="http://www.mfa.org/">Museum of Fine Arts, Boston (USA)</a></li>
+			  <li><a href="http://www.peabody.harvard.edu/">Peabody Museum of Archaeology and Ethnology, Harvard University (USA)</a></li>
+			  <li><a href="http://hearstmuseum.berkeley.edu/">Phoebe A. Hearst Museum of Anthropology, University of California, Berkeley (USA)</a></li>
+			  <li><a href="http://www.rpmuseum.de/">Roemer- und Pelizaeus-Museum, Hildesheim (Germany)</a></li>
+			  <li><a href="http://www.penn.museum/">University of Pennsylvania Museum of Archaeology and Anthropology, Philadelphia (USA)</a></li>
+			  <li><a href="http://www.aeraweb.org/">Ancient Egypt Research Associates</a></li>
+			 </ul>
+
+      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+
+      <h3>Acknowledgements<a name="ack"></a></h3>
+
+      <p>The Giza Project gratefully acknowledges current and past support from the following organizations:</p>
+
+      <ul>
+			  <li><a href="http://www.neh.gov/">National Endowment for the Humanities</a></li>
+			  <li><a href="http://www.harvard.edu/">Harvard University</a></li>
+			  <li>Mr. Sadek Wahba</li>
+			  <li><a href="http://www.3ds.com/">Dassault Syst&egrave;mes</a></li>
+			  <li><a href="http://leonlevyfoundation.org/">Leon Levy Foundation</a></li>
+			  <li><a href="https://www.zju.edu.cn/english/">Zhejiang University</a></li>
+			  <li><a href="http://www.mfa.org/">Museum of Fine Arts, Boston</a></li>
+			 </ul>
+
+      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+
+      <h3>Web Team</h3>
+
+      <ul>
+        <li><a href="http://www.pixelsforhumans.com/">Pixels for Humans</a></li>
+        <li><a href="https://archimedes.digital/">Archimedes Digital</a></li>
+        <li><a href="http://darthcrimson.org/">Harvard University Arts & Humanities Research Computing</a></li>
+      </ul></p>
+
+      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+
+      <h3>The Digital Brain behind Digital Giza<a name="card"></a></h3>
+
+      <p>Digital Giza is more than a simple website. It’s run by a vast database called the <em>Giza Consolidated Archaeological Reference Database</em> (GizaCARD). The GizaCARD organizes over 150,000 files and records from the collections and archives of museums, universities, and Egyptian excavation projects from around the world, from the 1800s to current ongoing work. </p>
+
+      <p>But the GizaCARD doesn't just store all of this data and information. It also builds connections: individual Giza monuments, artifacts, documents, and many kinds of media are connected via database records whenever they relate to each other. </p>
+
+      <p>The result is a huge "web" of interrelated archival records that enable you to access all the information you need as you explore each record, without having to conduct multiple searches or open lots of different pages.</p>
+
+      <p class="p-y-1"><img class="img-fluid thumbnail" src="{% static 'images/about-image-1.png' %}" alt="Illustration of the 'web' of archival records"></p>
+
+      <p>And since this website pulls from the database in real-time, any information you access here will always reflect the most up-to-date information that The Giza Project has made available. </p>
+
+      <p>The wide range of records that the GizaCARD links together for access through the Digital Giza website includes:</p>
+
+      <ul>
+        <li>Pyramids, tombs, and monuments</li>
+        <li>Artifacts</li>
+        <li>Giza maps, plans, and architectural drawings</li>
+        <li>Excavation photographs</li>
+        <li>Archaeologists&rsquo; field diary pages from past excavations</li>
+        <li>Archaeologists&rsquo; notes</li>
+        <li>Artifact photographs and illustrations</li>
+        <li>Site and monument photographs</li>
+        <li>3D graphic models of Giza monuments and artifacts</li>
+        <li>Reference documentation for 3D media</li>
+        <li>Videos</li>
+        <li>Interactive Media</li>
+        <li>Published books and articles</li>
+        <li>Unpublished manuscripts</li>
+        <li>Object register books</li>
+        <li>Letters</li>
+        <li>Packing lists for artifact transport</li>
+        <li>360-degree panoramas</li>
+        <li>Audio recordings</li>
+      </ul>
+
+      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+
+      <h3>Database Abbreviations<a name="abbrev"></a></h3>
+
+      <p>Most data records in the GizaCARD start with abbreviations of two to five letters. These identify the source or the owner of that archival data. Here is a list of those abbreviations:</p>
+
+      <h6>List of abbreviations of museums, institutions, and expeditions</h6>
+
+      <p><strong>ABE </strong>&ndash; Abu Bakr Expedition</p>
+      <p><strong>&Auml;MUL</strong> &ndash; &Auml;gyptisches Museum der Universit&auml;t Leipzig (Germany)</p>
+      <p><strong>ASU </strong>&ndash; Arizona State University (USA)</p>
+      <p><strong>AWW</strong> &ndash; Akademie der Wissenschaften in Wien (Austria)</p>
+      <p><strong>B&Auml;M</strong> &ndash; &Auml;gyptisches Museum und Papyrussammlung, Berlin/Neues Museum (Germany)</p>
+      <p><strong>BBAW</strong> &ndash; Berlin-Brandenburgische Akademie der Wissenschaften (Germany)</p>
+      <p><strong>BM </strong>&ndash; British Museum (England)</p>
+      <p><strong>BMA</strong> &ndash; Brooklyn Museum of Art (USA)</p>
+      <p><strong>CBE</strong> &ndash; Cairo University‐Brown University Expedition</p>
+      <p><strong>DUC</strong> &ndash; Duckworth Laboratory, University of Cambridge (England)</p>
+      <p><strong>EMC</strong> &ndash; Egyptian Museum, Cairo (Egypt)</p>
+      <p><strong>FMC</strong> &ndash; Field Museum, Chicago (USA)</p>
+      <p><strong>GEM</strong> &ndash; Grand Egyptian Museum (Egypt)</p>
+      <p><strong>GMBA</strong> - Glencairn Museum, Bryn Athyn (USA)</p>
+      <p><strong>GPH &ndash;</strong> Giza Project at Harvard University (USA)</p>
+      <p><strong>HM</strong> &ndash; Hearst Museum, Berkeley (USA)</p>
+      <p><strong>HSM </strong>&ndash; Harvard Semitic Museum (USA)</p>
+      <p><strong>HUMFA</strong> &ndash; Harvard University-Boston Museum of Fine Arts Expedition</p>
+      <p><strong>JFKL </strong>&ndash; John F. Kennedy Presidential Library &amp; Museum (USA)</p>
+      <p><strong>KHM</strong> &ndash; Kunsthistorisches Museum, Vienna (Austria)</p>
+      <p><strong>MFAB</strong> &ndash; Museum of Fine Arts, Boston (USA)</p>
+      <p><strong>MLP</strong> &ndash; Mus&eacute;e du Louvre, Paris (France)</p>
+      <p><strong>MMA</strong> &ndash; Metropolitan Museum of Art, New York (USA)</p>
+      <p><strong>MMS </strong>&ndash; Medelhavsmuseet, Stockholm (Sweden)</p>
+      <p><strong>MUT </strong>&ndash; Museum der Universit&auml;t T&uuml;bingen (Germany)</p>
+      <p><strong>NCG</strong> &ndash; Ny Carlsberg Glyptotek, Copenhagen (Denmark)</p>
+      <p><strong>NHM</strong> &ndash; Naturhistorisches Museum, Vienna (Austria)</p>
+      <p><strong>NMEC </strong>&ndash; Natonal Museum of Egyptian Civilization (Egypt)</p>
+      <p><strong>OIC</strong> &ndash; Oriental Institute, Chicago (USA)</p>
+      <p><strong>OSUT</strong> &ndash; Osteologische Sammlung der Universit&auml;t T&uuml;bingen (Germany)</p>
+      <p><strong>PDM</strong> &ndash; Peter Der Manuelian</p>
+      <p><strong>PMAE</strong> &ndash; Peabody Museum of Archaeology &amp; Ethnology, Harvard University (USA)</p>
+      <p><strong>PSNM</strong> &ndash; Port Said National Museum (Egypt)</p>
+      <p><strong>ROM</strong> &ndash; Royal Ontario Museum, Toronto (Canada)</p>
+      <p><strong>RPM</strong> &ndash; Roemer- und Pelizaeus-Museum, Hildesheim (Germany)</p>
+      <p><strong>SHM</strong> &ndash; State Hermitage Museum, St. Petersburg (Russia)</p>
+      <p><strong>SM&Auml;K</strong> &ndash; Staatliches Museum &Auml;gyptischer Kunst, Munich (Germany)</p>
+      <p><strong>TUR</strong> &ndash; Museo Egizio, Turin (Italy)</p>
+      <p><strong>UPM </strong>&ndash; University of Pennsylvania Museum of Archaeology &amp; Anthropology (USA)</p>
+      <p><strong>VMFA</strong> - Virginia Museum of Fine Arts, Richmond (USA)</p>
+      <p><strong>WAM</strong> &ndash; Worcester Art Museum, Massachusetts (USA)</p>
+
+      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+
+    </section>
+
+  </div>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

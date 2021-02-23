@@ -1,3 +1,6 @@
+
+
+from builtins import next
 import csv
 import codecs
 import elasticsearch_connection
@@ -5,26 +8,32 @@ import getpass
 import json
 import operator
 import time
+import unicodedata
+import os
 
 from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
 import published_sql
-from utils import get_media_url, process_cursor_row
+from utils import get_media_url, process_cursor_row, create_thumbnail_url
+
+ELASTICSEARCH_INDEX = 'giza'
+
+DIRNAME = os.path.dirname(__file__)
 
 def delete_pubs():
-	print "Deleting Pub Docs..."
+	print("Deleting Pub Docs...")
 	# delete pubs
 	es = elasticsearch_connection.get_connection()
-	es_index = elasticsearch_connection.ELASTICSEARCH_INDEX
+	es_index = ELASTICSEARCH_INDEX
 	results = es.search(index=es_index, doc_type='pubdocs', body={
 		"size" : 1000,
-		"fields" : ["_id"],
+		"stored_fields" : ["_id"],
 		"query": {
 			"match_all" : {}
 		}
 	})['hits']['hits']
 	for r in results:
-		elasticsearch_connection.delete(r['_id'], 'pubdocs')
-	print "Finished Deleting Pub Docs..."
+		elasticsearch_connection.delete(r['_id'], 'pubdocs', ELASTICSEARCH_INDEX)
+	print("Finished Deleting Pub Docs...")
 
 # First update each Published doc with the latest data
 # This is the basic information/metadata that comprises a Pubished document
@@ -53,6 +62,10 @@ def process_pubs(CURSOR):
 				row_value = None
 			else:
 				row_value = row_value.replace(',,','')
+				# remove font tags because it makes the Library page look weird with different fonts
+				import re
+				clean = re.compile('</?font.*?>', re.IGNORECASE)
+				row_value = re.sub(clean, '', row_value)
 
 			pub[key] = row_value
 
@@ -62,7 +75,7 @@ def process_pubs(CURSOR):
 		pub["authors"] = []
 		return (pub, current_id)
 
-	print "Starting Pub Docs..."
+	print("Starting Pub Docs...")
 	if CURSOR:
 		sql_command = published_sql.PUBLISHED
 		CURSOR.execute(sql_command)
@@ -76,16 +89,15 @@ def process_pubs(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(pub, current_id) = process_pub_row(pub, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(pub)
 
 	else:
-		with open('../data/pubdocs.csv', 'rb') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'pubdocs.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			pub_id_index = get_indices()
 
@@ -97,7 +109,7 @@ def process_pubs(CURSOR):
 			# save last object to elasticsearch
 			save(pub)
 
-	print "Finished Pub Docs..."
+	print("Finished Pub Docs...")
 
 def process_pub_related_sites(CURSOR):
 	def get_indices():
@@ -107,7 +119,8 @@ def process_pub_related_sites(CURSOR):
 			'site_name_index' : columns.index('SiteName'),
 			'site_number_index' : columns.index('SiteNumber'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -118,10 +131,10 @@ def process_pub_related_sites(CURSOR):
 			save(pub)
 			current_id = id
 			pub = {}
-			if elasticsearch_connection.item_exists(id, 'pubdocs'):
-				pub = elasticsearch_connection.get_item(id, 'pubdocs')
+			if elasticsearch_connection.item_exists(id, 'pubdocs', ELASTICSEARCH_INDEX):
+				pub = elasticsearch_connection.get_item(id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
-				print "%s could not be found!" % id
+				print("%s could not be found!" % id)
 				return(pub, current_id)
 		if 'relateditems' not in pub:
 			pub['relateditems'] = {}
@@ -130,6 +143,10 @@ def process_pub_related_sites(CURSOR):
 		site_name = row[indices['site_name_index']]
 		site_number = row[indices['site_number_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		site_dict = {}
 		site_dict['id'] = site_id
@@ -137,6 +154,7 @@ def process_pub_related_sites(CURSOR):
 		site_dict['sitenumber'] = site_number
 		site_dict['displaytext'] = site_number
 		site_dict['thumbnail'] = thumbnail_url
+		site_dict['has_manifest'] = has_manifest
 
 		if 'sites' not in pub['relateditems']:
 			pub['relateditems']['sites'] = []
@@ -146,7 +164,7 @@ def process_pub_related_sites(CURSOR):
 
 		return(pub, current_id)
 
-	print "Starting Pub Docs Related Sites..."
+	print("Starting Pub Docs Related Sites...")
 	if CURSOR:
 		sql_command = published_sql.RELATED_SITES
 		CURSOR.execute(sql_command)
@@ -160,15 +178,14 @@ def process_pub_related_sites(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(pub, current_id) = process_pub_row(pub, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last pub to elasticsearch
+		   # save last pub to elasticsearch
 		save(pub)
 	else:
-		with open('../data/pubdocs_sites_related.csv', 'rb') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'pubdocs_sites_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -180,7 +197,7 @@ def process_pub_related_sites(CURSOR):
 			# save last pub to elasticsearch
 			save(pub)
 
-	print "Finished Pub Docs Related Sites..."
+	print("Finished Pub Docs Related Sites...")
 
 # Update all related items from the Objects table
 def process_pub_related_objects(CURSOR):
@@ -193,7 +210,8 @@ def process_pub_related_objects(CURSOR):
 			'object_number_index' : columns.index('ObjectNumber'),
 			'object_date_index' : columns.index('ObjectDate'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -204,10 +222,10 @@ def process_pub_related_objects(CURSOR):
 			save(pub)
 			current_id = pub_id
 			pub = {}
-			if elasticsearch_connection.item_exists(pub_id, 'pubdocs'):
-				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs')
+			if elasticsearch_connection.item_exists(pub_id, 'pubdocs', ELASTICSEARCH_INDEX):
+				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
-				print "%s could not be found!" % pub_id
+				print("%s could not be found!" % pub_id)
 				return (pub, current_id)
 
 		if 'relateditems' not in pub:
@@ -216,6 +234,10 @@ def process_pub_related_objects(CURSOR):
 		classification = CLASSIFICATIONS.get(classification_key)
 		object_id = int(row[indices['object_id_index']])
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		date = "" if row[indices['object_date_index']].lower() == "null" else row[indices['object_date_index']]
 		object_title = row[indices['object_title_index']]
@@ -235,13 +257,14 @@ def process_pub_related_objects(CURSOR):
 			'classificationid' : classification_key,
 			'number' : object_number,
 			'date' : date,
-			'thumbnail' : thumbnail_url})
+			'thumbnail' : thumbnail_url,
+			'has_manifest' : has_manifest})
 		# keep the related items sorted
 		pub['relateditems'][classification].sort(key=operator.itemgetter('displaytext'))
 
 		return (pub, current_id)
 
-	print "Starting Pub Docs Related Objects..."
+	print("Starting Pub Docs Related Objects...")
 	if CURSOR:
 		sql_command = published_sql.RELATED_OBJECTS
 		CURSOR.execute(sql_command)
@@ -255,15 +278,14 @@ def process_pub_related_objects(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(pub, current_id) = process_pub_row(pub, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(pub)
 	else:
-		with open('../data/pubdocs_objects_related.csv', 'rb') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'pubdocs_objects_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -274,7 +296,7 @@ def process_pub_related_objects(CURSOR):
 				(pub, current_id) = process_pub_row(pub, current_id)
 			# save last object to elasticsearch
 			save(pub)
-	print "Finished Pub Docs Related Objects..."
+	print("Finished Pub Docs Related Objects...")
 
 # Next, update pub with all related Constituents
 def process_pub_related_constituents(CURSOR):
@@ -289,7 +311,8 @@ def process_pub_related_constituents(CURSOR):
 			'display_date_index' : columns.index('DisplayDate'),
 			'remarks_index' : columns.index('Remarks'),
 			'thumb_path_index' : columns.index('ThumbPathName'),
-			'thumb_file_index' : columns.index('ThumbFileName')
+			'thumb_file_index' : columns.index('ThumbFileName'),
+			'drs_id' : columns.index('ArchIDNum')
 		}
 		return indices
 
@@ -302,10 +325,10 @@ def process_pub_related_constituents(CURSOR):
 			save(pub)
 			current_id = pub_id
 			pub = {}
-			if elasticsearch_connection.item_exists(pub_id, 'pubdocs'):
-				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs')
+			if elasticsearch_connection.item_exists(pub_id, 'pubdocs', ELASTICSEARCH_INDEX):
+				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
-				print "%s could not be found!" % pub_id
+				print("%s could not be found!" % pub_id)
 				return(pub, current_id)
 		if 'relateditems' not in pub:
 			pub['relateditems'] = {}
@@ -317,6 +340,10 @@ def process_pub_related_constituents(CURSOR):
 			display_date = row[indices['display_date_index']]
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
 		alpha_sort = row[indices['alpha_sort_index']]
+		drs_id = "" if row[indices['drs_id']].lower() == "null" else row[indices['drs_id']]
+		has_manifest = False if drs_id == "" else True
+		if not thumbnail_url and drs_id:
+			thumbnail_url = create_thumbnail_url(drs_id)
 
 		constituent_dict = {}
 		role = row[indices['role_index']]
@@ -335,6 +362,7 @@ def process_pub_related_constituents(CURSOR):
 		constituent_dict['displaytext'] = display_name
 		constituent_dict['description'] = description
 		constituent_dict['thumbnail'] = thumbnail_url
+		constituent_dict['has_manifest'] = has_manifest
 
 		constituent_type_key = int(row[indices['constituent_type_id_index']])
 		constituent_type = CONSTITUENTTYPES.get(constituent_type_key)
@@ -346,7 +374,7 @@ def process_pub_related_constituents(CURSOR):
 
 		return(pub, current_id)
 
-	print "Starting Pub Docs Related Constituents..."
+	print("Starting Pub Docs Related Constituents...")
 	if CURSOR:
 		sql_command = published_sql.RELATED_CONSTITUENTS
 		CURSOR.execute(sql_command)
@@ -360,15 +388,14 @@ def process_pub_related_constituents(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(pub, current_id) = process_pub_row(pub, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(pub)
 	else:
-		with open('../data/pubdocs_constituents_related.csv', 'rb') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'pubdocs_constituents_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -380,7 +407,7 @@ def process_pub_related_constituents(CURSOR):
 			# save last object to elasticsearch
 			save(pub)
 
-	print "Finished Pub Docs Related Constituents..."
+	print("Finished Pub Docs Related Constituents...")
 
 # Update site with all related media
 def process_pub_related_media(CURSOR):
@@ -401,10 +428,10 @@ def process_pub_related_media(CURSOR):
 			save(pub)
 			current_id = pub_id
 			pub = {}
-			if elasticsearch_connection.item_exists(pub_id, 'pubdocs'):
-				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs')
+			if elasticsearch_connection.item_exists(pub_id, 'pubdocs', ELASTICSEARCH_INDEX):
+				pub = elasticsearch_connection.get_item(pub_id, 'pubdocs', ELASTICSEARCH_INDEX)
 			else:
-				print "%s could not be found!" % pub_id
+				print("%s could not be found!" % pub_id)
 				return(pub, current_id)
 
 		thumbnail_url = get_media_url(row[indices['thumb_path_index']], row[indices['thumb_file_index']])
@@ -418,7 +445,7 @@ def process_pub_related_media(CURSOR):
 
 		return(pub, current_id)
 
-	print "Starting Pub Docs Related Media..."
+	print("Starting Pub Docs Related Media...")
 	if CURSOR:
 		sql_command = published_sql.RELATED_MEDIA
 		CURSOR.execute(sql_command)
@@ -432,15 +459,14 @@ def process_pub_related_media(CURSOR):
 			row = process_cursor_row(cursor_row)
 			(pub, current_id) = process_pub_row(pub, current_id)
 			cursor_row = CURSOR.fetchone()
-   		# save last object to elasticsearch
+		   # save last object to elasticsearch
 		save(pub)
 	else:
-		with open('../data/pubdocs_media_related.csv', 'rb') as csvfile:
+		with open(os.path.join(DIRNAME, '..', 'data', 'pubdocs_media_related.csv'), 'r', encoding='utf-8-sig') as csvfile:
 			# Get the query headers to use as keys in the JSON
 			headers = next(csvfile)
-			if headers.startswith(codecs.BOM_UTF8):
-				headers = headers[3:]
 			headers = headers.replace('\r\n','')
+			headers = headers.replace('\n', '')
 			columns = headers.split(',')
 			indices = get_indices()
 
@@ -452,29 +478,29 @@ def process_pub_related_media(CURSOR):
 			# save last object to elasticsearch
 			save(pub)
 
-	print "Finished Pub Docs Related Media..."
+	print("Finished Pub Docs Related Media...")
 
 # this groups published documents by author, for use on the Digital Giza Library page
 def create_library():
-	print "Creating Digital Library..."
+	print("Creating Digital Library...")
 	time.sleep(3) # for some reason the library isn't always fully populated. see if a time delay helps
 
 	author_ids = []
 	size = 20
 	results_from = 0
 	es = elasticsearch_connection.get_connection()
-	es_index = elasticsearch_connection.ELASTICSEARCH_INDEX
+	es_index = ELASTICSEARCH_INDEX
 
 	# delete library
 	results = es.search(index=es_index, doc_type='library', body={
 		"size" : 500,
-		"fields" : ["_id", "name"],
+		"stored_fields" : ["_id", "name"],
 		"query": {
 			"match_all" : {}
 		}
 	})['hits']['hits']
 	for r in results:
-		elasticsearch_connection.delete(r['_id'], 'library')
+		elasticsearch_connection.delete(r['_id'], 'library', ELASTICSEARCH_INDEX)
 
 	total = es.search(index=es_index, doc_type='pubdocs', body={
 		"size" : 0,
@@ -503,18 +529,21 @@ def create_library():
 
 			for author in authors:
 				author_id = author.replace(' ', '')
+				sortauthor = author.lower().strip()
+				sortauthor = str(unicodedata.normalize('NFD', sortauthor).encode('ascii', 'ignore').decode("utf-8"))
 				# see if this author already exists
 				if author_id in author_ids:
-					author_data = elasticsearch_connection.get_item(author_id, 'library')
+					author_data = elasticsearch_connection.get_item(author_id, 'library', ELASTICSEARCH_INDEX)
 				else:
 					author_ids.append(author_id)
 					author_data = {}
 					author_data['name'] = author
+					author_data['sortname'] = sortauthor
 					author_data['docs'] = []
 
 				author_data['docs'].append({
 					'displaytext' : result['boilertext'],
-					'sorttext' : result['notes'],
+					'sorttext' : result['notes'] if result['notes'] is not None else result['title'],
 					'format' : result['format'],
 					# add file size
 					'url' : result['pdf']
@@ -522,21 +551,21 @@ def create_library():
 				author_data['docs'].sort(key=operator.itemgetter('sorttext'))
 
 				data = json.dumps(author_data)
-				elasticsearch_connection.add_or_update_item(author_id, data, 'library')
+				elasticsearch_connection.add_or_update_item(author_id, data, 'library', ELASTICSEARCH_INDEX)
 
 		results_from = results_from + size
-	print "Finished Digital Library..."
+	print("Finished Digital Library...")
 
 def save(pub):
 	if pub and 'id' in pub:
-		elasticsearch_connection.add_or_update_item(pub['id'], json.dumps(pub), 'pubdocs')
+		elasticsearch_connection.add_or_update_item(pub['id'], json.dumps(pub), 'pubdocs', ELASTICSEARCH_INDEX)
 
 def main(CURSOR=None):
 	if not CURSOR:
 		try:
 			import pyodbc
 			dsn = 'gizadatasource'
-			user = 'RC\\rsinghal'
+			user = 'RC\\svc-giza'
 			password = getpass.getpass()
 			database = 'gizacardtms'
 
@@ -544,7 +573,7 @@ def main(CURSOR=None):
 			connection = pyodbc.connect(connection_string)
 			CURSOR = connection.cursor()
 		except:
-			print "Could not connect to gizacardtms, defaulting to CSV files"
+			print("Could not connect to gizacardtms, defaulting to CSV files")
 
 	## delete_pubs and process_pubs MUST go first.  The other methods can go in any order
 	delete_pubs()

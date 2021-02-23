@@ -1,0 +1,51 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Contact Us",
+  section: "about",
+  section_about: true
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="6" title="Contact Us" %}
+{% endblock  %}
+
+{% block 'main_content' %}
+  <div class="row">
+    <div class="large-12 columns">
+      <h2>Questions? Comments? Concerns? Let us know.</h2>
+      <p class="lead">We’d love to hear from you. Please <a href="mailto:giza@fas.harvard.edu">email</a> us.</p>
+      <!-- <p><em>All fields below are required. Please note: although we make every effort to respond, we are unable to personally reply to every comment.</em></p> -->
+    </div>
+    <aside class="medium-4 columns">
+      <div class="thumbnail"><img src="{% static 'images/contact.jpg' %}" alt="A pyramid."></div>
+    </aside>
+  </div>
+
+  <!-- <div class="row lines">
+    <section class="medium-8 columns">
+      <form>
+        <label>
+          Name:
+          <input type="text" placeholder="Type your name here.">
+        </label>
+        <label>
+          Email address:
+          <input type="email" placeholder="i.e. jane@example.com">
+        </label>
+        <label>
+          Comment:
+          <textarea placeholder="How can we help you?" rows="6"></textarea>
+        </label>
+        <button type="button" class="button">Submit</button>
+      </form>
+    </section>
+    <aside class="medium-4 columns">
+      <div class="thumbnail"><img src="{% static 'images/contact.png' %}" alt="appropriate alt"></div>
+    </aside>
+  </div> -->
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

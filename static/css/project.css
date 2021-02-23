@@ -1,0 +1,100 @@
+.auth-layout {
+  max-width: 600px;
+  margin: 3em auto;
+}
+
+.tourTeaser {
+  margin: 1em 0;
+}
+
+.tourThumbImage {
+  width: 17em;
+  height: 13em;
+  background-size: cover;
+  margin-bottom: 1em;
+}
+
+.tourTeaser:hover .tourThumbImage {
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.6);
+}
+
+.viewerEmbed {
+  height: 66vh;
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+
+.viewerEmbed:hover {
+  text-decoration: none;
+}
+
+.viewerEmbed .gizaViewer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 66vh;
+}
+
+.viewerCover {
+  background-image: url("/static/images/Giza02_AirPano2011.jpg");
+  background-size: cover;
+  display: block;
+  height: 66vh;
+  width: 100%;
+  position: absolute;
+  z-index: 1;
+  transition: all 100ms ease-in-out;
+  filter: blur(2px);
+}
+
+.viewerCoverGradient {
+  height: 66vh;
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+  transition: all 100ms ease-in-out;
+  background: linear-gradient(180deg,rgba(0,0,0,.8) 0,rgba(0,0,0,.6) 50%,rgba(0,0,0,.9) 100%);
+}
+
+.viewerStartButton {
+  text-align: center;
+  z-index: 3;
+  padding: 20px 30px;
+  border-radius: 25px;
+  box-shadow: 0px 0px 4px 4px rgba(0,0,0, 0.4);
+  background: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #222;
+  border: 2px solid #222;
+  position: relative;
+  text-decoration: none;
+  transition: all 100ms ease-in-out;
+}
+
+.viewerEmbed:hover .viewerCover {
+  filter: blur(1px);
+}
+
+.viewerEmbed:hover .viewerCoverGradient {
+  background: linear-gradient(180deg,rgba(0,0,0,.75) 0,rgba(0,0,0,.6) 50%,rgba(0,0,0,.85) 100%);
+}
+
+.viewerEmbed:hover .viewerStartButton {
+  background: #1164AD;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0px 0px 2px 2px rgba(0,0,0, 0.2);
+  border: 2px solid #1164AD;
+}
+
+.giza3dEmbedToggle {
+  cursor: pointer;
+}
+
+.giza3dEmbed {
+  border: 1px solid #eee;
+}

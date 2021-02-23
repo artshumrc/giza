@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from .secure import SECURE_SETTINGS
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +21,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9w)eu)4tj*v(x%8^tz$fsc8^t@jj66_7_!_w2wo@9lcs)^xf6='
+SECRET_KEY = SECURE_SETTINGS.get("DJANGO_SECRET_KEY", '9w)eu)4tj*v(x%8^tz$fsc8^t@jj66_7_!_w2wo@9lcs)^xf6=')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['giza-web2.rc.fas.harvard.edu']
 
 
 # Application definition
@@ -33,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'search',
     'tms',
+    'giza',
     'utils',
 
     'django.contrib.admin',
@@ -68,6 +70,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
+                'giza.context_processors.user_collections',
             ],
         },
     },
@@ -81,10 +85,15 @@ WSGI_APPLICATION = 'giza.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': SECURE_SETTINGS.get('DB_NAME', 'giza'),
+        'USER': SECURE_SETTINGS.get('DB_USER', 'postgres'),
+        'PASSWORD': SECURE_SETTINGS.get('DB_PASSWORD'),
+        'HOST': SECURE_SETTINGS.get('DB_HOST', '127.0.0.1'),
+        'PORT': SECURE_SETTINGS.get('DB_PORT', '5432'),  # Default postgres port
     }
 }
+
 
 SEARCH_BACKENDS = {
     'default': {
@@ -92,12 +101,28 @@ SEARCH_BACKENDS = {
         'URLS': ['http://localhost:9200'],
         'INDEX': 'giza',
         'TIMEOUT': 5,
+    },
+    'iiif': {
+        'BACKEND': 'elasticsearch',
+        'URLS': ['http://localhost:9200'],
+        'INDEX': 'iiif',
+        'TIMEOUT': 5,
     }
 }
 
+# Custom User and auth settings
+# https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-LOGIN_URL
+LOGIN_URL = '/login'
+
+# custom user model registration
+AUTH_USER_MODEL = 'giza.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
+
+# NOTE: password validation is deactived for testing during development, readd when
+# ready for production
+"""
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -113,6 +138,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+"""
+AUTH_PASSWORD_VALIDATORS = []
 
 
 # Internationalization

@@ -1,0 +1,38 @@
+$breakpoints: (
+	'xs-phone': 320px,
+	'sm-phone': 375px,
+	'phone': 640px,
+	'tablet': 768px,
+	'desktop': 1024px,
+	'widescreen': 1200px
+);
+
+// keywords
+$media-expressions: (
+	'screen': 'screen',
+	'print': 'print',
+	'handheld': 'handheld',
+	'landscape': '(orientation: landscape)',
+	'portrait': '(orientation: portrait)',
+	'retina2x': '(-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi)',
+	'retina3x': '(-webkit-min-device-pixel-ratio: 2.5), (min-resolution: 240dpi)'
+);
+
+// ligatured operators ≥ ≤
+
+@import 'vendors/include-media';
+
+
+@import 'base/functions';
+// @import 'base/variables';
+@import 'base/mixins';
+@import 'base/helpers';
+
+// @import 'base/typography';
+
+@import 'vendors/slick';
+@import 'vendors/jcf';
+@import 'pages-styles/home';
+@import 'pages-styles/landing';
+@import 'pages-styles/collection';
+@import 'pages-styles/search';

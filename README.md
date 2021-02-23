@@ -2,17 +2,18 @@
 JSON API for the Giza Archives Project TMS Database
 
 ## Requirements
-* python2.7
+* python 3.5+
 * pip
 * virtualenv
-* elasticsearch 1.7.5
+* elasticsearch 5 (does not yet work with elasticsearch 6)
+* Java 8 for ES5 - see this matrix: https://www.elastic.co/support/matrix#matrix_jvm
 
 ## Installation
 1. [Install virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)
 2. [Activate virtualenv](https://virtualenv.pypa.io/en/latest/userguide.html)
-3. `curl -L -O https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.5.tar.gz`
-4. `tar -xvf elasticsearch-1.7.5.tar.gz`
-5. `./elasticsearch-1.7.5/bin/elasticsearch -d` (-d forces elasticsearch to run in the background, you can drop that flag to have it run in the foreground)
+3. `curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.15.tar.gz`
+4. `tar -xvf elasticsearch-5.6.15.tar.gz`
+5. `./elasticsearch-5.6.15/bin/elasticsearch -d` (-d forces elasticsearch to run in the background, you can drop that flag to have it run in the foreground)
 6. `git clone https://github.com/rsinghal/giza.git`
 7. `cd giza`
 8. `pip install -r requirements.txt`

@@ -1,0 +1,63 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Home",
+  section: "home",
+  section_home: true
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'content' %}
+<div class="home-hero-container">
+  <div class="row row-padded">
+
+    <div class="video-bg-home"
+      data-vide-bg="{% static 'video/home/GizaHome_web' %}"
+      data-vide-options="posterType: jpg, loop: true, position: 0% -5%">
+
+      <div class="home-hero-title">
+        <h1><span class="title-text-alt">Welcome to the</span> Giza Plateau</h1>
+      </div>
+
+      <div class="home-hero-content">
+        <div class="medium-8 columns">
+          <p class="lead text-alt" style="line-height: 1.4">The Giza Project gives you access to the largest collection of information, media, and research materials ever assembled about the Pyramids and related sites on Egypt&rsquo;s Giza Plateau. </p>
+        </div>
+        <div class="medium-4 columns">
+          <form action="{% url 'results' %}">
+            <p class="text-alt" style="color: #fff; margin-bottom: 0.1rem;">
+              <em>Search the archives:</em>
+            </p>
+            <div class="input-group" style="margin-bottom: 0.1rem;">
+              <input class="input-group-field" type="text" name="q" placeholder="Search">
+              <div class="input-group-button">
+                <button type="submit" class="button icon-search"></button>
+              </div>
+            </div>
+          </form>
+          <small>or go to <a class="link-lighter" href="{% url 'search' %}">Advanced Search</a></small>
+        </div>
+      </div>
+
+      <div class="home-hero-overlay"></div>
+    </div>
+
+      <!--<div id="hero-home" data-interchange="[partials/home/small.html, small], [partials/home/medium.html, medium], [partials/home/large.html, large]"></div> -->
+
+  </div>
+</div>
+
+<div class="row p-r-1" data-equalizer data-equalize-on="medium">
+
+  {% include 'partials/home-4col-block--giza3d.html' with block_title="Explore Giza 3D"  block_button="Jump In" block_destination="/giza3d" %}
+
+  {% include 'partials/home-4col-block--gizaatschool.html' with block_title="Giza @ School" block_button="View Resources" block_destination="/gizaatschool" %}
+
+  {% include 'partials/home-4col-block--mygiza.html' with block_title="Make it Yours" block_button="Start Collecting" block_destination="/mygiza-landing" %}
+
+  {% include 'partials/home-4col-block--donate.html' with block_title="Support the Project" block_button="Donate Now" block_destination="https://community.alumni.harvard.edu/give/34086571" %}
+
+</div>
+{% endblock %}
+<!-- END MAIN CONTENT ROWS -->

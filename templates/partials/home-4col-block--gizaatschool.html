@@ -1,0 +1,15 @@
+{% extends 'partials/home-4col-block.html' %}
+{% load static %}
+
+{% block '4col_block_partial' %}
+  <p>
+    <a href="{{block_destination}}">
+      <img class="img-fluid img-fluid-mw325 border-dark"
+        src="{% static 'images/home-feature-school.png' %}"
+        alt="Digital rendering of a figure from Giza's past standing in front of a tomb entrance">
+    </a>
+  </p>
+  <p>
+    Resources designed especially for <strong>teachers and students</strong>.
+  </p>
+{% endblock %}

@@ -1,0 +1,47 @@
+//
+// Menu
+//
+
+.vertical {
+  
+  li > a { // Improve the display of multi-line menu item text
+    line-height: 1.4;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+}
+
+// Thinner inline-block menu items
+// Builds on '.menu' but for single-character menu items (letters, numbers)
+
+.menu-pagination { 
+  
+  li {
+    display: inline-block; // '.menu' defaults to table-cell 
+  
+    a {
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
+      
+      @include breakpoint(medium) {
+        padding-left: 0.28rem;
+        padding-right: 0.28rem;
+      }
+      
+    }
+    
+  }
+  
+}
+
+// Sticky adjustments for sidebar menus
+
+.sticky-sidebar { // Container around feature-blocks that are supposed to stick
+  padding-right: 10px; // Fixes a width-plus-position:absolute problem
+
+  @include breakpoint(medium) {
+    padding-right: 15px;
+  }
+  
+}

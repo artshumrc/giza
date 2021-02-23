@@ -1,0 +1,55 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Giza @ School",
+  subtitle: "Video Library",
+  section: "school",
+  section_school: true
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="9" backlink_url="/gizaatschool/" title="Video Library" %}
+
+  {% include 'partials/page-subheader.html' with backlink_url="/gizaatschool/" backlink_text="Back to Giza @ School" %}
+{% endblock  %}
+
+{% block 'main_content' %}
+<div class="row">
+  <section class="small-12 columns">
+    {% for result in results %}
+    <article>
+      <h3>{{ result.displaytext }}</h3>
+        <div class="row">
+          <div class="medium-6 columns">
+          <div class="thumbnail">
+            <video width="100%" height="100%" {% if item.thumbnail %}poster="{{ result.primarydisplay.thumbnail }}"{% endif %} controls>
+              <source src="{{ result.primarydisplay.main }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+        <div class="medium-6 columns">
+          <p>{{ result.description }}</p>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+
+    <!-- <ul class="pagination text-center" role="navigation" aria-label="Pagination">
+      <li class="pagination-previous disabled">Previous</li>
+      <li class="current"><span class="show-for-sr">You're on page</span> 1</li>
+      <li><a href="#" aria-label="Page 2">2</a></li>
+      <li><a href="#" aria-label="Page 3">3</a></li>
+      <li><a href="#" aria-label="Page 4">4</a></li>
+      <li class="ellipsis"></li>
+      <li><a href="#" aria-label="Page 12">12</a></li>
+      <li><a href="#" aria-label="Page 13">13</a></li>
+      <li class="pagination-next"><a href="#" aria-label="Next page">Next</a></li>
+    </ul> -->
+  </section>
+</div>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

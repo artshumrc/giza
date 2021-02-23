@@ -1,0 +1,17 @@
+{% load static %}
+
+<div class="media-object list-item list-item-thumbonly">
+  <div class="media-object-section">
+    <div class="thumbnail">
+      <a href="#0" data-open="gallery1"><img src="{% static 'images/{{li_img}}' %}"></a>
+    </div>
+  </div>
+  <div class="media-object-section">
+    <p class="media-object-title"><a href="#0">{{li_title}}</a></p>
+    <ul class="subheader">
+    {% for x in li_properties %}
+      <li>{{key}}: {{this}}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>

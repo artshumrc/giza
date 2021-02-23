@@ -4,17 +4,46 @@ $(document).foundation();
 // Src: https://css-tricks.com/snippets/jquery/smooth-scrolling/
 
 $(function() {
+
+  // Variable set to accommodate fixed-top navbar.
+  // Un-comment the appropriate value below.
+  var topOffset;
+  //topOffset = 70; // Normal, no extra banner
+  topOffset = 99; // With extra under-construction banner
+
+  /**
+   *
+   * Currently throwing errors whenever links are clicked, investigate in future releases
+   *
   $('a[href*="#"]:not([href="#0"])').click(function() {
     if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
       var target = $(this.hash);
       target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
       if (target.length) {
         $('html, body').animate({
-          scrollTop: (target.offset().top - 70)
+          scrollTop: (target.offset().top - topOffset)
         }, 600);
         return false;
       }
     }
+  });
+  */
+
+
+  // toggle the signup/login forms in the auth modal
+  $(".login-toggle").on("click", function() {
+    $(".modal .login-form").hide();
+    $(".modal .signup-form").show();
+  });
+  $(".signup-toggle").on("click", function() {
+    $(".modal .login-form").show();
+    $(".modal .signup-form").hide();
+  });
+
+  // Start 3D environment
+  $(".giza3dEmbedToggle").on("click", function() {
+    $(".giza3dEmbedToggle").hide();
+    $(".giza3dEmbed").show();
   });
 });
 
@@ -45,42 +74,19 @@ $('#search-dropdown').on('show.zf.dropdown', function() {
   }, 250);
 });
 
-// from http://jsfiddle.net/iambriansreed/bjdSF/ and http://stackoverflow.com/a/5454303
-$(function() {
-  var minimized_elements = $('span.minimize');
+// Dynamically adjust right-column margin on feature full view
 
-  minimized_elements.each(function(){
-    var t = $(this).text(),
-    max_length = 200;
+var fnAdjustRightColMargin = function() {
+  var menu = $('#jumpmenu');
+  var col = $('.header-full.mode-full .content-col-secondary');
+  var offset = Foundation.Box.GetDimensions(menu)['height'];
+  offset = (offset + 50);
+  col.css('margin-top', offset);
+}
 
-    if(t.length < max_length) return;
-
-    var trimmed_string = t.substr(0, max_length);
-    max_length = Math.min(trimmed_string.length, trimmed_string.lastIndexOf(" "));
-    trimmed_string = trimmed_string.substr(0, max_length);
-
-    $(this).html(
-      trimmed_string+'<span> ... </span><a href="#" class="more">More</a>'+
-      '<span style="display:none;">'+ t.substr(max_length,t.length)+' <a href="#" class="less">Less</a></span>'
-    );
-
-  });
-
-  $('a.more', minimized_elements).click(function(event){
-    event.preventDefault();
-    $(this).hide().prev().hide();
-    $(this).next().show();
-  });
-
-  $('a.less', minimized_elements).click(function(event){
-    event.preventDefault();
-    $(this).parent().hide().prev().show().prev().show();
-  });
-
-});
-
-var goToPage = function(url) {
-  window.location = url;
+// Only run this function on ready if #jumpmenu is present
+if ($('#jumpmenu').length) {
+  fnAdjustRightColMargin();
 }
 
 // on Advanced Search page, switch between search fields for different categories
@@ -89,17 +95,3 @@ $('fieldset#category-radio-selector input').click(function() {
   var section_id = $(this).attr('data-for-id');
   $('#'+section_id).show();
 });
-
-// Dynamically adjust right-column margin on feature full view
-
-var fnAdjustRightColMargin = function() {
-  var menu = $('#jumpmenu');
-  if (menu.length > 0) {
-    var col = $('.header-full.mode-full .content-col-secondary');
-    var offset = Foundation.Box.GetDimensions(menu)['height'];
-    offset = (offset + 50);
-    col.css('margin-top', offset);
-  }
-}
-
-fnAdjustRightColMargin();

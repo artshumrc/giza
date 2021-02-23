@@ -1,0 +1,426 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "MyGIZA",
+  section: "mygiza",
+  section_mygiza: true,
+  class: "p-t-1"
+%}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="7" title="MyGIZA"%}
+{% endblock  %}
+
+{% block 'main_content' %}
+  <div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+    <div class="row">
+      <div class="columns">
+        <div class="titles">
+          <a href="/collections/">Collections</a>
+          <!--a href="/mygiza-saved-searches/" class="active">Saved Searches</a-->
+        </div>
+        <a href="#" class="add" data-open="add_collection"><span class="sr-only">add</span></a>
+      </div>
+    </div>
+    <div class="row save-heading">
+      <div class="columns">
+        <span class="title">13 saved searches</span>
+        <ul class="dropdown menu" data-dropdown-menu>
+          <li>
+            <a href="#" class="show-for-small-only"><i class="fas fa-ellipsis-h"></i></a>
+            <ul class="menu">
+              <li><a href="#">expand all</a></li>
+              <li><a href="#">collapse all</a></li>
+              <li><a href="#">delete all</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <section class="accordion-section">
+    <div class="row row-padded">
+      <ul class="accordion" data-accordion>
+        <li class="accordion-item is-active" data-accordion-item data-multi-expand="true">
+          <a href="#" class="accordion-title">Khafre Photos</a>
+          <a href="#" class="button primary"><i class="fas fa-arrow-circle-right show-for-small-only"></i><span class="show-for-medium">Run this search</span></a>
+          <div class="accordion-content" data-tab-content>
+            <div class="content-wrap">
+              <div class="col">
+                <ul>
+                  <li>Keywords: Khafre, pyramid</li>
+                  <li>Category: Photos</li>
+                  <li>MET 02: Pyramid Complex</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>Photographer: Peter Der Manuelian</li>
+                  <li>Date of photgraph: */*/1984</li>
+                  <li>MET 05: Alabaster</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>MET 06: Stone-technique</li>
+                  <li>MET 07: Incomplete</li>
+                  <li>MET 08: Mammal</li>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns medium-6">
+                {% include 'partials/share-links.html' with class="share-links--left" %}
+              </div>
+              <div class="columns medium-6">
+                <ul class="links">
+                  <li>
+                    <a href="#">
+                      <span class="show-for-medium">Delete this Saved Search</span> <i class="far fa-trash-alt show-for-small-only"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="accordion-item" data-accordion-item>
+          <a href="#" class="accordion-title">Sphinx Details</a>
+          <a href="#" class="button primary"><i class="fas fa-arrow-circle-right show-for-small-only"></i><span class="show-for-medium">Run this search</span></a>
+          <div class="accordion-content" data-tab-content>
+            <div class="content-wrap">
+              <div class="col">
+                <ul>
+                  <li>Keywords: Khafre, pyramid</li>
+                  <li>Category: Photos</li>
+                  <li>MET 02: Pyramid Complex</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>Photographer: Peter Der Manuelian</li>
+                  <li>Date of photgraph: */*/1984</li>
+                  <li>MET 05: Alabaster</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>MET 06: Stone-technique</li>
+                  <li>MET 07: Incomplete</li>
+                  <li>MET 08: Mammal</li>
+                </ul>
+              </div>
+            </div>
+            <div class="links-row">
+              <ul class="social-networks">
+                <li><a href="#"><i class="fab fa-facebook-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-google-plus-square"></i></a></li>
+              </ul>
+              <ul class="links">
+                <li><a href="#"><span class="show-for-medium">Email this Collection</span> <i class="far fa-envelope show-for-small-only"></i></a></li>
+                <li><a href="#"><span class="show-for-medium">Delete this Saved Search</span> <i class="far fa-trash-alt show-for-small-only"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li class="accordion-item" data-accordion-item>
+          <a href="#" class="accordion-title">Sphinx Details</a>
+          <a href="#" class="button primary"><i class="fas fa-arrow-circle-right show-for-small-only"></i><span class="show-for-medium">Run this search</span></a>
+          <div class="accordion-content" data-tab-content>
+            <div class="content-wrap">
+              <div class="col">
+                <ul>
+                  <li>Keywords: Khafre, pyramid</li>
+                  <li>Category: Photos</li>
+                  <li>MET 02: Pyramid Complex</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>Photographer: Peter Der Manuelian</li>
+                  <li>Date of photgraph: */*/1984</li>
+                  <li>MET 05: Alabaster</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>MET 06: Stone-technique</li>
+                  <li>MET 07: Incomplete</li>
+                  <li>MET 08: Mammal</li>
+                </ul>
+              </div>
+            </div>
+            <div class="links-row">
+              <ul class="social-networks">
+                <li><a href="#"><i class="fab fa-facebook-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-google-plus-square"></i></a></li>
+              </ul>
+              <ul class="links">
+                <li><a href="#"><span class="show-for-medium">Email this Collection</span> <i class="far fa-envelope show-for-small-only"></i></a></li>
+                <li><a href="#"><span class="show-for-medium">Delete this Saved Search</span> <i class="far fa-trash-alt show-for-small-only"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li class="accordion-item" data-accordion-item>
+          <a href="#" class="accordion-title">Statue Photos</a>
+          <a href="#" class="button primary"><i class="fas fa-arrow-circle-right show-for-small-only"></i><span class="show-for-medium">Run this search</span></a>
+          <div class="accordion-content" data-tab-content>
+            <div class="content-wrap">
+              <div class="col">
+                <ul>
+                  <li>Keywords: statue, person</li>
+                  <li>Category: Photos</li>
+                  <li>MET 02: Receptacle/vessel, Furniture decoration, Vase, Religious or cult object, Sculpture in the round, Figurine, Written document</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>MET 05: Anorthosite, Breccia, Diorite, Calcite/alabaster, Porphyry, Quartzite, Gypsum, Schist, Turquoise, Unspecified mineral, Pottery, Plaster, Mortar, Linen, Glaze, Glass</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>MET 08: Lying, Sitting, Attitude of legs/feet, Both knees pulled up, Attitude/facing of head, Divine appearance, Anthropomorphic god, Partly theriomorphic god, Human</li>
+                </ul>
+              </div>
+            </div>
+            <div class="links-row">
+              <ul class="social-networks">
+                <li><a href="#"><i class="fab fa-facebook-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-google-plus-square"></i></a></li>
+              </ul>
+              <ul class="links">
+                <li><a href="#"><span class="show-for-medium">Email this Collection</span> <i class="far fa-envelope show-for-small-only"></i></a></li>
+                <li><a href="#"><span class="show-for-medium">Delete this Saved Search</span> <i class="far fa-trash-alt show-for-small-only"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li class="accordion-item" data-accordion-item>
+          <a href="#" class="accordion-title">Sphinx Details</a>
+          <a href="#" class="button primary"><i class="fas fa-arrow-circle-right show-for-small-only"></i><span class="show-for-medium">Run this search</span></a>
+          <div class="accordion-content" data-tab-content>
+            <div class="content-wrap">
+              <div class="col">
+                <ul>
+                  <li>Keywords: Khafre, pyramid</li>
+                  <li>Category: Photos</li>
+                  <li>MET 02: Pyramid Complex</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>Photographer: Peter Der Manuelian</li>
+                  <li>Date of photgraph: */*/1984</li>
+                  <li>MET 05: Alabaster</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>MET 06: Stone-technique</li>
+                  <li>MET 07: Incomplete</li>
+                  <li>MET 08: Mammal</li>
+                </ul>
+              </div>
+            </div>
+            <div class="links-row">
+              <ul class="social-networks">
+                <li><a href="#"><i class="fab fa-facebook-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-google-plus-square"></i></a></li>
+              </ul>
+              <ul class="links">
+                <li><a href="#"><span class="show-for-medium">Email this Collection</span> <i class="far fa-envelope show-for-small-only"></i></a></li>
+                <li><a href="#"><span class="show-for-medium">Delete this Saved Search</span> <i class="far fa-trash-alt show-for-small-only"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li class="accordion-item" data-accordion-item>
+          <a href="#" class="accordion-title">Sphinx Details</a>
+          <a href="#" class="button primary"><i class="fas fa-arrow-circle-right show-for-small-only"></i><span class="show-for-medium">Run this search</span></a>
+          <div class="accordion-content" data-tab-content>
+            <div class="content-wrap">
+              <div class="col">
+                <ul>
+                  <li>Keywords: Khafre, pyramid</li>
+                  <li>Category: Photos</li>
+                  <li>MET 02: Pyramid Complex</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>Photographer: Peter Der Manuelian</li>
+                  <li>Date of photgraph: */*/1984</li>
+                  <li>MET 05: Alabaster</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>MET 06: Stone-technique</li>
+                  <li>MET 07: Incomplete</li>
+                  <li>MET 08: Mammal</li>
+                </ul>
+              </div>
+            </div>
+            <div class="links-row">
+              <ul class="social-networks">
+                <li><a href="#"><i class="fab fa-facebook-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-google-plus-square"></i></a></li>
+              </ul>
+              <ul class="links">
+                <li><a href="#"><span class="show-for-medium">Email this Collection</span> <i class="far fa-envelope show-for-small-only"></i></a></li>
+                <li><a href="#"><span class="show-for-medium">Delete this Saved Search</span> <i class="far fa-trash-alt show-for-small-only"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li class="accordion-item" data-accordion-item>
+          <a href="#" class="accordion-title">Khafre Photos</a>
+          <a href="#" class="button primary"><i class="fas fa-arrow-circle-right show-for-small-only"></i><span class="show-for-medium">Run this search</span></a>
+          <div class="accordion-content" data-tab-content>
+            <div class="content-wrap">
+              <div class="col">
+                <ul>
+                  <li>Keywords: Khafre, pyramid</li>
+                  <li>Category: Photos</li>
+                  <li>MET 02: Pyramid Complex</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>Photographer: Peter Der Manuelian</li>
+                  <li>Date of photgraph: */*/1984</li>
+                  <li>MET 05: Alabaster</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>MET 06: Stone-technique</li>
+                  <li>MET 07: Incomplete</li>
+                  <li>MET 08: Mammal</li>
+                </ul>
+              </div>
+            </div>
+            <div class="links-row">
+              <ul class="social-networks">
+                <li><a href="#"><i class="fab fa-facebook-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-google-plus-square"></i></a></li>
+              </ul>
+              <ul class="links">
+                <li><a href="#"><span class="show-for-medium">Email this Collection</span> <i class="far fa-envelope show-for-small-only"></i></a></li>
+                <li><a href="#"><span class="show-for-medium">Delete this Saved Search</span> <i class="far fa-trash-alt show-for-small-only"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li class="accordion-item" data-accordion-item>
+          <a href="#" class="accordion-title">Sphinx Details</a>
+          <a href="#" class="button primary"><i class="fas fa-arrow-circle-right show-for-small-only"></i><span class="show-for-medium">Run this search</span></a>
+          <div class="accordion-content" data-tab-content>
+            <div class="content-wrap">
+              <div class="col">
+                <ul>
+                  <li>Keywords: Khafre, pyramid</li>
+                  <li>Category: Photos</li>
+                  <li>MET 02: Pyramid Complex</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>Photographer: Peter Der Manuelian</li>
+                  <li>Date of photgraph: */*/1984</li>
+                  <li>MET 05: Alabaster</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>MET 06: Stone-technique</li>
+                  <li>MET 07: Incomplete</li>
+                  <li>MET 08: Mammal</li>
+                </ul>
+              </div>
+            </div>
+            <div class="links-row">
+              <ul class="social-networks">
+                <li><a href="#"><i class="fab fa-facebook-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-google-plus-square"></i></a></li>
+              </ul>
+              <ul class="links">
+                <li><a href="#"><span class="show-for-medium">Email this Collection</span> <i class="far fa-envelope show-for-small-only"></i></a></li>
+                <li><a href="#"><span class="show-for-medium">Delete this Saved Search</span> <i class="far fa-trash-alt show-for-small-only"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li class="accordion-item" data-accordion-item>
+          <a href="#" class="accordion-title">Khafre Photos</a>
+          <a href="#" class="button primary"><i class="fas fa-arrow-circle-right show-for-small-only"></i><span class="show-for-medium">Run this search</span></a>
+          <div class="accordion-content" data-tab-content>
+            <div class="content-wrap">
+              <div class="col">
+                <ul>
+                  <li>Keywords: Khafre, pyramid</li>
+                  <li>Category: Photos</li>
+                  <li>MET 02: Pyramid Complex</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>Photographer: Peter Der Manuelian</li>
+                  <li>Date of photgraph: */*/1984</li>
+                  <li>MET 05: Alabaster</li>
+                </ul>
+              </div>
+              <div class="col">
+                <ul>
+                  <li>MET 06: Stone-technique</li>
+                  <li>MET 07: Incomplete</li>
+                  <li>MET 08: Mammal</li>
+                </ul>
+              </div>
+            </div>
+            <div class="links-row">
+              <ul class="social-networks">
+                <li><a href="#"><i class="fab fa-facebook-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
+                <li><a href="#"><i class="fab fa-google-plus-square"></i></a></li>
+              </ul>
+              <ul class="links">
+                <li><a href="#"><span class="show-for-medium">Email this Collection</span> <i class="far fa-envelope show-for-small-only"></i></a></li>
+                <li><a href="#"><span class="show-for-medium">Delete this Saved Search</span> <i class="far fa-trash-alt show-for-small-only"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

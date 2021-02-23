@@ -1,0 +1,196 @@
+{% load static %}
+
+<!-- Modal: Image Gallery -->
+
+<div class="large reveal modal-inverse photo-gallery-modal" id="gallery1" data-reveal data-v-offset="65">
+
+  <h2>Name of this image</h2>
+
+  <p>Description of the image duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Sed posuere consectetur est at lobortis. Donec sed odio dui.</p>
+
+  <div class="modal-img-container">
+    <img src="{% static 'images/galleryimage1.jpg' %}" alt="appropriate alt">
+  </div>
+
+
+  {% include 'partials/close-button.html' with label="Close modal" %}
+</div>
+
+<!-- /Modal: Image Gallery -->
+
+
+
+<!-- Modal: Login -->
+
+<div class="reveal modal login-reveal" id="login_new" data-reveal>
+  <div class="auth-form signup-form">
+    <span class="title">Sign up for My Giza <span class="separator">|</span> <a href="#"  class="auth-toggle signup-toggle">Log in</a></span>
+    <!--
+    Reinstate when oauth added
+    a href="#" class="button social google"><i class="fab fa-google"></i>sign up with google</a>
+    <a href="#" class="button social facebook"><i class="fab fa-facebook-f"></i>sign up with facebook</a-->
+    <form id="login_form" method="post" action="{% url 'sign_up' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      <br>
+      {% endif %}
+      {{ custom_user_form.as_p }}
+    <!--form class="new_form" id="login_form" method="post" action="{% url 'sign_up' %}?redirect_to=/" enctype="multipart/form-data">
+      {% csrf_token %}
+      <span class="info">All * items are required.</span>
+      <label>Full Name*:
+        <input placeholder="Queen Meresankh III" type="text" name="full_name" value="" size="50"/>
+      </label>
+      <label>Email*:
+        <input type="email" placeholder="meresankh@giza.edu">
+      </label>
+      <label class="password">Password*:
+        <input type="password">
+      </label>
+      <span class="info">Password must be at least 8 characters and contain at least one letter and one number.</span>
+      <!--label>Interest:
+        <select>
+          <option value="abc">—</option>
+          <option value="starbuck">Starbuck</option>
+          <option value="hotdog">Hot Dog</option>
+          <option value="apollo">Apollo</option>
+        </select>
+      </label-->
+      <label class="custom-checkbox">
+        <input type="checkbox">
+        <span class="fake-input"></span>
+        I accept the <a href="/terms">Terms & Conditions</a> of the Digital Giza Website
+      </label>
+      <div class="btn-row">
+        <button type="button" class="button btn-white" data-close="login_new">Cancel</button>
+        <button type="submit" class="button">Create Account</button>
+      </div>
+    </form>
+  </div>
+  <div class="auth-form login-form" style="display: none">
+    <span class="title"><a class="auth-toggle login-toggle" href="#">Sign up</a> for My Giza <span class="separator">|</span> Log in</span>
+    <form class="new_form" id="login_form" method="post" action="{% url 'login' %}?redirect_to=/" enctype="multipart/form-data">
+      {% csrf_token %}
+      <span class="info">All * items are required.</span>
+      <label>Username*
+        <input placeholder="Username" type="text" name="username" value="" size="50"/>
+      </label>
+      <label>Password*
+        <input placeholder="Password" type="password" name="password" value="" size="50"/>
+      </label>
+      <div class="btn-row">
+        <button type="button" class="button btn-white" data-close="login_new">Cancel</button>
+        <button type="submit" class="button">Log In</button>
+      </div>
+    </form>
+  </div>
+  {% include 'partials/close-button.html' with label="Close modal" %}
+</div>
+
+<!-- /Modal: Login -->
+
+
+
+<!-- Modal: Email Collection -->
+
+<div class="reveal modal email-reveal" id="email_collection" data-reveal>
+  <span class="title">Email ‘My Latest Project’ Collection</span>
+  <form class="new_form" action="#">
+    <div class="email-wrap">
+      <label for="emailing">Email address:</label>
+      <div class="input-wrap">
+        <input type="email" id="emailing">
+      </div>
+    </div>
+    <div class="check-wrap">
+      <label class="custom-checkbox">
+        <input type="checkbox">
+        <span class="fake-input"></span>
+        Make Collaborator
+      </label>
+      <p class="text-right">
+        <button type="submit" class="button">Send Email</button>
+      </p>
+    </div>
+  </form>
+  <div class="collaborators">
+    <span class="title">Current Collaborators <i class="fas fa-info-circle"></i></span>
+    <ul>
+      <li data-closable class="callout alert-callout-subtle default">
+        <span class="text">Heather ONeill</span>
+        <span class="text"><a href="#">heather@pixelsforhumans.com</a></span>
+        <a href="#" class="close-button" aria-label="Dismiss alert" data-close>
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </li>
+      <li data-closable class="callout alert-callout-subtle default">
+        <span class="text">Nicholas Picardo</span>
+        <span class="text"><a href="#">npicardo@fas.harvard.edu </a></span>
+        <a href="#" class="close-button" aria-label="Dismiss alert" data-close>
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </li>
+      <li data-closable class="callout alert-callout-subtle default">
+        <span class="text">Luke Hollis</span>
+        <span class="text"><a href="#">luke@archimedes.digital</a></span>
+        <a href="#" class="close-button" aria-label="Dismiss alert" data-close>
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+    {% include 'partials/close-button.html' with label="Close modal" %}
+</div>
+
+<!-- /Modal: Email Collection -->
+
+
+
+<!-- Modal: Add to Collection -->
+
+<div class="reveal modal add-reveal" id="add_collection" data-reveal>
+  <span class="title">Add to a MyGiza Collection</span>
+  <span class="info-line">Hi Heather! (not you? <a href="#">Login to your account</a>.)</span>
+  <div class="jcf-scrollable">
+    <form class="new_form" action="#">
+      <label>
+        Name your new collection:
+        <input type="text">
+      </label>
+      <div class="btn-row">
+        <button type="submit" class="button btn-white">Cancel</button>
+        <button type="submit" class="button">create</button>
+      </div>
+    </form>
+    <ul class="add-lists">
+      <li><a href="#">My Favorite Pictures <span class="ico"></span></a></li>
+      <li><a href="#">My Latest Project <span class="ico"></span></a></li>
+      <li><a href="#">Khafre Pyramid Complex <span class="ico"></span></a></li>
+      <li><a href="#">Khafre Pyramid Complex <span class="ico"></span></a></li>
+    </ul>
+  </div>
+  <div class="bottom-info-block">
+    <div class="img-wrap">
+      <picture>
+        <source srcset="{% static 'images/thumb60-1.jpg' %}, {% static 'images/thumb60-1@2x.jpg' %} 2x"/>
+        <img src="{% static 'images/thumb60-1.jpg' %}" alt="image description" width="60" height="60">
+      </picture>
+    </div>
+    <ul>
+      <li>Sphinx</li>
+      <li>Tombs & Monuments</li>
+      <li>Sphinx Complex</li>
+    </ul>
+  </div>
+  {% include 'partials/close-button.html' with label="Close modal" %}
+</div>
+
+<!-- /Modal: Add to Collection -->
+
+{% include 'partials/modal-met.html' %}
+{% include 'partials/modal-contact.html' %}
