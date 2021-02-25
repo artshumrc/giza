@@ -24,7 +24,7 @@ def get_media_url(path, filename):
 	path = path[idx:].replace('\\','/')
 	if not path.endswith('/'):
 		path = path + '/'
-	url = 'http://gizamedia.rc.fas.harvard.edu/' + path + filename
+	url = 'https://gizamedia.rc.fas.harvard.edu/' + path + filename
 	return url
 
 
