@@ -60,6 +60,7 @@ class Lesson(models.Model):
     collections = models.ManyToManyField('Collection', related_name='collections_topics', blank=True)
     picture = models.ImageField(
         upload_to='images', blank=True)
+    summary = models.TextField(blank=True)
     content = HTMLField(blank=True)
 
     def __str__(self):
