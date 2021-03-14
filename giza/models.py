@@ -1,7 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from django.utils.text import slugify
+from composite_field import CompositeField
 
 from tinymce.models import HTMLField
 
@@ -13,12 +14,16 @@ PRIVACY_CHOICES = [
     (PRIVATE, 'Private'),
 ]
 
-EDITION = 'EDITION'
-TRANSLATION = 'TRANSLATION'
-CONTENT_TYPE_CHOICES = [
-    (EDITION, 'Edition'),
-    (TRANSLATION, 'Translation'),
-]
+
+class EsCompositeField(CompositeField):
+    type = models.CharField(max_length=20)
+    id = models.IntegerField()
+
+    def set_attributes_from_name(self, name="EsCompositeField"):
+        return name
+
+    def check(self, **kwargs):
+        return []
 
 
 class CustomUser(AbstractUser):
@@ -79,6 +84,7 @@ class Lesson(models.Model):
             self.slug = self._get_unique_slug()
         super().save(*args, **kwargs)
 
+
 class Collection(models.Model):
     title = models.CharField(max_length=256)
     slug = models.SlugField(blank=True)
@@ -87,9 +93,6 @@ class Collection(models.Model):
     topics = models.ManyToManyField('Topic', related_name='collections_topics', blank=True)
     picture = models.ImageField(
         upload_to='images', blank=True)
-
-    # possibly consider json field for this in the future
-    items = models.TextField(blank=True)
 
     def __str__(self):
         return self.title
@@ -105,3 +108,12 @@ class Collection(models.Model):
     def save(self, *args, **kwargs):
         self.slug = self._get_unique_slug()
         super().save(*args, **kwargs)
+
+
+class EsItem(models.Model):
+    collection = models.ForeignKey(Collection, related_name='items', on_delete=models.CASCADE)
+    type = models.CharField(max_length=20)
+    es_id = models.IntegerField()
+
+    def __str__(self):
+        return "{}-{}".format(es_id, type)
