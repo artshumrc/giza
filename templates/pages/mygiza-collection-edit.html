@@ -26,16 +26,11 @@
           Creating and editing collections is restricted to admin users currently. We hope to add this functionality in soon.
         </p>
         <div class="jcf-scrollable">
-          <form class="new_form" action="#">
-            <label>
-              Name your new collection:
-              <input type="text" disabled>
-            </label>
-          </form>
+          {{collection_form.as_p}}
         </div>
         <br>
         <div class="btn-row">
-          <button type="submit" class="button" disabled>Create</button>
+          <button type="submit" class="button" >Create</button>
         </div>
       </form>
     </div>

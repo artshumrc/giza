@@ -1,8 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.contrib.postgres.fields import ArrayField, JSONField
 from django.utils.text import slugify
-from composite_field import CompositeField
 
 from tinymce.models import HTMLField
 
@@ -14,16 +12,6 @@ PRIVACY_CHOICES = [
     (PRIVATE, 'Private'),
 ]
 
-
-class EsCompositeField(CompositeField):
-    type = models.CharField(max_length=20)
-    id = models.IntegerField()
-
-    def set_attributes_from_name(self, name="EsCompositeField"):
-        return name
-
-    def check(self, **kwargs):
-        return []
 
 
 class CustomUser(AbstractUser):
@@ -110,10 +98,10 @@ class Collection(models.Model):
         super().save(*args, **kwargs)
 
 
-class EsItem(models.Model):
+class ElasticsearchItem(models.Model):
     collection = models.ForeignKey(Collection, related_name='items', on_delete=models.CASCADE)
     type = models.CharField(max_length=20)
     es_id = models.IntegerField()
 
     def __str__(self):
-        return "{}-{}".format(es_id, type)
+        return "{}-{}".format(self.es_id, self.type)

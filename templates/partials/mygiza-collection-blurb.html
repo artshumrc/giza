@@ -27,11 +27,15 @@
         </a>
       </h3>
       <p class="text-smaller">
-        <strong class="collection-meta-count">{{collection.items|length}} items</strong><br>
+        <strong class="collection-meta-count">{{collection.items.all|length}} items</strong><br>
         {% for owner in collection.owners.all %}
           <span class="collection-meta-creator">
             Created by
-            {{owner.full_name}}
+            {% if owner.full_name %}
+              {{owner.full_name}}
+            {% else %}
+              {{owner.username}}
+            {% endif %}
           </span>
         {% endfor %}
       </p>
