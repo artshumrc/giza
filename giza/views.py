@@ -17,8 +17,8 @@ from django.shortcuts import get_object_or_404
 from utils.elastic_backend import es, ES_INDEX
 from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGORY
 
-from .forms import CustomUserCreationForm
-from .models import Collection, Lesson
+from .forms import CustomUserCreationForm, CollectionForm
+from .models import Collection, Lesson, ElasticsearchItem
 
 RESULTS_SIZE = 20
 
@@ -266,7 +266,40 @@ def collection(request, slug):
     hits = []
 
     search_term = request.GET.get('q', '')
-    item_ids = collection.items.split(",")
+    query = {}
+
+    if collection.items.all():
+        query = {
+            'bool': {
+                "should": [],
+            }
+        }
+        for elasticsearch_item in collection.items.all():
+            query['bool']['should'].append({
+                'bool': {
+                    'must': [
+                        {
+                            'term': {
+                                "_type": elasticsearch_item.type,
+                            }
+                        },
+                        {
+                            'term': {
+                                "_id": elasticsearch_item.es_id,
+                            }
+                        },
+                    ]
+                }
+            })
+    else:
+        # pass a query that will get no values returned
+        query = {
+            'ids': {
+                'type': '_doc',
+                'values': []
+            }
+        }
+
     categorystring = ""
     current_category = request.GET.get('category', '')
     current_subfacets = {}
@@ -291,11 +324,7 @@ def collection(request, slug):
     body_query = {
         "from": results_from,
         "size": RESULTS_SIZE,
-        "query": {
-            "ids": {
-                "values": item_ids,
-            }
-        },
+        "query": query,
         "aggregations": {
             "aggregation": {
                 "terms": {
@@ -324,11 +353,7 @@ def collection(request, slug):
     search_results = es.search(index=ES_INDEX, body={
         "from": results_from,
         "size": RESULTS_SIZE,
-        "query": {
-            "ids": {
-                "values": item_ids,
-            }
-        },
+        "query": query,
         "aggregations": {
             "aggregation": {
                 "terms": {
@@ -399,11 +424,78 @@ def collection(request, slug):
 
 def collections_create(request):
 
-    return render(request, 'pages/mygiza-collection-edit.html')
+    # create a collection
+    if request.method == 'POST':
+        collection_form = CollectionForm(data=request.POST)
 
-def collections_edit(request):
+        # save user
+        if collection_form.is_valid():
+            # create user
+            collection = collection_form.save()
+            collection.owners.add(request.user)
+            collection.save()
 
-    return render(request, 'pages/mygiza-collection-edit.html')
+            return redirect('/collections/{}'.format(collection.slug))
+
+        else:
+            messages.error(request, "Error creating collection.")
+
+    # show collection form
+    else:
+        collection_form = CollectionForm()
+
+    return render(request, 'pages/mygiza-collection-edit.html', {
+        'collection_form': collection_form,
+    })
+
+def collections_edit(request, slug):
+
+    # create a collection
+    if request.method == 'POST':
+        collection_form = CollectionForm(data=request.POST)
+
+        # save user
+        if collection_form.is_valid():
+            # create user
+            collection = collection_form.save()
+            collection.save()
+
+            return redirect('/collections/{}'.format(collection.slug))
+
+        else:
+            messages.error(request, "Error creating collection.")
+
+    # show collection form
+    else:
+        collection = get_object_or_404(Collection, slug=slug)
+        collection_form = CollectionForm(collection)
+
+        # user does not own this collection, redirect to collections page
+        if not request.user in collection.owners.all():
+            return redirect('/collections/')
+
+        # handle adding new item id and type to collection
+        if request.GET.get('add_item_id') and request.GET.get('add_item_type'):
+            elasticsearch_item = ElasticsearchItem(
+                    es_id=request.GET.get('add_item_id'),
+                    type=request.GET.get('add_item_type'),
+                    collection=collection
+                )
+            elasticsearch_item.save()
+            return redirect('/collections/{}'.format(collection.slug))
+
+        elif request.GET.get('remove_item_id') and request.GET.get('remove_item_type'):
+            elasticsearch_item = ElasticsearchItem.objects.filter(
+                    es_id=request.GET.get('remove_item_id'),
+                    type=request.GET.get('remove_item_type'),
+                    collection=collection
+                )
+            elasticsearch_item.delete()
+            return redirect('/collections/{}'.format(collection.slug))
+
+    return render(request, 'pages/mygiza-collection-edit.html', {
+        'collection_form': collection_form,
+    })
 
 def lessons(request):
     lessons = Lesson.objects.all()
