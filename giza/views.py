@@ -507,8 +507,85 @@ def lessons(request):
 def lesson(request, slug):
     lesson = get_object_or_404(Lesson, slug=slug)
     lessons = Lesson.objects.all()
+    hits = []
+
+    if lesson.videos.all():
+        query = {
+            'bool': {
+                "should": [],
+            }
+        }
+        for elasticsearch_video in lesson.videos.all():
+            query['bool']['should'].append({
+                'bool': {
+                    'must': [
+                        {
+                            'term': {
+                                "_type": "videos",
+                            }
+                        },
+                        {
+                            'term': {
+                                "_id": elasticsearch_video.es_id,
+                            }
+                        },
+                    ]
+                }
+            })
+    else:
+        # pass a query that will get no values returned
+        query = {
+            'ids': {
+                'type': '_doc',
+                'values': []
+            }
+        }
+
+    categorystring = ""
+    current_category = request.GET.get('category', '')
+    current_subfacets = {}
+    bool_filter = {
+        "must" : [],
+    }
+    sort = request.GET.get('sort', '_score')
+    page = int(request.GET.get('page', 1))
+    results_from = 0
+    # calculate elasticsearch's from, using the page value
+    results_from = (page - 1) * RESULTS_SIZE
+    all_categories = {}
+    sub_facets = {}
+    has_next = False
+    has_previous = False
+    previous_page_number = 0
+    next_page_number = 0
+    num_pages_range = []
+    num_pages = 0
+    total = 0
+
+    search_results = es.search(index=ES_INDEX, body={
+        "from": results_from,
+        "size": RESULTS_SIZE,
+        "query": query,
+        "aggregations": {
+            "aggregation": {
+                "terms": {
+                    "field": "_type",
+                    "exclude": "library", # ignore special type, library, which is used for the Digital Giza Library page
+                    "size" : 50 # make sure to get all categories (rather than just 10)
+                }
+            }
+        },
+        "post_filter" : {
+            "bool" : bool_filter
+        },
+        "sort" : sort
+    })
+
+    for hit in search_results['hits']['hits']:
+        hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
 
     return render(request, 'pages/lesson.html', {
         'lesson': lesson,
         'lessons': lessons,
+        'hits' : hits,
     })

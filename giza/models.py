@@ -105,3 +105,11 @@ class ElasticsearchItem(models.Model):
 
     def __str__(self):
         return "{}-{}".format(self.es_id, self.type)
+
+class ElasticsearchVideo(models.Model):
+    lesson = models.ForeignKey(Lesson, related_name='videos', on_delete=models.CASCADE)
+    # type will always = "videos"
+    es_id = models.IntegerField()
+
+    def __str__(self):
+        return "{}-videos".format(self.es_id)
