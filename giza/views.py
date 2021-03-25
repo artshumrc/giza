@@ -215,6 +215,8 @@ def sign_up(request):
         if custom_user_form.is_valid():
             # create user
             custom_user = custom_user_form.save()
+            public_group = Group.objects.get(name='Public')
+            custom_user.groups.add(public_group)
             custom_user.save()
             registered = True
             return redirect('/')
