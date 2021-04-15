@@ -76,6 +76,7 @@ class Lesson(models.Model):
 class Collection(models.Model):
     title = models.CharField(max_length=256)
     slug = models.SlugField(blank=True)
+    public = models.BooleanField(blank=True)
     owners = models.ManyToManyField(
         'CustomUser', related_name='owners', blank=True)
     topics = models.ManyToManyField('Topic', related_name='collections_topics', blank=True)

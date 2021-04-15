@@ -245,7 +245,7 @@ def mygiza(request):
     return render(request, 'pages/mygiza-landing.html')
 
 def collections(request):
-    collections = Collection.objects.all()
+    collections = Collection.objects.filter(public=True)
 
     return render(request, 'pages/mygiza-allcollections.html', {
         'collections': collections,
