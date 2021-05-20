@@ -567,7 +567,6 @@ def build_es_query(search_term, fields):
 						k : {
 							"query" : v,
 							"operator" : "and",
-							"fuzziness": "AUTO"
 						}
 					}
 				})
@@ -590,7 +589,6 @@ def build_es_query(search_term, fields):
 						 "query" : search_term,
 						 "operator" : "and",
 						 "boost" : 2,
-						 "fuzziness": "AUTO"
 					  }
 				   }
 				},
@@ -599,7 +597,6 @@ def build_es_query(search_term, fields):
 					   "_all" : {
 						"query" : search_term,
 						"operator" : "and",
-						"fuzziness": "AUTO"
 					   }
 					}
 				}
