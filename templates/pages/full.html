@@ -29,6 +29,28 @@
 
           <div class="feature-block secondary" id="jumpmenu">
             <div class="feature-block__body">
+              <h5 class="heading-em">MyGiza:</h5>
+              <p>
+                {% if user.is_authenticated %}
+                  <a data-open="add_collection" aria-controls="add_collection" aria-haspopup="true" tabindex="0">
+                    <span class="icon-plus-circle icon-fw"></span> Add this to a collection
+                  </a>
+                {% else %}
+                  <a href="/login" tabindex="0">
+                    <span class="icon-plus-circle icon-fw"></span> Add this to a collection
+                  </a>
+                {% endif %}
+              </p>
+
+              <h5 class="heading-em">Jump to:</h5>
+              <ul class="vertical menu show-for-medium">
+                <li>
+                  <a href="#details">
+                    <span class="icon-info-circle icon-fw"></span> Details
+                  </a>
+                </li>
+              </ul>
+
 
               <h5 class="heading-em">Jump to:</h5>
 
@@ -829,6 +851,12 @@
 
     <!-- /Modal -->
 
+    <!--
+      TEMPORARY FIX:
+      Include modals and styles for Adding items to Collections
+    -->
+    {% include 'partials/modals.html' %}
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
 {% endblock %}
 
 {% block extra_js %}

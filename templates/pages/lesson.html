@@ -35,78 +35,26 @@
 
       {% include 'partials/feature-block-end.html' %}
 
-      <!--
-      {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="collapsible" feature_icon="video-camera" feature_counter="5" feature_anchor="videos" %}
+      {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="collapsible" feature_icon="video-camera" feature_counter=hits|length feature_anchor="videos" %}
         <ul class="feature-block__list multicol-2 thumbsize-lg thumbs-square">
 
-          <li class="video-border">
-            <div class="media-object list-item list-item-thumbcaption">
-              <video width="100%" height="100%"
-                poster="https://gizamedia.rc.fas.harvard.edu/images/ASU/ASU Khafre photography/Thumbnails/ASU_A5_video_003_thumb.jpg"
-                controls="">
-                <source src="https://gizamedia.rc.fas.harvard.edu/images/ASU/ASU Khafre photography/ASU_A5_video_003.mp4"
-                  type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-              <p class="media-object-title"><a href="/videos/86667/full/">Sphinx Complex: Site: Giza; View: Sphinx</a></p>
-            </div>
-          </li>
-
-          <li class="video-border">
-            <div class="media-object list-item list-item-thumbcaption">
-              <video width="100%" height="100%"
-                poster="https://gizamedia.rc.fas.harvard.edu/images/ASU/ASU Khafre photography/Thumbnails/ASU_A5_video_003_thumb.jpg"
-                controls="">
-                <source src="https://gizamedia.rc.fas.harvard.edu/images/ASU/ASU Khafre photography/ASU_A5_video_003.mp4"
-                  type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-              <p class="media-object-title"><a href="/videos/86667/full/">Sphinx Complex: Site: Giza; View: Sphinx</a></p>
-            </div>
-          </li>
-
-          <li class="video-border">
-            <div class="media-object list-item list-item-thumbcaption">
-              <video width="100%" height="100%"
-                poster="https://gizamedia.rc.fas.harvard.edu/images/ASU/ASU Khafre photography/Thumbnails/ASU_A5_video_003_thumb.jpg"
-                controls="">
-                <source src="https://gizamedia.rc.fas.harvard.edu/images/ASU/ASU Khafre photography/ASU_A5_video_003.mp4"
-                  type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-              <p class="media-object-title"><a href="/videos/86667/full/">Sphinx Complex: Site: Giza; View: Sphinx</a></p>
-            </div>
-          </li>
-
-          <li class="video-border">
-            <div class="media-object list-item list-item-thumbcaption">
-              <video width="100%" height="100%"
-                poster="https://gizamedia.rc.fas.harvard.edu/images/ASU/ASU Khafre photography/Thumbnails/ASU_A5_video_003_thumb.jpg"
-                controls="">
-                <source src="https://gizamedia.rc.fas.harvard.edu/images/ASU/ASU Khafre photography/ASU_A5_video_003.mp4"
-                  type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-              <p class="media-object-title"><a href="/videos/86667/full/">Sphinx Complex: Site: Giza; View: Sphinx</a></p>
-            </div>
-          </li>
-
-          <li class="video-border">
-            <div class="media-object list-item list-item-thumbcaption">
-              <video width="100%" height="100%"
-                poster="https://gizamedia.rc.fas.harvard.edu/images/ASU/ASU Khafre photography/Thumbnails/ASU_A5_video_003_thumb.jpg"
-                controls="">
-                <source src="https://gizamedia.rc.fas.harvard.edu/images/ASU/ASU Khafre photography/ASU_A5_video_003.mp4"
-                  type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-              <p class="media-object-title"><a href="/videos/86667/full/">Sphinx Complex: Site: Giza; View: Sphinx</a></p>
-            </div>
-          </li>
+          {% for result in hits %}
+            <li class="video-border">
+              <div class="media-object list-item list-item-thumbcaption">
+                <video width="100%" height="100%"
+                  poster="{{result.source.primarydisplay.thumbnail}}"
+                  controls="">
+                  <source src="{{result.source.primarydisplay.main}}"
+                    type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                <p class="media-object-title"><a href="/videos/{{result.id}}/full/">{{result.source.displaytext}}</a></p>
+              </div>
+            </li>
+          {% endfor %}
 
         </ul>
       {% include 'partials/feature-block-end.html' %}
-      -->
 
     </section>
 
