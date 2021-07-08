@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.urls import path
+from django.conf.urls import include
 from django.contrib import admin
 from tms import views as tms_views
 from search import views as search_views
@@ -34,7 +35,7 @@ urlpatterns = [
     url(r'^collections/user$', views.collections_user, name="collections_user"),
     url(r'^collections/create$', views.collections_create, name="collections_create"),
     url(r'^collections/(?P<slug>[\w-]+)$', views.collection, name="collection"),
-    url(r'^collections/(?P<slug>[\w-]+)/edit$', views.collection, name="collection_edit"),
+    url(r'^collections/(?P<slug>[\w-]+)/edit$', views.collections_edit, name="collection_edit"),
     url(r'^collections/$', views.collections, name="collections"),
     url(r'^mygiza/$', views.mygiza, name="mygiza"),
 
@@ -47,6 +48,7 @@ urlpatterns = [
     url(r'^search-results/$', search_views.results, name='results'),
 
     # auth
+	# TODO for password change/reset, implement django accounts auth
     # path('accounts/', include('django.contrib.auth.urls')),
     url('sign-up/', views.sign_up, name='sign_up'),
     url('login/', views.user_login, name='login'),

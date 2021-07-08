@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 from django.utils.text import slugify
 
 from tinymce.models import HTMLField
@@ -13,12 +12,6 @@ PRIVACY_CHOICES = [
     (PRIVATE, 'Private'),
 ]
 
-EDITION = 'EDITION'
-TRANSLATION = 'TRANSLATION'
-CONTENT_TYPE_CHOICES = [
-    (EDITION, 'Edition'),
-    (TRANSLATION, 'Translation'),
-]
 
 
 class CustomUser(AbstractUser):
@@ -79,17 +72,16 @@ class Lesson(models.Model):
             self.slug = self._get_unique_slug()
         super().save(*args, **kwargs)
 
+
 class Collection(models.Model):
     title = models.CharField(max_length=256)
     slug = models.SlugField(blank=True)
+    public = models.BooleanField(blank=True, default=False)
     owners = models.ManyToManyField(
         'CustomUser', related_name='owners', blank=True)
     topics = models.ManyToManyField('Topic', related_name='collections_topics', blank=True)
     picture = models.ImageField(
         upload_to='images', blank=True)
-
-    # possibly consider json field for this in the future
-    items = models.TextField(blank=True)
 
     def __str__(self):
         return self.title
@@ -105,3 +97,12 @@ class Collection(models.Model):
     def save(self, *args, **kwargs):
         self.slug = self._get_unique_slug()
         super().save(*args, **kwargs)
+
+
+class ElasticsearchItem(models.Model):
+    collection = models.ForeignKey(Collection, related_name='items', on_delete=models.CASCADE)
+    type = models.CharField(max_length=20)
+    es_id = models.IntegerField()
+
+    def __str__(self):
+        return "{}-{}".format(self.es_id, self.type)

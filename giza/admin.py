@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Lesson, Topic, Collection
+from .models import CustomUser, Lesson, Topic, Collection, ElasticsearchItem
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
@@ -15,8 +15,16 @@ class CustomUserAdmin(UserAdmin):
             (None, {'fields': ('full_name', 'bio', 'tagline', 'picture')}),
     )
 
+
+class ElasticsearchItemInline(admin.TabularInline):
+    model = ElasticsearchItem
+
 class CollectionAdmin(admin.ModelAdmin):
     readonly_fields=('slug',)
+
+    inlines = [
+        ElasticsearchItemInline,
+    ]
 
 class LessonAdmin(admin.ModelAdmin):
     readonly_fields=('slug',)
