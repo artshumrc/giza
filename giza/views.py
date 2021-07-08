@@ -352,7 +352,7 @@ def collection(request, slug):
 
     search_results = es.search(index=ES_INDEX, body={
         "from": results_from,
-        "size": RESULTS_SIZE,
+        "size": 10000, 
         "query": query,
         "aggregations": {
             "aggregation": {
