@@ -54,7 +54,7 @@ def get_height_and_width(id):
 				height = int(row[1])
 				width = int(row[2])
 	if width == 0 and height == 0:
-		print("DRS ID not found in CSV file, requesting from IIIF server")
+		print("DRS ID not found, requesting from IIIF server")
 		url = "https://ids.lib.harvard.edu/ids/iiif/{}/info.json".format(id)
 		r = requests.get(url)
 		r.raise_for_status()
@@ -127,7 +127,6 @@ def build_multi_image_sequence(manifest_id, resources_list, drs_ids, canvas_labe
 
 def build_manifest_canvas(manifest_id, drs_id, idx, resource, label, metadata):
 	if resource is None:
-		print("Building new resource")
 		resource = build_resource(drs_id)
 	canvas_id = "{}/canvas/{}".format(manifest_id, idx)
 	canvas = {
