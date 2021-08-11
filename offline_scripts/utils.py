@@ -54,7 +54,7 @@ def get_height_and_width(id):
 				height = int(row[1])
 				width = int(row[2])
 	if width == 0 and height == 0:
-		print("DRS ID not found in CSV file, requesting from IIIF server")
+		print("DRS ID not found, requesting from IIIF server")
 		url = "https://ids.lib.harvard.edu/ids/iiif/{}/info.json".format(id)
 		r = requests.get(url)
 		r.raise_for_status()
@@ -68,7 +68,7 @@ def generate_iiif_manifest(data):
 	""" returns json representation of a IIIF manifest """
 	manifest = build_base_manifest(data['manifest_id'], data)
 	manifest["sequences"] = build_manifest_sequences(data['manifest_id'])
-	manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['manifest_id'], data['drs_id'], 0, None, None, None)]
+	manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['manifest_id'], data['drs_id'], 0, data['resource'] if 'resource' in data else None, None, None)]
 	return manifest
 
 

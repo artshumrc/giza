@@ -76,6 +76,14 @@ def process_media_iiif(CURSOR):
 			"label": mediaview,
 			"metadata": metadata
 		}
+
+		## see if manifest exists to grab the existing resource data so we can avoid checking the CSV file or doing a network call to IDS
+		if elasticsearch_connection.item_exists(media_type+'-'+media_id, 'manifest', ELASTICSEARCH_INDEX):
+			existing_manifest = elasticsearch_connection.get_item(media_type+'-'+media_id, 'manifest', ELASTICSEARCH_INDEX)
+			resource = existing_manifest['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
+			if drs_id in resource['@id']:
+				manifest_ob['resource'] = resource
+
 		object = {
 			"id": manifest_id,
 			"manifest": generate_iiif_manifest(manifest_ob)
