@@ -68,7 +68,7 @@ def generate_iiif_manifest(data):
 	""" returns json representation of a IIIF manifest """
 	manifest = build_base_manifest(data['manifest_id'], data)
 	manifest["sequences"] = build_manifest_sequences(data['manifest_id'])
-	manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['manifest_id'], data['drs_id'], 0, None, None, None)]
+	manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['manifest_id'], data['drs_id'], 0, data['resource'] if 'resource' in data else None, None, None)]
 	return manifest
 
 
@@ -127,6 +127,7 @@ def build_multi_image_sequence(manifest_id, resources_list, drs_ids, canvas_labe
 
 def build_manifest_canvas(manifest_id, drs_id, idx, resource, label, metadata):
 	if resource is None:
+		print("Building new resource")
 		resource = build_resource(drs_id)
 	canvas_id = "{}/canvas/{}".format(manifest_id, idx)
 	canvas = {
