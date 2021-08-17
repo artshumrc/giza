@@ -1,20 +1,17 @@
-{% extends "base.html" %}
+{% extends "layouts/default.html" %}
 {% load static %}
 
 {% block body_class %}section-explore-body header-full mode-full{% endblock %}
 
-{% block title %}Digital Giza | {{ object.displaytext }}{% endblock %}
+{% block title %}{{ object.displaytext }}{% endblock %}
 
-{% block content %}
-<div class="page-header header-bg-1" id="content">
-  <div class="row title">
-    <header class="large-12 columns">
-      <h1>{{ object.displaytext }}<a name="top"></a></h1>
-      {% if type == 'sites' %}<h3 class="page-header__meta">{{ object.sitename }}</h3>{% endif %}
-    </header>
-  </div>
-</div>
+<!-- BEGIN MAIN CONTENT ROWS -->
 
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="1" title=object.displaytext page_header_meta_text=object.sitename %}
+{% endblock  %}
+
+{% block 'main_content' %}
 
 <div class="row content-start">
   <section class="large-8 columns content-col-primary">
@@ -42,118 +39,8 @@
                 {% endif %}
               </p>
 
-              <h5 class="heading-em">Jump to:</h5>
+              {% include 'partials/jump-menu-full.html' %}
 
-              <ul class="vertical menu show-for-small-only">
-                <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
-                {% if object.relateditems.sites %}
-                <li><a href="#tombs"><span class="icon-map-marker icon-fw"></span> Tombs and Monuments <span class="badge">{{ object.relateditems.sites|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.objects %}
-                <li><a href="#objects"><span class="icon-vase icon-fw"></span> Finds <span class="badge">{{ object.relateditems.objects|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.diarypages %}
-                <li><a href="#diary"><span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages <span class="badge">{{ object.relateditems.diarypages|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.mapsandplans %}
-                <li><a href="#maps"><span class="icon-map-o icon-fw"></span> Maps &amp; Plans <span class="badge">{{ object.relateditems.mapsandplans|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.drawings %}
-                <li><a href="#drawings"><span class="icon-pencil-square-o icon-fw"></span> Drawings <span class="badge">{{ object.relateditems.drawings|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.pubdocs %}
-                <li><a href="#published"><span class="icon-book icon-fw"></span> Published Documents <span class="badge">{{ object.relateditems.pubdocs|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.unpubdocs %}
-                <li><a href="#unpublished"><span class="icon-file-text-o icon-fw"></span> Unpublished Documents <span class="badge">{{ object.relateditems.unpubdocs|length }}</span></a></li>
-                {% endif %}
-                {% if object.bibreferences %}
-                <li><a href="#biblio"><span class="icon-info-circle icon-fw"></span> Full Bibliography </a></li>
-                {% endif %}
-                {% if object.relateditems.photos %}
-                <li><a href="#photos"><span class="icon-camera icon-fw"></span> Photos <span class="badge">{{ object.relateditems.photos|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.giza3d %}
-                <li><a href="#models"><span class="icon-icon-pyramid-3d icon-fw"></span> 3D Models <span class="badge">{{ object.relateditems.giza3d|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.videos %}
-                <li><a href="#videos"><span class="icon-video-camera icon-fw"></span> Videos <span class="badge">{{ object.relateditems.videos|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.audio %}
-                <li><a href="#audio"><span class="icon-volume-up icon-fw"></span> Audio <span class="badge">{{ object.relateditems.audio|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
-                <li><a href="#people"><span class="icon-user icon-fw"></span> People <span class="badge">
-                  {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
-                  {{ apnum|add:mpnum }}
-                  {% endwith %}
-                </span></a></li>
-                {% endif %}
-                {% if object.relateditems.institutions %}
-                <li><a href="#institutions"><span class="icon-university icon-fw"></span> Institutions <span class="badge">{{ object.relateditems.institutions|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.groups %}
-                <li><a href="#groups"><span class="icon-users icon-fw"></span> Groups <span class="badge">{{ object.relateditems.groups|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.animals %}
-                <li><a href="#animals"><span class="icon-users icon-fw"></span> Animals <span class="badge">{{ object.relateditems.animals|length }}</span></a></li>
-                {% endif %}
-              </ul>
-              <ul class="vertical menu show-for-medium">
-                <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
-                {% if object.relateditems.sites %}
-                <li><a href="#tombs"><span class="icon-map-marker icon-fw"></span> Tombs and Monuments <span class="badge">{{ object.relateditems.sites|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.objects %}
-                <li><a href="#objects"><span class="icon-vase icon-fw"></span> Finds <span class="badge">{{ object.relateditems.objects|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.diarypages %}
-                <li><a href="#diary"><span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages <span class="badge">{{ object.relateditems.diarypages|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.mapsandplans %}
-                <li><a href="#maps"><span class="icon-map-o icon-fw"></span> Maps &amp; Plans <span class="badge">{{ object.relateditems.mapsandplans|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.drawings %}
-                <li><a href="#drawings"><span class="icon-pencil-square-o icon-fw"></span> Drawings <span class="badge">{{ object.relateditems.drawings|length }}</span></a></li>
-                {% endif %}
-                <!-- {% if object.relateditems.photos %}
-                <li><a href="#photos"><span class="icon-camera icon-fw"></span> Photos <span class="badge">{{ object.relateditems.photos|length }}</span></a></li>
-                {% endif %} -->
-                {% if object.relateditems.giza3d %}
-                <li><a href="#models"><span class="icon-icon-pyramid-3d icon-fw"></span> 3D Models <span class="badge">{{ object.relateditems.giza3d|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.videos %}
-                <li><a href="#videos"><span class="icon-video-camera icon-fw"></span> Videos <span class="badge">{{ object.relateditems.videos|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.audio %}
-                <li><a href="#audio"><span class="icon-volume-up icon-fw"></span> Audio <span class="badge">{{ object.relateditems.audio|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
-                <li><a href="#people"><span class="icon-user icon-fw"></span> People <span class="badge">
-                  {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
-                  {{ apnum|add:mpnum }}
-                  {% endwith %}
-                </span></a></li>
-                {% endif %}
-                {% if object.relateditems.institutions %}
-                <li><a href="#institutions"><span class="icon-university icon-fw"></span> Institutions <span class="badge">{{ object.relateditems.institutions|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.groups %}
-                <li><a href="#groups"><span class="icon-users icon-fw"></span> Groups <span class="badge">{{ object.relateditems.groups|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.animals %}
-                <li><a href="#animals"><span class="icon-users icon-fw"></span> Animals <span class="badge">{{ object.relateditems.animals|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.pubdocs %}
-                <li><a href="#published"><span class="icon-book icon-fw"></span> Published Documents <span class="badge">{{ object.relateditems.pubdocs|length }}</span></a></li>
-                {% endif %}
-                {% if object.relateditems.unpubdocs %}
-                <li><a href="#unpublished"><span class="icon-file-text-o icon-fw"></span> Unpublished Documents <span class="badge">{{ object.relateditems.unpubdocs|length }}</span></a></li>
-                {% endif %}
-                {% if object.bibreferences %}
-                <li><a href="#biblio"><span class="icon-info-circle icon-fw"></span> Full Bibliography </a></li>
-                {% endif %}
-              </ul>
             </div>
           </div>
         </div>
@@ -872,4 +759,5 @@
     }
   });
 </script>
+
 {% endblock %}

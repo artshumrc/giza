@@ -113,6 +113,7 @@ SEARCH_BACKENDS = {
 # Custom User and auth settings
 # https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-LOGIN_URL
 LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/collections/user'
 
 # custom user model registration
 AUTH_USER_MODEL = 'giza.CustomUser'
