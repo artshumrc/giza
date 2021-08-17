@@ -4,5 +4,7 @@ SECURE_SETTINGS = {
     "DB_USER": "",
     "DB_PASSWORD": "",
     "DB_PORT": "",
-    "DJANGO_SECRET_KEY": ""
+    "DJANGO_SECRET_KEY": "",
+    "RECAPTCHA_PUBLIC_KEY": "",
+    "RECAPTCHA_PRIVATE_KEY": ""
 }

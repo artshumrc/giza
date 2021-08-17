@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['giza-web2.rc.fas.harvard.edu', 'giza.fas.harvard.edu']
 # Application definition
 
 INSTALLED_APPS = [
+    'captcha',
     'search',
     'tms',
     'giza',
@@ -170,3 +171,8 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'http_static')
 STATIC_URL = '/static/'
+
+RECAPTCHA_PUBLIC_KEY = SECURE_SETTINGS.get("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = SECURE_SETTINGS.get("RECAPTCHA_PRIVATE_KEY")
+RECAPTCHA_REQUIRED_SCORE = 1
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
