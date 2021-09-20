@@ -4,3 +4,7 @@
 
 .envrc
 secure.py
+.venv
+.env
+offline_scripts/
+data/
