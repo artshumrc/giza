@@ -269,7 +269,7 @@ def results(request):
 		'sub_facets' : sub_facets,
 		'current_subfacets' : current_subfacets,
 		'subfacet_strings' : subfacet_strings,
-		'total' : total,
+		'total' : total['value'],
 		'has_previous' : has_previous,
 		'previous_page_number' : previous_page_number,
 		'has_next' : has_next,
