@@ -235,7 +235,7 @@ def results(request):
 
 		total = search_results['hits']['total']
 
-		num_pages = (total // RESULTS_SIZE) + (total % RESULTS_SIZE > 0)
+		num_pages = (total['hits'] // RESULTS_SIZE) + (total['hits'] % RESULTS_SIZE > 0)
 		if num_pages > 0:
 			num_pages_range = create_page_ranges(page, num_pages)
 
