@@ -6,5 +6,7 @@
 secure.py
 .venv
 .env
+.vscode
 offline_scripts/
 data/
+.gitignore
