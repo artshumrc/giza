@@ -10,4 +10,3 @@ secure.py
 offline_scripts/
 data/
 .gitignore
-giza/secure.py
