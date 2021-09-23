@@ -1,4 +1,4 @@
-curl -XPUT 'http://localhost:9200/giza' -d '
+curl -sv -XPUT 'http://localhost:9200/giza' -d '
 {
 	"settings" : {
 		"analysis": {
@@ -514,4 +514,4 @@ curl -XPUT 'http://localhost:9200/giza' -d '
 		}
 	}
 }
-'
+' | less
