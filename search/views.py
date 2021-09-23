@@ -235,7 +235,7 @@ def results(request):
 
 		total = search_results['hits']['total']
 
-		num_pages = (total['value'] // RESULTS_SIZE) + (total['value'] % RESULTS_SIZE > 0)
+		num_pages = (total // RESULTS_SIZE) + (total % RESULTS_SIZE > 0)
 		if num_pages > 0:
 			num_pages_range = create_page_ranges(page, num_pages)
 
@@ -269,7 +269,7 @@ def results(request):
 		'sub_facets' : sub_facets,
 		'current_subfacets' : current_subfacets,
 		'subfacet_strings' : subfacet_strings,
-		'total' : total['value'],
+		'total' : total,
 		'has_previous' : has_previous,
 		'previous_page_number' : previous_page_number,
 		'has_next' : has_next,
