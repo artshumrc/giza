@@ -145,14 +145,17 @@ curl -sv -XPUT 'http://localhost:9200/giza' -d '
 				},
 				"number": {
 					"type" : "text",
-					"index":"not_analyzed"
+					"index": "not_analyzed"
 				},
 				"altnumber": {
 					"type" : "text",
-					"index":"not_analyzed"
+					"index": "not_analyzed"
 				},
 				"entrydate": {
-					"type": "text"
+					"type": "keyword"
+				},
+				"entrydate_ms": {
+					"type": "float"
 				}
 			}
 		},
@@ -180,7 +183,10 @@ curl -sv -XPUT 'http://localhost:9200/giza' -d '
 					"index":"not_analyzed"
 				},
 				"entrydate": {
-					"type": "text"
+					"type": "keyword"
+				},
+				"entrydate_ms": {
+					"type": "float"
 				},
 				"drsId": {
 					"type": "text"
@@ -220,7 +226,10 @@ curl -sv -XPUT 'http://localhost:9200/giza' -d '
 					"index":"not_analyzed"
 				},
 				"entrydate": {
-					"type": "text"
+					"type": "keyword"
+				},
+				"entrydate_ms": {
+					"type": "float"
 				},
 				"drsId": {
 					"type": "text"
@@ -251,7 +260,10 @@ curl -sv -XPUT 'http://localhost:9200/giza' -d '
 					"index":"not_analyzed"
 				},
 				"entrydate": {
-					"type": "text"
+					"type": "keyword"
+				},
+				"entrydate_ms": {
+					"type": "float"
 				},
 				"drsId": {
 					"type": "text"
@@ -282,7 +294,10 @@ curl -sv -XPUT 'http://localhost:9200/giza' -d '
 					"index":"not_analyzed"
 				},
 				"entrydate": {
-					"type": "text"
+					"type": "keyword"
+				},
+				"entrydate_ms": {
+					"type": "float"
 				}
 			}
 		},
@@ -514,4 +529,4 @@ curl -sv -XPUT 'http://localhost:9200/giza' -d '
 		}
 	}
 }
-' | less
+'

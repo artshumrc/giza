@@ -27,13 +27,20 @@ FIELDS_PER_CATEGORY = {
 		'allnumbers' : 'ID',
 		'medium' : 'Material',
 		'provenance' : 'Findspot',
-		'entrydate' : 'Date of register entry'
+		'entrydate' : 'Date of register entry',
+		'entrydate_ms' : 'Date of register entry in milliseconds'
 	},
 	'sites' : {
 		'number' : 'Tomb/Monument number',
 		'sitename' : 'Tomb/Monument name',
 		'datevalues' : 'Site Dates',
 		'people' : 'People'
+	},
+	'diarypages' : {
+		'diarytranscription' : 'Keywords',
+		'entrydate' : 'Dates',
+		'people' : 'People',
+		'monuments' : 'Tomb/Monument number'
 	}
 }
 
