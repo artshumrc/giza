@@ -35,9 +35,6 @@ MONTHS = [
 def search(request):
 	return render(request, 'pages/search.html')
 
-# def search_legacy(request):
-# 	return render(request, 'search/search.html')
-
 # get all pubdocs with pdfs for Digital Giza Library
 def library(request):
 	sort = request.GET.get('sort', 'name')
@@ -337,12 +334,6 @@ def results(request):
 		'current_page' : str(page)
 	})
 
-# THIS FUNCTION PERFORMS AN ELASTICSEARCH SEARCH
-# INPUT: Dict of parameters, search-term(s), and facets
-# RETURNS: Dict with hits, sorted by _score
-def es_search(params):
-	return None
-
 def build_query(operator, field, term):
 	if "match_all" in operator:
 		q = { operator : {}}
@@ -367,7 +358,6 @@ def body_query(base_query, subfacet_aggs, bool_filter, sort):
 	return q
 
 # THIS METHOD AGGREGATES ALL SEARCH RESULTS INTO THE CATEGORIES FOR VIEWING ON THE CLIENT SIDE
-# THIS DOES NOT DO A SEARCH, BUT ONLY CONSTSRUCTS THE CATEGORIES
 def recurse_aggs(agg_name, facets, sub_facets, facet_names):
 	if type(facets) != type(dict()):
 		return sub_facets
@@ -395,7 +385,7 @@ def recurse_aggs(agg_name, facets, sub_facets, facet_names):
 			recurse_aggs(agg_name, value, sub_facets, facet_names)
 		return sub_facets
 
-# THIS METHOD 
+# THIS METHOD BUILDS THE SUBFACETS AND RETURNS ALL AGGREGATED SUBFACETS
 def build_subfacet_aggs(current_category, current_subfacets, bool_filter):
 	if not current_category:
 		return {}
@@ -434,7 +424,7 @@ def build_subfacet_aggs(current_category, current_subfacets, bool_filter):
 
 	return aggregations
 
-# THIS METHOD ...
+# THIS METHOD BUILDS A BOOL FILTER
 def build_bool(current_category, current_subfacets, facet_name_ignore):
 	# strucure should be at the top level a must bool
 	# each facet type is a should bool with all selected values in the array
@@ -474,23 +464,10 @@ def build_bool(current_category, current_subfacets, facet_name_ignore):
 	return bool_filter
 
 # THIS METHOD BUILDS THE ELASTIC SEARCH BASE QUERY
-# MUST
-
-# {
-#   "query": {
-#     "range": {
-#       "age": {
-#         "gte": 10,
-#         "lte": 20,
-#         "boost": 2.0
-#       }
-#     }
-#   }
-# }
 # INPUT: 
 # 	- SEARCH_TERM: STRING
 # 	- FIELDS: DICT WITH FIELDS FROM ADVANCED SEARCH
-# OUTPUT:
+# OUTPUT: dict WITH QUERY
 def build_es_query(search_term, fields):
 	q, should, must = {}, [], []
 	q['bool'] = {}
@@ -518,78 +495,6 @@ def build_es_query(search_term, fields):
 		q = { "match_all" : {}}
 
 	return q
-
-
-			
-				# if 'date' in k:
-
-					# LOOK UP A DATE
-					# if '_ms' in k:
-
-						# IF MULTIPLE VALUES THEN A RANGE
-						# if len(v) > 1:
-						# 	must.append({
-						# 		"range" : {
-						# 			k : {
-						# 				"gte": int(v[0]),
-						# 				"lte": int(v[-1]),
-						# 				"boost": 2.0
-						# 			}
-						# 		},
-						# 		# "operator" : "and",
-						# 	})
-						# else:
-						# 	must.append({
-						# 		"match" : {
-						# 			k : {
-						# 				"query" : v[0],
-						# 				"operator" : "and",
-						# 			}
-						# 		}
-						# 	})
-					# else:
-					# 	must.append({
-					# 		"match" : {
-					# 			k : {
-					# 				"query" : v,
-					# 				"operator" : "and",
-					# 			}
-					# 		}
-					# 	})
-		
-		# 	"bool" : {
-		# 		"must" : must
-		# 	}
-		# }
-	
-	# IF NO SPECIFIC SEARCH TERM IS PROVIDED, RETURN EVERYTHING IN DATABASE
-	# else search_term == '':
-	# 	q = { "match_all" : {}}
-
-	# SPECIFIC SEARCH TERM IS PROVIDED
-	# else:
-	# 	q['bool'] = {
-	# 		 "should" : [
-	# 			{
-	# 			   "match" : {
-	# 				  "displaytext" : {
-	# 					 "query" : search_term,
-	# 					 "operator" : "and",
-	# 					 "boost" : 2,
-	# 				  }
-	# 			   }
-	# 			},
-	# 			{
-	# 				"match" : {
-	# 				   "_all" : {
-	# 					"query" : search_term,
-	# 					"operator" : "and",
-	# 				   }
-	# 				}
-	# 			}
-	# 		 ]
-	# 	  }
-	# return q
 
 def find_key(key, value):
 	for k, v in value.items():
@@ -696,7 +601,7 @@ def chkDatePattern(values):
                 elif len(dayOptions) == 1:
                     day = "".join(dayOptions)
                 else:
-                    print('multiple day options possible')
+                    print('multiple day options possible--have not yet come across a case like this, but have not extensively checked')
                     # if ()
                     # # WHICH OF THE DAY OPTIONS IS MOST REASONABLE?
                     # for dayOption in dayOptions:
@@ -750,7 +655,6 @@ def chkDatePattern(values):
 # INPUTS: A STRING
 # OUTPUTS: TUPLE WITH BOOLEAN FOR SUCCESS AND LIST OF DICTS WITH DATES (KEYS) AND MILLISECONDS (VALUES) SORTED FROM EARLY TO LATE
 def chkDate(value):
-    # print(f'Evaluating record: {value["id"]}')
     try:
         value = str(value) # CHECK IF THE INPUT IS A STRING
         value = value.split(' ') # SPLIT ON SPACE
