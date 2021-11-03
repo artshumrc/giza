@@ -1,12 +1,12 @@
 *.pyc
 *~
 *.sqlite3
-
-.envrc
 secure.py
+dbmgmt/secret.py
+.envrc
 .venv
 .env
 .vscode
-offline_scripts/
-data/
+.vscode/launch.json
+.vscode/settings.json
 .gitignore
