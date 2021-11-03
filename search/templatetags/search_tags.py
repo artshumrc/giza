@@ -1,4 +1,5 @@
 from django import template
+# from utils.views_utils import MET_LOGICAL, MET_SIMPLE_REVERSED
 register = template.Library()
 
 @register.filter
@@ -30,8 +31,8 @@ def build_search_params(search_params, current_category, current_subfacets, sf_t
     url = f'category={current_category}{"&amp;" if len(search_params) > 0 else ""}' if current_category else ""
     url += "&amp;".join([f'{x[0]}={x[2]}' for x in search_params])
 
-    if current_category not in sf_to_remove:
-        sf_to_remove = f'{current_category}{sf_to_remove}'
+    # if current_category not in sf_to_remove:
+        # sf_to_remove = f'{current_category}{sf_to_remove}'
 
     # SPLIT sf_to_add AND sf_to_remove IN LISTS ([category]_[key]_[facet])
     sf_add_parts, sf_remove_parts = sf_to_add.split('_'), sf_to_remove.split('_')
@@ -55,3 +56,29 @@ def build_search_params(search_params, current_category, current_subfacets, sf_t
         url = f'{url}&amp;page={page}'
 
     return url
+
+# @register.filter
+# def index(i, l):
+#     return MET_SIMPLE_REVERSED.get(l)
+
+@register.filter
+def next(l, current_index):
+    """
+    Returns the next element of the list using the current index if it exists.
+    Otherwise returns an empty string.
+    """
+    try:
+        return any([x for x in l if x.startswith(current_index)])
+    except:
+        return False # return empty string in case of exception
+
+@register.filter
+def previous(l, current_index):
+    """
+    Returns the previous element of the list using the current index if it exists.
+    Otherwise returns an empty string.
+    """
+    try:
+        return l[int(current_index) - 1]['code'] # access the previous element
+    except:
+        return False # return empty string in case of exception
