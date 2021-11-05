@@ -26,7 +26,7 @@ SECRET_KEY = SECURE_SETTINGS.get("DJANGO_SECRET_KEY", '9w)eu)4tj*v(x%8^tz$fsc8^t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['giza-web2.rc.fas.harvard.edu', 'giza.fas.harvard.edu', 'localhost']
+ALLOWED_HOSTS = ['giza-web2.rc.fas.harvard.edu', 'giza.fas.harvard.edu']
 
 
 # Application definition
