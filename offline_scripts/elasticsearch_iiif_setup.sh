@@ -1,4 +1,4 @@
-curl -vs -XPUT 'http://localhost:9200/iiif' -d '
+curl -XPUT 'http://localhost:9200/iiif' -d '
 {
 	"settings" : {
 		"analysis": {
@@ -44,4 +44,4 @@ curl -vs -XPUT 'http://localhost:9200/iiif' -d '
 		}
 	}
 }
-' | less
+'
