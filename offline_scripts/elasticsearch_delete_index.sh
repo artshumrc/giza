@@ -1,1 +1,1 @@
-curl -sv -XDELETE "http://localhost:9200/giza" | less
+curl -XDELETE "http://localhost:9200/giza"
