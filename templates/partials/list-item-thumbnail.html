@@ -1,0 +1,15 @@
+<div class="media-object list-item list-item-thumbnail">
+  <div class="media-object-section">
+    <div class="thumbnail">
+      <a href="#0"><img src="{% static 'images/{{li-img}}' %}"></a>
+    </div>
+  </div>
+  <div class="media-object-section">
+    <p class="media-object-title"><a href="#0">{{li-title}}</a></p>
+    <ul class="subheader">
+    {% for x in li-properties %}
+      <li><span class="item-property">{{@key}}</span> <span class="item-value">{{this}}</span></li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>

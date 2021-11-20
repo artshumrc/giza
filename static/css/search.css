@@ -1,0 +1,25 @@
+div.row {
+    display: flex;
+    flex-direction: row;
+    max-width: 85rem;
+}
+
+@media screen and (min-width: 40em) {
+    .medium-3 {
+        left: 0;
+        width: 35%;
+    }
+
+    .medium-push-3 {
+        left: 0;
+        width: 100%;
+    }
+
+    .medium-pull-9-right {
+
+    }
+
+    ul.accordion {
+        margin-bottom: 0;
+    }
+}

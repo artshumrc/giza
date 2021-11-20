@@ -1,0 +1,265 @@
+{% load static %}
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_suffix %}{% endblock %}</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    {# Global stylesheets #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/giza.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/blueimp-gallery.min.css' %}">
+
+    <!-- <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="manifest.json"> -->
+    <meta name="theme-color" content="#ffffff">
+
+    {% block extra_css %}
+    {# Override this in templates to add extra stylesheets #}
+    {% endblock %}
+  </head>
+
+  <body class="{% block body_class %}{% endblock %}">
+
+    <a id="skippy" class="sr-only sr-only-focusable" href="#content">
+      <div class="top-bar-container">
+        <span class="skiplink-text">Skip to main content</span>
+      </div>
+    </a>
+
+    <!-- BEGIN TOPBAR -->
+
+    <div data-sticky-container>
+	    <!--div class="top-banner" style="height: 30px;">This site is under construction. Thank you for your patience.</div-->
+          <div class="top-bar-container" data-sticky data-options="marginTop:0;" style="width:100%">
+            <div class="row row-padded">
+              <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
+                <button class="icon-bars icon-padded title-bar-title" type="button" data-toggle>Menu</button>
+              </div>
+              <div class="top-bar" id="main-menu">
+                <div class="top-bar-left hide-for-small-only">
+                   <a href="{% url 'index' %}"><img src="{% static 'images/navlogo.png' %}" alt="Digital Giza at Harvard University. Click for home."></a>
+                 </div>
+            <div class="top-bar-left nav-menu-primary">
+              <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown" data-alignment="left">
+                <li {% if request.resolver_match.url_name == 'explore' or request.resolver_match.url_name == 'get_type_html' or request.resolver_match.url_name == 'library' or request.resolver_match.url_name == 'videos' %}class="active"{% endif %}>
+                  <a href="{% url 'explore' 'gizaintro' %}">Explore</a>
+                    <ul class="vertical menu">
+                      <li><a href="{% url 'explore' 'gizaintro' %}">Introduction to Giza</a></li>
+                       <li><a href="{% url 'explore' 'archaeology' %}">Archaeology at Giza</a></li>
+                      <li><a href="{% url 'explore' 'commontopics' %}">Common Topics</a></li>
+                      <!-- <li><a href="#0">Giza Maps &amp; Plans</a></li> -->
+                      <li><a href="{% url 'library' %}">Digital Giza Library</a></li>
+                      <li><a href="{% url 'videos' %}">Videos</a></li>
+                      <li><a href="{% url 'explore' 'faq' %}">Glossary &amp; FAQs</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                      <a href="#0">Giza 3D</a>
+                      <ul class="vertical menu">
+                        <li><a href="{% url 'get_type_html' '3dmodels' '71017' 'full' %}">Giza Plateau</a></li>
+                        <!-- <li><a href="#0">Khufu Pyramid Complex</a></li>
+                        <li><a href="#0">Khufu Pyramid Temple</a></li>
+                        <li><a href="#0">Khufu Valley Temple</a></li> -->
+                        <li><a href="{% url 'get_type_html' '3dmodels' '71018' 'full' %}">Khafre Pyramid</a></li>
+                        <li><a href="{% url 'get_type_html' '3dmodels' '71019' 'full' %}">Khafre Pyramid Temple</a></li>
+                        <li><a href="{% url 'get_type_html' '3dmodels' '71020' 'full' %}">Khafre Valley Temple</a></li>
+                        <li><a href="{% url 'get_type_html' '3dmodels' '71021' 'full' %}">Sphinx</a></li>
+                        <li><a href="{% url 'get_type_html' '3dmodels' '71023' 'full' %}">Sphinx Temple</a></li>
+                        <!-- <li><a href="#0">Menkaure Pyramid Complex</a></li>
+                        <li><a href="#0">Menkaure Pyramid Temple</a></li>
+                        <li><a href="#0">Menkaure Valley Temple</a></li>
+                        <li><a href="#0">Tomb of Hetepheres I (G 7000 X)</a></li>
+                        <li><a href="#0">G 2100 Family Tomb Complex</a></li>
+                        <li><a href="#0">Tomb of Nefer (G 2110)</a></li>
+                        <li><a href="#0">Tomb of Kaninsut [I] (G 2155)</a></li>
+                        <li><a href="#0">Tomb of Meresankh III (G 7530-7540)</a></li> -->
+                      </ul>
+                    </li>
+                    <li>
+                        <a href="#0">My Giza</a>
+                        <ul class="vertical menu">
+                          <li><a href="#0">My Bookshelf</a></li>
+                          <li><a href="#0">My Photo Albums</a></li>
+                          <li><a href="#0">My Documents</a></li>
+                          <li><a href="#0">My Object Collections</a></li>
+                          <li><a href="#0">My Archives</a></li>
+                          <li><a href="#0">Register for My Giza</a></li>
+                        </ul>
+                      </li>
+                      <li {% if request.resolver_match.url_name == 'about' %}class="active"{% endif %}>
+                          <a href="{% url 'about' 'about' %}">About</a>
+                          <ul class="vertical menu">
+                            <li><a href="{% url 'about' 'about' %}">What is the Giza Project?</a></li>
+                            <li><a href="{% url 'about' 'gizacard' %}">The GizaCARD</a></li>
+                            <li><a href="{% url 'about' 'resources' %}">Educational Resources</a></li>
+                            <li><a href="{% url 'about' 'news' %}">News</a></li>
+                            <li><a href="{% url 'about' 'blog' %}">Blog</a></li>
+                            <li><a href="{% url 'about' 'contact' %}">Contact</a></li>
+                          </ul>
+                        </li>
+              <li {% if request.resolver_match.url_name == 'donate' %}class="active"{% endif %}><a href="{% url 'donate' 'donate' %}">Donate</a></li>
+              <li><form id="search-form" action="{% url 'results' %}">
+                    <input type="text" id="inputSimpleSearch" name="q" placeholder="Enter search keywords">
+                        <button class="icon-search button" onclick="document.getElementById('search-form').submit();"></button>
+                  </form>
+                  <!--<button class="icon-search button" type="button" data-toggle="search-dropdown"> <span class="hide-for-medium">Search</span></button>-->
+                    <!--<div class="dropdown-pane left" id="search-dropdown" data-dropdown data-auto-focus="true">
+
+                  <small class="middle"><a href="{% url 'search' %}">Advanced Search</a></small>
+                </div>-->
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- END TOPBAR -->
+
+    <!-- BEGIN MAIN CONTENT ROWS -->
+
+    <section>
+      {% block content %}{% endblock %}
+    </section>
+    <!-- BEGIN FOOTER -->
+
+    <nav class="footer">
+      <div class="row">
+
+        <section class="large-6 columns">
+          <div class="row">
+            <div class="medium-4 columns">
+              <h6><a class="heading-link" href="{% url 'explore' 'gizaintro' %}">Explore</a></h6>
+              <ul class="footer-menu-list">
+                <li><a href="{% url 'explore' 'gizaintro' %}">Introduction to Giza</a></li>
+                <li><a href="{% url 'explore' 'archaeology' %}">Archaeology at Giza</a></li>
+                <li><a href="{% url 'explore' 'commontopics' %}">Common Topics</a></li>
+                <!-- <li><a href="#0">Giza Maps &amp; Plans</a></li> -->
+                <li><a href="{% url 'library' %}">Digital Giza Library</a></li>
+                <li><a href="{% url 'videos' %}">Videos</a></li>
+                <li><a href="{% url 'explore' 'faq' %}">Glossary &amp; FAQs</a></li>
+              </ul>
+            </div>
+            <div class="medium-4 columns">
+              <h6><a class="heading-link" href="#0">Giza 3D</a></h6>
+              <ul class="footer-menu-list vertical menu accordion-slim" data-accordion-menu>
+                <li>
+                  <a href="#0" class="accordion-toggletext" data-closed-text="Show models" data-open-text="Hide models">Show models</a>
+                  <ul class="no-bullet menu vertical nested">
+                    <li><a href="{% url 'get_type_html' '3dmodels' '71017' 'full' %}">Giza Plateau</a></li>
+                    <!-- <li><a href="#0">Khufu Pyramid Complex</a></li>
+                    <li><a href="#0">Khufu Pyramid Temple</a></li>
+                    <li><a href="#0">Khufu Valley Temple</a></li> -->
+                    <li><a href="{% url 'get_type_html' '3dmodels' '71018' 'full' %}">Khafre Pyramid</a></li>
+                    <li><a href="{% url 'get_type_html' '3dmodels' '71019' 'full' %}">Khafre Pyramid Temple</a></li>
+                    <li><a href="{% url 'get_type_html' '3dmodels' '71020' 'full' %}">Khafre Valley Temple</a></li>
+                    <li><a href="{% url 'get_type_html' '3dmodels' '71021' 'full' %}">Sphinx</a></li>
+                    <li><a href="{% url 'get_type_html' '3dmodels' '71023' 'full' %}">Sphinx Temple</a></li>
+                    <!-- <li><a href="#0">Menkaure Pyramid Complex</a></li>
+                    <li><a href="#0">Menkaure Pyramid Temple</a></li>
+                    <li><a href="#0">Menkaure Valley Temple</a></li>
+                    <li><a href="#0">Tomb of Hetepheres I (G 7000 X)</a></li>
+                    <li><a href="#0">G 2100 Family Tomb Complex</a></li>
+                    <li><a href="#0">Tomb of Nefer (G 2110)</a></li>
+                    <li><a href="#0">Tomb of Kaninsut [I] (G 2155)</a></li>
+                    <li><a href="#0">Tomb of Meresankh III (G 7530-7540)</a></li> -->
+                  </ul>
+                </li>
+            </div>
+            <div class="medium-4 columns">
+              <h6><a class="heading-link" href="#0">My Giza</a></h6>
+              <ul class="footer-menu-list">
+                <li><a href="#0">My Bookshelf</a></li>
+                <li><a href="#0">My Photo Albums</a></li>
+                <li><a href="#0">My Documents</a></li>
+                <li><a href="#0">My Object Collections</a></li>
+                <li><a href="#0">My Archives</a></li>
+                <li><a href="#0">Register for MY Giza</a></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="large-6 columns">
+          <div class="row">
+            <div class="medium-4 columns">
+              <h6><a class="heading-link" href="{% url 'about' 'about' %}">About the Project</a></h6>
+              <ul class="footer-menu-list">
+                <li><a href="{% url 'about' 'about' %}">What is the Giza Project?</a></li>
+                <li><a href="{% url 'about' 'gizacard' %}">The GizaCARD</a></li>
+                <li><a href="{% url 'about' 'resources' %}">Educational Resources</a></li>
+                <li><a href="{% url 'about' 'news' %}">News</a></li>
+                <li><a href="{% url 'about' 'blog' %}">Blog</a></li>
+                <li><a href="{% url 'about' 'contact' %}">Contact</a></li>
+              </ul>
+            </div>
+            <div class="medium-4 columns">
+              <h6><a class="heading-link" href="{% url 'donate' 'donate' %}">Donate</a></h6>
+            </div>
+            <div class="medium-4 columns">
+              <h6><a class="heading-link" href="{% url 'search' %}">Search</a></h6>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </nav>
+
+    <footer class="legal-social" data-equalizer data-equalize-on="medium">
+      <div class="row">
+        <div class="large-6 large-push-6 columns text-md-right" data-equalizer-watch>
+          <img src="{% static 'images/footerlogo.png' %}" alt="Giza Project at Harvard University" class="image-spacer" style="max-width: 200px;">
+          <img src="{% static 'images/neh_logo_web.svg' %}" alt="National Endowment for the Humanities" class="image-spacer" style="margin-top: -0.2em; max-width: 200px;">
+            <p class="medium-9 columns text-smaller text-muted text-center">Digital Giza has been made possible in part by the <a href="http://www.neh.gov/">National Endowment for the Humanities</a>: Exploring the human endeavor</p>
+        </div>
+        <div class="large-6 large-pull-6 columns" data-equalizer-watch>
+          <div class="row" data-equalizer>
+            <div class="medium-6 columns" data-equalizer-watch>
+              <p class="text-smaller text-muted" style="margin-top: 0.25em;">&copy; 2017 Giza Project at Harvard University. <br> All rights reserved.</p>
+            </div>
+            <div class="medium-6 columns text-md-right" data-equalizer-watch>
+              <p class="stat" style="margin-top: 0.0em;">
+                <a class="icon-facebook-square text-muted" href="https://www.facebook.com/The-Giza-Project-at-Harvard-University-1872145656335515/" target="_blank"></a>
+                <!--<a class="icon-twitter text-muted" href="http://www.twitter.com" target="_blank"></a>
+                <a class="icon-google-plus-square text-muted" href="https://plus.google.com" target="_blank"></a>
+                <a class="icon-instagram text-muted" href="http://www.instagram.com" target="_blank"></a>-->
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- END FOOTER -->
+    {# Global javascript #}
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/foundation.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/giza.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/blueimp-gallery.js' %}"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-98043800-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    {% block extra_js %}
+    {# Override this in templates to add extra javascript #}
+    {% endblock %}
+  </body>
+</html>

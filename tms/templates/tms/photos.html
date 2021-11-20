@@ -1,0 +1,99 @@
+<div class="feature-block__body">
+  <ul class="feature-block__list multicol-2">
+    {% if object.number %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>ID</dt>
+          <dd>{{ object.number }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.department %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Department</dt>
+          <dd>{{ object.department }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.subjects %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Subjects</dt>
+          <dd>{{ object.subjects }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.date %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Date</dt>
+          <dd>{{ object.date }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.remarks %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Remarks</dt>
+          <dd>{{ object.remarks }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.problemsquestions %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Problems/Questions</dt>
+          <dd>{{ object.problemsquestions }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+
+    {% for role in object.roles %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>{{role}}</dt>
+          {% for item in object.relateditems.modernpeople %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.ancientpeople %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.institutions %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.groups %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.animals %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+        </dl>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>

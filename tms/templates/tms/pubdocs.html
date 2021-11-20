@@ -1,0 +1,107 @@
+<div class="feature-block__body">
+  <ul class="feature-block__list multicol-2">
+    {% if object.format %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Format</dt>
+          <dd>{{ object.format }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.language %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Language</dt>
+          <dd>{{ object.language }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.series %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Series</dt>
+          <dd>{{ object.series }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.yearpublished %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Year Published</dt>
+          <dd>{{ object.yearpublished }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.numofpages %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Number of Pages</dt>
+          <dd>{{ object.numofpages }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.boilertext %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Citation Text</dt>
+          <dd>{{ object.boilertext|safe }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% for role in object.roles %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>{{role}}</dt>
+          {% for item in object.relateditems.modernpeople %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.ancientpeople %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.institutions %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.groups %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.animals %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+        </dl>
+      </div>
+    </li>
+    {% endfor %}
+    {% if object.pdf %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dd><a href="{{ object.pdf }}">Download PDF</a></dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+  </ul>
+</div>

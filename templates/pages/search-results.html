@@ -1,0 +1,186 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% load search_tags %}
+{% set
+  title: "Search the Archives",
+  section: "search",
+  section_search: true,
+  bodyclasses: "list-active"
+%}
+
+{% block title %}{{ "Search Results" }}{% endblock %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="5" title="Search the Archives" %}
+{% endblock  %}
+
+{% block 'main_content' %}
+
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+  // DEBUGGING
+  $(document).ready(() => {
+
+      st = JSON.parse($(search).text())
+
+      allowDrop = ev => {
+    ev.preventDefault()
+  }
+
+
+
+      // $('#MET_submit').on('click', () => {
+      //     $.ajax({
+      //       url: '',
+      //       data: {
+      //         MET_list : JSON.stringify([].map.call($('#METList').children(), elem => elem.getAttribute('name')))
+      //       },
+      //       dataType: 'json',
+      //       success: data => {
+      //         console.log(JSON.parse(data["MET_list"]))
+      //         // if (data.is_taken) {
+      //           // alert("A user with this username already exists.");
+      //         // }
+      //       },
+      //       error: res => {
+      //         console.log(res.responseText)
+      //       }
+      //     })
+      // })
+
+      $('#save_search').on('click', () => {
+          $.ajax({
+            url: '/search/save',
+            data: {
+              'name' : prompt("Please give a name to this search", "Simple"),
+              'term' : st['term'],
+              'category' : st['category'],
+              'fields' : JSON.stringify(st['fields']),
+              'MET' : st['MET']
+            },
+            contentType: "application/json",
+            dataType: 'json',
+            success: data => {
+              alert('search saved')
+            },
+            error: res => {
+              console.log(res.responseText)
+            }
+          })
+      })
+
+      $('#search_token').on('keyup', e => {
+        if (e.which == 13){
+          $('#search_token_form').submit()
+        }
+      })
+
+      // mlist = []
+
+      // $("#METfilter").on("keyup", e => {
+      //   // if (e.which == 13) {
+      //   let text = $(e.currentTarget).val().toLowerCase()
+      //   let items = $(".METvalue")
+      //   let res = items.filter(e => items[e].getAttribute('data-term').toLowerCase().includes(text))
+      //   if (res.length == 1) {
+      //     id = $(res[0]).attr('id')
+      //     newNode = document.getElementById(id).cloneNode(true)
+      //     $(newNode).attr('id', 'list_'+id)
+      //     $(newNode).on('click', e => $(e.currentTarget).remove())
+      //     document.getElementById('METList').appendChild(newNode)
+      //     if (!mlist.includes(id)) {
+      //       mlist.push(id)
+      //     }
+      //   // console.log(res.attr('id'))
+      //   // $('.accordion').foundation('toggle', $('[data-remote="' + res.attr('id') + '"]'));
+      //   // $('#METAccordion .accordion-navigation:not(.active) [data-external-trigger]').trigger('click')
+      //     if (e.keyCode == 13) {
+      //       // ADD
+      //     } else {
+      //       $(newNode).remove()
+      //     }
+      //   }
+      // })
+  })
+</script>
+
+<!-- FOR DEBUGGING PURPOSES -->
+{{ search|json_script:"search" }}
+{{ result|json_script:"result" }}
+<!-- {{ MET_tree|json_script:"MET_tree" }} -->
+<!-- {{ MET_paths|json_script:"MET_paths" }} -->
+<!-- {{ facets|json_script:"facets" }} -->
+
+<div class="row" id="search_results">
+
+  <!-- SIDE MENU BAR -->
+  <aside class="medium-3 medium-pull-9 columns">
+
+    <div class="feature-block secondary text-smaller">
+      <h5 class="heading-alt">Search Options</h5>
+      
+      <!-- SEARCH OPTIONS -->
+      {% include 'partials/search-options.html' %}
+
+      <!-- CURRENT SEARCH PARAMETERS -->
+      {% include 'partials/search-params.html' %}
+
+      <!-- CATEGORIES -->
+      <div id=search_categories>
+        {% include 'partials/search-categories.html' %}
+      </div>
+
+      <!-- FACETS -->
+      <div id=search_facets>
+        {% include 'partials/search-facets.html' %}
+      </div>
+    </div>
+  </aside>
+
+  <!-- Display result statistics to user -->
+  <section class="medium-9 medium-push-3 columns">
+    <div class="row" id='search_stats'>
+      {% include 'partials/search-stats.html' %}
+      <div class="medium-6 columns text-right">
+          <label for="sortResults" class="d-inline-block middle m-r-qt">Sort by:</label>
+          <div class="d-inline-block img-fluid-mw150">
+            <select id="sortResults">
+              <option value="">Category</option>
+              <option value="">Name</option>
+              <option value="">Year</option>
+              <option value="">Material</option>
+              <option value="">Findspot</option>
+            </select>
+          </div>
+          <ul class="d-inline-block view-switcher p-y-qt m-l-1 hide-for-small-only">
+            <li><a href="#" class="switcher"><i class="fa fa-fw fa-align-justify"></i><span class="sr-only">List</span></a></li>
+            <li><a href="#" class="switcher"><i class="fa fa-fw fa-th-large"></i><span class="sr-only">Grid</span></a></li>
+          </ul>
+        </div>
+    </div>
+    <div class="row" id='search_pagination'>
+      {% include 'partials/search-pagination.html' %}
+    </div>
+
+    <div class="media-object-holder" id="search_result">
+        {% include 'partials/search-result.html' %}
+    </div>
+
+
+  </section>
+
+  <!-- MET -->
+  <aside class="medium-3 medium-pull-9 columns">
+    <div id='search_MET'>
+      {% include 'partials/search-MET.html' %}
+    </div>
+  </aside>
+
+</div>
+{% endblock %}
+<!-- END MAIN CONTENT ROWS -->

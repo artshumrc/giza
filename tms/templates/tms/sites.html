@@ -1,0 +1,102 @@
+<div class="feature-block__body">
+  <ul class="feature-block__list multicol-2">
+    {% for role in object.roles %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>{{role}}</dt>
+          {% for item in object.relateditems.modernpeople %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.ancientpeople %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.institutions %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.groups %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+          {% for item in object.relateditems.animals %}
+            {% if item.role == role %}
+            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+            {% endif %}
+          {% endfor %}
+        </dl>
+      </div>
+    </li>
+    {% endfor %}
+    {% for altnumtype in object.altnum_types %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          {% if altnumtype %}<dt>{{ altnumtype }}</dt>{% endif %}
+          {% for altnum in object.altnums %}
+            {% if altnum.description == altnumtype %}
+              <dd>{{ altnum.altnum|default:"" }}</dd>
+            {% endif %}
+          {% endfor %}
+        </dl>
+      </div>
+    </li>
+    {% endfor %}
+    {% for sitedate in object.sitedates %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          {% if sitedate.type %}<dt>{{ sitedate.type }}</dt>{% endif %}
+          <dd>{{ sitedate.date|default:"" }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endfor %}
+    {% if object.sitetype %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Site Type</dt>
+          <dd>{{ object.sitetype.sitetype }}</dd> <!-- Add search by sitetype id -->
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.shafts %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Shafts</dt>
+          <dd>{{ object.shafts }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.remarks %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Remarks</dt>
+          <dd>{{ object.remarks }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.problemsquestions %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dt>Problems/Questions</dt>
+          <dd>{{ object.problemsquestions }}</dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+  </ul>
+</div>

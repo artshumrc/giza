@@ -1,0 +1,40 @@
+{% load static %}
+<div class="collection-thumb">
+  {% if images_1 %}
+  <div class="collection-thumb-grid grid-images-1">
+    {% for file in images_thumb|slice:":1" %}
+    <div class="grid-image">
+      <img src="{% static 'images/example-data/thumb/{{file}}' %}">
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if images_4 %}
+  <div class="collection-thumb-grid grid-images-4">
+    {% for file in images_thumb|slice:":4" %}
+    <div class="grid-image">
+      <img src="{% static 'images/example-data/thumb/{{file}}' %}">
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if images_9 %}
+  <div class="collection-thumb-grid grid-images-9">
+    {% for file in images_thumb|slice:":9" %}
+    <div class="grid-image">
+      <img src="{% static 'images/example-data/thumb/{{file}}' %}">
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if caption %}
+  <div class="collection-thumb-caption">
+    <h6 class="collection-thumb-title">
+      {{collection_title}}
+    </h6>
+    <div class="collection-thumb-meta">
+      {{collection_count}} items
+    </div>
+  </div>
+  {% endif %}
+</div>

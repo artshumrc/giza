@@ -1,0 +1,15 @@
+<div class="feature-block secondary text-smaller">
+  <h5 id="METthesaurus" class="heading-alt">Multilingual Egyptological Thesaurus (MET)</h5>
+  <div>
+      <input id=METfilter name=METfilter placeholder="Drop MET terms here" type=search ondrop=drop(event) ondragover=allowDrop(event)>
+  </div>
+  <div id=METList name=METList ondrop=drop(event)></div>
+  <h6 class="MET-facet-title">Terms:</h6>
+  <ul id=METAccordion class="vertical menu accordion-menu" data-accordion-menu data-multi-open="false">
+      <ul class="vertical menu">
+        {% for k in MET_tree %}
+          {% include "partials/search-MET-terms.html" with dict=k%}
+        {% endfor %}
+      </ul>
+  </ul>
+</div>

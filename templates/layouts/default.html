@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Giza | {% block title %}{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'css/project.css' %}">
+
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon-32x32.png" sizes="32x32' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon-16x16.png" sizes="16x16' %}">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+  <body class="{% block body_class %}{% endblock %}">
+
+    {% include 'partials/header.html' %}
+
+    {% block 'page_headers' %}
+    {% endblock %}
+
+    {% block 'content' %}
+    {% endblock %}
+
+    <div class="content-main {{class|default:'p-t-2'}}">
+      {% block 'main_content' %}
+      {% endblock %}
+    </div>
+
+    {% include 'partials/footer.html' %}
+    {% include 'partials/modals.html' %}
+    
+    {# Global javascript #}
+    <!-- Core JavaScript and required libraries -->
+    <script src="{% static 'js/app.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+    <!-- App-specific JavaScript -->
+    <script src="{% static 'js/giza.js' %}"></script> 
+   
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-98043800-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    {% block extra_js %}
+      {# Override this in templates to add extra javascript #}
+    {% endblock %}
+
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Search the Archives",
+  section: "search",
+  section_search: true,
+  met-tooltip-text: 'The "Multilingual Egyptological Thesaurus" (MET) allows users to search any image on the website using keywords and descriptions of the image itself. The MET applies to two-dimensional wall scene photos, as well as three-dimensional object photos. Start typing your search term to get a menu of available options.'
+%}
+
+{% block title %}{{ "Search the Archives" }}{% endblock %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="5" title="Search the Archives" %}
+{% endblock  %}
+
+{% block 'main_content' %}
+
+<!-- JAVASCRIPT IN STATIC/GIZA.JS -->
+
+<div class="row" id='search_pages'>
+  {% include 'pages/search-advanced.html' %}
+</div>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

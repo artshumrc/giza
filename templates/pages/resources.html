@@ -1,0 +1,65 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Resources",
+  section: "about",
+  section_about: true
+%}
+
+{% block title %}{{ "Educational Resouces" }}{% endblock %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="6" title="Educational Resources" %}
+{% endblock  %}
+
+{% block 'main_content' %}
+    <div class="row">
+      <aside class="medium-4 medium-push-8 columns">
+        <div class="feature-block secondary">
+          <h5><span class="icon-list icon-padded"></span> Contents</h5>
+          <ul class="menu vertical">
+            <li><a href="#1">EDSITEment (a project of the National Endowment for the Humanities)</a></li>
+            <li><a href="#2">Museums</a></li>
+            <!-- <li><a href="#3">Item 3</a></li>
+            <li><a href="#4">Item 4</a></li> -->
+          </ul>
+        </div>
+      </aside>
+      <section class="medium-8 medium-pull-4 columns">
+        <h3>EDSITEment (a project of the National Endowment for the Humanities)<a name="1"></a></h3>
+        <p><a href="https://edsitement.neh.gov/lesson-plan/egyptian-symbols-and-figures-scroll-paintings#sect-thelesson">"Egyptian Symbols and Figures: Scroll Paintings" (Grades K-2)</a></p>
+        <p><a href="https://edsitement.neh.gov/lesson-plan/egypts-pyramids-monuments-message#sect-thelesson">"Egypt's Pyramids: Monuments with a Message" (Grades 3-5)</a></p>
+        <!-- <p><a href="#top">Back to top ^</a></p> -->
+
+        <h3>Museums<a name="2"></a></h3>
+        <p><a href="http://www.gko.uni-leipzig.de/aegyptisches-museum">The Ägyptisches Museum der Universität Leipzig (Germany)</a></p>
+        <p><a href="http://www.ashmolean.org">The Ashmolean Museum, Univeristy of Oxford (UK)</a></p>
+        <p><a href="http://www.smb.museum/en/museums-institutions/aegyptisches-museum-und-papyrussammlung/home.html">The Berlin Ägyptisches Museum (Germany)</a></p>
+        <p><a href="http://www.britishmuseum.org">The British Museum (UK)</a></p>
+        <p><a href="http://www.sca-egypt.org/eng/MUS_Egyptian_Museum.htm">The Egyptian Museum, Cairo (Egypt)</a></p>
+        <p><a href="http://www.gem.gov.eg">The Grand Egyptian Museum (Egypt)</a></p>
+        <p><a href="http://www.khm.at/en">The Kunsthistorisches Museum, Vienna (Austria)</a></p>
+        <p><a href="http://www.metmuseum.org">The Metropolitan Museum of Art (USA)</a></p>
+        <p><a href="http://www.louvre.fr/en">The Musée du Louvre (France)</a></p>
+        <p><a href="http://www.museoegizio.it/en">The Museo Egizio, Turin (Italy)</a></p>
+        <p><a href="http://www.mfa.org">The Museum of Fine Arts, Boston (USA)</a></p>
+        <p><a href="http://oi.uchicago.edu">The Oriental Institute Museum of the University of Chicago (USA)</a></p>
+        <p><a href="http://www.peabody.harvard.edu">The Peabody Museum of Archaeology and Ethnology, Harvard University (USA)</a></p>
+        <p><a href="http://www.ucl.ac.uk/museums/petrie">The Petrie Museum of Egyptian Archaeology, University College London (UK)</a></p>
+        <p><a href="http://hearstmuseum.berkeley.edu">The Phoebe A. Hearst Museum of Anthropology, University of California, Berkeley (USA)</a></p>
+        <p><a href="http://www.rpmuseum.de">The Roemer- und Pelizaeus-Museum, Hildesheim (Germany)</a></p>
+        <p><a href="http://www.rom.on.ca/en">The Royal Ontario Museum (Canada)</a></p>
+        <p><a href="http://www.penn.museum">The University of Pennsylvania Museum of Archaeology and Anthropology, Philadelphia (USA)</a></p>
+        <!-- <p><a href="#top">Back to top ^</a></p>
+
+        <h3>Item 3<a name="3"></a></h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, culpa, delectus. Voluptatum magnam, voluptate maiores iusto, accusantium fugit unde quis quidem ut possimus laudantium quibusdam, sapiente voluptatibus adipisci sed ea!</p>
+        <p><a href="#top">Back to top ^</a></p>
+
+        <h3>Item 4<a name="4"></a></h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, culpa, delectus. Voluptatum magnam, voluptate maiores iusto, accusantium fugit unde quis quidem ut possimus laudantium quibusdam, sapiente voluptatibus adipisci sed ea!</p>
+        <p><a href="#top">Back to top ^</a></p> -->
+      </section>
+    </div>
+{% endblock  %}

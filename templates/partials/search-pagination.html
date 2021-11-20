@@ -1,0 +1,31 @@
+{% if result.total > 0 %}
+<div class="text-center columns p-t-1">
+  <nav aria-label="Pagination">
+    <ul class="pagination m-l-neghalf">
+      <li class="pagination-previous {% if result.pages.page <= 1 %} disabled {% endif %}">
+        {% if result.pages.page > 1 %}
+          <a href='#' onclick="toggle_page({{ result.pages.page }} - 1)" aria-label="Previous page">Previous</a>
+        {% endif %}
+      </li>
+      {% for i in result.pages.range %}
+        {% if i == -1 %}
+          <li class="ellipsis"></li>
+        {% else %}
+          <li {% if i == result.pages.page %} class="current" {% endif %}>
+            {% if i == result.pages.page %}
+              <span class="show-for-sr">You're on page</span>{{i}}
+            {% else %}
+              <a href='#' onclick="toggle_page({{ i }})" aria-label="Page {{ i }}">{{i}}</a>
+            {% endif %}
+          </li>
+        {% endif %}
+      {% endfor %}
+      <li class="pagination-next {% if result.pages.page >= result.pages.range|last %} disabled {% endif %}">
+        {% if result.pages.page < result.pages.range|last %}
+          <a href='#' onclick="toggle_page({{ result.pages.page }} + 1 )" aria-label="Next page">Next</a>
+        {% endif %}
+      </li>
+    </ul>
+  </nav>
+</div>
+{% endif %}

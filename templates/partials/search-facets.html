@@ -1,0 +1,40 @@
+{#<div id='all_subfacets'> #}
+  {#  {% for type, subfacets in facets.items %} #}
+    {#      <div class="search-facet-section"> #}
+        {#        <fieldset> #}
+          {#          <legend class="search-facet-title">{{ type }}:</legend> #}
+          {#          <ul class="search-facet-list"> #}
+            {#            {% for facet in subfacets %} #}
+
+            {#              <li class="search-facet-item {% if facet.selected %}is-active{% endif %}"> #}
+                {#                <input type="checkbox" class="facet_checkbox" id="{{ search.category }}_{{ type }}_{{ facet.display_text }}" name="{{ type }}_{{ facet.display_text }}" {% if facet.selected %} checked {% endif %} onclick="toggle_facet('{{ type }}_{{ facet.display_text }}')"> #}
+                {#                <label for="{{ search.category }}_{{ type }}_{{ facet.display_text }}">{{facet.display_text}} ({{facet.doc_count}})</label> #}
+                {#              </li> #}
+              {#             #}
+             {#            {% endfor %} #}
+            {#          </ul> #}
+          {#        </fieldset> #}
+        {#      </div> #}
+      {#    {% endfor %} #}
+{#  </div>#}
+
+{% if facets|length %}
+  <div class="search-facet-section">
+    <h6 class="search-facet-title">Facets:</h6>
+    <ul class="vertical menu accordion-menu" data-accordion-menu data-multi-open="false">
+      {% for type, subfacets in facets.items %}
+        <li>
+          <a href='#'>{{ type }}
+            <ul class="menu vertical nested" data-multi-open="false">
+              {% for facet in subfacets %}
+                <li class="search-facet-item {% if facet.selected %}is-active{% endif %}">
+                  <a href='#' onclick="toggle_facet('{{ type }}_{{ facet.display_text }}')">{{facet.display_text}} ({{facet.doc_count}})</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}section-explore-body header-full mode-intro{% endblock %}
+
+{% block title %}Digital Giza | {{ object.displaytext }}{% endblock %}
+
+{% block content %}
+<div class="page-header header-bg-1" id="content">
+    <div class="row title">
+      <header class="large-8 columns">
+        <h1>{{ object.displaytext }}<a name="top"></a></h1>
+        <!-- <h3 class="page-header__meta"><a href="javascript:history.back()"><i class="icon-angle-left"></i> Back</a></h3> -->
+      </header>
+    </div>
+  </div>
+
+  <!-- row -->
+
+  <div class="row content-start">
+
+    <section class="large-12 columns content-col-primary">
+      <section id="featureBlock_" class="feature-block " data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-camera icon-padded"></i> All Photos
+            <a name=""></a>
+            <span class="badge">{{ object.relateditems.photos|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+            <div class="slides"></div>
+            <div class="title"></div>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+        </div>
+
+        <ul id="links" class="feature-block__list item-grid thumbsize-lg thumbs-square">
+          {% for item in object.relateditems.photos %}
+          <li>
+            <div class="media-object list-item list-item-thumbonly">
+              <div class="media-object-section">
+                <div class="thumbnail">
+                {% if item.drs_id and item.drs_id != '' %}
+                  <a>
+                    <img src="{{ item.thumbnail }}" alt="{{ item.displaytext }}" data-drs-id="{{ item.drs_id }}">
+                  </a>
+                {% else %}
+                  <a href="{{ item.main }}" title="{{ item.displaytext }}" data-title="<p><b>ID:</b> <a href=&quot;{% url 'get_type_html' 'photos' item.id 'full' %}&quot;>{{ item.number }}</a></p>
+                    <p><b>Subjects:</b> {{ item.displaytext }}</p>
+                    <p><b>Description:</b> {{ item.description }}</p>">
+                    <img src="{{ item.thumbnail }}" alt="{{ item.displaytext }}">
+                  </a>
+                {% endif %}
+                </div>
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        </div>
+      </section>
+    </section>
+
+</div>
+
+
+<div id="miradorModal" class="reveal-modal photo-gallery-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+  <div class="row">
+      <div id="mirador"></div>
+  </div>
+</div>
+
+      <!-- END MAIN CONTENT ROWS -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'js/mirador-giza.js' %}"></script>
+<script>
+$('#links').click(function(event) {
+  var target = event.target;
+  if (!$(target).is('img')) {
+    target = $(target).find('img')[0];
+  }
+  if (target.dataset.drsId) {
+    let v = target.dataset.drsId;
+    let url = "{% url 'iiif-manifest' 1 %}"; // the '1' here is a placeholder
+    $('#miradorModal').foundation('open');
+
+    const config = {
+      windows: [{
+        imageToolsEnabled: true,
+        manifestId: url.replace('1', v),
+        loadedManifest: url.replace('1', v),
+      }]
+    }
+    var addConfig = Mirador.actions.importConfig(config);
+    miradorInstance.store.dispatch(addConfig);
+
+    let closeButton = document.getElementsByClassName("mirador-window-close");
+    closeButton[0].addEventListener("click", function() {
+      $('#miradorModal').foundation('close');
+    });
+  } else {
+    var link = target.src ? target.parentNode : target;
+    options = {index: link, event: event, titleElement: 'div.title'},
+    links = $(this).find('a');
+    blueimp.Gallery(links, options);
+  }
+});
+</script>
+{% endblock %}

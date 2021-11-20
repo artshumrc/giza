@@ -1,0 +1,110 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Introduction to Giza",
+  section: "about",
+  section_about: true
+%}
+
+{% block title %}{{ "Introduction to Giza" }}{% endblock %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="6" title="Introduction to Giza" %}
+{% endblock  %}
+
+{% block 'main_content' %}
+  <div class="row">
+    <aside class="medium-4 medium-push-8 columns">
+      <div class="thumbnail"><img src="{% static 'images/intro-image-1.png' %}" alt="Black & white photo of a pyramid at Giza"></div>
+    </aside>
+
+    <section class="medium-8 medium-pull-4 columns">
+
+      <p class="lead text-alt m-b-2">
+        <em>This brief summary describes the basic history of the Giza Plateau. For a closer look at some of the most popular topics, people, and places related to ancient Giza, check out <a href="{% url 'explore' 'gizaatschool' %}">Giza @ School</a>.</em>
+      </p>
+
+      <p>The Giza Plateau of Egypt. Located about 15 miles southwest of modern Cairo, Giza is home to <a href="{% url 'get_type_html' type='sites' id='1782' view='full' %}">the Great Pyramid</a>, the only one of the Seven Wonders of the Ancient World still standing.</p>
+
+      <p>Built by <a href="{% url 'get_type_html' type='ancientpeople' id='202' view='full' %}">King Khufu</a> (also known as Cheops) in the Fourth Dynasty of ancient Egypt’s Old Kingdom (around 2550 BCE), the Great Pyramid was the largest ever constructed in Egypt, originally reaching a height of 481 feet.</p>
+
+      <p>The Giza Plateau is also home to two other major pyramids, built by Khufu's successors:</p>
+
+      <ul>
+        <li>the <a href="{% url 'get_type_html' type='sites' id='1775' view='full' %}">Pyramid of Khafre</a> (also known as <a href="{% url 'get_type_html' type='ancientpeople' id='756' view='full' %}">Chephren</a>), whose burial complex includes the second-largest pyramid as well as <a href="{% url 'get_type_html' type='sites' id='2080' view='full' %}">the Sphinx</a>.</li>
+        <li>and the <a href="{% url 'get_type_html' type='sites' id='2796' view='full' %}">Pyramid of Menkaure</a> (also known as <a href="{% url 'get_type_html' type='ancientpeople' id='230' view='full' %}">Mycerinus</a>), smallest of the three pyramids at Giza.</li>
+      </ul>
+
+      <p class="p-y-1"><img class="img-fluid thumbnail" src="{% static 'images/intro-image-2.jpg' %}" alt="Black and white photo of all 3 pyramids across the sand"></p>
+
+      <p>As these royal complexes were constructed, and even long after kings began to build their monuments elsewhere, hundreds of tombs were systematically added to cemeteries surrounding the pyramids, to serve as the eternal resting places for the royal family and bureaucratic elite. </p>
+
+      <p>Among these individuals were:</p>
+
+    	<ul>
+      	<li>Khufu's mother, <a href="{% url 'get_type_html' type='ancientpeople' id='75' view='full' %}">Queen Hetepheres I</a>, whose <a href="{% url 'get_type_html' type='sites' id='1509' view='full' %}">mysterious burial</a> was hidden nearly 90 feet (30 meters) underground;</li>
+  	  	<li>the vizier (or prime minister) <a href="{% url 'get_type_html' type='ancientpeople' id='1186' view='full' %}">Hemiunu</a>, architect of the Great Pyramid (<a href="{% url 'get_type_html' type='sites' id='999' view='full' %}">his tomb</a>);</li>
+  	  	<li>and <a href="{% url 'get_type_html' type='ancientpeople' id='236' view='full' %}">Queen Meresankh III</a>, owner of a unique, <a href="{% url 'get_type_html' type='sites' id='1175' view='full' %}">beautifully decorated tomb</a> east of her grandfather Khufu’s pyramid.</li>
+  	  </ul>
+
+      <p class="float-right img-fluid-mw450 m-l-1">
+        <img class="img-fluid thumbnail" src="{% static 'images/intro-image-3.png' %}" alt="Color photo of painted details on the columns inside a tomb">
+      </p>
+
+      <p>This was all during a time referred to as the Old Kingdom (about 2650–2150 BCE). In this period of strong central government, kings were able to organize the immense amounts of labor and resources from all over Egypt required for such vast building projects. Many officials of the time also chose to be buried at the Giza Plateau, because it was near the capital and the focus of administrative power.</p>
+
+      <p>The old Kingdom collapsed, and a period of weakened central control in Egypt followed, along with the rise of powerful local district rulers. Officials built their tombs at smaller regional burial grounds, closer to the local centers of power and away from the primary elite cemeteries of the capital region, including Giza.</p>
+
+      <p> As a result, building at Giza tapered off, and was not resumed even with the reunification of Egypt under a single, strong dynasty during the Middle Kingdom (about 2060–1640 BCE).</p>
+
+      <p class="float-left img-fluid-mw250 m-r-1">
+        <img class="img-fluid thumbnail" src="{% static 'images/intro-image-4.jpg' %}" alt="Color photo of 2 men standing in front of Thutmose's stela">
+      </p>
+
+      <p>After another period of fractured rule and civil war, Egypt rose to new heights of imperial power during the New Kingdom (about 1550–1070 BCE), and renewed to Giza and especially the Sphinx occurred. Several pharaohs of Dynasties 18 and 19 built or added onto chapels in the area of the Sphinx.</p>
+
+      <p><a href="{% url 'get_type_html' type='ancientpeople' id='1916' view='full' %}">King Thutmose IV</a> cleared away the sand which had buried the Sphinx's body after supposedly having a vision which would grant him the kingship in return. He became king and commemorated the event with a nearly 12-foot (3.6 meters) tall stone monument now called “the Dream Stela.” Set between the front legs of the Sphinx, Thutmose's stela still stands there today.</p>
+
+      <p>With the close of the New Kingdom, yet another era of decline and political instability was followed by a period of foreign rule over Egypt. Then Egyptian kings of Dynasty 26 broke free of foreign control and established a new central government.</p>
+
+      <div class="clearfix"></div>
+
+      <p class="float-right img-fluid-mw325 m-l-1">
+        <img class="img-fluid thumbnail" src="{% static 'images/intro-image-5.png' %}" alt="Black & white photo of statues inside a tomb">
+      </p>
+
+      <p>These kings tried to validate their reigns by emphasizing their native Egyptian-ness. This sparked a surge of interest in Egypt's past, especially in the glory days of the Old Kingdom. Already ancient by then, the Pyramids were iconic images of Egypt, and the elite returned once more to Giza, digging new burial shafts across the plateau—many of them intruding into existing Old Kingdom structures.</p>
+
+      <p>While the Pyramids identify Giza as the great royal cemetery of ancient Egypt’s earliest state, the Giza Plateau preserves a much broader window into the first flourishing of ancient Egypt, one of the world’s first great civilizations, including:</p>
+
+      <ul>
+        <li>Tomb scenes that capture snapshots of everyday lives and beliefs of Egyptians from all walks of life;</li>
+        <li>Settlements that offer opportunities to walk the same halls where ancient feet once passed; </li>
+        <li>And burial remains that give us a modern understanding of the lives of individual Egyptians. </li>
+      </ul>
+
+      <p class="float-left img-fluid-mw325 m-r-1">
+        <img class="img-fluid thumbnail" src="{% static 'images/intro-image-6.jpg' %}" alt="Color photo of the Sphinx from afar with a pyramid in the background and several visitors walking in the foreground">
+      </p>
+
+      <p>Although Giza thrived several millennia ago, connecting with ancient Egyptian culture now through the site's history and archaeology provides insight into not only the differences but, more importantly, the many similarities between the ancient and modern experiences of being human.</p>
+
+      <div class="clearfix"></div>
+
+      <h4>Suggested reading:</h4>
+
+      <p>Lehner, Mark and Zahi Hawass. <em>Giza and the Pyramids: The Definitive History.</em> Chicago: University of Chicago Press, 2017.</p>
+
+      <p>Manuelian, Peter Der. "Excavating the Old Kingdom. The Giza Necropolis and Other Mastaba Fields." In <em>Egyptian Art in the Age of the Pyramids</em>, pp. 138–153. New York: The Metropolitan Museum of Art, 1999.</p>
+
+      <p>Manuelian, Peter Der. <em>Digital Giza. Visualizing the Pyramids.</em> Cambridge and London: Harvard University Press, 2017.</p>
+
+      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+    </section>
+
+  </div>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

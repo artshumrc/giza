@@ -1,0 +1,11 @@
+{% if 'key' in dict.1 and dict.1.key|length > 0 %}
+     <ul class="menu vertical nested" data-multi-open="false">
+          <li draggable=true ondragstart=drag(event)>
+               <a href='#' name="{{dict.1.path}}" id="{{dict.1.path}}" data-term="{{dict.1.key}}" class=METvalue>{{dict.1.key}} ({{dict.1.count}})
+               {% for item in dict.1.items %}
+                    {%include "partials/search-MET-terms.html" with dict=item%}
+               </a>
+               {% endfor %}
+          </li>
+     </ul>
+{% endif %}

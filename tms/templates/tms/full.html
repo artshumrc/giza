@@ -1,0 +1,849 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}section-explore-body header-full mode-full{% endblock %}
+
+{% block title %}Digital Giza | {{ object.displaytext }}{% endblock %}
+
+{% block content %}
+<div class="page-header header-bg-1" id="content">
+  <div class="row title">
+    <header class="large-12 columns">
+      <h1>{{ object.displaytext }}<a name="top"></a></h1>
+      {% if type == 'sites' %}<h3 class="page-header__meta">{{ object.sitename }}</h3>{% endif %}
+    </header>
+  </div>
+</div>
+
+
+<div class="row content-start">
+  <section class="large-8 columns content-col-primary">
+
+    <div class="row page-navigation-container">
+      <div class="large-4 columns large-push-8">
+        <div class="page-navigation">
+
+          <div class="title-bar" data-responsive-toggle="jumpmenu" data-hide-for="medium">
+            <button class="icon-bars icon-padded title-bar-title" type="button" data-toggle>Jump to...</button>
+          </div>
+
+          <div class="feature-block secondary" id="jumpmenu">
+            <div class="feature-block__body">
+
+              <h5 class="heading-em">Jump to:</h5>
+
+              <ul class="vertical menu show-for-small-only">
+                <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
+                {% if object.relateditems.sites %}
+                <li><a href="#tombs"><span class="icon-map-marker icon-fw"></span> Tombs and Monuments <span class="badge">{{ object.relateditems.sites|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.objects %}
+                <li><a href="#objects"><span class="icon-vase icon-fw"></span> Finds <span class="badge">{{ object.relateditems.objects|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.diarypages %}
+                <li><a href="#diary"><span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages <span class="badge">{{ object.relateditems.diarypages|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.mapsandplans %}
+                <li><a href="#maps"><span class="icon-map-o icon-fw"></span> Maps &amp; Plans <span class="badge">{{ object.relateditems.mapsandplans|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.drawings %}
+                <li><a href="#drawings"><span class="icon-pencil-square-o icon-fw"></span> Drawings <span class="badge">{{ object.relateditems.drawings|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.pubdocs %}
+                <li><a href="#published"><span class="icon-book icon-fw"></span> Published Documents <span class="badge">{{ object.relateditems.pubdocs|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.unpubdocs %}
+                <li><a href="#unpublished"><span class="icon-file-text-o icon-fw"></span> Unpublished Documents <span class="badge">{{ object.relateditems.unpubdocs|length }}</span></a></li>
+                {% endif %}
+                {% if object.bibreferences %}
+                <li><a href="#biblio"><span class="icon-info-circle icon-fw"></span> Full Bibliography </a></li>
+                {% endif %}
+                {% if object.relateditems.photos %}
+                <li><a href="#photos"><span class="icon-camera icon-fw"></span> Photos <span class="badge">{{ object.relateditems.photos|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.giza3d %}
+                <li><a href="#models"><span class="icon-icon-pyramid-3d icon-fw"></span> 3D Models <span class="badge">{{ object.relateditems.giza3d|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.videos %}
+                <li><a href="#videos"><span class="icon-video-camera icon-fw"></span> Videos <span class="badge">{{ object.relateditems.videos|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.audio %}
+                <li><a href="#audio"><span class="icon-volume-up icon-fw"></span> Audio <span class="badge">{{ object.relateditems.audio|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
+                <li><a href="#people"><span class="icon-user icon-fw"></span> People <span class="badge">
+                  {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+                  {{ apnum|add:mpnum }}
+                  {% endwith %}
+                </span></a></li>
+                {% endif %}
+                {% if object.relateditems.institutions %}
+                <li><a href="#institutions"><span class="icon-university icon-fw"></span> Institutions <span class="badge">{{ object.relateditems.institutions|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.groups %}
+                <li><a href="#groups"><span class="icon-users icon-fw"></span> Groups <span class="badge">{{ object.relateditems.groups|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.animals %}
+                <li><a href="#animals"><span class="icon-users icon-fw"></span> Animals <span class="badge">{{ object.relateditems.animals|length }}</span></a></li>
+                {% endif %}
+              </ul>
+              <ul class="vertical menu show-for-medium">
+                <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
+                {% if object.relateditems.sites %}
+                <li><a href="#tombs"><span class="icon-map-marker icon-fw"></span> Tombs and Monuments <span class="badge">{{ object.relateditems.sites|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.objects %}
+                <li><a href="#objects"><span class="icon-vase icon-fw"></span> Finds <span class="badge">{{ object.relateditems.objects|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.diarypages %}
+                <li><a href="#diary"><span class="icon-sticky-note-o icon-fw"></span> Excavation Diary Pages <span class="badge">{{ object.relateditems.diarypages|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.mapsandplans %}
+                <li><a href="#maps"><span class="icon-map-o icon-fw"></span> Maps &amp; Plans <span class="badge">{{ object.relateditems.mapsandplans|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.drawings %}
+                <li><a href="#drawings"><span class="icon-pencil-square-o icon-fw"></span> Drawings <span class="badge">{{ object.relateditems.drawings|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.photos %}
+                <li><a href="#photos"><span class="icon-camera icon-fw"></span> Photos <span class="badge">{{ object.relateditems.photos|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.giza3d %}
+                <li><a href="#models"><span class="icon-icon-pyramid-3d icon-fw"></span> 3D Models <span class="badge">{{ object.relateditems.giza3d|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.videos %}
+                <li><a href="#videos"><span class="icon-video-camera icon-fw"></span> Videos <span class="badge">{{ object.relateditems.videos|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.audio %}
+                <li><a href="#audio"><span class="icon-volume-up icon-fw"></span> Audio <span class="badge">{{ object.relateditems.audio|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
+                <li><a href="#people"><span class="icon-user icon-fw"></span> People <span class="badge">
+                  {% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+                  {{ apnum|add:mpnum }}
+                  {% endwith %}
+                </span></a></li>
+                {% endif %}
+                {% if object.relateditems.institutions %}
+                <li><a href="#institutions"><span class="icon-university icon-fw"></span> Institutions <span class="badge">{{ object.relateditems.institutions|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.groups %}
+                <li><a href="#groups"><span class="icon-users icon-fw"></span> Groups <span class="badge">{{ object.relateditems.groups|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.animals %}
+                <li><a href="#animals"><span class="icon-users icon-fw"></span> Animals <span class="badge">{{ object.relateditems.animals|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.pubdocs %}
+                <li><a href="#published"><span class="icon-book icon-fw"></span> Published Documents <span class="badge">{{ object.relateditems.pubdocs|length }}</span></a></li>
+                {% endif %}
+                {% if object.relateditems.unpubdocs %}
+                <li><a href="#unpublished"><span class="icon-file-text-o icon-fw"></span> Unpublished Documents <span class="badge">{{ object.relateditems.unpubdocs|length }}</span></a></li>
+                {% endif %}
+                {% if object.bibreferences %}
+                <li><a href="#biblio"><span class="icon-info-circle icon-fw"></span> Full Bibliography </a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if object.primarydisplay.main %}
+      <div class="item__featured-image">
+        {% if type == '3dmodels' %}
+        <iframe allowfullscreen height="500px" width="100%" src="{{ object.primarydisplay.main }}"></iframe>
+        {% elif type == 'pubdocs' and object.pdf %}
+          <a href="{{ object.pdf }}"><img src="{{ object.primarydisplay.main }}" alt=""></a>
+        {% elif type == 'videos' %}
+          <video width="100%" height="100%" {% if object.primarydisplay.thumbnail %}poster="{{ object.primarydisplay.thumbnail }}"{% endif %} controls>
+            <source src="{{ object.primarydisplay.main }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        {% elif type == 'sites' %}
+          <div style="height:500px;width:100%;">
+            <div id="mirador"></div>
+          </div>
+        {% else %}
+          <img src="{{ object.primarydisplay.main }}" alt="">
+        {% endif %}
+        {% if object.primarydisplay.displaytext %}
+        <p class="item__featured-image__caption">
+          {{ object.primarydisplay.displaytext }}
+        </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+      {% if object.diarytranscription %}
+      <div class="item__overview text-alt">
+            <h5>Diary Transcription:</h5>
+            {{ object.diarytranscription|linebreaks }}
+          </div>
+      {% elif object.description %}
+      <div class="item__overview">
+
+        <!-- <ul class="item__featured-properties">
+          {% if type != "sites" %}
+          <li class="item__property item__property--primary">
+            ID: {{ object.number }}
+          </li>
+          {% endif %}
+          {% if type == 'objects' or type == 'diarypages' or type == 'mapsandplans' or type == 'drawings' or  type == 'unpubdocs' %}
+            <li class="item__property">
+              Department: {{ object.department }}
+            </li>
+          {% elif type == 'objects' or type == 'diarypages' or type == 'mapsandplans' or type == 'drawings' %}
+            <li class="item__property">
+              Title: {{ object.title }}
+            </li>
+          {% endif %}
+        </ul> -->
+
+          <p class="lead text-alt">
+            {{ object.description }}
+          </p>
+
+      </div>
+      {% endif %}
+
+      <section id="featureBlock_details" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-info-circle icon-padded"></i> Details
+            <a name="details"></a>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_details">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        {% with template_name="tms/"|add:type|add:".html" %}
+          {% include template_name %}
+        {% endwith %}
+      </section>
+
+      {% if object.relateditems.sites %}
+      <section id="featureBlock_tombs" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-map-marker icon-padded"></i> Tombs and Monuments
+            <a name="tombs"></a>
+            <span class="badge">{{ object.relateditems.sites|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_tombs">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.sites %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'sites' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'sites' item.id 'full' %}">{{item.displaytext}}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-property">Site Name</span> <span class="item-value">{{item.sitename}}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.objects %}
+      <section id="featureBlock_objects" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-vase icon-padded"></i> Finds
+            <a name="objects"></a>
+            <span class="badge">{{ object.relateditems.objects|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_objects">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.objects %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'objects' item.id 'full' %}"><img src= "{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'objects' item.id 'full' %}">{{item.displaytext}}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-value">{{item.number}}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.diarypages %}
+      <section id="featureBlock_diary" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-sticky-note-o icon-padded"></i> Excavation Diary Pages
+            <a name="diary"></a>
+            <span class="badge">{{ object.relateditems.diarypages|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_diary">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.diarypages %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'diarypages' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'diarypages' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-property">Diary page dates</span> <span class="item-value">{{ item.date }}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.mapsandplans %}
+      <section id="featureBlock_maps" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-map-o icon-padded"></i> Maps &amp; Plans
+            <a name="maps"></a>
+            <span class="badge">{{ object.relateditems.mapsandplans|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_maps">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list item-grid thumbsize-lg thumbs-square">
+            {% for item in object.relateditems.mapsandplans %}
+            <li>
+              <div class="media-object list-item list-item-thumbcaption">
+                {% if item.thumbnail %}
+                <div class="thumbnail">
+                  <a href="{% url 'get_type_html' 'mapsandplans' item.id 'full' %}"><img src="{{ item.thumbnail }}" alt=""></a>
+                </div>
+                {% endif %}
+                <p class="media-object-title"><a href="{% url 'get_type_html' 'mapsandplans' item.id 'full' %}">{{ item.displaytext }}</a></p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.drawings %}
+      <section id="featureBlock_drawings" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-pencil-square-o icon-padded"></i> Drawings
+            <a name="drawings"></a>
+            <span class="badge">{{ object.relateditems.drawings|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_drawings">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.drawings %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'drawings' item.id 'full' %}"><img src= "{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'drawings' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                  <ul class="subheader">
+                    <li><span class="item-property">ID</span> <span class="item-value">{{ item.number }}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.pubdocs %}
+      <section id="featureBlock_published" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-book icon-padded"></i> Published Documents
+            <a name="published"></a>
+            <span class="badge">{{ object.relateditems.pubdocs|length}}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_published">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2">
+            {% for item in object.relateditems.pubdocs %}
+            <li>
+              <div class="media-object list-item list-item-document">
+                <div class="media-object-section">
+                  <a class="icon-large icon-file-text-o" href="{% url 'get_type_html' 'pubdocs' item.id 'full' %}"></a>
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'pubdocs' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                  {% if item.date %}
+                  <ul class="subheader">
+                    <li>Date: {{ item.date }}</li>
+                  </ul>
+                  {% endif %}
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.unpubdocs %}
+      <section id="featureBlock_unpublished" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-file-text-o icon-padded"></i> Unpublished Documents
+            <a name="unpublished"></a>
+            <span class="badge">{{ object.relateditems.unpubdocs|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_unpublished">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.unpubdocs %}
+            <li>
+              <div class="media-object list-item list-item-thumbnail">
+                <div class="media-object-section">
+                  {% if item.thumbnail %}
+                  <div class="thumbnail">
+                    <a href="{% url 'get_type_html' 'unpubdocs' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="media-object-section">
+                  <p class="media-object-title"><a href="{% url 'get_type_html' 'unpubdocs' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                  <ul class="subheader">
+                    <li>ID: {{ item.number }}</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.bibreferences %}
+      <section id="featureBlock_biblio" class="feature-block collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-bookmark icon-padded"></i> Full Bibliography
+            <a name="biblio"></a>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_biblio">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list">
+            <li>
+              <div class="media-object list-item list-item-textblob">
+                <p>
+                  {{ object.bibreferences|linebreaks }}
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+    </section>
+
+    <section class="large-4 columns content-col-secondary">
+      {% if object.relateditems.photos %}
+      <section id="featureBlock_photos" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-camera icon-padded"></i> Photos
+            <a name="photos"></a>
+            <span class="badge">{{ object.relateditems.photos|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_photos">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list item-grid thumbsize-sm thumbs-square">
+            {% for item in object.relateditems.photos|slice:":10" %}
+            <li>
+              <div class="media-object list-item list-item-thumbonly">
+                <div class="media-object-section">
+                  <div class="thumbnail">
+                    <a data-open="gallery{{ item.id }}"><img src="{{ item.thumbnail }}"></a>
+                  </div>
+                </div>
+                <!-- <div class="media-object-section">
+                  <p class="media-object-title"><a href="#0"></a></p>
+                  <ul class="subheader">
+                  </ul>
+                </div> -->
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <div class="feature-block__footer">
+            <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'allphotos' %}">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.3dmodels %}
+      <section id="featureBlock_models" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-pyramid-3d icon-padded"></i> 3D Models
+            <a name="models"></a>
+            <span class="badge">{{ object.relateditems.3dmodels|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_models">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list thumbsize-full">
+            {% for item in object.relateditems.3dmodels %}
+            <li>
+              <div class="media-object list-item list-item-thumbcaption">
+                <div class="thumbnail">
+                  <a href="{% url 'get_type_html' '3dmodels' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                </div>
+                <p class="media-object-title"><a href="{% url 'get_type_html' '3dmodels' item.id 'full' %}">{{ item.displaytext }}</a></p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.videos %}
+      <section id="featureBlock_videos" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-video-camera icon-padded"></i> Videos
+            <a name="videos"></a>
+            <span class="badge">{{ object.relateditems.videos|length }}</span>
+          </h3>
+          <button class="toggler" data-toggle="featureBlock_videos">
+            <span class="sr-only">Collapse or Expand</span>
+          </button>
+        </div>
+        <div class="feature-block__body">
+          <ul class="feature-block__list multicol-2 thumbsize-lg">
+            {% for item in object.relateditems.videos %}
+            <li>
+              <div class="media-object list-item list-item-thumbcaption">
+                <!-- <div class="thumbnail">
+                <a href="#0"><img src="assets/img/video1.png"></a>
+              </div> -->
+              <video width="100%" height="100%" {% if item.thumbnail %}poster="{{ item.thumbnail }}"{% endif %} controls>
+                <source src="{{ item.main }}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                <p class="media-object-title"><a href="{% url 'get_type_html' 'videos' item.id 'full' %}">{{ item.displaytext }}</a></p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if object.relateditems.ancientpeople or object.relateditems.modernpeople %}
+      <section id="featureBlock_people" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+        <div class="feature-block__header">
+          <h3 class="feature-block__title">
+            <i class="icon-user icon-padded"></i> People
+            <a name="people"></a>
+            <span class="badge">{% with apnum=object.relateditems.ancientpeople|length mpnum=object.relateditems.modernpeople|length %}
+              {{ apnum|add:mpnum }}
+              {% endwith %}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_people">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            {% if object.relateditems.ancientpeople %}
+            <h4>Ancient People</h4>
+
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+              {% for item in object.relateditems.ancientpeople %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'ancientpeople' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'ancientpeople' item.id 'full' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>{% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if object.relateditems.modernpeople %}
+            <h4>Modern People</h4>
+
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+              {% for item in object.relateditems.modernpeople %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'modernpeople' item.id 'full' %}"><img src="{{ item.thumbnail }}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'modernpeople' item.id 'full' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      <li><span class="item-property">Nationality &amp; Dates</span> <span class="item-value">{{item.displaydate}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>{% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+        </section>
+        {% endif %}
+
+        {% if object.relateditems.institutions %}
+        <section id="featureBlock_institutions" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+          <div class="feature-block__header">
+            <h3 class="feature-block__title">
+              <i class="icon-university icon-padded"></i> Institutions
+              <a name="institutions"></a>
+              <span class="badge">{{ object.relateditems.institutions|length }}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_institutions">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+              {% for item in object.relateditems.institutions %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'institutions' item.id 'full' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'institutions' item.id 'full' %}">{{ item.displaytext }}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li> {% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+
+          </div>
+        </section>
+        {% endif %}
+
+        {% if object.relateditems.groups %}
+        <section id="featureBlock_groups" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+          <div class="feature-block__header">
+            <h3 class="feature-block__title">
+              <i class="icon-users icon-padded"></i> Groups
+              <a name="groups"></a>
+              <span class="badge">{{ object.relateditems.groups|length }}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_groups">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+              {% for item in object.relateditems.groups %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'groups' item.id 'full' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'groups' item.id 'full' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>{% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </section>
+        {% endif %}
+
+        {% if object.relateditems.animals %}
+        <section id="featureBlock_animals" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
+          <div class="feature-block__header">
+            <h3 class="feature-block__title">
+              <i class="icon-paw icon-padded"></i> Animals
+              <a name="animals"></a>
+              <span class="badge">{{ object.relateditems.animals|length }}</span>
+            </h3>
+            <button class="toggler" data-toggle="featureBlock_animals">
+              <span class="sr-only">Collapse or Expand</span>
+            </button>
+          </div>
+          <div class="feature-block__body">
+            <ul class="feature-block__list thumbsize-sm thumbs-square no-labels first-property-bold">
+              {% for item in object.relateditems.groups %}
+              <li>
+                <div class="media-object list-item list-item-thumbnail">
+                  <div class="media-object-section">
+                    {% if item.thumbnail %}
+                    <div class="thumbnail">
+                      <a href="{% url 'get_type_html' 'animals' item.id 'full' %}"><img src="{{item.thumbnail}}"></a>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="media-object-section">
+                    <p class="media-object-title"><a href="{% url 'get_type_html' 'animals' item.id 'full' %}">{{item.displaytext}}</a></p>
+                    <ul class="subheader">
+                      <li><span class="item-property">Type</span> <span class="item-value">{{item.role}}</span></li>
+                      {% if item.description %}<li><span class="item-property">Remarks</span> <span class="item-value minimize">{{item.description}}</span></li>{% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </section>
+        {% endif %}
+
+      </section>
+    </div>
+
+    <!-- Modal -->
+
+    {% for item in object.relateditems.photos %}
+    <div class="large reveal modal-inverse photo-gallery-modal" id="gallery{{ item.id }}" data-reveal dava-v-offset="65">
+
+      {% if item.number %}
+        <p><b>ID:</b> <a href="{% url 'get_type_html' 'photos' item.id 'full' %}">{{ item.number }}</a></p>
+      {% endif %}
+      {% if item.displaytext %}
+        <p><b>Subjects:</b> {{ item.displaytext }}</p>
+      {% endif %}
+      {% if item.description %}
+        <p><b>Description:</b> {{ item.description }}</p>
+      {% endif %}
+
+      <div class="modal-img-container">
+        <img src="{{ item.main }}" alt="{{ item.displaytext }}">
+      </div>
+
+
+      <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+
+    <!-- /Modal -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function(){
+    let miradorDiv = $('#mirador');
+    if(miradorDiv) {
+      let url = "{% url 'iiif-manifest' object.id %}";
+      Mirador.viewer({
+        id: 'mirador',
+        windows: [
+          { manifestId: url }
+        ]
+      });
+    }
+  });
+</script>
+{% endblock %}

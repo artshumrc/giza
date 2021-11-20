@@ -1,0 +1,5 @@
+<p>
+    {% if user.is_authenticated %}<a href="#" id="save_search">Save this search</a><br>{% endif %}
+    <a href="/search/">Start a new search</a><br><form id=search_token_form action='/search/lookup'>
+    <label for=search_token>Redeem search token</label><input type=text name=token id=search_token></form>
+  </p>

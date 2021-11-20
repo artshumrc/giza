@@ -1,0 +1,41 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Login"
+  section: "authentication",
+%}
+
+{% block title %}{{ "Login" }}{% endblock %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'content' %}
+  <div class="auth-layout ">
+    <div class="auth-form login-form" >
+      <span class="title"><a class="auth-toggle" href="/sign-up">Sign up</a> for My Giza <span class="separator">|</span> Log in</span>
+      <br>
+      <br>
+      {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <form id="login_form" method="post" action="{% url 'login' %}?next={{request.GET.next}}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Username
+          <input placeholder="Username" type="text" name="username" value="" size="50"/>
+        </label>
+        <label>Password
+          <input placeholder="Password" type="password" name="password" value="" size="50"/>
+        </label>
+        <p class="jss19 jss27 errorText"></p>
+        <br>
+        <div class="btn-row">
+          <button type="submit" class="button">Log In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock  %}
