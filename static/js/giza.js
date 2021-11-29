@@ -259,16 +259,44 @@ $('#search-dropdown')
         'object' : JSON.stringify($(e.currentTarget).data('object-name')) 
       },
       success : response => {
-        modal = new Foundation.Reveal($('.add_to_collection_modal'))
-        modal.close()
+        $('#exampleModal3').foundation('reveal', 'open')
+        // modal = new Foundation.Reveal($('.add_to_collection_modal'))
+        // modal.close()
         // SOMEHOW MARK OBJECTS THAT ARE ALREADY IN A COLLECTION?
       }
     })
   })
+  
+  $('#saveSearch').on('click', () => {
+    console.log('save')
+    // $.ajax({
+    //   url: '/search/save',
+    //   data: {
+    //     'name' : prompt("Please give a name to this search", "Simple"),
+    //     'term' : st['term'],
+    //     'category' : st['category'],
+    //     'fields' : JSON.stringify(st['fields']),
+    //     'MET' : st['MET']
+    //   },
+    //   contentType: "application/json",
+    //   dataType: 'json',
+    //   success: data => {
+    //     alert('search saved')
+    //   },
+    //   error: res => {
+    //     console.log(res.responseText)
+    //   }
+    // })
+  })
+// .on('keyup', '#search_token', e => {
+//   if (e.which == 13){
+//     $('#search_token_form').submit()
+//   }
+// })
 
   // REQUEST ALL PRIVATE COLLECTIONS
   $(document).on('click', '.collections_content', e => {
-    print('click')
+    console.log('click')
     // id = $(e.currentTarget).attr('id')
     // $.get({
     //   url : '',

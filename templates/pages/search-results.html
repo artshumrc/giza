@@ -31,33 +31,6 @@
       allowDrop = ev => {
     ev.preventDefault()
   }
-
-      $('#save_search').on('click', () => {
-          $.ajax({
-            url: '/search/save',
-            data: {
-              'name' : prompt("Please give a name to this search", "Simple"),
-              'term' : st['term'],
-              'category' : st['category'],
-              'fields' : JSON.stringify(st['fields']),
-              'MET' : st['MET']
-            },
-            contentType: "application/json",
-            dataType: 'json',
-            success: data => {
-              alert('search saved')
-            },
-            error: res => {
-              console.log(res.responseText)
-            }
-          })
-      })
-
-      $('#search_token').on('keyup', e => {
-        if (e.which == 13){
-          $('#search_token_form').submit()
-        }
-      })
   })
 </script>
 

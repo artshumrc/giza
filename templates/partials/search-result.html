@@ -4,7 +4,7 @@
 <div class="media-object list-item search-result thumbsize-md thumbs-square">
   <div class="media-object-section">
     {% if user.is_authenticated %}
-      <div class="add-wrap" id="add_to_collection" data-id="{{ result.type }}_{{ result.id }}">
+      <div class="add-wrap" id="addToCollectionBtn" data-id="{{ result.type }}_{{ result.id }}">
         <a data-open="add_collection" aria-controls="add_collection" aria-haspopup="true" tabindex="0">
           <span class="ico"></span>
         </a>
