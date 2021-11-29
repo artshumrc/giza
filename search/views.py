@@ -1,4 +1,3 @@
-# from _typeshed import NoneType
 import copy, re, operator, json, os
 
 from django.http.response import JsonResponse
@@ -378,6 +377,9 @@ def __prepare_base_params(request):
 						if res[0] and not '_ms' in date['key']:
 							items['search']['fields'][f'{date["key"]}_ms'] = {}
 							items['search']['fields'][f'{date["key"]}_ms'] = [int(x[1]) for x in res[1]]
+		else:
+			# RETURN ALL EXCEPT LIBRARY DOC_TYPE
+			items['search']['ignore'] = "library"
 	
 	#########################
 	#	PROCESS SEARCH Q	#
@@ -512,7 +514,18 @@ def __base_query(items):
 
 	# IF NO SEARCH TERM OR FIELDS ARE PROVIDED RETURN EVERYTHING IN DATABASE
 	if not len(items['query']) and not len(items['category']):
-		items['base'] = {"match_all" : {} }
+		if 'ignore' in items:
+			items['base']['bool'] = { 
+				"must" : [],
+				"must_not" : [{ 
+					"query_string" : { 
+						"default_field" : "_type",
+						"query" : "library "
+					}
+				}]
+			}
+		
+		# items['base'] = {"match_all" : {} }
 
 	# CONSTRUCT A MUST-QUERY IF QUERY TERM IS PROVIDED (SIMPLE SEARCH)
 	if len(items['query']):
@@ -592,41 +605,40 @@ def __build_aggregations(items):
 	items['aggs'] = {}
 
 	# SIMPLE SEARCH USE-CASE
-	if not items['category']:
-		return items
+	# if not items['category']:
+		# return items
 		
 	# AGGREGATE ALL FACETS REGISTERED FOR THE CURRENT DOCUMENT TYPE
-	aggs = { name : term_agg for name, term_agg in list(FACETS_PER_CATEGORY[items['category']].items()) }
+	if items['category']:
+		items['aggs'] = { name : term_agg for name, term_agg in list(FACETS_PER_CATEGORY[items['category']].items()) }
 
-	# LIMIT MET AGGREGATIONS TO SELECTED CATEGORY
-	if 'MET' in aggs:
-		q = {	
-			"inner": {
-				"filter": {
-					"bool": {
-						"must": [
-							{
-								"match": {
-									"type": items['category']
+		# LIMIT MET AGGREGATIONS TO SELECTED CATEGORY
+		if 'MET' in items['aggs']:
+			q = {	
+				"inner": {
+					"filter": {
+						"bool": {
+							"must": [
+								{
+									"match": {
+										"type": items['category']
+									}
 								}
-							}
-						]
+							]
+						}
 					}
 				}
 			}
-		}
-		aggs['MET']['aggregations'].update(q)
+			items['aggs']['MET']['aggregations'].update(q)
 
 	# AGGREGATE ALL DATA TYPES IN THE DATA SET
-	aggs['doc_types'] = { 
+	items['aggs']['doc_types'] = { 
 		'terms' : {
 			'field' : '_type',
 			'exclude' : 'library',
 			'size' : 50
 		}
 	}
-
-	items['aggs'] = aggs
 
 	return items
 

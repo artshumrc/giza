@@ -1,5 +1,6 @@
 {% load static %}
 {% for result in result.hits %}
+{% if result.source.primarydisplay %}
 <div class="media-object list-item search-result thumbsize-md thumbs-square">
   <div class="media-object-section">
     {% if user.is_authenticated %}
@@ -27,6 +28,7 @@
     </ul>
   </div>
 </div>
+{% endif %}
 {% endfor %}
 
 

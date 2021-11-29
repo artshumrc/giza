@@ -31,7 +31,8 @@
           <p class="lead text-alt" style="line-height: 1.4">The Giza Project gives you access to the largest collection of information, media, and research materials ever assembled about the Pyramids and related sites on Egypt&rsquo;s Giza Plateau. </p>
         </div>
         <div class="medium-4 columns">
-          <form action="{% url 'search_results' %}">
+          <form method="post" action="/search/results/">
+            {% csrf_token %}
             <p class="text-alt" style="color: #fff; margin-bottom: 0.1rem;">
               <em>Search the archives:</em>
             </p>

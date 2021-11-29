@@ -111,7 +111,7 @@
                         </li>
               <li {% if request.resolver_match.url_name == 'donate' %}class="active"{% endif %}><a href="{% url 'donate' 'donate' %}">Donate</a></li>
               <li><form id="search-form" action="{% url 'results' %}">
-                    <input type="text" id="inputSimpleSearch" name="q" placeholder="Enter search keywords">
+                    <input type="text" id="inputSimpleSearch" name="query" placeholder="Enter search keywords">
                         <button class="icon-search button" onclick="document.getElementById('search-form').submit();"></button>
                   </form>
                   <!--<button class="icon-search button" type="button" data-toggle="search-dropdown"> <span class="hide-for-medium">Search</span></button>-->
