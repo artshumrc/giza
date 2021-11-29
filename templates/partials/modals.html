@@ -151,25 +151,25 @@
 
 
 
-<!-- Modal: Add to Collection -->
-
+<!-- MODAL: ADD TO COLLECTION -->
 <div class="reveal modal add-reveal" id="add_collection" data-reveal>
   <span class="title">Add to a MyGiza Collection</span>
   <br>
-  <span class="info-line">Hi {% if user.full_name %}{{user.full_name}}{% else %}{{user.username}}{% endif %}! (not you? <a href="/login">Login to your account</a>.)</span>
+  <span class="info-line">Hi {% if user.full_name %}{{ user.full_name }}{% else %}{{ user.username }}{% endif %}! (not you? <a href="/login">Login to your account</a>.)</span>
   <div class="jcf-scrollable">
+
     <form id="collection_create_form" method="post" action="{% url 'collections_create' %}?redirect_to={{redirect_to}}" enctype="multipart/form-data">
       {% csrf_token %}
       {% if messages %}
       <ul class="messages">
         {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
         {% endfor %}
       </ul>
       <br>
       {% endif %}
 
-      {{ collection_form.as_p }}
+      {# {{ collection_form.as_p }} #}
       <div class="btn-row">
         <!--button type="submit" class="button btn-white">Cancel</button-->
         <button type="submit" class="button">Create</button>
@@ -178,18 +178,18 @@
     
     <ul class="add-lists">
       {% for collection in user_collections %}
-      <!-- WILL NEED REWORKING TO CLEAN UP URL -->
+
       {# <!-- <form id=form_{{type}}_{{object.id}} action="{% url 'collections_add' collection.slug %}"> --> #}
-      <li>
         <!-- <a href="#" onclick="document.getElementById('form_{{type}}_{{object.id}}').submit();">{{collection.title}}<span class="ico"></span></a></li> -->
         <!-- <input type=hidden name={{type}}_{{object.id}}> -->
-        
+        collection
         <li>
-          <a href="/collections/{{collection.slug}}/edit?add_item_id={{object.id}}&add_item_type={{type}}">{{collection.title}} <span class="ico"></span></a></li>
-      <!-- </form> -->
-
+          <a href='#' class="add_to_collection_modal" data-collection-id="{{ collection }}">{{ collection.title }}<span class="ico"></span></a>
+          <!-- <a href="/collections/{{collection.slug}}/edit?add_item_id={{object.id}}&add_item_type={{type}}">{{collection.title}} -->
+            <!-- <span class="ico"></span> -->
+          <!-- </a> -->
+        </li>
       {% endfor %}
-    
     </ul>
     
   </div>

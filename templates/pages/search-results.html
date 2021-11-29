@@ -32,27 +32,6 @@
     ev.preventDefault()
   }
 
-
-
-      // $('#MET_submit').on('click', () => {
-      //     $.ajax({
-      //       url: '',
-      //       data: {
-      //         MET_list : JSON.stringify([].map.call($('#METList').children(), elem => elem.getAttribute('name')))
-      //       },
-      //       dataType: 'json',
-      //       success: data => {
-      //         console.log(JSON.parse(data["MET_list"]))
-      //         // if (data.is_taken) {
-      //           // alert("A user with this username already exists.");
-      //         // }
-      //       },
-      //       error: res => {
-      //         console.log(res.responseText)
-      //       }
-      //     })
-      // })
-
       $('#save_search').on('click', () => {
           $.ajax({
             url: '/search/save',
@@ -79,42 +58,12 @@
           $('#search_token_form').submit()
         }
       })
-
-      // mlist = []
-
-      // $("#METfilter").on("keyup", e => {
-      //   // if (e.which == 13) {
-      //   let text = $(e.currentTarget).val().toLowerCase()
-      //   let items = $(".METvalue")
-      //   let res = items.filter(e => items[e].getAttribute('data-term').toLowerCase().includes(text))
-      //   if (res.length == 1) {
-      //     id = $(res[0]).attr('id')
-      //     newNode = document.getElementById(id).cloneNode(true)
-      //     $(newNode).attr('id', 'list_'+id)
-      //     $(newNode).on('click', e => $(e.currentTarget).remove())
-      //     document.getElementById('METList').appendChild(newNode)
-      //     if (!mlist.includes(id)) {
-      //       mlist.push(id)
-      //     }
-      //   // console.log(res.attr('id'))
-      //   // $('.accordion').foundation('toggle', $('[data-remote="' + res.attr('id') + '"]'));
-      //   // $('#METAccordion .accordion-navigation:not(.active) [data-external-trigger]').trigger('click')
-      //     if (e.keyCode == 13) {
-      //       // ADD
-      //     } else {
-      //       $(newNode).remove()
-      //     }
-      //   }
-      // })
   })
 </script>
 
 <!-- FOR DEBUGGING PURPOSES -->
 {{ search|json_script:"search" }}
 {{ result|json_script:"result" }}
-<!-- {{ MET_tree|json_script:"MET_tree" }} -->
-<!-- {{ MET_paths|json_script:"MET_paths" }} -->
-<!-- {{ facets|json_script:"facets" }} -->
 
 <div class="row" id="search_results">
 
@@ -142,35 +91,22 @@
     </div>
   </aside>
 
-  <!-- Display result statistics to user -->
   <section class="medium-9 medium-push-3 columns">
+    
+    <!-- SEARCH STATISTICS -->
     <div class="row" id='search_stats'>
       {% include 'partials/search-stats.html' %}
-      <div class="medium-6 columns text-right">
-          <label for="sortResults" class="d-inline-block middle m-r-qt">Sort by:</label>
-          <div class="d-inline-block img-fluid-mw150">
-            <select id="sortResults">
-              <option value="">Category</option>
-              <option value="">Name</option>
-              <option value="">Year</option>
-              <option value="">Material</option>
-              <option value="">Findspot</option>
-            </select>
-          </div>
-          <ul class="d-inline-block view-switcher p-y-qt m-l-1 hide-for-small-only">
-            <li><a href="#" class="switcher"><i class="fa fa-fw fa-align-justify"></i><span class="sr-only">List</span></a></li>
-            <li><a href="#" class="switcher"><i class="fa fa-fw fa-th-large"></i><span class="sr-only">Grid</span></a></li>
-          </ul>
-        </div>
-    </div>
-    <div class="row" id='search_pagination'>
-      {% include 'partials/search-pagination.html' %}
     </div>
 
+    <!-- SEARCH RESULTS -->
     <div class="media-object-holder" id="search_result">
         {% include 'partials/search-result.html' %}
     </div>
 
+    <!-- PAGINATION -->
+    <div class="row" id='search_pagination'>
+      {% include 'partials/search-pagination.html' %}
+    </div>
 
   </section>
 
@@ -182,5 +118,6 @@
   </aside>
 
 </div>
+
 {% endblock %}
 <!-- END MAIN CONTENT ROWS -->

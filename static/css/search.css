@@ -4,6 +4,15 @@ div.row {
     max-width: 85rem;
 }
 
+.ui-slider-tick-mark {
+    display:inline-block;
+    width:2px;
+    background:black;
+    height:16px;
+    position:relative;
+    top:-23px;
+  }
+
 @media screen and (min-width: 40em) {
     .medium-3 {
         left: 0;
@@ -21,5 +30,9 @@ div.row {
 
     ul.accordion {
         margin-bottom: 0;
+    }
+
+    .add-wrap a span {
+        z-index: 10;
     }
 }

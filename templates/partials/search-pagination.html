@@ -27,5 +27,13 @@
       </li>
     </ul>
   </nav>
+  <label for="showResults" class="d-inline-block middle m-r-qt">Number of results:</label>
+  <div class="d-inline-block img-fluid-mw150">
+    <select id="showResults">
+      {% for option in result.pages.view_options %}
+        <option value="{{option}}" {% if option == result.size %} selected {% endif %}>{{ option }}</option>
+      {% endfor %}
+    </select>
+  </div>
 </div>
 {% endif %}

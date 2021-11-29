@@ -332,6 +332,7 @@ fieldset {
 		position: relative;
 		margin: rem-calc(20px 0 0 50px);
 
+
 		.list-active & {
 			min-width: 140px;
 			text-align: right;
@@ -352,6 +353,7 @@ fieldset {
 			width: rem-calc(21px);
 			height: rem-calc(21px);
 			border-radius: 50%;
+			z-index: 10;
 
 			&:before,
 			&:after {
@@ -362,6 +364,7 @@ fieldset {
 				position: absolute;
 				top: rem-calc(9px);
 				left: rem-calc(5px);
+				z-index: 10;
 			}
 
 			&:after {
@@ -369,6 +372,7 @@ fieldset {
 				height: rem-calc(11px);
 				top: rem-calc(5px);
 				left: rem-calc(9px);
+				z-index: 10;
 			}
 		}
 

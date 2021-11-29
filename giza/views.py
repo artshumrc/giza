@@ -1,7 +1,8 @@
-import json
+import json, uuid
 
 from django import forms
 from django.core import serializers
+from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
@@ -22,7 +23,7 @@ from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGO
 from search.views import search_results
 
 from .forms import CustomUserCreationForm, CollectionForm
-from .models import Collection, Lesson, ElasticsearchItem, Search
+from .models import Collection, Lesson, ElasticSearchItem, Search
 
 RESULTS_SIZE = 20
 
@@ -321,15 +322,23 @@ Collections are user stored groupings of random records. Collections
 should probably store individual ElasticSearch record ids for quick retrieval.
 """
 @login_required
+# def collections(request):
+#     """ This user route returns all collections marked as public """
+#     res = Collection.objects.filter(public=True)
+#     return render(request, 'pages/mygiza-allcollections.html', { 'collections': res if res else [] })
+
 def collections(request):
-    """ This user route returns all collections marked as public """
-    res = Collection.objects.filter(public=True)
-    return render(request, 'pages/mygiza-allcollections.html', { 'collections': res if res else [] })
+    """ This public route returns all public collections """
+    return render(request, 'pages/mygiza-collections.html', { 'public_collections' : Collection.objects.filter(public=True) })
+
+def public_collections(request):
+    return JsonResponse(render_to_string('mygiza-collections-public.html', { 'collections': Collection.objects.filter(public=True) }))
 
 @login_required
-def collections_user(request):
-    """ This user route returns all collections stored for the logged in user """
-    return render(request, 'pages/mygiza-allcollections.html', { 'collections': Collection.objects.filter(owners=request.user.id)})
+def private_collections(request):
+    """ This private route returns all user collections """
+    return JsonResponse(render_to_string('mygiza-collections-private.html', { 'collections': Collection.objects.filter(owners=request.user.id) }))
+
 
 @login_required
 def collection(request, slug):
@@ -341,7 +350,6 @@ def collection(request, slug):
     """
     
     collection = get_object_or_404(Collection, slug=slug)
-    # items = []
     hits = []
 
     # search_term = request.GET.get('q', '')
@@ -380,54 +388,54 @@ def collection(request, slug):
         }
 
     # categorystring = ""
-    current_category = request.GET.get('category', '')
-    current_subfacets = {}
+    # current_category = request.GET.get('category', '')
+    # current_subfacets = {}
     bool_filter = {
         "must" : [],
     }
     sort = request.GET.get('sort', '_score')
     page = int(request.GET.get('page', 1))
-    results_from = 0
+    # results_from = 0
     # calculate elasticsearch's from, using the page value
     results_from = (page - 1) * RESULTS_SIZE
-    all_categories = {}
-    sub_facets = {}
-    has_next = False
-    has_previous = False
-    previous_page_number = 0
-    next_page_number = 0
-    num_pages_range = []
-    num_pages = 0
-    total = 0
+    # all_categories = {}
+    # sub_facets = {}
+    # has_next = False
+    # has_previous = False
+    # previous_page_number = 0
+    # next_page_number = 0
+    # num_pages_range = []
+    # num_pages = 0
+    # total = 0
 
-    body_query = {
-        "from": results_from,
-        "size": RESULTS_SIZE,
-        "query": query,
-        "aggregations": {
-            "aggregation": {
-                "terms": {
-                    "field": "_type",
-                    "exclude": "library", # ignore special type, library, which is used for the Digital Giza Library page
-                    "size" : 50 # make sure to get all categories (rather than just 10)
-                }
-            }
-        },
-        "post_filter" : {
-            "bool" : bool_filter
-        },
-        "sort" : sort
-    }
+    # body_query = {
+    #     "from": results_from,
+    #     "size": RESULTS_SIZE,
+    #     "query": query,
+    #     "aggregations": {
+    #         "aggregation": {
+    #             "terms": {
+    #                 "field": "_type",
+    #                 "exclude": "library", # ignore special type, library, which is used for the Digital Giza Library page
+    #                 "size" : 50 # make sure to get all categories (rather than just 10)
+    #             }
+    #         }
+    #     },
+    #     "post_filter" : {
+    #         "bool" : bool_filter
+    #     },
+    #     "sort" : sort
+    # }
 
-    subfacet_aggs = build_subfacet_aggs(current_category, current_subfacets, bool_filter)
-    facets_for_category = es.search(index=ES_INDEX, body=body_query)
+    # subfacet_aggs = build_subfacet_aggs(current_category, current_subfacets, bool_filter)
+    # facets_for_category = es.search(index=ES_INDEX, body=body_query)
 
-    facet_names = []
-    if current_subfacets:
-        for facet_name in list(current_subfacets[current_category].keys()):
-            facet_names.append(facet_name)
-    rec = recurse_aggs('', facets_for_category, [], facet_names)
-    sub_facets[current_category] = rec
+    # facet_names = []
+    # if current_subfacets:
+    #     for facet_name in list(current_subfacets[current_category].keys()):
+    #         facet_names.append(facet_name)
+    # rec = recurse_aggs('', facets_for_category, [], facet_names)
+    # sub_facets[current_category] = rec
 
     search_results = es.search(index=ES_INDEX, body={
         "from": results_from,
@@ -448,37 +456,37 @@ def collection(request, slug):
         "sort" : sort
     })
 
-    all_categories['types'] = []
-    for count in search_results['aggregations']['aggregation']['buckets']:
-         all_categories['types'].append({
-            'key' : count['key'],
-            'doc_count' : count['doc_count'],
-            'display_text' : CATEGORIES[count['key']]
-        })
+    # all_categories['types'] = []
+    # for count in search_results['aggregations']['aggregation']['buckets']:
+    #      all_categories['types'].append({
+    #         'key' : count['key'],
+    #         'doc_count' : count['doc_count'],
+    #         'display_text' : CATEGORIES[count['key']]
+    #     })
     for hit in search_results['hits']['hits']:
         hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
 
-    total = search_results['hits']['total']
+    # total = search_results['hits']['total']
 
-    num_pages = (total // RESULTS_SIZE) + (total % RESULTS_SIZE > 0)
-    if num_pages > 0:
-        num_pages_range = create_page_ranges(page, num_pages)
+    # num_pages = (total // RESULTS_SIZE) + (total % RESULTS_SIZE > 0)
+    # if num_pages > 0:
+    #     num_pages_range = create_page_ranges(page, num_pages)
 
-    if page > 1:
-        has_previous = True
-        previous_page_number = page - 1
-    if page < num_pages:
-        has_next = True
-        next_page_number = page + 1
+    # if page > 1:
+    #     has_previous = True
+    #     previous_page_number = page - 1
+    # if page < num_pages:
+    #     has_next = True
+    #     next_page_number = page + 1
 
-    # combine the current_subfacets into strings for quick comparison in template
-    subfacet_strings = []
-    if current_category and current_category in current_subfacets:
-        for facet_name, facet_values in list(current_subfacets[current_category].items()):
-            for value in facet_values:
-                subfacet_strings.append("%s_%s_%s" % (current_category, facet_name, value))
+    # # combine the current_subfacets into strings for quick comparison in template
+    # subfacet_strings = []
+    # if current_category and current_category in current_subfacets:
+    #     for facet_name, facet_values in list(current_subfacets[current_category].items()):
+    #         for value in facet_values:
+    #             subfacet_strings.append("%s_%s_%s" % (current_category, facet_name, value))
 
-    search_params = []
+    # search_params = []
     # if search_term:
     #     search_params.append(('q', 'Keyword', search_term))
     # if current_category:
@@ -488,18 +496,18 @@ def collection(request, slug):
 
     return render(request, 'pages/mygiza-collection.html', {
         'collection': collection,
-        'search_params' : search_params,
+        # 'search_params' : search_params,
         'hits' : hits,
-        'sub_facets' : sub_facets,
-        'current_subfacets' : current_subfacets,
-        'subfacet_strings' : subfacet_strings,
-        'total' : total,
-        'has_previous' : has_previous,
-        'previous_page_number' : previous_page_number,
-        'has_next' : has_next,
-        'next_page_number' : next_page_number,
-        'num_pages_range' : num_pages_range,
-        'num_pages' : num_pages,
+        # 'sub_facets' : sub_facets,
+        # 'current_subfacets' : current_subfacets,
+        # 'subfacet_strings' : subfacet_strings,
+        # 'total' : total,
+        # 'has_previous' : has_previous,
+        # 'previous_page_number' : previous_page_number,
+        # 'has_next' : has_next,
+        # 'next_page_number' : next_page_number,
+        # 'num_pages_range' : num_pages_range,
+        # 'num_pages' : num_pages,
     })
 
 @login_required
@@ -530,12 +538,23 @@ def collections_create(request):
     })
 
 @login_required
-def collections_add(request, token):
-
-    return request
+def collections_add(request):
+    """
+    This route adds a record to a collection using the little '+' ico class
+    """
+    if request.POST.get('collection') and request.POST.get('object'):
+        collection = Collection.objects.filter(id=uuid.UUID(request.POST.get('collection').replace('"', ''))).first()
+        elasticsearch_item = ElasticSearchItem(
+            es_id=int(request.POST.get('object').replace('"', '').split('_')[1]),
+            type=request.POST.get('object').replace('"', '').split('_')[0],
+            collection=collection
+        )
+        elasticsearch_item.save()
+    return JsonResponse({ 'response' : f'You have added this record to collection {collection.title}'})
 
 @login_required
-def collections_edit(request, slug):
+def collections_edit(request, id):
+    print(id)
 
     # create a collection
     if request.method == 'POST':
@@ -543,6 +562,7 @@ def collections_edit(request, slug):
 
         # save user
         if collection_form.is_valid():
+            
             # create user
             collection = collection_form.save()
             collection.save()
@@ -554,7 +574,7 @@ def collections_edit(request, slug):
 
     # show collection form
     else:
-        collection = get_object_or_404(Collection, slug=slug)
+        collection = get_object_or_404(Collection, id=id)
         collection_form = CollectionForm(collection)
 
         # user does not own this collection, redirect to collections page
@@ -563,28 +583,34 @@ def collections_edit(request, slug):
 
         # handle adding new item id and type to collection
         if request.GET.get('add_item_id') and request.GET.get('add_item_type'):
-            elasticsearch_item = ElasticsearchItem(
+            elasticsearch_item = ElasticSearchItem(
                     es_id=request.GET.get('add_item_id'),
                     type=request.GET.get('add_item_type'),
                     collection=collection
                 )
             elasticsearch_item.save()
-            return redirect('/collections/{}'.format(collection.slug))
+            return redirect('/collections/{}'.format(collection.id))
 
         elif request.GET.get('remove_item_id') and request.GET.get('remove_item_type'):
-            elasticsearch_item = ElasticsearchItem.objects.filter(
+            elasticsearch_item = ElasticSearchItem.objects.filter(
                     es_id=request.GET.get('remove_item_id'),
                     type=request.GET.get('remove_item_type'),
                     collection=collection
                 )
             elasticsearch_item.delete()
-            return redirect('/collections/{}'.format(collection.slug))
+            return redirect('/collections/{}'.format(collection.id))
 
     return render(request, 'pages/mygiza-collection-edit.html', {
         'collection_form': collection_form,
     })
 
-
+@login_required
+def collection_view(request, id):
+    collection = get_object_or_404(Collection, id=id)
+    collection_form = CollectionForm(collection)
+    return render(request, 'pages/mygiza-collection-edit.html', {
+        'collection_form': collection_form,
+    })
 
 
 

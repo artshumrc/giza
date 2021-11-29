@@ -1,3 +1,6 @@
+from datetime import date
+
+
 CATEGORIES = {
 	'sites' 			: 'Tombs and Monuments',
 	'objects' 			: 'Objects',
@@ -28,7 +31,6 @@ FIELDS_PER_CATEGORY = {
 		'medium' : 'Material',
 		'provenance' : 'Findspot',
 		'entrydate' : 'Date of register entry',
-		'entrydate_ms' : 'Date of register entry in milliseconds'
 	},
 	'sites' : {
 		'displaytext' : 'Tomb/Monument number',
@@ -76,6 +78,116 @@ FIELDS_PER_CATEGORY = {
 		'title' : 'Objects mentioned in the document',
 		'dates' : 'Date range of the document'
 	}
+}
+
+"""
+This constant is a temporary stop-measure to resolving search parameters (esp. keywords on unindexed fields)
+"""
+SEARCH_FIELDS_PER_CATEGORY = {
+    'sites' : {
+        'monument' : "displaytext",
+        'sitename' : 'sitename.keyword',
+        'people' : 'people'
+    },
+    'objects' : {
+        'title' : 'title',
+        'number' : 'allnumbers',
+        'medium' : 'medium',
+        'provenance' : 'provenance',
+        'entrydate' : 'entrydate'
+    },
+    'diarypages' : {
+        'keywords' : 'diarytranscription',
+        'entrydate' : 'entrydate',
+        'monuments' : 'diarytranscription'
+    },
+    'photos' : { 
+        'keywords' : 'description',
+        'number' : 'allnumbers',
+        'date' : 'entrydate'
+    },
+    'unpubdocs' : {
+        'author' : 'relateditems.modernpeople.displayname',
+        'site' : 'relateditems.sites.sitename',
+        # 'number' : 'title',
+        'date' : 'entrydate'
+    },
+    'pubdocs' : {
+        'author' : 'authors',
+        'title' : 'title',
+        'year' : 'entrydate',
+        'journal-series' : 'journal',
+        'city-publisher' : 'relateditems.institutions.displayname.keyword'
+    },
+    'drawings' : {
+        'people' : 'relateditems.modernpeople.displayname',
+        'object' : 'description',
+        'date' : 'entrydate'
+    },
+    'people' : {
+        'name' : 'name',
+        'date' : 'date'
+    },
+    'mapsandplans' : {
+        'author' : '',
+        'date' : '',
+        'people' : '',
+        'monument' : 'title'
+    }
+}
+
+"""
+This constant provides the sort options per document type. 
+Values map directly onto the ElasticSearch database field names.
+"""
+SORT_FIELDS_PER_CATEGORY = {
+    'sites' : {
+        'Name' : 'sitesortnumber.keyword',
+        'Tomb owner' : 'tombowner'
+    },
+    'objects' : {
+        'Number' : 'number.keyword', 
+        'With photo' : 'hasphoto', 
+        'Date' : 'entrydate_ms', 
+        'Title' : 'displaytext.keyword',
+        'Classification' : 'classificationtext.keyword',
+        'Material' : 'medium.keyword'
+    },
+    'photos' : {
+        'Number' : 'number',
+        'Date' : 'entrydate_ms',
+        'Department' : 'department'
+    },
+    'diarypages' : {
+        'Date' : 'entrydate_ms',
+    },
+    'drawings' : {
+        'Medium' : 'medium',
+        'Department' : 'department',
+        'Photo' : 'hasphoto'
+    },
+    'mapsandplans' : {
+        'Title' : 'title',
+        'Department' : 'department',
+        'Date' : 'entrydate_ms',
+        'Photo' : 'hasphoto'
+    },
+    'ancientpeople' : {
+        'Name' : 'displayname',
+        'Year' : 'begindate',
+        'Nationality' : 'nationality',
+        'Department' : 'institution'
+    },
+    'modernpeople' : {
+        'Name' : 'displayname'
+    },
+    'videos' : {},
+    'pubdocs' : {},
+    'unpubdocs' : {},
+    'institutions' : {},
+    '3dmodels' : {},
+    'groups' : {},
+    'animals' : {}
 }
 
 """
@@ -134,11 +246,46 @@ FACETS_PER_CATEGORY = {
                     }
                 }
             }
+        },
+        'MET_path' : {
+            'nested' : {
+                'path' : 'MET.Codes'
+            }
+        },
+        'MET_code' : { 
+            'nested' : {
+                'path' : 'MET.Path'
+            }
         }
 	},
 
     # 'objects' document type
 	'objects' : {
+        'Year of Registration_daterange': {
+            "filter": {
+				"type": {
+				   "value": "objects"
+				}
+			},
+            "aggregations" : {
+                'Year of Registration_daterange' : {
+			    	"terms": {
+			        	"field": 'entrydate_ms',
+                        "size" : 10000
+					}
+				}
+            }
+        },
+        'Findspot' : {
+	    	"terms": {
+	        	"field": "provenance.keyword"
+	     	}
+		},
+        'Has Related Photo' : {
+	    	"terms": {
+				'field' : 'hasphoto'
+			}
+		},
 		'Classification' : {
 			"filter": {
 				"type": {
@@ -152,11 +299,6 @@ FACETS_PER_CATEGORY = {
 					}
 				}
 			}
-		},
-		'Findspot' : {
-	    	"terms": {
-	        	"field": "provenance.keyword"
-	     	}
 		},
 		"Material": {
 			"filter": {
@@ -191,16 +333,16 @@ FACETS_PER_CATEGORY = {
 	        	"field": 'period.keyword'
 			}
 		},
-		'Date' : {
-	    	"terms": {
-	        	"field": 'entrydate.keyword'
-			}
-		},
-		'Has Related Photo' : {
-	    	"terms": {
-				'field' : 'hasphoto'
-			}
-		}
+        'MET_path' : {
+            'nested' : {
+                'path' : 'MET.Codes'
+            }
+        },
+        'MET_code' : { 
+            'nested' : {
+                'path' : 'MET.Path'
+            }
+        }
 	},
 
     # 'diarypages' document type
@@ -232,7 +374,74 @@ FACETS_PER_CATEGORY = {
 					}
 				}
 			}
-		}
+		},
+        # "Sites Mentioned": {
+		# 	"filter": {
+		# 		"type": {
+		# 			"value": "diarypages"
+		# 		}
+		# 	},
+		# 	"aggregations": {
+		# 		"Sites Mentioned": {
+		# 			"nested": {
+		# 				"path": "relateditems"
+		# 			},
+		# 			"aggregations": {
+		# 				"Sites Mentioned": {
+		# 					"nested": {
+		# 						"path": "relateditems.sites"
+		# 					},
+		# 					"aggregations": {
+		# 						"Sites Mentioned": {
+		# 							"terms": {
+		# 								"field": "relateditems.sites.sitenumber.keyword"
+		# 							}
+		# 						}
+		# 					}
+		# 				}
+		# 			}
+		# 		}
+		# 	}
+		# },
+        # 'Individuals Mentioned' : {
+        #     "filter" : {
+        #         "type" : {
+        #             "value" : "diarypages"
+        #         }
+        #     },
+        #     "aggregations" : {
+        #         "Individuals Mentioned" : {
+        #             "terms" : {
+        #                 "field" : "relateditems.modernpeople.displayname.keyword"
+        #             }
+        #         }
+        #     }
+        # },
+        'Year_daterange': {
+            "filter": {
+				"type": {
+				   "value": "diarypages"
+				}
+			},
+            "aggregations" : {
+                'Year_daterange' : {
+			    	"terms": {
+			        	"field": 'entrydate_ms',
+                        "size" : 10000
+					}
+				}
+            }
+        },
+        'MET_path' : {
+            'nested' : {
+                'path' : 'MET.Codes'
+            }
+        },
+        'MET_code' : { 
+            'nested' : {
+                'path' : 'MET.Path'
+            }
+        }
 	},
 
     # 'plansanddrawings' document type; being phased out?
@@ -267,7 +476,17 @@ FACETS_PER_CATEGORY = {
 				   }
 				}
 			}
-	  	}
+	  	},
+        'MET_path' : {
+            'nested' : {
+                'path' : 'MET.Codes'
+            }
+        },
+        'MET_code' : { 
+            'nested' : {
+                'path' : 'MET.Path'
+            }
+        }
 	},
 
     # 'drawings' document type
@@ -299,7 +518,17 @@ FACETS_PER_CATEGORY = {
 				   }
 				}
 			}
-	  	}
+	  	},
+        'MET_path' : {
+            'nested' : {
+                'path' : 'MET.Codes'
+            }
+        },
+        'MET_code' : { 
+            'nested' : {
+                'path' : 'MET.Path'
+            }
+        }
 	},
 
     # 'unpubdocs' document type
@@ -317,7 +546,32 @@ FACETS_PER_CATEGORY = {
 					}
 				}
 			}
-		}
+		},
+        'Year_daterange': {
+            "filter": {
+				"type": {
+				   "value": "unpubdocs"
+				}
+			},
+            "aggregations" : {
+                'Year_daterange' : {
+			    	"terms": {
+			        	"field": 'entrydate_ms',
+                        "size" : 10000
+					}
+				}
+            }
+        },
+        'MET_path' : {
+            'nested' : {
+                'path' : 'MET.Codes'
+            }
+        },
+        'MET_code' : { 
+            'nested' : {
+                'path' : 'MET.Path'
+            }
+        }
 	},
 
     # 'pubdocs' document type
@@ -332,11 +586,21 @@ FACETS_PER_CATEGORY = {
 				'field' : 'language.keyword'
 			}
 		},
-		'Year Published' : {
-			'terms' : {
-				'field' : 'yearpublished.keyword'
-			}
-		},
+        'Year of Publication_daterange': {
+            "filter": {
+				"type": {
+				   "value": "pubdocs"
+				}
+			},
+            "aggregations" : {
+                'Year of Publication_daterange' : {
+			    	"terms": {
+			        	"field": 'entrydate_ms',
+                        "size" : 10000
+					}
+				}
+            }
+        },
 		"Author": {
 	         "nested": {
 	            "path": "relateditems"
@@ -379,11 +643,11 @@ FACETS_PER_CATEGORY = {
 				}
 			}
       	},
-		'Number of Pages' : {
-			'terms' : {
-				'field' : 'numofpages'
-			}
-		},
+		# 'Number of Pages' : {
+		# 	'terms' : {
+		# 		'field' : 'numofpages'
+		# 	}
+		# },
 		'Journal' : {
 			'terms' : {
 				'field' : 'journal.keyword'
@@ -393,21 +657,21 @@ FACETS_PER_CATEGORY = {
 			'terms' : {
 				'field' : 'series.keyword'
 			}
-		}
+		},
+        'MET_path' : {
+            'nested' : {
+                'path' : 'MET.Codes'
+            }
+        },
+        'MET_code' : { 
+            'nested' : {
+                'path' : 'MET.Path'
+            }
+        }
 	},
 
     # 'photos' document type
 	'photos' : {
-        'MET_paths' : {
-            "nested" : {
-                "path" : "MET_path_CN.Path"
-            },
-        },
-        'MET_code' : {
-            "terms" : {
-                "field" : "MET_path_CN.Code.keyword"
-            }
-        },
 		'Owning Institution' : {
 			"filter": {
 				"type": {
@@ -427,11 +691,21 @@ FACETS_PER_CATEGORY = {
 				'field' : 'mediaview.keyword'
 			}
 		},
-		'Date' : {
-	    	"terms": {
-				'field' : 'date.keyword'
-			}
-		},
+        'Date of Photograph_daterange': {
+            "filter": {
+				"type": {
+				   "value": "photos"
+				}
+			},
+            "aggregations" : {
+                'Date of Photograph_daterange' : {
+			    	"terms": {
+			        	"field": 'entrydate_ms',
+                        "size" : 10000
+					}
+				}
+            }
+        },
 		"Photographer": {
 			"nested": {
 			   "path": "relateditems"
@@ -452,7 +726,26 @@ FACETS_PER_CATEGORY = {
 			         }
 				}
 			}
-      	}
+      	},
+        'MET' : {
+            'nested' : {
+                'path' : 'MET'
+            },
+            "aggregations" : {
+                "Codes" : {
+                    "terms" : {
+                        "field" : "MET.Codes.keyword",
+                        "size" : 1000
+                    }
+                },
+                "Paths" : {
+                    "terms" : {
+                        "field" : "MET.Path.keyword",
+                        "size" : 1000
+                    }
+                }
+            }
+        }
 	},
 
     # 'people' document type
@@ -599,6 +892,9 @@ FACETS_PER_CATEGORY = {
 	'document' : {}
 }
 
+"""
+This constant is used for resolving dates in the __chkDatePattern function.
+"""
 MONTHS = [
     'january',
     'february',
@@ -614,6 +910,9 @@ MONTHS = [
     'december'
 ]
 
+"""
+This is the MET for quick indexing into values by key.
+"""
 MET_SIMPLE = {
     "AAA": "met 02: category",
     "AAA_AAA": "accessory (including regalia)",
@@ -6240,6 +6539,10 @@ MET_SIMPLE = {
     "AAO_AAP": "unknown"
 }
 
+"""
+This is the MET for quick indexing into values by term. Note that terms are not always unique and
+may result in multiple matches.
+"""
 MET_SIMPLE_REVERSED = {
     "...djefare": [
         "AAF_AAG_AAA_AAI",

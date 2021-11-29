@@ -47,7 +47,7 @@
                       <a href="/admin/">Dashboard</a>
                     </li>
                   {% endif %}
-                  <li><a href="/collections/user">My Collections</a></li>
+                  <li><a href="/collections/">My Collections</a></li>
                   {% for collection in user_collections|slice:":5" %}
                     <li class="li-indented"><a href="/collections/{{collection.slug}}">{{collection.title}}</a></li>
                   {% endfor %}
@@ -78,9 +78,10 @@
                 <a href="https://community.alumni.harvard.edu/give/34086571">Donate</a>
               </li>
               <li {% if section_search %} class="active" {% endif %}>
-                <form id="search-form" action="/search/results/">
-                  <input type="text" id="inputSimpleSearch" name="q" placeholder="Search" value="{{request.GET.q}}">
+                <form id="search-form" method='post' action="/search/results/">
+                  <input type="text" name="query" placeholder="Search" value="{{request.GET.q}}">
                   <button class="icon-search button" onclick="document.getElementById('search-form').submit();"></button>
+                  {% csrf_token %}
                 </form>
               </li>
             </ul>

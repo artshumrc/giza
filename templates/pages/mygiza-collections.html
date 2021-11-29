@@ -1,0 +1,102 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "MyGIZA",
+  section: "mygiza",
+  section_mygiza: true,
+  mygiza_auth: true,
+  class: "p-t-1"
+%}
+
+{% block title %}{{ "MyGIZA" }}{% endblock %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'partials/page-header.html' with bg="7"  title="MyGIZA"%}
+{% endblock  %}
+
+{% block 'main_content' %}
+  <div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+    <div class="row">
+      <div class="columns">
+        <div class="titles">
+        <h2>Collections</h2>
+          <!--a href="mygiza-saved-searches.html">Saved Searches</a-->
+        </div>
+        {% if user.is_superuser %}
+          <a href="/admin/giza/collection/add" class="add" ><span class="sr-only">add</span></a>
+        {% elif user.is_authenticated %}
+          <a href="/collections/create" class="add" ><span class="sr-only">add</span></a>
+        {% else %}
+          <a href="/login" class="add" ><span class="sr-only">add</span></a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="row links">
+      <div class="columns">
+        <ul class="dropdown menu" data-dropdown-menu>
+          <li class="{% if request.path == '/collections/' %}active{% endif %}">
+            <a href="#" id="all_collections_link">All Collections</a>
+            {% if user.is_authenticated %}
+              <ul class="menu show-for-small-only">
+                <li>
+                    <a href="#" id="my_collections">My Collections</a>
+                </li>
+              <!--<li><a href="#">Collections Shared with Me</a></li-->
+              </ul>
+            {% endif %}
+          </li>
+          <li>
+            <a href="#" id="public_collections_link">Public Collections</a>
+          </li>
+          {% if user.is_authenticated %}
+            <li class="hide-for-small-only {% if request.path == '/collections/user' %} active {% endif %}">
+              <a href="#" id="private_collections_link">My Collections</a>
+            </li>
+          {% endif %}
+          <!--li class="hide-for-small-only"><a href="#">Collections Shared with Me</a></li-->
+        </ul>
+        <!-- a href="/collections/" class="go-back">Back to Individual Collections</a-->
+      </div>
+    </div>
+  
+  <section class="collection-section">
+    <div class="row row-padded">
+  
+      <!-- SHOW ALL PUBLIC COLLECTIONS -->
+      <div id="public_collections" class="collections_content">
+        {% include 'partials/mygiza-collections-public.html' %}
+      </div>
+  
+      <!-- SHOW ALL PUBLIC COLLECTIONS -->
+      <div id="public_collections" class="collections_content">
+        {% include 'partials/mygiza-collections-public.html' %}
+      </div>
+      
+      <!-- SHOW ALL PRIVATE COLLECTIONS -->
+      <div id="private_collections" display=hidden class="collections_content">
+        {% include 'partials/mygiza-collections-private.html' %}
+      </div>
+    </div>
+  </section>
+    <!-- <div class="columns row links">
+      <ul class="tabs" data-tabs id="example-tabs">
+        <li class="tabs-title is-active"><a href="#panel1" aria-selected="true">Tab 1</a></li>
+        <li class="tabs-title"><a data-tabs-target="panel2" href="#panel2">Tab 2</a></li>
+      </ul>
+      <div class="tabs-content row links" data-tabs-content="example-tabs">
+        <div class="tabs-panel is-active" id="panel1">
+          <p>Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus.</p>
+        </div>
+        <div class="tabs-panel" id="panel2">
+          <p>Suspendisse dictum feugiat nisl ut dapibus.  Vivamus hendrerit arcu sed erat molestie vehicula. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.  Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor.</p>
+        </div>
+      </div>
+    </div> -->
+  </div>
+    
+    
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

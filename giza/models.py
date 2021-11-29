@@ -87,16 +87,18 @@ class Lesson(models.Model):
         super().save(*args, **kwargs)
 
 class Collection(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=256)
     slug = models.SlugField(blank=True)
     public = models.BooleanField(blank=True, default=False)
     owners = models.ManyToManyField('CustomUser', related_name='owners', blank=True)
     topics = models.ManyToManyField('Topic', related_name='collections_topics', blank=True)
+    contents = models.ManyToManyField('ElasticSearchItem', related_name='elasticsearchitem', blank=True)
     picture = models.ImageField(upload_to='images', blank=True)
-    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # contents = fields.JSONField(blank=False)
 
     def __str__(self):
-        return self.title
+        return str(self.id)
 
     def _get_unique_slug(self):
         unique_slug = slugify(self.title)
@@ -106,11 +108,17 @@ class Collection(models.Model):
             num += 1
         return unique_slug
 
+    def get(self):
+        return self.contents
+
+    def add(self, object):
+        print(object, self.contents)
+
     def save(self, *args, **kwargs):
         self.slug = self._get_unique_slug()
         super().save(*args, **kwargs)
 
-class ElasticsearchItem(models.Model):
+class ElasticSearchItem(models.Model):
     collection = models.ForeignKey(Collection, related_name='items', on_delete=models.CASCADE)
     type = models.CharField(max_length=20)
     es_id = models.IntegerField()
