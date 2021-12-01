@@ -17,26 +17,10 @@
 {% endblock  %}
 
 {% block 'main_content' %}
-
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript">
-
-  // DEBUGGING
-  $(document).ready(() => {
-
-      st = JSON.parse($(search).text())
-
-      allowDrop = ev => {
-    ev.preventDefault()
-  }
-  })
-</script>
-
-<!-- FOR DEBUGGING PURPOSES -->
 {{ search|json_script:"search" }}
-{{ result|json_script:"result" }}
+{{ search_result|json_script:"result" }}
 
 <div class="row" id="search_results">
 
@@ -47,10 +31,14 @@
       <h5 class="heading-alt">Search Options</h5>
       
       <!-- SEARCH OPTIONS -->
-      {% include 'partials/search-options.html' %}
+      <div id="search_options">
+        {% include 'partials/search-options.html' %}
+      </div>
 
       <!-- CURRENT SEARCH PARAMETERS -->
-      {% include 'partials/search-params.html' %}
+      <div id=search_parameters>
+        {% include 'partials/search-params.html' %}
+      </div>
 
       <!-- CATEGORIES -->
       <div id=search_categories>
@@ -94,3 +82,8 @@
 
 {% endblock %}
 <!-- END MAIN CONTENT ROWS -->
+
+<!-- JAVASCRIPT -->
+{% block extra_js %}
+  <script src="{% static '/js/block_search-results.js' %}"></script>
+{% endblock %}

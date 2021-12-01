@@ -4,6 +4,7 @@ from django.http.response import JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.core.handlers.wsgi import WSGIRequest
 
 from functools import reduce
 
@@ -11,7 +12,7 @@ from dateutil.parser import parser
 from datetime import *
 
 from utils.elastic_backend import es, ES_INDEX
-from utils.views_utils import CATEGORIES, SEARCH_FIELDS_PER_CATEGORY, SORT_FIELDS_PER_CATEGORY, FACETS_PER_CATEGORY, MET_SIMPLE, MET_SIMPLE_REVERSED, MONTHS
+from utils.views_utils import CATEGORIES, FIELDS_PER_CATEGORY, SEARCH_FIELDS_PER_CATEGORY, SORT_FIELDS_PER_CATEGORY, FACETS_PER_CATEGORY, MET_SIMPLE, MET_SIMPLE_REVERSED, MONTHS
 
 ####################################
 ###				ROUTES			 ###
@@ -22,7 +23,7 @@ def search(request):
 def search_show(request):
 	return render(request, 'pages/searchresults.html')
 
-def search_results(request):
+def search_results(request, items=None):
 	""" This route passes the Django Request object on to the base parameters method and will receive the items dictionary.
 	It then renders the initial search_results page with items and returns the HTML to the user.
 	###Parameters
@@ -31,34 +32,70 @@ def search_results(request):
 	###Returns
 	- Render function with template
 	"""
-	items = __prepare_base_params(request)
-	return render(request, 'pages/search-results.html', {
-		'MET_tree' : items['search']['MET']['MET_tree'],
-		'search': items['search'],
-		'result' : items['search']['result'],
-		'facets' : items['search']
-	})
+	if items is None:
+		return render(request, 'pages/search-results.html', compile_results(request))
+	else:
+		if items:
+			return compile_results(items)
+		else:
+			return []
 
 @csrf_exempt
-def search_update(request):
+def search_results_update(request, items=None):
 	""" This route reprocesses the new search parameters that are sent from the frontend through an AJAX post request.
-	The method first calls __prepare_base_params, which is detailed below and will result in a new items global object, which 
+	The method first calls search_execute, which is detailed below and will result in a new items global object, which 
 	forms the basis to recompile the various templates required on the frontend.
 	###Parameters
 	-	request : Django Request Object
 		- The Django Request object sent through AJAX on the frontend
 	"""
-	items = __prepare_base_params(request)
-	return JsonResponse({
+	if items is None:
+		return JsonResponse(compile_update(request))
+	else:
+		items['user'] = request.user.is_authenticated
+		if request.method == 'GET':
+			return compile_results(items)
+		else:
+			return compile_update(items)
+		# else:
+			# return JsonResponse({'status':'false','message': "Server error"}, status=500)
+
+
+def compile_results(items):
+	"""
+	This method returns the search results for a vanilla render/page redirect or when the page is refreshed (F5).
+	Key names do not map onto the template.
+	"""
+	items = search_execute(items)
+	return {
+		'stats' : items['search'],
+		'search_result' : items['search']['result'],
+		# 'search' : items['search'],
+		'search_params' : items['search'],
+		'search_pagination' : items['search']['result'],
+		'search_categories' : items['search'],
+		'search_MET' : items['search']['MET']['MET_tree'],
+		'search': items['search'],
+		'search_options' : items['search']
+	}
+
+def compile_update(items):
+	"""
+	This method returns the search results for returning in a JsonResponse. 
+	The keys correspond to the id's declared in the template 'search-results.html'
+	"""
+	items = search_execute(items)
+	return {
 		'search_stats' : render_to_string('search-stats.html', { 'search': items['search'] }), 
-		'search_result' : render_to_string('search-result.html', { 'result': items['search']['result'], 'user': { 'is_authenticated' : request.user.is_authenticated } }), 
+		'search_result' : render_to_string('search-result.html', { 'search_result': items['search']['result'], 'user' : items['user'] }), 
 		'search_facets' : render_to_string('search-facets.html', { 'search': items['search'] }), 
-		'search_params' : render_to_string('search-params.html', { 'fields': items['search']['fields'] }), 
-		'search_pagination' : render_to_string('search-pagination.html', { 'result': items['search']['result'] }),
+		'search_params' : render_to_string('search-params.html', { 'search_params': items['search'] }), 
+		'search_pagination' : render_to_string('search-pagination.html', { 'search_result': items['search']['result'] }),
 		'search_categories' : render_to_string('search-categories.html', { 'search' : items['search'] }),
+		'search_options' : render_to_string('search-options.html', { 'search' : items['search'] }),
 		'search_MET' : render_to_string('search-MET.html', { 'MET_tree': items['search']['MET']['MET_tree'] }),
 		'search' : items['search']
-	})
+	}
 	
 
 
@@ -224,7 +261,6 @@ def build_MET(buckets):
 	if 'aggregations' in buckets:
 		MET_aggregations = { k : v for k, v in buckets['aggregations'].items() if 'MET' in k}
 		if 'MET' in MET_aggregations and MET_aggregations['MET']['doc_count'] > 0:
-			# for facet_category, v in MET_aggregations.items():
 			codes = { x['key'] : x['doc_count'] for x in MET_aggregations['MET']['Codes']['buckets'] }
 			doc_counts = { x['key'] : x['doc_count'] for x in MET_aggregations['MET']['Paths']['buckets'] }
 			if len(codes) and len(doc_counts):
@@ -280,10 +316,16 @@ def getCodes(code):
 ####################################
 ###			SEARCH ROUTINE		 ###
 ####################################
-def __prepare_base_params(request):
+def search_execute(request):
 	"""
-	This method prepares the base parameters for every search called. The method takes in the Django Request object
-	to extract all fields 
+	This method prepares the base parameters for every search called. The method takes in Django WSGIRequest objects 
+	and dictionaries to extract all relevant fields. Crucial keys include: 
+	-	'category', 
+	-	'fields', 
+	-	'query', 
+	-	'MET',
+	-	'facets', 
+	-	'result' with 'sort' and 'size' as well as 'pages.page' 
 	###Output
 	- dict
 		- A dictionary with fields:
@@ -301,56 +343,55 @@ def __prepare_base_params(request):
 	items = {'search' : {} }
 	
 	# IF A SEARCH IS SUBMITTED FOR THE FIRST TIME
-	if request.method == 'POST' and not 'search' in request.POST:
-		items['search']['fields'] = list(request.POST.items())
-		items['search']['query'], items['search']['category'] = '', ''
+	if type(request) is WSGIRequest:
+		if request.method == 'POST' and not 'search' in request.POST:
+			items['search']['fields'] = list(request.POST.items())
+			items['search']['query'], items['search']['category'] = '', ''
 
-		# COLLECT ALL SEARCH FIELDS IF ANY
-		items['search']['fields'] = { x[0].split('_')[0] : {} if '_' in x[0] else (json.loads(x[1]) if '{' in x[1] else x[1]) for x in list(request.POST.items()) }
+			# COLLECT ALL SEARCH FIELDS IF ANY
+			items['search']['fields'] = { x[0].split('_')[0] : {} if '_' in x[0] else (json.loads(x[1]) if '{' in x[1] else x[1]) for x in list(request.POST.items()) }
 
-		# SIMPLE SEARCH
-		if 'query' in request.POST: 
-			items['search']['query'] = request.POST.get('query')
+			# SIMPLE SEARCH
+			if 'query' in request.POST: 
+				items['search']['query'] = request.POST.get('query')
 
-		# ADVANCED SEARCH
-		if 'category' in items['search']['fields']:
-			items['search']['category'] = items['search']['fields']['category']
-			del items['search']['fields']['category']
+			# ADVANCED SEARCH
+			if 'category' in items['search']['fields']:
+				items['search']['category'] = items['search']['fields']['category']
+				del items['search']['fields']['category']
 
-			# REFORMAT SEARCH PARAMETERS FROM ADVANCED SEARCH FORM
-			{ items['search']['fields'][x].update({ SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]] : y[1] }) for x in items['search']['fields'] for y in list(request.POST.items()) if x == y[0].split('_')[0] and type(items['search']['fields'][x]) is dict and items['search']['category'] in x }
+				# REFORMAT SEARCH PARAMETERS FROM ADVANCED SEARCH FORM
+				# { items['search']['fields'][x].update({ 'key' : SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]], 'val' : y[1], 'text' : FIELDS_PER_CATEGORY[items['search']['category']][SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]]] }) for x in items['search']['fields'] for y in list(request.POST.items()) if x == y[0].split('_')[0] and type(items['search']['fields'][x]) is dict and items['search']['category'] in x }
+				{ items['search']['fields'][x].update({ SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]] : y[1] }) for x in items['search']['fields'] for y in list(request.POST.items()) if x == y[0].split('_')[0] and type(items['search']['fields'][x]) is dict and items['search']['category'] in x }
 
-			# REMOVE IRRELEVANT FIELDS--REMOVE THIS AND UPDATE ABOVE LINE TO ENABLE CROSS-CATEGORY SEARCH
-			items['search']['fields'] = { k : v for k, v in items['search']['fields'].items() if type(v) is str or (type(v) is dict and items['search']['category'] in k) }
+				# REMOVE IRRELEVANT FIELDS--REMOVE THIS AND UPDATE ABOVE LINE TO ENABLE CROSS-CATEGORY SEARCH
+				items['search']['fields'] = { k : v for k, v in items['search']['fields'].items() if type(v) is str or (type(v) is dict and items['search']['category'] in k) }
 
-		items['search']['fields'] = { y : z for k, v in { k : v for k, v in items['search']['fields'].items() if isinstance(v, dict) }.items() for y, z in v.items() if z is not ''}
-		
-		# ADD MET
-		items['search']['MET'] = request.POST.get('MET') if request.POST.get('MET') else { 'MET_tree' : {}, 'MET_paths' : [], 'MET_terms' : [] }
+			items['search']['fields'] = { y : z for k, v in { k : v for k, v in items['search']['fields'].items() if isinstance(v, dict) }.items() for y, z in v.items() if z is not ''}
+			
+			# ADD MET
+			items['search']['MET'] = request.POST.get('MET') if request.POST.get('MET') else { 'MET_tree' : {}, 'MET_paths' : [], 'MET_terms' : [] }
 
-		# FACETS
-		items['search']['facets'] = {}
-		
-		# EXTRACT FIELDS THAT WERE SEARCHED FOR
-		items['search']['result'] = { 'sort_options' : [], 'sort' : '', 'hits' : [], 'size' : 25, 'overall' : 0, 'total' : 20, 'params' : [ { y : z } for k, v in { k : v for k, v in items['search']['fields'].items() if isinstance(v, dict) }.items() for y, z in v.items() if z is not ''] }
+			# FACETS
+			items['search']['facets'] = {}
+			
+			# EXTRACT FIELDS THAT WERE SEARCHED FOR
+			items['search']['result'] = { 'sort_options' : [], 'sort' : '', 'hits' : [], 'size' : 25, 'overall' : 0, 'total' : 20, 'params' : [ { y : z } for k, v in { k : v for k, v in items['search']['fields'].items() if isinstance(v, dict) }.items() for y, z in v.items() if z is not ''] }
 
-		# ADD STARTING PAGE
-		items['search']['result']['pages'] = { 'page' : 1, 'view_options' : [10, 25, 50, 100] }
+			# ADD STARTING PAGE
+			items['search']['result']['pages'] = { 'page' : 1, 'view_options' : [10, 25, 50, 100] }
+		else:
+
+			# IF SEARCH PARAMETERS ALREADY EXIST IN THE REQUEST POST
+			items['search'] = json.loads(request.POST.get('search'))
+			items['user'] = request.user.is_authenticated
 	else:
 
-		# IF SEARCH PARAMETERS ALREADY EXIST IN THE REQUEST POST
-		items['search'] = json.loads(request.POST.get('search'))
-
-	# IF REQUEST OBJECT IS FROM REDEEMING A SEARCH TOKEN
-	# if token:
-	# 	items = token[0]
-	# 	del items['key']
-	# 	if 'fields' in items:
-	# 		items.update({ f'{items["category"][0]}_{k}' : v['val'] for k, v in items['fields'].items() })
-	# 		del items['fields']
+		# RESOLVE A SEARCH TOKEN
+		items['search'] = request['search']
 	
 	# USER PROVIDED A SEARCH QUERY WITH COLON AND MAY BE LOOKING FOR A SPECIFIC OBJECT (E.G.: 'objects:HUMFA_27-5-1')
-	if ':' in items['search']['query']:
+	if 'query' in items['search'] and ':' in items['search']['query']:
 		parts = items['search']['query'].split(':')
 		if parts[0] in CATEGORIES:
 			items['search']['category'] = parts[0]
@@ -384,7 +425,7 @@ def __prepare_base_params(request):
 	#########################
 	#	PROCESS SEARCH Q	#
 	#########################
-	items['search'], search_results = search_execute(items['search'])
+	items['search'], search_results = __execute(items['search'])
 
 	#########################
 	#		SEPARATE	 	#
@@ -405,7 +446,7 @@ def __prepare_base_params(request):
 	#########################
 	items['search']['MET']['MET_terms'], items['search']['MET']['MET_tree'] = build_MET(search_results)
 
-	# SURFACE FACETS IN ITEMS, BUT PRESERVES TRUTHY FLAGS IF SET
+	# EXTRACT SELECTED FACETS FROM ITEMS
 	selected_facets = []
 	if items['search']['facets']:
 		selected_facets = list(find_val(items['search']['facets'], True))
@@ -439,7 +480,7 @@ def __prepare_base_params(request):
 ####################################
 ###			QUERY BUILDING		 ###
 ####################################
-def search_execute(items):
+def __execute(items):
 	""" This function calls all methods to construct and execute the search query
 	Once the query has been constructed from __base_query, __post_filter, and __build_aggregations
 	the method returns the ElasticSearch query results.
@@ -481,7 +522,7 @@ def __build_query(items):
 	return q
 
 def __sort_results(items):
-	if not items["result"]["sort"] is '':
+	if not items["result"]["sort"] is '' and items["result"]["sort"] in SORT_FIELDS_PER_CATEGORY[items['category']]:
 		return [
 			{ f'{items["result"]["sort_options"][items["result"]["sort"]]}' : { "order" : "asc" } },
 			{ '_score' : { "order" : "asc" } }
@@ -524,12 +565,11 @@ def __base_query(items):
 					}
 				}]
 			}
-		
-		# items['base'] = {"match_all" : {} }
 
 	# CONSTRUCT A MUST-QUERY IF QUERY TERM IS PROVIDED (SIMPLE SEARCH)
 	if len(items['query']):
-		items['base'] = { 'bool' : { 'must' : { "match" : { "_all" : { "query" : items['query'] } } } } }
+		must.append(__bool_must_match("_all", re.split('\W+', items['query']), {}))
+		items['base']['bool'] = { 'must' : must }
 
 	# CONSTRUCT A MUST-QUERY IF A CATEGORY IS SPECIFIED (ADVANCED SEARCH)
 	if items['category']:
@@ -542,7 +582,7 @@ def __base_query(items):
 		
 		for k, v in fields.items():
 			
-			# RANGE MATCH IF THE SEARCH IS FOR A DATE (IN MILLISECONDS)
+			# RANGE MATCH IF THE SEARCH IS FOR A DATE (IN SECONDS)
 			if 'entrydate' in k:
 				if 'entrydate_ms' in k and len(v):
 					must.append({ "match" : { k : v[0] } }) if len(v) == 1 else must.append({ "range" : { k : { "gte" : v[0], "lte" : v[1] } } })
@@ -765,7 +805,7 @@ def find_key(key, value):
 def find_val(data, value):
 	if isinstance(data, dict):
 		for k, v in data.items():
-			if v == value and isinstance(v, bool): yield v
+			if v == value and isinstance(v, bool): yield k, v
 			else: 
 				yield from find_val(v, value)
 	if isinstance(data, list):
@@ -969,7 +1009,7 @@ def chkDatePattern(values):
 def chkDate(value):
 	try:
 		value = str(value) # CHECK IF THE INPUT IS A STRING
-		value = re.split('\W+', value) # SPLIT ON SPACE
+		value = re.split('\W+', value) # SPLIT ON SPACE ETC.
 
 		# ITERATE OVER VALUES IN STRING LIST
 		if len(value) > 0 and any([char.isdigit() for x in value for char in x]):

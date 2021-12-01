@@ -1,0 +1,12 @@
+{% if search.categories|length %}
+  <ul class="menu vertical nested" data-multi-open="false">
+    {% for category in search.categories %}
+        <a href='#'>
+          <li class="search-facet-item {% if category.selected %} is-active {% endif %}">
+            <label for="category_{{ category.key }}">{{category.displaytext}}</label>
+            <input type="checkbox" class="facet_checkbox" id="category_{{ category.key }}" name="category_{{ category.key }}" {% if category.selected %} checked {% endif %}>
+          </li>
+        </a>
+    {% endfor %}
+  </ul>
+{% endif %}

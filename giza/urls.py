@@ -42,9 +42,11 @@ urlpatterns = [
     
     # url(r'^collections/edit/<uuid:uuid>', views.collections_edit, name="collection_edit"),
     url(r'^collections/all/$', views.collections, name="collections"),
-    url(r'^search/all/del/(?P<token>[\w-]+)$', views.search_del, name='search_del'),
+    url(r'^search/all/update/$', views.search_update, name='search_update'),
+    url(r'^search/all/del/$', views.search_del, name='search_del'),
     url(r'^search/all/$', views.search_all, name="search_all"),
-    url(r'^search/lookup', views.search_token, name='search_token'),
+    # url(r'^search/all/run/', views.search_run, name="search_run"),
+    url(r'^search/lookup/$', views.search_token, name='search_token'),
     url(r'^mygiza/$', views.mygiza, name="mygiza"),
     
     url(r'^library/$', search_views.library, name="library"),
@@ -53,7 +55,7 @@ urlpatterns = [
     url(r'^search/results/add-to-collection$', views.collections_add, name='collections_add'),
     url(r'^search/$', search_views.search, name='search'),
     url(r'^search/show/$', search_views.search_show, name='search_show'),
-    url(r'^search/update', search_views.search_update, name='update_search'),
+    url(r'^search/update', search_views.search_results_update, name='search_results_update'),
 
     # url(r'^search/show/$', search_views.searchResultsView.as_view(), name='search_show'),
     url(r'^search/save$', views.search_save, name='search_save'),

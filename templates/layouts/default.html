@@ -36,6 +36,12 @@
     {% block 'page_headers' %}
     {% endblock %}
 
+      <!-- Core JavaScript and required libraries -->
+    <script src="{% static 'js/app.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+    <script src="{% static 'js/giza.js' %}"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
     {% block 'content' %}
     {% endblock %}
 
@@ -48,13 +54,9 @@
     {% include 'partials/modals.html' %}
     
     {# Global javascript #}
-    <!-- Core JavaScript and required libraries -->
-    <script src="{% static 'js/app.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
     <!-- App-specific JavaScript -->
-    <script src="{% static 'js/giza.js' %}"></script> 
-    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-   
+
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -64,13 +66,8 @@
         ga('create', 'UA-98043800-1', 'auto');
         ga('send', 'pageview');
     </script>
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
-    
-          
 
-    {% block extra_js %}
-      {# Override this in templates to add extra javascript #}
-    {% endblock %}
+    {% block extra_js %}{% endblock %}
 
   </body>
 </html>

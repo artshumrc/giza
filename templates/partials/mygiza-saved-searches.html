@@ -1,0 +1,9 @@
+<!-- BEGIN ACCORDION MENU -->
+<ul class="accordion" data-accordion data-allow-all-closed="true">
+
+    {{ searches|json_script:"searches" }}
+
+    {% for search in searches %}
+        {% include 'partials/mygiza-saved-search.html' %}
+    {% endfor %}
+</ul>

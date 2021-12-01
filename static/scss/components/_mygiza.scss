@@ -1300,16 +1300,17 @@ h3 {
 
 		.button {
 			&.primary {
-				margin: 0;
+				margin: 0 0 0 rem-calc(11px);
 				border: 1px solid rgba(34, 34, 34, 0.4);
 				border-radius: 3px;
 				background: #0279c1;
 				font-size: rem-calc(11px);
 				line-height: 1.27;
 				padding: rem-calc(6px 17px);
-				position: absolute;
-				top: rem-calc(11px);
-				right: rem-calc(13px);
+				float: right;
+				// position: absolute;
+				// top: rem-calc(11px);
+				// right: rem-calc(13px);
 
 				@include media('>=medium') {
 					top: rem-calc(17px);
@@ -1410,7 +1411,7 @@ h3 {
 
 			@include media('>=medium') {
 				display: flex;
-				flex-wrap: wrap;
+				// flex-wrap: wrap;
 				position: relative;
 				padding: rem-calc(7px 0 18px);
 				margin-top: 0;

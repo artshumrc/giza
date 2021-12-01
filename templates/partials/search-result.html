@@ -1,52 +1,31 @@
 {% load static %}
-{% for result in result.hits %}
-{% if result.source.primarydisplay %}
-<div class="media-object list-item search-result thumbsize-md thumbs-square">
-  <div class="media-object-section">
-    {% if user.is_authenticated %}
-      <div class="add-wrap" id="addToCollectionBtn" data-id="{{ result.type }}_{{ result.id }}">
-        <a data-open="add_collection" aria-controls="add_collection" aria-haspopup="true" tabindex="0">
-          <span class="ico"></span>
-        </a>
-      </div>
-    {% endif %}
-    <!-- <a data-open="add_collection" aria-controls="add_collection" aria-haspopup="true" tabindex="0">
-      <span class="icon-plus-circle icon-fw"></span> Add this to a collection
-    </a> -->
-    <div class="thumbnail {% if result.source.primarydisplay.thumbnail %} no-img {% endif %}">
-      <a href="{% url 'get_type_html' result.type result.id 'full' %}"><img src="{% if result.source.primarydisplay.thumbnail %}{{ result.source.primarydisplay.thumbnail }}{% else %}{% static 'images/object1.png' %}{% endif %}" alt="{{ result.title }}"></a>
-    </div>
-  </div>
-  <div class="media-object-section">
-    <p class="media-object-title"><a href="{% url 'get_type_html' result.type result.id 'full' %}">{{ result.source.displaytext }}</a></p>
-    <ul class="subheader">
-      {% if result.type == 'sites' %}
-      <li>{{ result.source.sitename }}</li>
-      {% else %}
-      <li>{{ result.source.number }}</li>
+{% for result in search_result.hits %}
+  <div class="media-object list-item search-result thumbsize-md thumbs-square">
+    <div class="media-object-section">
+      {% if user %}
+        <div class="add-wrap" id="addToCollectionBtn" data-id="{{ result.type }}_{{ result.id }}">
+          <a data-open="add_collection" aria-controls="add_collection" aria-haspopup="true" tabindex="0">
+            <span class="ico"></span>
+          </a>
+        </div>
       {% endif %}
-    </ul>
-  </div>
-</div>
-{% endif %}
-{% endfor %}
-
-
-
-
-<!-- <div class="media-object list-item search-result thumbsize-md thumbs-square">
-  <div class="media-object-section img-wrap">
-    <div class="thumbnail no-img">
-      <a href="#0"><img src="assets/img/thumb-default.png" alt="image description"><img src="assets/img/upload-icon.svg" alt="image description" class="ico"></a>
+      <!-- <a data-open="add_collection" aria-controls="add_collection" aria-haspopup="true" tabindex="0">
+        <span class="icon-plus-circle icon-fw"></span> Add this to a collection
+      </a> -->
+      <div class="thumbnail {% if not 'primarydisplay' in result.source %} no-img {% endif %}">
+        <a href="{% url 'get_type_html' result.type result.id 'full' %}">
+          <img src="{% if result.source.primarydisplay.thumbnail %}{{ result.source.primarydisplay.thumbnail }}{% else %}{% static 'images/object1.png' %}{% endif %}" alt="{{ result.title }}"></a>
+      </div>
+    </div>
+    <div class="media-object-section">
+      <p class="media-object-title"><a href="{% url 'get_type_html' result.type result.id 'full' %}">{{ result.source.displaytext }}</a></p>
+      <ul class="subheader">
+        {% if result.type == 'sites' %}
+        <li>{{ result.source.sitename }}</li>
+        {% else %}
+        <li>{{ result.source.number }}</li>
+        {% endif %}
+      </ul>
     </div>
   </div>
-  <div class="media-object-section">
-    <p class="media-object-title"><a href="#0">Alabaster model bowl</a></p>
-    <ul class="subheader">
-      <li>Objects</li>
-      <li>KHM_ÄS_5952</li>
-    </ul>
-  </div>
-  <div class="add-wrap"><a href="#" class="add"><span class="ico"></span>Add to collection</a></div>
-</div>
- -->
+{% endfor %}

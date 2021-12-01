@@ -24,9 +24,16 @@
       </a>
     </li>
     <li>
-      <span>
-        {{ request.get_host|add:"/search/lookup?token="|add:search.key }}
+      <span id="copy_to_clipboard" data-id="{{ request.get_host|add:'/search/lookup?token='|add:search.key }}">
+        <i class="fas fa-clipboard"></i>
       </span>
     </li>
+    <li>
+      <a href="{{ request.get_host|add:'/search/lookup?token='|add:search.key }}" target="_blank" rel="noopener noreferrer">
+        <span id="load_new_window" data-id="{{ request.get_host|add:'/search/lookup?token='|add:search.key }}">
+          <i class="fas fa-clipboard"></i>
+        </span>
+      </a>
+    </li>
   </ul>
-</div>
+</div

@@ -1,6 +1,7 @@
-{% if fields %}
+{% if search_params.fields|length > 200 %}
+
 <div class="search-facet-section">
-    {% for param in fields.items %}
+    {% for param in search_params.fields.items %}
     {{ param }}
     <h6 class="search-facet-title">{{ param.1.key }}:</h6>
     <ul class="search-facet-list">

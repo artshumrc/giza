@@ -1806,7 +1806,6 @@ class Accordion {
     this.$tabs = this.$element.children('li, [data-accordion-item]');
 
     this.$tabs.each(function(idx, el) {
-      console.log('1')
       var $el = $(el),
           $content = $el.children('[data-tab-content]'),
           id = $content[0].id || Foundation.GetYoDigits(6, 'accordion'),
@@ -1842,11 +1841,9 @@ class Accordion {
       if ($tabContent.length) {
         $elem.children('a').off('click.zf.accordion keydown.zf.accordion')
                .on('click.zf.accordion', function(e) {
-                console.log('2')
           e.preventDefault();
           _this.toggle($tabContent);
         }).on('keydown.zf.accordion', function(e){
-          console.log('3')
           Foundation.Keyboard.handleKey(e, 'Accordion', {
             toggle: function() {
               _this.toggle($tabContent);

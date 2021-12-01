@@ -2,6 +2,7 @@ import json, uuid
 
 from django import forms
 from django.core import serializers
+from django.http.response import Http404
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, render, redirect
@@ -20,164 +21,164 @@ from django.shortcuts import get_object_or_404
 from utils.elastic_backend import es, ES_INDEX
 from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGORY
 
-from search.views import search_results
+from search.views import search_results, search_results_update, search_execute
 
 from .forms import CustomUserCreationForm, CollectionForm
 from .models import Collection, Lesson, ElasticSearchItem, Search
 
 RESULTS_SIZE = 20
 
-def build_es_query(search_term, fields):
-     if fields:
-          must = []
-          for k,v in list(fields.items()):
-               if v:
-                    must.append({
-                         "match" : {
-                              k : {
-                                   "query" : v,
-                                   "operator" : "and"
-                              }
-                         }
-                    })
-          q = {
-               "bool" : {
-                    "must" : must
-               }
-          }
-     elif search_term == '':
-          q = {
-               "match_all" : {}
-          }
-     else:
-          q = {
-               "bool" : {
-                "should" : [
-                    {
-                       "match" : {
-                           "displaytext" : {
-                               "query" : search_term,
-                               "operator" : "and",
-                               "boost" : 2
-                           }
-                       }
-                    },
-                    {
-                         "match" : {
-                            "_all" : {
-                              "query" : search_term,
-                              "operator" : "and"
-                            }
-                         }
-                    }
-                ]
-            }
-          }
-     return q
+# def build_es_query(search_term, fields):
+#      if fields:
+#           must = []
+#           for k,v in list(fields.items()):
+#                if v:
+#                     must.append({
+#                          "match" : {
+#                               k : {
+#                                    "query" : v,
+#                                    "operator" : "and"
+#                               }
+#                          }
+#                     })
+#           q = {
+#                "bool" : {
+#                     "must" : must
+#                }
+#           }
+#      elif search_term == '':
+#           q = {
+#                "match_all" : {}
+#           }
+#      else:
+#           q = {
+#                "bool" : {
+#                 "should" : [
+#                     {
+#                        "match" : {
+#                            "displaytext" : {
+#                                "query" : search_term,
+#                                "operator" : "and",
+#                                "boost" : 2
+#                            }
+#                        }
+#                     },
+#                     {
+#                          "match" : {
+#                             "_all" : {
+#                               "query" : search_term,
+#                               "operator" : "and"
+#                             }
+#                          }
+#                     }
+#                 ]
+#             }
+#           }
+#      return q
 
-def build_subfacet_aggs(current_category, current_subfacets, bool_filter):
-    if not current_category:
-        return {}
-    if current_category not in current_subfacets:
-        return { name : term_agg for name, term_agg in list(FACETS_PER_CATEGORY[current_category].items()) }
+# def build_subfacet_aggs(current_category, current_subfacets, bool_filter):
+#     if not current_category:
+#         return {}
+#     if current_category not in current_subfacets:
+#         return { name : term_agg for name, term_agg in list(FACETS_PER_CATEGORY[current_category].items()) }
 
-    aggregations = {}
-    aggs_for_selected = {}
-    aggs_for_unselected = {}
-    should = []
-    # aggregations for a facet that has been selected by the user will only be affected by other selected facets
-    for name, term_agg in list(FACETS_PER_CATEGORY[current_category].items()):
-        if name in current_subfacets[current_category]:
-            # bool_filter_for_facet = build_bool(current_category, current_subfacets, name)
-            filter_name = name + "_selected_filter"
-            aggregations[filter_name] = {
-                "filter" : {
-                    "bool" : bool_filter_for_facet
-                },
-                "aggregations": {
-                    name : term_agg
-                }
-            }
-        else:
-            # other aggregations will be filtered by the selected facets
-            aggs_for_unselected[name] = term_agg
+#     aggregations = {}
+#     aggs_for_selected = {}
+#     aggs_for_unselected = {}
+#     should = []
+#     # aggregations for a facet that has been selected by the user will only be affected by other selected facets
+#     for name, term_agg in list(FACETS_PER_CATEGORY[current_category].items()):
+#         if name in current_subfacets[current_category]:
+#             # bool_filter_for_facet = build_bool(current_category, current_subfacets, name)
+#             filter_name = name + "_selected_filter"
+#             aggregations[filter_name] = {
+#                 "filter" : {
+#                     "bool" : bool_filter_for_facet
+#                 },
+#                 "aggregations": {
+#                     name : term_agg
+#                 }
+#             }
+#         else:
+#             # other aggregations will be filtered by the selected facets
+#             aggs_for_unselected[name] = term_agg
 
-    filter_name = "_".join(list(current_subfacets[current_category].keys())) + "_filter"
+#     filter_name = "_".join(list(current_subfacets[current_category].keys())) + "_filter"
 
-    aggregations[filter_name] = {
-        "filter" : {
-            "bool" : bool_filter
-        },
-        "aggregations": aggs_for_unselected
-    }
+#     aggregations[filter_name] = {
+#         "filter" : {
+#             "bool" : bool_filter
+#         },
+#         "aggregations": aggs_for_unselected
+#     }
 
-    return aggregations
+#     return aggregations
 
-def recurse_aggs(agg_name, facets, sub_facets, facet_names):
-    if type(facets) != type(dict()):
-        return sub_facets
+# def recurse_aggs(agg_name, facets, sub_facets, facet_names):
+#     if type(facets) != type(dict()):
+#         return sub_facets
 
-    if 'aggregations' not in facets:
-        facet_array = []
-        if 'buckets' in facets:
-            for bucket in facets['buckets']:
-                agg = {
-                'display_text' : bucket['key'],
-                'doc_count' : bucket['doc_count']
-                }
-                facet_array.append(agg)
-            if agg_name in facet_names:
-                sub_facets.insert(0, {agg_name : facet_array})
-            else:
-                sub_facets.append({agg_name : facet_array})
-            return sub_facets
-        else:
-            for agg_name, value in list(facets.items()):
-                recurse_aggs(agg_name, value, sub_facets, facet_names)
-            return sub_facets
-    else:
-        for agg_name, value in list(facets['aggregations'].items()):
-            recurse_aggs(agg_name, value, sub_facets, facet_names)
-        return sub_facets
+#     if 'aggregations' not in facets:
+#         facet_array = []
+#         if 'buckets' in facets:
+#             for bucket in facets['buckets']:
+#                 agg = {
+#                 'display_text' : bucket['key'],
+#                 'doc_count' : bucket['doc_count']
+#                 }
+#                 facet_array.append(agg)
+#             if agg_name in facet_names:
+#                 sub_facets.insert(0, {agg_name : facet_array})
+#             else:
+#                 sub_facets.append({agg_name : facet_array})
+#             return sub_facets
+#         else:
+#             for agg_name, value in list(facets.items()):
+#                 recurse_aggs(agg_name, value, sub_facets, facet_names)
+#             return sub_facets
+#     else:
+#         for agg_name, value in list(facets['aggregations'].items()):
+#             recurse_aggs(agg_name, value, sub_facets, facet_names)
+#         return sub_facets
 
-def create_page_ranges(page, num_pages):
-	# create the range of page numbers and ellipses to show
-	# always show 1. attempt to show two page numbers around the current page
-	num_pages_range = ["1"]
+# def create_page_ranges(page, num_pages):
+# 	# create the range of page numbers and ellipses to show
+# 	# always show 1. attempt to show two page numbers around the current page
+# 	num_pages_range = ["1"]
 
-	# check if we need an ellipsis after 1
-	if page - 2 > 2:
-		num_pages_range.append('ellipsis')
+# 	# check if we need an ellipsis after 1
+# 	if page - 2 > 2:
+# 		num_pages_range.append('ellipsis')
 
-	# determine values before
-	if page - 2 <= 1:
-		for i in range(2, page+1):
-			num_pages_range.append(str(i))
-	else:
-		for i in range(page-2, page):
-			num_pages_range.append(str(i))
+# 	# determine values before
+# 	if page - 2 <= 1:
+# 		for i in range(2, page+1):
+# 			num_pages_range.append(str(i))
+# 	else:
+# 		for i in range(page-2, page):
+# 			num_pages_range.append(str(i))
 
-	# add current page if it's not first or last
-	if page != 1 and page != num_pages and str(page) not in num_pages_range:
-		num_pages_range.append(str(page))
+# 	# add current page if it's not first or last
+# 	if page != 1 and page != num_pages and str(page) not in num_pages_range:
+# 		num_pages_range.append(str(page))
 
-	# determine values after
-	if page + 2 >= num_pages:
-		for i in range(page+1, num_pages):
-			num_pages_range.append(str(i))
-	else:
-		for i in range(page+1, page+3):
-			num_pages_range.append(str(i))
+# 	# determine values after
+# 	if page + 2 >= num_pages:
+# 		for i in range(page+1, num_pages):
+# 			num_pages_range.append(str(i))
+# 	else:
+# 		for i in range(page+1, page+3):
+# 			num_pages_range.append(str(i))
 
-	# check if we need an ellipsis before last page
-	if page + 2 < num_pages - 1:
-		num_pages_range.append('ellipsis')
+# 	# check if we need an ellipsis before last page
+# 	if page + 2 < num_pages - 1:
+# 		num_pages_range.append('ellipsis')
 
-	# always append last page, check it's not already in there (when there are only a few pages)
-	if str(num_pages) not in num_pages_range:
-		num_pages_range.append(str(num_pages))
+# 	# always append last page, check it's not already in there (when there are only a few pages)
+# 	if str(num_pages) not in num_pages_range:
+# 		num_pages_range.append(str(num_pages))
 
-	return num_pages_range
+# 	return num_pages_range
 
 def user_login(request):
     # perform login
@@ -261,22 +262,87 @@ def mygiza(request):
 @login_required
 def search_all(request):
     """This user route returns all searches stored for the logged in user"""
-    return render(request, 'pages/mygiza-saved-searches.html', { 'searches' : __findSavedSearches(user=request.user.id) })
+    return render(request, 'pages/mygiza-saved-search-queries.html', { 'searches' : __findSavedSearches(user=request.user.id) })
 
 @login_required
 def search_save(request):
     """This user route saves the user's current search parameters as a new Search model instance"""
-    return JsonResponse({'result' : Search(owner=request.user.id, search=dict(request.GET), name=request.GET.get('name')).save()})
+    search = json.loads(request.POST.get('search'))
+    search['result']['hits'] = []
+    return JsonResponse({'result' : Search(owner=request.user.id, search=search, name=request.POST.get('name')).save()})
 
 @login_required
-def search_del(request, token):
-    """This user route deletes a single search by token"""
-    return render(request, 'pages/mygiza-saved-searches.html', { 'searches' : __findSavedSearches(user=request.user.id, ssid=token) })
+def search_del(request):
+    """This user route deletes a single search by id"""
+    searches = __findSavedSearches(user=request.user.id, ssid=request.POST.get('id'))
+    html = render_to_string('partials/mygiza-saved-search-queries.html', searches)
+    return JsonResponse({ 'success' : True, 'response' : html, 'total' : len(searches) })
+    # return render(request, 'pages/mygiza-saved-searches.html', { 'searches' : __findSavedSearches(user=request.user.id, ssid=token) })
+
+@login_required
+def search_update(request):
+    """This user route updates a single search by id"""
+    if request.POST:
+        # items.update({ 'user' : request.user.is_authenticated, 'key' : str(request.POST.get('id')), 'search' :  })
+        return JsonResponse({ 'success' : True, **__updateSavedSearch(request) })
+        
+        # return JsonResponse({ 'success' : True, 'html' : render_to_string('partials/mygiza-saved-searches.html', { 'searches' : __findSavedSearches(user=request.user.id) }) })
+        # return JsonResponse({ 'success' : True, 'search' : items }) })
+
+def __updateSavedSearch(request):
+    try:
+        result = get_object_or_404(Search, id=request.POST.get('id'))
+        if result:
+            param = request.POST.get('param').split('_')
+            if 'category' in param:
+                result[0]['search']['category'].append(param[1])
+            else:
+                for facet in result.search['facets'][param[1]]:
+                    if facet['display_text'] == param[2]:
+                        facet['selected'] = False if facet['selected'] else True
+                items = search_execute({ 'search' : result.search })
+                del items['search']['result']['hits']
+                result.search = items['search']
+                result.save(update_fields=['search'])
+        
+        return { 'key' : request.POST.get('id'), 'search' : result.search }
+    except Http404:
+        raise f'Search model {request.POST.get("id")} unknown'
 
 def search_token(request):
     """This public route returns a single search redeemed by token"""
-    return render(request, 'pages/searchresults.html', search_results(request, token=__findSavedSearches(ssid=request.GET.get('token'))))
+    try:
+        if request.POST.get('token'):
+            items = __findSavedSearches(ssid=request.POST.get('token'))
+            if items:
 
+                # RETURN IF TOKEN IS RESOLVED FROM SEARCH PAGE
+                return JsonResponse({ 'success' : True, 'response' : search_results_update(request, items) })
+            else:
+
+                # RETURN IF NO RESULTS
+                return JsonResponse({ 'success' : False, 'response' : 'No saved search found for that token' })
+        else:
+            
+            # IF URL IS PASTED
+            
+            items = __findSavedSearches(ssid=request.GET.get('token'))
+            
+            if len(items) and len(items) == 1:
+                return render(request, 'pages/search-results.html', search_results_update(request, items[0]))
+            else:
+                return JsonResponse({ 'success' : False, 'response' : 'You did not provide a valid token' })
+                # return render(request, 'pages/search-results.html', search_update(request, items))
+            # RETURN IF NO TOKEN IS GIVEN
+            # return redirect('/search/results')
+            # return {'error' : "error"}
+            
+
+    # RETURN IF ERROR
+    except:
+        raise
+        # return render(request, 'pages/search-results.html', {})
+ 
 
 
 
@@ -289,25 +355,26 @@ def __findSavedSearches(user=None, ssid=None):
     """ This private helper method finds saved searches for user id or search id """
     """ If both are given, the record will be deleted """
     """ ### PARAMETERS """
-    if user: searches = Search.objects.filter(owner=user)
-    if ssid: searches = Search.objects.filter(id=ssid)
+    try:
+        results = []
+        if user: results = Search.objects.filter(owner=user)
+        if ssid: results = Search.objects.filter(id=ssid)
 
-    if user and ssid:
-        searches.delete()
-        searches = Search.objects.filter(owner=user)
-    
-    data = json.loads(serializers.serialize('json', searches))
+        if user and ssid:
+            results.delete()
+            results = Search.objects.filter(owner=user)
 
-    # SERIALIZE DATA FOR TEMPLATE
-    data = [{ 
-        'key' : x['pk'], 
-        'name' : x['fields']['name'],
-        'term' : x['fields']['search']['term'], 
-        'category' : x['fields']['search']['category'],
-        'fields' : [json.loads(k) for k in x['fields']['search']['fields']][0] if 'fields' in x['fields']['search'] else []
-    } for x in data ]
+        if results:    
+        
+            items = json.loads(serializers.serialize('json', results))
 
-    return data
+            # SERIALIZE DATA FOR TEMPLATE
+            return [{ 'key' : x['pk'], 'name' : x['fields']['name'], 'search' : x['fields']['search'] } for x in items]
+        
+        return {}
+    except:
+        raise
+
 
 
 

@@ -1,0 +1,74 @@
+<li class="accordion-item {% if forloop.first %}is-active{% endif %}" data-accordion-item name="{{ search.key }}">
+    <a href="#" class="accordion-title">{{ search.name }}</a>
+    <a href="#" data-id="{{ search.key }}" class="button primary del_search">
+        <i class="fas fa-arrow-circle-left show-for-small-only"></i>
+        <span class="show-for-medium">Delete this search</span>
+    </a>
+    <a href="#" data-id="{{ search.key }}" class="button primary run_search">
+        <i class="fas fa-arrow-circle-right show-for-small-only"></i>
+        <span class="show-for-medium">Run this search</span>
+    </a>
+    <div class="accordion-content" data-tab-content>
+        <div class="content-wrap">
+            <div class="col">
+                <h5>Search Statistics</h5>
+                <div>
+                    <h6>Results</h6>
+                    <span id="{{ search.key }}_total">{{ search.search.result.overall }}/{{ search.search.result.overall }}</span>
+                </div>
+            </div>
+            <div class="col">
+
+            <!-- SEARCH PARAMETERS -->
+            <h5>Search Parameters</h5>
+            <ul class="vertical menu accordion-menu" data-accordion-menu data-multi-open="false">
+
+                <!-- QUERY -->
+                <li data-accordion-item>
+                    <h6>Search terms:</h6>
+                    <input type="text" value="{% if search.search.query|length %}{{ search.search.query }}{% endif %}" placeholder="{% if not search.search.query|length %}No query terms{% endif %}">
+                </li>
+               
+                <!-- CATEGORIES -->
+                <li data-accordion-item>
+                    <a href='#'>
+                        <h6>Categories</h6>
+                        {% include 'partials/search-categories-accordion.html' with search=search.search %}
+                    </a>
+                </li>
+
+                <!-- SEARCH FIELDS -->
+                {% if search.search.fields %}
+                <li data-accordion-item>
+                    <a href="#">
+                        <h6>Search fields</h6>
+                        {% include 'partials/search-fields.html' with fields=search.search.fields %}
+                    </a>
+                </li>
+                {% endif %}
+            <ul>
+            </div>
+
+            <div class="col">
+            <h5>Facets</h5>
+            
+                <!-- FACETS -->
+                <div id=search_facets>
+                    {% include 'partials/search-facets-accordion.html' with search=search.search %}
+                </div>
+
+            </div>
+            <div class="col">
+                <h5>MET</h5>
+                {% include 'partials/search-MET.html' with MET_tree=search.search.MET.MET_tree %}
+            </div>    
+        </div>
+        <div class="row">
+            <div class="columns medium-6">
+            {% with email_modal=request.get_host|add:"/search/lookup?token="|add:search.key %}
+                {% include 'partials/share-links.html' with class="share-links--left" %}
+            {% endwith %}
+            </div>
+        </div>
+    </div>
+</li>

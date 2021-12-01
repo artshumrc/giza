@@ -1,0 +1,12 @@
+{% if fields %}
+  <ul class="menu vertical nested" data-multi-open="false">
+    {% for key, val in fields.items %}
+      <label for="{{ key }}_{{ val }}">{{ key }}</label>
+      <a href='#'>
+        <li class="search-facet-item {% if facet.selected %} is-active {% endif %}">
+          <input type="text" value="{{ val }}">
+        </li>
+      </a>
+    {% endfor %}
+  </ul>
+{% endif %}

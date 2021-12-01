@@ -1,6 +1,5 @@
 from datetime import date
 
-
 CATEGORIES = {
 	'sites' 			: 'Tombs and Monuments',
 	'objects' 			: 'Objects',
@@ -14,13 +13,13 @@ CATEGORIES = {
 	'ancientpeople' 	: 'Ancient People',
 	'modernpeople' 		: 'Modern People',
 	'institutions' 		: 'Institutions',
-	'groups' 			: 'Groups',
+	'groups' 			: 'Groups', # Uncertain
 	'animals'			: 'Animals',
 	'3dmodels'			: '3D Models',
 	'videos'			: 'Videos',
 	'audio'				: 'Audio',
-	'microfilm'			: 'Microfilm',
-	'document'			: 'Document',
+	'microfilm'			: 'Microfilm',  # Not yet in TMS?
+	'document'			: 'Document',   # Default Media type?? authority table: not used because subdivisions?: file-type;
 	'iiifmanifest'		: 'IIIF Manifest'
 }
 
@@ -61,10 +60,10 @@ FIELDS_PER_CATEGORY = {
 		'date' : 'Date of plan',
 		'people' : 'People associated with the plan'
 	},
-	'people' : {
-		'name' : 'Name of a person',
-		'dates' : 'Date range of person'
-	},
+	# 'people' : {
+	# 	'name' : 'Name of a person',
+	# 	'dates' : 'Date range of person'
+	# },
 	'pubdocs' : {
 		'author' : 'Author of the document',
 		'title' : 'Title of the document',
@@ -124,10 +123,10 @@ SEARCH_FIELDS_PER_CATEGORY = {
         'object' : 'description',
         'date' : 'entrydate'
     },
-    'people' : {
-        'name' : 'name',
-        'date' : 'date'
-    },
+    # 'people' : {
+    #     'name' : 'name',
+    #     'date' : 'date'
+    # },
     'mapsandplans' : {
         'author' : '',
         'date' : '',
@@ -154,16 +153,16 @@ SORT_FIELDS_PER_CATEGORY = {
         'Material' : 'medium.keyword'
     },
     'photos' : {
-        'Number' : 'number',
+        # 'Number' : 'number.keyword',
         'Date' : 'entrydate_ms',
-        'Department' : 'department'
+        'Department' : 'department.keyword'
     },
     'diarypages' : {
         'Date' : 'entrydate_ms',
     },
     'drawings' : {
-        'Medium' : 'medium',
-        'Department' : 'department',
+        'Medium' : 'medium.keyword',
+        'Department' : 'department.keyword',
         'Photo' : 'hasphoto'
     },
     'mapsandplans' : {
@@ -226,6 +225,48 @@ FACETS_PER_CATEGORY = {
 				'field' : 'tombowner'
 			}
 		},
+        # "Tomb Owner": {
+        #     "nested": {
+        #         "path": "relateditems"
+        #     },
+        #     "aggregations": {
+        #         "owner_aggs": {
+        #             "filter": {
+        #                 "term": {
+        #                     "relateditems.ancientpeople.role.keyword": "Tomb Owner"
+        #                 }
+        #             },
+        #             "aggregations": {
+        #                 "Tomb Owner": {
+        #                     "terms": {
+        #                         "field": "relateditems.ancientpeople.displayname.keyword"
+        #                     }
+        #                 }
+        #             }
+        #         }
+        #     }
+        # },
+        # "Attested": {
+        #     "nested": {
+        #         "path": "relateditems"
+        #     },
+        #     "aggregations": {
+        #         "attested_aggs": {
+        #             "filter": {
+        #                 "term": {
+        #                     "relateditems.ancientpeople.role.keyword": "Attested"
+        #                 }
+        #             },
+        #             "aggregations": {
+        #                 "Attested": {
+        #                     "terms": {
+        #                         "field": "relateditems.ancientpeople.displayname.keyword"
+        #                     }
+        #                 }
+        #             }
+        #         }
+        #     }
+        # },
         "Excavator": {
             "nested": {
                 "path": "relateditems"
@@ -754,8 +795,8 @@ FACETS_PER_CATEGORY = {
 			"filter": {
 				"type": {
 				   "value": "ancientpeople"
-				}, "type" : 
-				{ "value" : "modernpeople"
+				}, "type" : { 
+                    "value" : "modernpeople"
 				}
 			},
 			"aggregations": {
@@ -770,16 +811,35 @@ FACETS_PER_CATEGORY = {
 
     # 'ancientpeople' document type
 	'ancientpeople' : {
-		'Gender' : {
+		"Gender" : {
 			"filter": {
 				"type": {
 				   "value": "ancientpeople"
 				}
 			},
 			"aggregations": {
-				'Gender' : {
+				"Gender" : {
 					'terms' : {
-						'field' : 'gender.keyword'
+						"field" : "gender.keyword"
+					}
+				}
+			}
+		},
+		"Associated Tombs": {
+			"nested": {
+				"path": "relateditems"
+			},
+			"aggregations": {
+				"relateditems.sites": {
+					"filter": {
+						"type": {
+							"value": "sitenumber.keyword"
+						}
+					}
+				},
+				"Associated Tombs": {
+					"terms": {
+						"field": "relateditems.sites.sitenumber.keyword"
 					}
 				}
 			}

@@ -1,4 +1,15 @@
 <p>
-  <a href="/search/">New search</a><br><form id=search_token_form action='/search/lookup'></form>
-  <label for=search_token>Redeem search token</label><input type=text name=token id=search_token></form>
+  <a href="/search/">New search</a>
+  <br>
+    <!-- <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown" data-alignment="left"> -->
+      <!-- <li {% if section_search %} class="active" {% endif %}> -->
+        <!-- <form id="search_token_form"> -->
+  <input type="text" name="token" id="token" placeholder="Token">
+  <button class="icon-search button" id='redeem_token'></button>
+  <br>
+  {% if search.facets|length > 200 %} <a href='#' id="reset_facets">Reset facets</a> {% endif %}
+
+        <!-- </form> -->
+      <!-- </li> -->
+  <!-- </ul> -->
 </p>

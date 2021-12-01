@@ -1,0 +1,23 @@
+{% if search.facets|length %}
+  <ul class="vertical menu accordion-menu" data-accordion-menu data-multi-open="false">
+    {% for type, subfacets in search.facets.items %}
+      {% if '_daterange' not in type and 'Codes' not in type and 'Paths' not in type and subfacets|length %}
+        <li>
+          <a href='#'>
+            <h6 class="search-facet-title">{{ type }}:</h6>
+            <ul class="menu vertical nested" data-multi-open="false"> 
+              {% for facet in subfacets %}
+              <a href='#'>
+                <li class="search-facet-item">
+                  <label for="{{ search.category }}_{{ type }}_{{ facet.display_text }}">{{facet.display_text}}</label>
+                  <input type="checkbox" class="facet_checkbox" id="{{ search.category }}_{{ type }}_{{ facet.display_text }}" name="{{ type }}_{{ facet.display_text }}" {% if facet.selected %} checked {% endif %}>
+                </li>
+              </a>
+              {% endfor %}
+            </ul>
+          </a>        
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}
