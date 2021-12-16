@@ -1,12 +1,4 @@
-{% extends 'layouts/default.html' %}
 {% load static %}
-{% set
-  title: "Digital Giza Library",
-  section: "library",
-  section_library: true
-%}
-
-{% block title %}{{ "Digital Giza Library" }}{% endblock %}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
@@ -20,18 +12,18 @@
     <aside class="medium-4 columns medium-push-8" data-sticky-container>
       <div class="sticky sticky-sidebar" data-sticky data-margin-top="4.6" data-top-anchor="page-content-main" data-btm-anchor="page-content-main:bottom">
         <div class="feature-block secondary">
-          <h5><span class="icon-list icon-padded"></span> Navigate</h5>
+          <h5><span class="icon-list icon-padded"></span>Navigate</h5>
 
-          <div>
+          <!-- <div>
             <label><h6 class="heading-em">Sort by:</h6>
               <select onchange="goToPage({% url 'library' %}+'?sort='+this.value);">
                 <option {% if sort == 'name'%}selected{% endif %} value="name">Author</option>
                 <option {% if sort == 'format'%}selected{% endif %} value="format">Format</option>
-                <!-- <option {% if sort == 'title'%}selected{% endif %} value="title">Title</option> -->
+                <option {% if sort == 'title'%}selected{% endif %} value="title">Title</option>
                 <option {% if sort == 'yearpublished'%}selected{% endif %} value="yearpublished">Year Published</option>
               </select>
             </label>
-          </div>
+          </div> -->
 
           {% if sort == 'name' %}
           <h6 class="heading-em">Jump to:</h6>
@@ -49,7 +41,7 @@
           <h5><span class="icon-info-circle icon-padded"></span> Contributions</h5>
 
           <p class="text-smaller">
-            In an effort to provide a comprehensive online library for the Digital Giza Project, authors are encouraged to <a href="{% url 'about' 'contact' %}">contact the Giza Archives Project staff</a> if they have Giza-related publications already converted to electronic form (PDF) that they would like to post here.
+            In an effort to provide a comprehensive online library for the Digital Giza Project, authors are encouraged to <a href="{% url 'contact' %}">contact the Giza Archives Project staff</a> if they have Giza-related publications already converted to electronic form (PDF) that they would like to post here.
           </p>
 
       </div>

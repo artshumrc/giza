@@ -11,12 +11,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
-from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.contrib.auth.views import LogoutView
+# Django 2.2.24:
+# from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.templatetags.static import static
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse, resolve
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+from elasticsearch.exceptions import HTTP_EXCEPTIONS
 
 from utils.elastic_backend import es, ES_INDEX
 from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGORY
@@ -180,7 +184,61 @@ RESULTS_SIZE = 20
 
 # 	return num_pages_range
 
-def user_login(request):
+def giza_at_school(request):
+    return JsonResponse({
+        'success' : True, 
+        'html' : render_to_string('gizaatschool.html')
+    })
+
+def common_topics(request):
+    return JsonResponse({
+        'success' : True, 
+        'html' : render_to_string('commontopics.html')
+    })
+
+def faq(request):
+    return JsonResponse({
+        'success' : True, 
+        'html' : render_to_string('faq.html')
+    })
+
+def giza_intro(request):
+    return JsonResponse({
+        'success' : True, 
+        'html' : render_to_string('gizaintro.html')
+    })
+
+def giza_3d(request):
+    return JsonResponse({
+        'success' : True, 
+        'html' : render_to_string('giza3d.html')
+    })
+
+def mygiza(request):
+    return JsonResponse({
+        'success' : True, 
+        'html' : render_to_string('mygiza-landing.html')
+    })
+
+def about(request):
+    return JsonResponse({
+        'success' : True, 
+        'html' : render_to_string('about.html')
+    })
+
+def archaeology(request):
+    return JsonResponse({
+        'success' : True, 
+        'html' : render_to_string('archaeology.html')
+    })
+
+def contact(request):
+    return JsonResponse({
+        'success' : True, 
+        'html' : render_to_string('archaeology.html')
+    })
+
+def sign_in(request):
     # perform login
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -189,69 +247,96 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                redirect_to = request.GET.get('redirect_to', None)
-                next = request.GET.get('next', None)
+                return JsonResponse({
+                    'success' : True,
+                    'html' : render_to_string('header.html', { 'user' : user })
+                    # 'user' : user.id,
+                    # 'username' : user.get_username()
+                })
+                # redirect_to = request.GET.get('redirect_to', None)
+                # next = request.GET.get('next', None)
 
                 # no idea why the failed get is being cast to a string
-                if redirect_to is not None and redirect_to != 'None':
-                    return HttpResponseRedirect(redirect_to)
-                elif next is not None and next != 'None':
-                    return HttpResponseRedirect(next)
-                return HttpResponseRedirect(reverse('index'))
+                # if redirect_to is not None and redirect_to != 'None':
+                    # return HttpResponseRedirect(redirect_to)
+                # elif next is not None and next != 'None' and next != '':
+                    # return HttpResponseRedirect(next)
+                # return HttpResponseRedirect(reverse('index'))
             else:
-                return HttpResponse("Your account is inactivate.")
+                return HttpResponse("Your account has been deactivated. Please contact us to reactivate your account.")
         else:
-            messages.error(request, "Wrong username or password.")
-            return HttpResponseRedirect(reverse('login'))
+            return JsonResponse({ 
+                'success' : False,
+                "message" : "Uh-oh! We did not find a user with that username and password!"
+            })
 
     # show login form
     else:
+        return JsonResponse({
+            'success' : True, 
+            'html' : render_to_string('user-sign-in.html'),
+        })
         # render
-        return render(request, 'pages/login.html', { 'redirect_to': request.GET.get('redirect_to') })
+        # return render(request, 'pages/user-sign-in.html')
 
 def sign_up(request):
+    """
+    This route processes new sign up requests.
+    """
     registered = False
 
-    # perform registration
+    # RECEIVED A NEW REGISTRATION POST REQUEST
     if request.method == 'POST':
         custom_user = None
         custom_user_form = CustomUserCreationForm(data=request.POST)
-
-        # save user
+ 
+        # IF CUSTOM USER WAS SUCCESSFULLY CREATED
         if custom_user_form.is_valid():
-            # create user
-            custom_user = custom_user_form.save()
-            public_group = Group.objects.get(name='Public')
-            custom_user.groups.add(public_group)
-            custom_user.save()
-            registered = True
-            return redirect('/')
+            
+            # ASSIGN THE CUSTOM USER TO A GROUP
+            try:
+                custom_user = custom_user_form.save()
+                group = Group.objects.get_or_create(name="Public")
+                if not group[1]: group[0].save()
+                custom_user.groups.add(group[0])
+                custom_user.save()
 
+                # registered = True
+                # return redirect('/')
+            except Exception as e:
+                messages.add_message(request, messages.WARNING, e.args[0])
         else:
-            messages.error(request, "You were unable to create a new user account.")
-
+            messages.add_message(request, messages.WARNING, custom_user_form.errors)
 
     # show reg form
     else:
         custom_user_form = CustomUserCreationForm()
 
+    l = messages.get_messages(request)._queued_messages
+
     # render
     context = {
+        'messages' : l,
         'custom_user_form': custom_user_form,
         'registered': registered
     }
-    return render(request, 'pages/sign_up.html', context)
+    return JsonResponse({
+        'success' : True, 
+        'html' : render_to_string('user-sign-up.html', context, request=request)
+    })
+    # return render(request, 'pages/sign_up.html', context)
 
 @login_required
-def user_logout(request):
+def sign_out(request):
     logout(request)
-    return HttpResponseRedirect(reverse('index'))
-
-def mygiza(request):
-    return render(request, 'pages/mygiza-landing.html')
-
-
-
+    # return HttpResponseRedirect('/')
+    # return HttpResponseRedirect(reverse('index'))
+    # return redirect('giza:index')
+    return JsonResponse({
+        'success' : True,
+        'html' : render_to_string('header.html'),
+        'body' : render_to_string('intro.html')
+    })
 
 
 
@@ -260,9 +345,24 @@ def mygiza(request):
 ################################
 """ SEARCH FUNCTIONS """
 @login_required
-def search_all(request):
-    """This user route returns all searches stored for the logged in user"""
-    return render(request, 'pages/mygiza-saved-search-queries.html', { 'searches' : __findSavedSearches(user=request.user.id) })
+def searches(request):
+    """This user route returns all searches stored for the logged in user in a rendered page"""
+    return JsonResponse({ 
+        'success' : True, 
+        'html' : render_to_string('pages/mygiza.html', { 
+            'collections' : [], 
+            'searches' : __findSavedSearches(user=request.user.id),
+            'topics' : [],
+            'user' : request.user
+        })
+    })
+    # return render(request, )
+    # return JsonResponse({ 'success' : True, 'html' : render_to_string('partials/mygiza-saved-search-queries.html', { 'searches' : __findSavedSearches(user=request.user.id) }) })
+    # return render(request, 'partials/mygiza-saved-search-queries.html', { 'searches' : __findSavedSearches(user=request.user.id) })
+
+def searches_all(request):
+    """This user route returns all searches stored for the logged in user as JSON"""
+    return JsonResponse({ 'success' : True, 'html' : render_to_string('partials/mygiza-saved-search-queries.html', { 'searches' : __findSavedSearches(user=request.user.id) }) })
 
 @login_required
 def search_save(request):
@@ -283,12 +383,8 @@ def search_del(request):
 def search_update(request):
     """This user route updates a single search by id"""
     if request.POST:
-        # items.update({ 'user' : request.user.is_authenticated, 'key' : str(request.POST.get('id')), 'search' :  })
         return JsonResponse({ 'success' : True, **__updateSavedSearch(request) })
         
-        # return JsonResponse({ 'success' : True, 'html' : render_to_string('partials/mygiza-saved-searches.html', { 'searches' : __findSavedSearches(user=request.user.id) }) })
-        # return JsonResponse({ 'success' : True, 'search' : items }) })
-
 def __updateSavedSearch(request):
     try:
         result = get_object_or_404(Search, id=request.POST.get('id'))
@@ -296,14 +392,16 @@ def __updateSavedSearch(request):
             param = request.POST.get('param').split('_')
             if 'category' in param:
                 result[0]['search']['category'].append(param[1])
+            elif 'query' in param:
+                result.search['query'] = param[1]
             else:
                 for facet in result.search['facets'][param[1]]:
                     if facet['display_text'] == param[2]:
                         facet['selected'] = False if facet['selected'] else True
-                items = search_execute({ 'search' : result.search })
-                del items['search']['result']['hits']
-                result.search = items['search']
-                result.save(update_fields=['search'])
+            items = search_execute({ 'search' : result.search })
+            del items['search']['result']['hits']
+            result.search = items['search']
+            result.save(update_fields=['search'])
         
         return { 'key' : request.POST.get('id'), 'search' : result.search }
     except Http404:
@@ -388,6 +486,10 @@ def __findSavedSearches(user=None, ssid=None):
 Collections are user stored groupings of random records. Collections
 should probably store individual ElasticSearch record ids for quick retrieval.
 """
+def collections_all(request):
+    """This user route returns all collections stored for the logged in user"""
+    return JsonResponse({ 'success' : True, 'html' : render_to_string('mygiza-collections.html', { 'collections' : __getPublicCollections() }) })
+
 @login_required
 # def collections(request):
 #     """ This user route returns all collections marked as public """
@@ -396,15 +498,62 @@ should probably store individual ElasticSearch record ids for quick retrieval.
 
 def collections(request):
     """ This public route returns all public collections """
-    return render(request, 'pages/mygiza-collections.html', { 'public_collections' : Collection.objects.filter(public=True) })
+    collections = __getPublicCollections()
+    # saved_search_queries = __findSavedSearches(request.user.id)
+    return JsonResponse({ 
+        'success' : True, 
+        'html' : render_to_string('pages/mygiza.html', { 
+            'collections' : { 
+                'collections' : len(collections),
+                'html' : render_to_string('mygiza-collections.html', { 
+                    'collections' : collections, 
+                    'user' : request.user.is_authenticated 
+                })
+            },
+            'user' : request.user
+        })
+        # 'searches' : { 
+            # 'searches' : saved_search_queries,
+            # 'html' : render_to_string('mygiza-saved-search-queries.html', { 
+                # 'searches' : saved_search_queries 
+            # })
+        # }
+    })
 
-def public_collections(request):
-    return JsonResponse(render_to_string('mygiza-collections-public.html', { 'collections': Collection.objects.filter(public=True) }))
+def collections_public(request):
+    return JsonResponse({ 'success' : True, 'html' : __getCollectionsView() })
 
 @login_required
-def private_collections(request):
-    """ This private route returns all user collections """
-    return JsonResponse(render_to_string('mygiza-collections-private.html', { 'collections': Collection.objects.filter(owners=request.user.id) }))
+def collections_private(request):
+    return JsonResponse({ 'success' : True, 'html' : __getCollectionsView(request.user.id) })
+
+def __getCollectionsView(uid=None):
+    """ This private method returns the collections view either with public or user-specific collections as rendered HTML
+    uid : int
+        - The user id for which to retrieve all collections. If uid is None, the method returns all public collections
+    """
+    return render_to_string('mygiza-collections-view.html', { 'collections': Collection.objects.filter(owners=uid) if uid else Collection.objects.filter(public=True) })
+
+@login_required
+def edit_collection(request):
+    collection = Collection.objects.get(id=request.POST.get('token'))
+    items = collection.contents.all()
+
+    for item in items:
+        es.search('giza', item.type, query={'query' : { 'match' : {'_id' : item.es_id }}})
+
+
+    return JsonResponse({ 'success' : True, 'html' : render_to_string('mygiza-collection-edit.html', { 'collection' : collection.contents.all() }) })
+
+def __getPublicCollections(uid=None):
+    """ This method returns all collections in JSON format
+    
+    fields tuple
+    """
+    return Collection.objects.filter(owners=uid) if uid else Collection.objects.filter(public=True)
+    # json.loads(serializers.serialize("json", 
+
+
 
 
 @login_required
@@ -591,18 +740,36 @@ def collections_create(request):
             collection.owners.add(request.user)
             collection.save()
 
-            return redirect('/collections/{}'.format(collection.slug)) # RETURN UUID?
+            collections = __getPublicCollections()
+
+            return JsonResponse({ 
+                'success' : True,
+                'collections' : { 
+                    'collections' : len(collections),
+                    'html' : render_to_string('mygiza-collections.html', { 
+                        'collections' : collections, 
+                        'user' : request.user.is_authenticated 
+                    })
+                }
+            })
+
+            # return redirect('/collections/{}'.format(collection.slug)) # RETURN UUID?
 
         else:
             messages.error(request, "Error creating collection.")
 
     # METHOD IS 'GET': NEW COLLECTION IS BEING MADE
     else:
-        collection_form = CollectionForm()
+        return JsonResponse({ 
+            'success' : True, 
+            'html' : render_to_string('partials/mygiza-collection-new.html', {
+                'collection_form': CollectionForm(),
+            })
+        })
 
-    return render(request, 'pages/mygiza-collection-edit.html', {
-        'collection_form': collection_form,
-    })
+    # return render(request, 'pages/mygiza-collection-edit.html', {
+    #     'collection_form': collection_form,
+    # })
 
 @login_required
 def collections_add(request):
@@ -617,7 +784,8 @@ def collections_add(request):
             collection=collection
         )
         elasticsearch_item.save()
-    return JsonResponse({ 'response' : f'You have added this record to collection {collection.title}'})
+        return JsonResponse({ 'success' : True, 'response' : f'You have added this record to collection {collection.title}'})
+    return JsonResponse({ 'success' : False, 'response' : 'Something went wrong' })
 
 @login_required
 def collections_edit(request, id):

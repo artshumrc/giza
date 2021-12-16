@@ -1,0 +1,39 @@
+<!-- BEGIN MAIN CONTENT ROWS -->
+<div class="auth-layout ">
+  <div class="auth-form sign_in_form">
+    <div id='user-sign-modal-content'>
+      <ul class="messages" id="messages"></ul>
+      <label>Username
+        <input placeholder="Username" id=username type="text" value="" size="50" />
+      </label>
+      <label>Password
+        <input placeholder="Password" id=password type="password" value="" size="50" />
+      </label>
+      <br>
+      <div class="btn-row">
+        <button id="sign_in_button" class="button">Sign In</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(() => {
+    $('#sign_in_button').on('click', () => {
+      $.post({
+          url: '/sign-in/',
+          data: {
+            'username': $('#username').val(),
+            'password': $('#password').val()
+          }
+        })
+        .done(response => {
+          if (response.success) {
+            $('#header_bar').empty().html(response.html)
+            $("#sign_new").foundation('close')
+          } else {
+            $('#messages').append('li').empty().html(response.message).addClass('jss19').addClass('jss27').addClass('errorText').fadeOut(5000)
+          }
+        })
+    })
+  })
+</script>

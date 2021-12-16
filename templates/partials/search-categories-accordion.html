@@ -1,12 +1,21 @@
 {% if search.categories|length %}
-  <ul class="menu vertical nested" data-multi-open="false">
+  <ul class="accordion-menu" data-accordion>
     {% for category in search.categories %}
+      <li>
         <a href='#'>
-          <li class="search-facet-item {% if category.selected %} is-active {% endif %}">
-            <label for="category_{{ category.key }}">{{category.displaytext}}</label>
-            <input type="checkbox" class="facet_checkbox" id="category_{{ category.key }}" name="category_{{ category.key }}" {% if category.selected %} checked {% endif %}>
-          </li>
-        </a>
+          <h1 class="search-facet-title">{{ category.displaytext }}</h6>
+          <ul class="menu vertical nested"> 
+            {% for key, val in category.fields.items %}
+            <a href='#'>
+              <li class="search-facet-item">                
+                <label for="{{ category.key }}_{{ key }}">{{ val }}</label>
+                <input id="{{ category.key }}_{{ key }}" name="{{ category.key }}_{{ key }}">
+              </li>
+            </a>
+            {% endfor %}
+          </ul>
+        </a>        
+      </li>
     {% endfor %}
   </ul>
 {% endif %}

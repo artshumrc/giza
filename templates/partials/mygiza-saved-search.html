@@ -1,13 +1,17 @@
-<li class="accordion-item {% if forloop.first %}is-active{% endif %}" data-accordion-item name="{{ search.key }}">
+<li class="accordion-item" data-accordion-item name="{{ search.key }}">
+    
     <a href="#" class="accordion-title">{{ search.name }}</a>
+    
     <a href="#" data-id="{{ search.key }}" class="button primary del_search">
         <i class="fas fa-arrow-circle-left show-for-small-only"></i>
         <span class="show-for-medium">Delete this search</span>
     </a>
+
     <a href="#" data-id="{{ search.key }}" class="button primary run_search">
         <i class="fas fa-arrow-circle-right show-for-small-only"></i>
         <span class="show-for-medium">Run this search</span>
     </a>
+
     <div class="accordion-content" data-tab-content>
         <div class="content-wrap">
             <div class="col">
@@ -26,8 +30,8 @@
                 <!-- QUERY -->
                 <li data-accordion-item>
                     <h6>Search terms:</h6>
-                    <input type="text" value="{% if search.search.query|length %}{{ search.search.query }}{% endif %}" placeholder="{% if not search.search.query|length %}No query terms{% endif %}">
-                </li>
+                    <input type="text" value="{% if search.search.query|length %}{{ search.search.query }}{% endif %}" placeholder="{% if not search.search.query|length %}No query terms{% endif %}" id="query_{% if search.search.query %}{{ search.search.query }}{% else %}#{% endif %}" name="query_{{ search.search.query }}">
+                </li> 
                
                 <!-- CATEGORIES -->
                 <li data-accordion-item>

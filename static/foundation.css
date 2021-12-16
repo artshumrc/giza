@@ -1,0 +1,45 @@
+/**
+ * Foundation for Sites by ZURB
+ * Version 6.2.4
+ * foundation.zurb.com
+ * Licensed under MIT Open Source
+ */
+/* line 7, D:/GIT/Giza Archives/Giza Archives (ES5)/static/scss/components/_menu.scss */
+.vertical li > a {
+  line-height: 1.4;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* line 20, D:/GIT/Giza Archives/Giza Archives (ES5)/static/scss/components/_menu.scss */
+.menu-pagination li {
+  display: inline-block;
+}
+
+/* line 23, D:/GIT/Giza Archives/Giza Archives (ES5)/static/scss/components/_menu.scss */
+.menu-pagination li a {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+@media screen and (min-width: 40em) {
+  /* line 23, D:/GIT/Giza Archives/Giza Archives (ES5)/static/scss/components/_menu.scss */
+  .menu-pagination li a {
+    padding-left: 0.28rem;
+    padding-right: 0.28rem;
+  }
+}
+
+/* line 40, D:/GIT/Giza Archives/Giza Archives (ES5)/static/scss/components/_menu.scss */
+.sticky-sidebar {
+  padding-right: 10px;
+}
+
+@media screen and (min-width: 40em) {
+  /* line 40, D:/GIT/Giza Archives/Giza Archives (ES5)/static/scss/components/_menu.scss */
+  .sticky-sidebar {
+    padding-right: 15px;
+  }
+}
+
+/*# sourceMappingURL=foundation.css.map */

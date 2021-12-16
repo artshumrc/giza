@@ -1,20 +1,11 @@
-{% extends 'layouts/default.html' %}
 {% load static %}
-{% set
-  title: "Giza @ School",
-  subtitle: "People and Places of Giza",
-  section: "school",
-  section_school: true
-%}
-
-{% block title %}{{ "People and Places of Giza" }}{% endblock %}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {% block 'page_headers' %}
   {% include 'partials/page-header.html' with bg="9" title="People and Places of Giza" %}
 
-  {% include 'partials/page-subheader.html' with backlink_url="/gizaatschool/" backlink_text="Back to Giza @ School" %}
+  {% include 'partials/page-subheader.html' with backlink_url="giza-at-school" backlink_text="Back to Giza @ School" %}
 
 {% endblock  %}
 

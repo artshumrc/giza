@@ -7,12 +7,12 @@ from .models import CustomUser, Collection
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ('full_name', 'username', 'email',)
+        fields = ('full_name', 'email',)
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ('full_name', 'username', 'email',)
+        fields = ('full_name', 'email',)
 
 class CollectionForm(forms.ModelForm):
     title = forms.CharField(required=False, label="Name your new collection")

@@ -1,23 +1,55 @@
-$(document).foundation()
-
 // Smooth scroll for in-page anchors
 // Src: https://css-tricks.com/snippets/jquery/smooth-scrolling/
+$(document).foundation()
 
 $(document).ready(() => {
 
-  // CATCHING TOKEN
-  csrftoken = $("[name=csrfmiddlewaretoken]").val()      
-  csrfSafeMethod = method => /^(GET|HEAD|OPTIONS|TRACE)$/.test(method)
+  /**
+   * SETTING UP AJAX
+   */
+  // csrftoken = $("[name=csrfmiddlewaretoken]").val()   
   
-  // APPEND CSRF TOKENS TO ALL AJAX POST REQUESTS
-  $.ajaxSetup({
-    beforeSend: (xhr, settings) => {
-      if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-        xhr.setRequestHeader("X-CSRFToken", csrftoken)
-      }
+  // csrfSafeMethod = method => /^(GET|HEAD|OPTIONS|TRACE)$/.test(method)
+  // $.ajaxSetup({
+  //   beforeSend: (xhr, settings) => {
+  //     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+  //       xhr.setRequestHeader("X-CSRFToken", csrftoken)
+  //     }
+  //   }
+  // })
+  
+  // $.ajaxPrefilter(options => options.async = true)
+
+  /**
+   * SETTING UP ADVANCED SEARCH SLIDE DOWN PANEL
+   */
+  $.ajax({
+    url : '/search/categories/'
+    })
+    .done(response => {
+    if (response.success) {
+      $('#html').html(response.html).foundation()
     }
   })
 
+  // $('#openAdvancedSearchPane').on('click', () => ($('#sideMenuContainer').hasClass('open')) ? closeAdvancedSearchPane() : openAdvancedSearchPane())
+ 
+  // openAdvancedSearchPane = () => {
+  //   $('#sideMenuContainer').addClass('open').animate({ 'width' : '350px' }, 'slow')
+  //   $('#sideBarTab').animate({ 'marginRight': '+=350px' }, 'slow')
+  // }
+  
+  // closeAdvancedSearchPane = () => {
+  //   $('#sideMenuContainer').removeClass('open').animate({ 'width' : '0px' }, 'slow')
+  //   $('#sideBarTab').animate({ 'marginRight': '-=350px'}, 'slow')
+  // }
+
+
+
+
+
+
+  
 
 // Accordion menu toggletext
 $('[data-accordion-menu]')
@@ -65,15 +97,18 @@ $('#search-dropdown')
   // topOffset = 99; // With extra under-construction banner
 
   // toggle the signup/login forms in the auth modal
-  $(".login-toggle").on("click", () => {
-    $(".modal .login-form").hide()
-    $(".modal .signup-form").show()
-  })
 
-  $(".signup-toggle").on("click", () => {
-    $(".modal .login-form").show()
-    $(".modal .signup-form").hide()
-  })
+
+  
+  // $(".login-toggle").on("click", () => {
+  //   $(".modal .sign_in_form").hide()
+  //   $(".modal .sign_up_form").show()
+  // })
+
+  // $(".signup-toggle").on("click", () => {
+  //   $(".modal .sign_in_form").show()
+  //   $(".modal .sign_up_form").hide()
+  // })
 
   // Start 3D environment
   $(".giza3dEmbedToggle").click(() => {

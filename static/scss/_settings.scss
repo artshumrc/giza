@@ -40,7 +40,7 @@
 //  35. Tooltip
 //  36. Top Bar
 
-// @import 'util/util';
+@import 'util/util';
 
 // 1. Global
 // ---------
@@ -60,9 +60,9 @@ $foundation-palette: (
 // TODO: move to above array
 // $primary-color: #2199e8;
 // $secondary-color: #777;
-// $success-color: #3adb76;
-// $warning-color: #ffae00;1
-// $alert-color: #ec5840;
+// map-get($foundation-palette, success): #3adb76;
+// map-get($foundation-palette, warning): #ffae00;
+// map-get($foundation-palette, alert): #ec5840;
 
 $light-gray: #e6e6e6;
 $medium-gray: #cacaca;
@@ -102,7 +102,7 @@ $rem-base: 16px;
 
 $accent-font-family: Georgia, serif; //larger intro paragraphs
 
-@include add-foundation-colors;
+// @include add-foundation-colors;
 
 // Spacers (borrowed from Bootstrap)
 
@@ -275,7 +275,7 @@ $code-font-weight: $global-weight-normal;
 $code-background: $light-gray;
 $code-border: 1px solid $medium-gray;
 $code-padding: rem-calc(2 5 1);
-$anchor-color: $primary-color;
+$anchor-color: map-get($foundation-palette, primary);
 $anchor-color-hover: scale-color($anchor-color, $lightness: -14%);
 $anchor-text-decoration: none;
 $anchor-text-decoration-hover: underline;
@@ -331,24 +331,24 @@ $input-error-font-weight: $global-weight-bold;
 
 $accordion-background: $white;
 $accordion-plusminus: true;
-$accordion-item-color: foreground($accordion-background, $primary-color);
+$accordion-item-color: foreground($accordion-background, map-get($foundation-palette, primary));
 $accordion-item-background-hover: $light-gray;
 $accordion-item-padding: 1.25rem 1rem;
 $accordion-content-background: $white;
 $accordion-content-border: 1px solid $light-gray;
-$accordion-content-color: foreground($accordion-background, $primary-color);
+$accordion-content-color: foreground($accordion-background, map-get($foundation-palette, primary));
 $accordion-content-padding: 1rem;
 
 // 8. Accordion Menu
 // -----------------
 
 $accordionmenu-arrows: true;
-$accordionmenu-arrow-color: $primary-color;
+$accordionmenu-arrow-color: map-get($foundation-palette, primary);
 
 // 9. Badge
 // --------
 
-$badge-background: $primary-color;
+$badge-background: map-get($foundation-palette, primary);
 $badge-color: foreground($badge-background);
 $badge-padding: 0.3em;
 $badge-minwidth: 2.1em;
@@ -359,7 +359,7 @@ $badge-font-size: 0.6rem;
 
 $breadcrumbs-margin: 0 0 $global-margin 0;
 $breadcrumbs-item-font-size: rem-calc(11);
-$breadcrumbs-item-color: $primary-color;
+$breadcrumbs-item-color: map-get($foundation-palette, primary);
 $breadcrumbs-item-color-current: $black;
 $breadcrumbs-item-color-disabled: $medium-gray;
 $breadcrumbs-item-margin: 0.75rem;
@@ -373,7 +373,7 @@ $button-padding: 0.85em 1em;
 $button-margin: 0 0 $global-margin 0;
 $button-margin: 0 $global-margin $global-margin 0;
 $button-fill: solid;
-$button-background: $primary-color;
+$button-background:  map-get($foundation-palette, primary);
 $button-background-hover: scale-color($button-background, $lightness: -15%);
 $button-color: $white;
 $button-color-alt: $black;
@@ -423,7 +423,7 @@ $closebutton-color-hover: $black;
 
 $drilldown-transition: transform 0.15s linear;
 $drilldown-arrows: true;
-$drilldown-arrow-color: $primary-color;
+$drilldown-arrow-color: map-get($foundation-palette, primary);
 $drilldown-background: $white;
 
 // 16. Dropdown
@@ -500,7 +500,7 @@ $input-radius: $global-radius;
 // 20. Label
 // ---------
 
-$label-background: $primary-color;
+$label-background: map-get($foundation-palette, primary);
 $label-color: foreground($label-background);
 $label-font-size: 0.8rem;
 $label-padding: 0.33333rem 0.5rem;
@@ -530,9 +530,9 @@ $menu-expand-max: 6;
 $meter-height: 1rem;
 $meter-radius: $global-radius;
 $meter-background: $medium-gray;
-$meter-fill-good: $success-color;
-$meter-fill-medium: $warning-color;
-$meter-fill-bad: $alert-color;
+$meter-fill-good: map-get($foundation-palette, success);
+$meter-fill-medium: map-get($foundation-palette, warning);
+$meter-fill-bad: map-get($foundation-palette, alert);
 
 // 24. Off-canvas
 // --------------
@@ -572,7 +572,7 @@ $pagination-item-padding: rem-calc(3 10);
 $pagination-item-spacing: rem-calc(1);
 $pagination-radius: $global-radius;
 $pagination-item-background-hover: $light-gray;
-$pagination-item-background-current: $primary-color;
+$pagination-item-background-current: map-get($foundation-palette, primary);
 $pagination-item-color-current: foreground($pagination-item-background-current);
 $pagination-item-color-disabled: $medium-gray;
 $pagination-ellipsis-color: $black;
@@ -585,7 +585,7 @@ $pagination-arrows: true;
 $progress-height: 1rem;
 $progress-background: $medium-gray;
 $progress-margin-bottom: $global-margin;
-$progress-meter-background: $primary-color;
+$progress-meter-background: map-get($foundation-palette, primary);
 $progress-radius: $global-radius;
 
 // 28. Reveal
@@ -612,7 +612,7 @@ $slider-background: $light-gray;
 $slider-fill-background: $medium-gray;
 $slider-handle-height: 1.4rem;
 $slider-handle-width: 1.4rem;
-$slider-handle-background: $primary-color;
+$slider-handle-background: map-get($foundation-palette, primary);
 $slider-opacity-disabled: 0.25;
 $slider-radius: $global-radius;
 $slider-transition: all 0.2s ease-in-out;
@@ -621,7 +621,7 @@ $slider-transition: all 0.2s ease-in-out;
 // ----------
 
 $switch-background: $medium-gray;
-$switch-background-active: $primary-color;
+$switch-background-active: map-get($foundation-palette, primary);
 $switch-height: 2rem;
 $switch-height-tiny: 1.5rem;
 $switch-height-small: 1.75rem;
@@ -658,13 +658,13 @@ $tab-background: $white;
 $tab-background-active: $light-gray;
 $tab-item-font-size: rem-calc(12);
 $tab-border: $light-gray;
-$tab-item-color: foreground($tab-background, $primary-color);
+$tab-item-color: foreground($tab-background, map-get($foundation-palette, primary));
 $tab-item-background-hover: $white;
 $tab-item-padding: 1.25rem 1.5rem;
 $tab-expand-max: 6;
 $tab-content-background: $white;
 $tab-content-border: $light-gray;
-$tab-content-color: foreground($tab-background, $primary-color);
+$tab-content-color: foreground($tab-background, map-get($foundation-palette, primary));
 $tab-content-padding: 1rem;
 
 // 33. Thumbnail
@@ -673,7 +673,7 @@ $tab-content-padding: 1rem;
 $thumbnail-border: solid 4px $white;
 $thumbnail-margin-bottom: $global-margin;
 $thumbnail-shadow: 0 0 0 1px rgba($black, 0.2);
-$thumbnail-shadow-hover: 0 0 6px 1px rgba($primary-color, 0.5);
+$thumbnail-shadow-hover: 0 0 6px 1px rgba(map-get($foundation-palette, primary), 0.5);
 $thumbnail-transition: box-shadow 200ms ease-out;
 $thumbnail-radius: $global-radius;
 

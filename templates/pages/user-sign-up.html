@@ -1,0 +1,32 @@
+<!-- BEGIN MAIN CONTENT ROWS -->
+<div class="auth-layout">
+  <div class="auth-form signup-form">
+    <form id="sign-in_form" method="post">
+      <ul class="messages" id="messages"></ul>
+      <br>
+      {{ custom_user_form.as_p }}
+      <label class="custom-checkbox">
+        <input type="checkbox">
+        <span class="fake-input"></span>
+        I accept the <a href="/terms">Terms & Conditions</a> of the Digital Giza Website
+      </label>
+      <br>
+      <div class="btn-row">
+        <button id="sign_in_button" class="button">Sign Up</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  $('#sign_in_button').on('click', () => {
+    $.post({
+        url: '/sign-up/',
+        data: $('#sign-in_form').serializeArray()
+      })
+      .done(response => {
+        if (response.success) {
+          $('#sign_new_form').empty().html(response.html)
+        }
+      })
+  })
+</script>

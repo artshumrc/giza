@@ -311,8 +311,13 @@
 
 // Search dropdown in top bar
 
-.top-bar .dropdown-pane {
+.top-bar {
   background-color: $dune;
+  color: $sand-light;
+}
+
+.dropdown-pane {
+  background-color: $white;
   color: $sand-light;
 }
 

@@ -1,11 +1,14 @@
 @charset 'utf-8';
+
 //items below commented because they are not used in this site
 //leave commented to reduce file size of output CSS
 //Depending on final structure of site, other items could also be commented
+
+
 // @import 'settings-default';
 @import 'settings';
-@import '/scss/foundation';
-@import 'motion-ui';
+@import 'foundation';
+// @import 'motion-ui';
 
 @include foundation-global-styles;
 @include foundation-grid;
@@ -21,7 +24,7 @@
 @include foundation-button-group;
 @include foundation-callout;
 @include foundation-close-button;
-@include foundation-menu;
+// @include foundation-menu;
 // @include foundation-menu-icon;
 @include foundation-drilldown-menu;
 @include foundation-dropdown;
@@ -39,7 +42,7 @@
 @include foundation-sticky;
 @include foundation-reveal;
 @include foundation-switch;
-@include foundation-table;
+// @include foundation-table;
 @include foundation-tabs;
 @include foundation-thumbnail;
 @include foundation-title-bar;
@@ -49,17 +52,17 @@
 @include foundation-float-classes;
 // @include foundation-flex-classes;
 
-@include motion-ui-transitions;
-@include motion-ui-animations;
+// @include motion-ui-transitions;
+// @include motion-ui-animations;
 
 //custom styles
 @import 'components/functions'; // New for MyGiza
 @import 'components/mixins'; // New for MyGiza
 @import 'components/helpers'; // New for MyGiza
 
-@import 'include-media'; // New for MyGiza
-@import 'slick.scss'; // New for MyGiza
-@import 'components/vendors/jcf'; // New for MyGiza
+@import 'components/vendors/_include-media'; // New for MyGiza
+@import 'components/vendors/_slick.scss'; // New for MyGiza
+@import 'components/vendors/_jcf'; // New for MyGiza
 @import 'components/fontastic';
 
 @import 'components/typography';

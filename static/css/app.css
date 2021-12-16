@@ -2232,7 +2232,8 @@ li {
 
 ul {
   list-style-type: disc;
-  margin-left: 1.25rem; }
+  margin-left: 1.25rem;
+  }
 
 ol {
   margin-left: 1.25rem; }
@@ -4702,7 +4703,8 @@ table.hover tbody tr:nth-of-type(even):hover {
     clear: both; }
   .top-bar,
   .top-bar ul {
-    background-color: #312E2B; }
+    background-color: #312E2B;
+    }
   .top-bar input {
     max-width: 108px;
     margin-right: 1rem; }
@@ -6689,7 +6691,8 @@ input[type="radio"] {
     height: 85px; } }
 
 [data-sticky-container] {
-  height: 85px; }
+  height: 85px;
+  }
 
 .title-bar {
   background-color: #312E2B;
@@ -6872,7 +6875,8 @@ input[type="radio"] {
 
 .top-bar .dropdown-pane {
   background-color: #312E2B;
-  color: #F0EAE4; }
+  color: #F0EAE4;
+  }
 
 #search-dropdown {
   border: none;
@@ -7428,17 +7432,18 @@ footer.legal-social {
 
 .share-links__icons {
   -ms-flex: 1;
-      flex: 1;
+  /* flex: 1; */
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: nowrap;
-      flex-wrap: nowrap;
+  flex-wrap: nowrap;
   -ms-flex-pack: end;
-      justify-content: flex-end;
+  justify-content: flex-end;
   font-size: 1.5rem;
   line-height: 1;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  }
   .share-links__icons li {
     -ms-flex: 0;
         flex: 0;
@@ -9089,13 +9094,16 @@ h3 {
     margin-left: auto; } }
 
 .reveal .title {
-  display: block;
+  display: flex;
   font-family: "Montserrat";
   font-weight: 500;
   color: #731422;
   font-size: 1.25rem;
   margin-bottom: 1rem;
-  padding-right: 2.5rem; }
+  padding-right: 2.5rem;
+  justify-content: space-evenly;
+  place-items: flex-end;
+  }
   @media (max-width: 639px) {
     .reveal .title {
       font-size: 1rem;

@@ -1,0 +1,47 @@
+<span class="title">
+    <span><a href='#' class="sign_up_lnk">Sign up for My Giza </a></span><span class="separator"> | </span><span><a href='#' class="sign_in_lnk">Sign in to My Giza</a></span><span class="separator"> | </span>
+    <ul class="no-bullet share-links__icons">
+        <li>
+            <a class="share-facebook" href="{{facebook_link}}">
+            <i class="icon-facebook-square"></i>
+            </a>
+        </li>
+        <li>
+            <a class="share-twitter" href="{{twitter_link}}">
+            <i class="icon-twitter-square"></i>
+            </a>
+        </li>
+        <li>
+            <a class="share-instagram" href="{{instagram_link}}">
+            <i class="icon-instagram"></i>
+            </a>
+        </li>
+    </ul>
+    {% include 'partials/close-button.html' with label="Close modal" %}
+</span>
+<script>
+    // $('.sign_up_lnk').on('click', () => {
+        // sign_up()
+    // })
+    $('.sign_up_lnk').on('click', () => {
+        // $('sign_in_link')
+        // href="/sign-up
+        $.get('/sign-up/')
+        .done(response => {
+            if (response.success) {
+                $('#sign_new_form').empty().html(response.html)
+                $("#sign_new").foundation('open')
+            }
+        })
+    })
+
+    $('.sign_in_lnk').on('click', () => {
+        $.get('/sign-in/')
+        .done(response => {
+            if (response.success) {
+                $('#sign_new_form').empty().html(response.html)
+                $("#sign_new").foundation('open')
+            }
+        })
+    })
+</script>

@@ -1,12 +1,4 @@
-{% extends 'layouts/default.html' %}
 {% load static %}
-{% set
-  title: "Giza @ School",
-  section: "school",
-  section_school: true
-%}
-
-{% block title %}{{ "Giza @ School" }}{% endblock %}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 {% block 'page_headers' %}
@@ -21,13 +13,13 @@
 
     <section class="large-8 columns">
 
-      {% include 'partials/school-hilite-item--lessontopics.html' with  primary="true" hilite_title="Lesson Topics" hilite_link="/lessons/" hilite_img="lessontopics" hilite_link_text="View Topics" %}
+      {% include 'partials/school-hilite-item--lessontopics.html' with primary="true" hilite_title="Lesson Topics" hilite_link="lessons" hilite_img="lessontopics" hilite_link_text="View Topics" %}
 
-      {% include 'partials/school-hilite-item--commontopics.html' with hilite_title="People and Places of Giza" hilite_link="/commontopics/" hilite_img="people" hilite_link_text="View People and Places" %}
+      {% include 'partials/school-hilite-item--commontopics.html' with hilite_title="People and Places of Giza" hilite_link="common-topics" hilite_img="people" hilite_link_text="View People and Places" %}
 
-      {% include 'partials/school-hilite-item--faq.html' with hilite_title="Glossary and FAQ" hilite_link="/faq/" hilite_img="faq" hilite_link_text="View Glossary and FAQ" %}
+      {% include 'partials/school-hilite-item--faq.html' with hilite_title="Glossary and FAQ" hilite_link="faq" hilite_img="faq" hilite_link_text="View Glossary and FAQ" %}
 
-      {% include 'partials/school-hilite-item--videos.html' with  hilite_title="Video Library" hilite_link="/videos/" hilite_img="videos" hilite_link_text="View All Videos" %}
+      {% include 'partials/school-hilite-item--videos.html' with  hilite_title="Video Library" hilite_link="videos" hilite_img="videos" hilite_link_text="View All Videos" %}
 
       <div class="p-y-1">
         <p>
@@ -71,7 +63,7 @@
           </li>
           -->
           <li>
-            <a href="/giza3d/">Giza 3D Models</a>
+            <a class="my-giza-lnk" data-url="{% url 'giza-3d' %}">Giza 3D Models</a>
           </li>
         </ul>
       {% include 'partials/feature-block-end.html' %}

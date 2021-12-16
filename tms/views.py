@@ -127,8 +127,8 @@ def get_annotation(request, id, canvas_index):
 	if manifest:
 		try:
 			# so far, there is only one image in the image list
-		    annotation = manifest['sequences'][0]['canvases'][canvas_index]['images'][0]
-		    return JsonResponse(annotation)
+			annotation = manifest['sequences'][0]['canvases'][canvas_index]['images'][0]
+			return JsonResponse(annotation)
 		except:
 			raise Http404("There was an error getting this manifest")
 	else:

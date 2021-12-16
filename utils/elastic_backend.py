@@ -1,5 +1,10 @@
 from django.conf import settings
-from django.utils.six.moves.urllib.parse import urlparse
+# Django 2.2.24:
+# from django.utils.six.moves.urllib.parse import urlparse
+
+# Django 3:
+from urllib.parse import urlparse
+
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan

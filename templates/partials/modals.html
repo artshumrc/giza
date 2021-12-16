@@ -6,7 +6,8 @@
 
   <h2>Name of this image</h2>
 
-  <p>Description of the image duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Sed posuere consectetur est at lobortis. Donec sed odio dui.</p>
+  <p>Description of the image duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec
+    elit. Sed posuere consectetur est at lobortis. Donec sed odio dui.</p>
 
   <div class="modal-img-container">
     <img src="{% static 'images/galleryimage1.jpg' %}" alt="appropriate alt">
@@ -19,82 +20,16 @@
 <!-- /Modal: Image Gallery -->
 
 
-
-<!-- Modal: Login -->
-
-<div class="reveal modal login-reveal" id="login_new" data-reveal>
-  <div class="auth-form signup-form">
-    <span class="title">Sign up for My Giza <span class="separator">|</span> <a href="#"  class="auth-toggle signup-toggle">Log in</a></span>
-    <!--
-    Reinstate when oauth added
-    a href="#" class="button social google"><i class="fab fa-google"></i>sign up with google</a>
-    <a href="#" class="button social facebook"><i class="fab fa-facebook-f"></i>sign up with facebook</a-->
-    <form id="login_form" method="post" action="{% url 'sign_up' %}" enctype="multipart/form-data">
-      {% csrf_token %}
-      {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-      </ul>
-      <br>
-      {% endif %}
-      {{ custom_user_form.as_p }}
-    <!--form class="new_form" id="login_form" method="post" action="{% url 'sign_up' %}?redirect_to=/" enctype="multipart/form-data">
-      {% csrf_token %}
-      <span class="info">All * items are required.</span>
-      <label>Full Name*:
-        <input placeholder="Queen Meresankh III" type="text" name="full_name" value="" size="50"/>
-      </label>
-      <label>Email*:
-        <input type="email" placeholder="meresankh@giza.edu">
-      </label>
-      <label class="password">Password*:
-        <input type="password">
-      </label>
-      <span class="info">Password must be at least 8 characters and contain at least one letter and one number.</span>
-      <!--label>Interest:
-        <select>
-          <option value="abc">—</option>
-          <option value="starbuck">Starbuck</option>
-          <option value="hotdog">Hot Dog</option>
-          <option value="apollo">Apollo</option>
-        </select>
-      </label-->
-      <label class="custom-checkbox">
-        <input type="checkbox">
-        <span class="fake-input"></span>
-        I accept the <a href="/terms">Terms & Conditions</a> of the Digital Giza Website
-      </label>
-      <div class="btn-row">
-        <button type="button" class="button btn-white" data-close="login_new">Cancel</button>
-        <button type="submit" class="button">Create Account</button>
-      </div>
-    </form>
-  </div>
-  <div class="auth-form login-form" style="display: none">
-    <span class="title"><a class="auth-toggle login-toggle" href="#">Sign up</a> for My Giza <span class="separator">|</span> Log in</span>
-    <form class="new_form" id="login_form" method="post" action="{% url 'login' %}?redirect_to=/" enctype="multipart/form-data">
-      {% csrf_token %}
-      <span class="info">All * items are required.</span>
-      <label>Username*
-        <input placeholder="Username" type="text" name="username" value="" size="50"/>
-      </label>
-      <label>Password*
-        <input placeholder="Password" type="password" name="password" value="" size="50"/>
-      </label>
-      <div class="btn-row">
-        <button type="button" class="button btn-white" data-close="login_new">Cancel</button>
-        <button type="submit" class="button">Log In</button>
-      </div>
-    </form>
-  </div>
-  {% include 'partials/close-button.html' with label="Close modal" %}
+<!-- SIGN UP/IN MODAL -->
+<div class="reveal modal sign_up-reveal" id="sign_new" data-reveal>
+  {% include 'partials/user-sign-navbar.html' %}
+  <div class="auth-form sign_form" id="sign_new_form"></div>
 </div>
 
-<!-- /Modal: Login -->
-
-
+<!-- COLLECTION ADD/EDIT MODAL -->
+<div class="reveal modal collection_edit-reveal" id="collection_new" data-reveal>
+  <div class="collection_form" id="collection_new_form"></div>
+</div>
 
 <!-- Modal: Email Collection -->
 
@@ -144,7 +79,7 @@
       </li>
     </ul>
   </div>
-    {% include 'partials/close-button.html' with label="Close modal" %}
+  {% include 'partials/close-button.html' with label="Close modal" %}
 </div>
 
 <!-- /Modal: Email Collection -->
@@ -155,15 +90,17 @@
 <div class="reveal modal add-reveal" id="add_collection" data-reveal>
   <span class="title">Add to a MyGiza Collection</span>
   <br>
-  <span class="info-line">Hi {% if user.full_name %}{{ user.full_name }}{% else %}{{ user.username }}{% endif %}! (not you? <a href="/login">Login to your account</a>.)</span>
+  <span class="info-line">Hi {% if user.full_name %}{{ user.full_name }}{% else %}{{ user.username }}{% endif %}! (not
+    you? <a href="/sign-in">Sign in to your account</a>.)</span>
   <div class="jcf-scrollable">
 
-    <form id="collection_create_form" method="post" action="{% url 'collections_create' %}?redirect_to={{redirect_to}}" enctype="multipart/form-data">
+    <form id="collection_create_form" method="post"
+      action="{% url 'mygiza_collections_create' %}?redirect_to={{redirect_to}}" enctype="multipart/form-data">
       {% csrf_token %}
       {% if messages %}
       <ul class="messages">
         {% for message in messages %}
-        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
         {% endfor %}
       </ul>
       <br>
@@ -175,23 +112,24 @@
         <button type="submit" class="button">Create</button>
       </div>
     </form>
-    
+
     <ul class="add-lists">
       {% for collection in user_collections %}
 
       {# <!-- <form id=form_{{type}}_{{object.id}} action="{% url 'collections_add' collection.slug %}"> --> #}
-        <!-- <a href="#" onclick="document.getElementById('form_{{type}}_{{object.id}}').submit();">{{collection.title}}<span class="ico"></span></a></li> -->
-        <!-- <input type=hidden name={{type}}_{{object.id}}> -->
-        collection
-        <li>
-          <a href='#' class="add_to_collection_modal" data-collection-id="{{ collection }}">{{ collection.title }}<span class="ico"></span></a>
-          <!-- <a href="/collections/{{collection.slug}}/edit?add_item_id={{object.id}}&add_item_type={{type}}">{{collection.title}} -->
-            <!-- <span class="ico"></span> -->
-          <!-- </a> -->
-        </li>
+      <!-- <a href="#" onclick="document.getElementById('form_{{type}}_{{object.id}}').submit();">{{collection.title}}<span class="ico"></span></a></li> -->
+      <!-- <input type=hidden name={{type}}_{{object.id}}> -->
+      collection
+      <li>
+        <a href='#' class="add_to_collection_modal" data-collection-id="{{ collection }}">{{ collection.title }}<span
+            class="ico"></span></a>
+        <!-- <a href="/collections/{{collection.slug}}/edit?add_item_id={{object.id}}&add_item_type={{type}}">{{collection.title}} -->
+        <!-- <span class="ico"></span> -->
+        <!-- </a> -->
+      </li>
       {% endfor %}
     </ul>
-    
+
   </div>
   <!--div class="bottom-info-block">
     <div class="img-wrap">
@@ -209,14 +147,8 @@
   {% include 'partials/close-button.html' with label="Close modal" %}
 </div>
 
-<div class="reveal" id="exampleModal3" data-reveal>
-  <h2>Response</h2>
-  <button class="close-button" data-close aria-label="Close reveal" type="button">
-    <span aria-hidden="true">&times;</span>
-  </button>
+<!-- MODAL: EDIT COLLECTION -->
+<div class="reveal modal add-reveal" id="edit_collection" data-reveal>
+  <div id="edit_collection_form"></div>
 </div>
 
-<!-- /Modal: Add to Collection -->
-
-{% include 'partials/modal-met.html' %}
-{% include 'partials/modal-contact.html' %}

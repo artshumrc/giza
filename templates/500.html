@@ -1,17 +1,29 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Internal server error</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-    </head>
-    <body>
-        <h1>Internal server error</h1>
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% set
+  title: "Home",
+  section: "home",
+  section_home: true
+%}
 
-        <h2>Sorry, there seems to be an error. Please try again soon.</h2>
+{% block title %}{{ "Home" }}{% endblock %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'content' %}
+    <body>
+        <div class="grid-x">
+            <div class="cell large-4"></div>
+            <div class="cell large-4">
+                <h1>Internal server error</h1>
+            </div>
+            <div class="cell large-4"></div>
+            <div class="cell large-4"></div>
+            <div class="cell large-4">
+                <h2>Sorry, there seems to be an error. Please try again soon.</h2>
+            </div>
+            <div class="cell large-4"></div>
+        </div>
     </body>
 </html>
+{% endblock %}

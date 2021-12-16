@@ -1,0 +1,54 @@
+{% load static %}
+<ul class="collections-list">
+  {% for collection in collections %}
+    <li>
+      <div class="item-wrap" data-id="{{ collection }}">
+        <a data-open="edit_collection" aria-controls="edit_collection" aria-haspopup="true" tabindex="0">
+          <picture>
+            <img src="{% static 'images/thumb-default.png' %}" alt="image description" width="250" height="250">
+          </picture>
+          <div class="caption">
+            <strong>{{ collection.title }}</strong>
+            <span>{{ collection.items.all|length }} items</span>
+          </div>
+          <i class="fas fa-chevron-right show-for-small-only"></i>
+        </a>
+      </div>
+      <div class="list-row">
+        <div class="check-hold">
+          <label>
+            <input type="checkbox">
+            <span class="fake-input"></span>
+            <span>{{ collection.title }} <em>({{ collection.items.all|length }} items)</em></span>
+          </label>
+        </div>
+        <div class="btn-hold">
+          {% if user.is_superuser %}
+            <a href="#" class="button primary">View this collection</a>
+            <a href="#" class="button primary">Delete</a>
+          {% endif %}
+        </div>
+      </div>
+    </li>
+  {% endfor %}
+</ul>
+{% block extra_js %}
+<script>
+  $('.item-wrap').on('click', e => {
+        console.log()
+        console.log('ol')
+        $.post({
+            url : '/mygiza/collections/edit/',
+            data : {
+                'token' : $(e.currentTarget).data('id') 
+            },
+            success : response => {
+                if (response.success) {
+                    console.log(response.html)
+                    $('#edit_collection_form').empty().html(response.html)
+                }
+            }
+        })        
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% load static %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'main_content' %}
+{{ user }}
+<div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+  <div class="row">
+    <div class="columns">
+      <ul class="dropdown menu" data-dropdown-menu>
+        <li class="{% if request.path == '/collections/' %}active{% endif %}">
+          <a href="#" id="public_collections_link">All Collections</a>
+        </li>
+        <li>
+          <a href="#" id="my_collections_link">My Private Collections</a>
+        </li>
+        <!--<li><a href="#">Collections Shared with Me</a></li-->
+        <li>
+          {% if user.is_superuser %}
+          <a href="/admin/giza/collection/add" class="add"><span class="sr-only">add</span></a>
+          {% elif user %}
+          <!-- <a href="#" class="collection_lnk" data-open="new_collection" aria-controls="new_collection" -->
+          <!-- aria-haspopup="true" tabindex="0" class="add"><span class="sr-only">add</span></a> -->
+          <a href="#" class="collection_lnk" data-id="mygiza/collections/create/"><span class="sr-only">add</span></a>
+          {% else %}
+          <a href="/sign-in" class="add"><span class="sr-only">add</span></a>
+          {% endif %}
+        </li>
+        <!--li class="hide-for-small-only"><a href="#">Collections Shared with Me</a></li-->
+      </ul>
+      <!-- a href="/collections/" class="go-back">Back to Individual Collections</a-->
+    </div>
+  </div>
+
+  <section class="collection-section">
+    <div class="row row-padded">
+
+      <!-- SHOW ALL PUBLIC COLLECTIONS -->
+      <div id="collections_view" class="collections_content">
+        {% include 'partials/mygiza-collections-view.html' %}
+      </div>
+
+    </div>
+  </section>
+</div>
+
+{% endblock %}
+<!-- END MAIN CONTENT ROWS -->
+
+<!-- JAVASCRIPT -->
+{% block extra_js %}
+<script>
+  $(document).foundation()
+  $(document).ready(() => {
+    $('#my_collections_link').on('click', () => {
+      $.get('/mygiza/collections/private/')
+        .done(response => {
+          if (response.success) {
+            $('#collections_view').empty().html(response.html).show()
+          }
+        })
+    })
+
+    $('#public_collections_link').on('click', () => {
+      $.get('/mygiza/collections/public/')
+        .done(response => {
+          console.log('ok')
+          if (response.success) {
+            console.log(response.html)
+            $('#collections_view').empty().html(response.html).show()
+          }
+        })
+    })
+
+    $('.collection_lnk').on('click', e => {
+      $.get($(e.currentTarget).data('id'))
+        .done(response => {
+          if (response.success) {
+            $('#edit_collection_form').empty().html(response.html)
+            $('#edit_collection').foundation('open')
+          }
+        })
+    })
+  })
+</script>
+{% endblock %}

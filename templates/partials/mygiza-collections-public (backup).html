@@ -1,10 +1,15 @@
 {% load static %}
+
 <ul class="collections-list">
-    {% for collection in public_collections %}
+  {{collections}}
+    {% for collection in collections %}
+
+    {{ collection }}
       <li>
         <div class="item-wrap">
           <!-- <a href="/collections/view/{{ collection.id }}"> -->
-            <a href="{% url 'collections_view' collection.id %}">
+            <a href="#"></a>
+            
             <picture>
               <!--
               <source srcset="{% static 'images/img-n9-small.jpg' %}, {% static '/assets/images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>

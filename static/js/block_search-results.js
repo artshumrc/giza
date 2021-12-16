@@ -128,7 +128,7 @@ $(document).ready(() => {
   * individual tags in the search-results.html template.
   */
   update_search = () => {
-    $.post('/search/update', { 'search' : JSON.stringify(st) } )
+    $.post('/mygiza/search/update', { 'search' : JSON.stringify(st) } )
     .done(response => {
       refresh_results(response)
 
@@ -161,7 +161,7 @@ $(document).ready(() => {
     st['result']['sort_order'] = $(e.currentTarget).val()
     update_search()
   })
-  .on('click', '#add_to_collection', e => $('#add_collection').find('a').data('object-name', $(e.currentTarget).data('id')).foundation('reveal', 'open'))
+  .on('click', '#addToCollectionBtn', e => $('#add_collection').find('a').data('object-name', $(e.currentTarget).data('id')))
   .on('click', '.add_to_collection_modal', e => {
     $.post({
       url : 'add-to-collection',
@@ -170,7 +170,11 @@ $(document).ready(() => {
         'object' : JSON.stringify($(e.currentTarget).data('object-name')) 
       },
       success : response => {
-        $('#exampleModal3').foundation('reveal', 'open')
+        if (response.success) {
+          console.log(response)
+        }
+        
+        // $('#exampleModal3').foundation('reveal', 'open')
         // modal = new Foundation.Reveal($('.add_to_collection_modal'))
         // modal.close()
         // SOMEHOW MARK OBJECTS THAT ARE ALREADY IN A COLLECTION?
@@ -183,7 +187,7 @@ $(document).ready(() => {
     input = prompt("Please give a name to this search", "Simple")
     if (input != null || input != '') {
       $.post({
-        url: '/search/save',
+        url: '/mygiza/search/save',
         data: {
           'name' : input,
           'search' : JSON.stringify(st)
@@ -229,7 +233,7 @@ $(document).ready(() => {
   })
 
   $(document).on('click', '#redeem_token', e => {
-    $.post("/search/lookup/", { 'token' : $('#token').val() })
+    $.post("/mygiza/search/lookup/", { 'token' : $('#token').val() })
     .done(response => {
       (response.success) ? refresh_results(response.response) : alert(response.response)
       $('#token').val('')

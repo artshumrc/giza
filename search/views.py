@@ -173,11 +173,13 @@ def library(request):
 			if len(docs) > 0:
 				hits.append(sort_docs)
 
-	return render(request, 'pages/library.html', {
-		'results' : hits,
-		'sort' : sort
-	})
-	
+	return JsonResponse({ 
+		'success' : True, 
+		'html' : render_to_string('pages/library.html', {
+			'results' : hits,
+			'sort' : sort
+		}) 
+	})	
 
 
 
@@ -202,10 +204,20 @@ def videos(request):
 	return render(request, 'pages/videos.html', {
 		'results' : hits
 	})
+
+
+
+
+
+
+
+
+def get_categories(request):
+	categories = { 'categories' : []}
+	for category, fields in FIELDS_PER_CATEGORY.items():
+		categories['categories'].append({ 'fields' : fields, 'displaytext' : CATEGORIES[category], 'key' : category })
 	
-
-
-
+	return JsonResponse({ 'success' : True, 'html' : render_to_string('partials/search-advanced-accordion-category.html', { 'search' : categories }) })
 
 ####################################
 ###				MET				 ###
@@ -489,7 +501,7 @@ def __execute(items):
 	items = __post_filter(items) 							# BUILD POST FILTER
 	items = __build_aggregations(items)						# AGGREGATE RELATED CATEGORIES AND FACETS
 	
-	addToClipBoard(json.dumps(__build_query(items)))		# DEBUGGING ELASTICSEARCH QUERY
+	# addToClipBoard(json.dumps(__build_query(items)))		# DEBUGGING ELASTICSEARCH QUERY
 	
 	return items, __search_get_results(__build_query(items))
 

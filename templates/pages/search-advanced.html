@@ -1,215 +1,227 @@
-{% load static %}
-
-{% block extra_js %}
-  <script src="{% static 'js/block_search-advanced.js' %}"></script>
-{% endblock %}
-
 <section class="large-12 columns">
 
-    <h3>Advanced Search</h3>
-    <p>
-      Narrow your search results using the advanced search fields below.
-    </p>
-    <p class="text-smaller">
-      Need help with abbreviations? Check out our
-      <a href="{% url 'explore' 'faq' %}#abbr">list of abbreviations on the FAQ page.</a>
-    </p>
+  <h3>Advanced Search</h3>
+  <p>
+    Narrow your search results using the advanced search fields below.
+  </p>
+  <p class="text-smaller">
+    Need help with abbreviations? Check out our <a href="{% url 'explore' 'faq' %}#abbr">list of abbreviations on the
+      FAQ page.</a>
+  </p>
 
-    <hr>
+  <hr>
 
-    <form id="advanced-search-form" method="post" action="{% url 'search_results' %}">
-      {% csrf_token %}
-      <div class="row">
+  <form id="advanced-search-form" method="post" action="{% url 'search_results' %}">
+    {% csrf_token %}
+    <div class="row">
 
-        <!-- CATEGORIES -->
-        <fieldset id="category-radio-selector" class="medium-4 medium-push-8 columns">
-          <legend>Search within the selected category:</legend>
+      <!-- CATEGORIES -->
+      <fieldset id="category-radio-selector" class="medium-4 medium-push-8 columns">
+        <legend>Search within the selected category:</legend>
 
-          <div class="feature-block tertiary">
-            <input id="sites" class="advanced_search_field" data-for-id="section-sites" name="category" value="sites" type="radio" checked>
-              <label for="sites">Tombs and Monuments</label><br>
-            <input id="objects" class="advanced_search_field" data-for-id="section-objects" name="category" value="objects" type="radio" >
-              <label for="objects">Objects</label><br>
-            <input id="photos" class="advanced_search_field" data-for-id="section-photos" name="category" value="photos" type="radio">
-              <label for="photos">Photos</label><br>
-            <input id="diarypages" class="advanced_search_field" data-for-id="section-diarypages" name="category" value="diarypages" type="radio">
-              <label for="diarypages">Diary Pages</label><br>
-            <input id="drawings" class="advanced_search_field" data-for-id="section-drawings" name="category" value="drawings" type="radio">
-              <label for="drawings">Drawings</label><br>
-            <input id="mapsandplans" class="advanced_search_field" data-for-id="section-mapsandplans" name="category" value="mapsandplans" type="radio">
-              <label for="mapsandplans">Maps and Plans</label><br>
-            <!-- <input id="people" class="advanced_search_field" data-for-id="section-people" name="category" value="people" type="radio">
+        <div class="feature-block tertiary">
+          <input id="sites" class="advanced_search_field" data-for-id="section-sites" name="category" value="sites"
+            type="radio" checked>
+          <label for="sites">Tombs and Monuments</label><br>
+          <input id="objects" class="advanced_search_field" data-for-id="section-objects" name="category"
+            value="objects" type="radio">
+          <label for="objects">Objects</label><br>
+          <input id="photos" class="advanced_search_field" data-for-id="section-photos" name="category" value="photos"
+            type="radio">
+          <label for="photos">Photos</label><br>
+          <input id="diarypages" class="advanced_search_field" data-for-id="section-diarypages" name="category"
+            value="diarypages" type="radio">
+          <label for="diarypages">Diary Pages</label><br>
+          <input id="drawings" class="advanced_search_field" data-for-id="section-drawings" name="category"
+            value="drawings" type="radio">
+          <label for="drawings">Drawings</label><br>
+          <input id="mapsandplans" class="advanced_search_field" data-for-id="section-mapsandplans" name="category"
+            value="mapsandplans" type="radio">
+          <label for="mapsandplans">Maps and Plans</label><br>
+          <!-- <input id="people" class="advanced_search_field" data-for-id="section-people" name="category" value="people" type="radio">
               <label for="people">People</label><br> -->
-            <input id="pubdocs" class="advanced_search_field" data-for-id="section-pubdocs" name="category" value="pubdocs" type="radio">
-              <label for="pubdocs">Published Documents</label><br>
-            <input id="unpubdocs" class="advanced_search_field" data-for-id="section-unpubdocs" name="category" value="unpubdocs" type="radio">
-              <label for="unpubdocs">Unpublished Documents</label><br>
-          </div>
-        </fieldset>
+          <input id="pubdocs" class="advanced_search_field" data-for-id="section-pubdocs" name="category"
+            value="pubdocs" type="radio">
+          <label for="pubdocs">Published Documents</label><br>
+          <input id="unpubdocs" class="advanced_search_field" data-for-id="section-unpubdocs" name="category"
+            value="unpubdocs" type="radio">
+          <label for="unpubdocs">Unpublished Documents</label><br>
+        </div>
+      </fieldset>
 
-        <!-- TOMBS AND MONUMENTS -->
-        <section id="section-sites" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
-          <label>Tomb/Monument number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
-              aria-haspopup="true" data-disable-hover="false" tabindex="2"
-              title="Official unique number or name of a Tomb/Monument."></span>
-            <input class="advanced_search_field" name="sites_monument" type="text" placeholder="Example: 'G 7000 X'">
-          </label>
-          <label>Tomb/Monument name:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
-              aria-haspopup="true" data-disable-hover="false" tabindex="2"
-              title="The area of Giza where a Tomb/Monument is located."></span>
-            <input class="advanced_search_field" name="sites_sitename" type="text" placeholder="Example: 'Eastern Cemetery'">
-          </label>
-          <!-- <label>Site Dates:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+      <!-- TOMBS AND MONUMENTS -->
+      <section id="section-sites" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
+        <label>Tomb/Monument number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2"
+            title="Official unique number or name of a Tomb/Monument."></span>
+          <input class="advanced_search_field" name="sites_monument" type="text" placeholder="Example: 'G 7000 X'">
+        </label>
+        <label>Tomb/Monument name:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2"
+            title="The area of Giza where a Tomb/Monument is located."></span>
+          <input class="advanced_search_field" name="sites_sitename" type="text"
+            placeholder="Example: 'Eastern Cemetery'">
+        </label>
+        <!-- <label>Site Dates:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
               data-disable-hover="false" tabindex="2"
               title="Date(s) or time period(s) when a Tomb/Monument was originally in use."></span>
             <input name="sites_datevalues" type="text" placeholder="Example: 'Khufu to Shepseskaf'">
           </label> -->
-          <label>People:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2"
-              title="Ancient and modern individuals (or institutions, or animals) who are associated with a Tomb/Monument."></span>
-            <input class="advanced_search_field" name="sites_people" type="text" placeholder="Example: 'George Reisner'">
-          </label>
-        </section>
+        <label>People:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2"
+            title="Ancient and modern individuals (or institutions, or animals) who are associated with a Tomb/Monument."></span>
+          <input class="advanced_search_field" name="sites_people" type="text" placeholder="Example: 'George Reisner'">
+        </label>
+      </section>
 
-        <!-- OBJECTS -->
-        <section id="section-objects" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
-          <label>Object title or name:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
-              aria-haspopup="true" data-disable-hover="false" tabindex="2"
-              title="The name or kind of Object that you are looking for."></span>
-            <input class="advanced_search_field" name="objects_title" type="text" placeholder="Example: 'royal statue' or 'Khafre'">
-          </label>
-          <label>Object or ID number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
-              aria-haspopup="true" data-disable-hover="false" tabindex="2"
-              title="The museum number, expedition number, or other unique identifier of an artifact or document."></span>
-            <input class="advanced_search_field" name="objects_number" type="text" placeholder="Example: 'HUMFA_14-11-206'">
-          </label>
-          <label>Material:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="What an Object is made of."></span>
-            <input class="advanced_search_field" name="objects_medium" type="text" placeholder="Example: 'alabaster'">
-          </label>
-          <label>Findspot:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2"
-              title="The location (e.g. monument, tomb, etc.) where an Object was discovered."></span>
-            <input class="advanced_search_field" name="objects_provenance" type="text" placeholder="Example: 'G 2110'">
-          </label>
-          <label>Date of register entry:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
-              aria-haspopup="true" data-disable-hover="false" tabindex="2"
-              title="The date an Object was recorded in the official artifact register (usually soon after discovery)."></span>
-            <input class="advanced_search_field" name="objects_entrydate" type="text" placeholder="Example: 05/23/1924">
-          </label>
-        </section>
+      <!-- OBJECTS -->
+      <section id="section-objects" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
+        <label>Object title or name:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2"
+            title="The name or kind of Object that you are looking for."></span>
+          <input class="advanced_search_field" name="objects_title" type="text"
+            placeholder="Example: 'royal statue' or 'Khafre'">
+        </label>
+        <label>Object or ID number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2"
+            title="The museum number, expedition number, or other unique identifier of an artifact or document."></span>
+          <input class="advanced_search_field" name="objects_number" type="text"
+            placeholder="Example: 'HUMFA_14-11-206'">
+        </label>
+        <label>Material:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="What an Object is made of."></span>
+          <input class="advanced_search_field" name="objects_medium" type="text" placeholder="Example: 'alabaster'">
+        </label>
+        <label>Findspot:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2"
+            title="The location (e.g. monument, tomb, etc.) where an Object was discovered."></span>
+          <input class="advanced_search_field" name="objects_provenance" type="text" placeholder="Example: 'G 2110'">
+        </label>
+        <label>Date of register entry:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2"
+            title="The date an Object was recorded in the official artifact register (usually soon after discovery)."></span>
+          <input class="advanced_search_field" name="objects_entrydate" type="text" placeholder="Example: 05/23/1924">
+        </label>
+      </section>
 
-        <!-- DIARY PAGES -->
-        <section id="section-diarypages" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
-          <label>Keywords:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="Author of the diary."></span>
-            <input class="advanced_search_field" name="diarypages_keywords" type="text" placeholder="Example: 'George Reisner'">
-          </label>
-          <label>Date:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="Specific date or date-range of the diary/diaries."></span>
-            <input class="advanced_search_field" name="diarypages_entrydate" type="text"
-              placeholder="Example: '04/13/1913' or '15-12-1904 through 1-3-1905'">
-          </label>
-          <!-- <label>People:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+      <!-- DIARY PAGES -->
+      <section id="section-diarypages" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
+        <label>Keywords:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="Author of the diary."></span>
+          <input class="advanced_search_field" name="diarypages_keywords" type="text"
+            placeholder="Example: 'George Reisner'">
+        </label>
+        <label>Date:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="Specific date or date-range of the diary/diaries."></span>
+          <input class="advanced_search_field" name="diarypages_entrydate" type="text"
+            placeholder="Example: '04/13/1913' or '15-12-1904 through 1-3-1905'">
+        </label>
+        <!-- <label>People:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
               data-disable-hover="false" tabindex="2" title="Author"></span>
             <input class="advanced_search_field" name="diarypages_author" type="text" placeholder="Example: 'Mohammed Siad Ahmed'">
           </label> -->
-          <label>Monuments:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="People mentioned."></span>
-            <input class="advanced_search_field" name="diarypages_monuments" type="text" placeholder="Example: 'G 2017'">
-          </label>
-        </section>
+        <label>Monuments:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="People mentioned."></span>
+          <input class="advanced_search_field" name="diarypages_monuments" type="text" placeholder="Example: 'G 2017'">
+        </label>
+      </section>
 
-        <!-- PHOTOS -->
-        <section id="section-photos" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
-          <label>Keywords:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="Keywords"></span>
-            <input class="advanced_search_field" name="photos_keywords" type="text" placeholder="Example: 'G 1169'">
-          </label>
-          <label>Photo ID Number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
-              aria-haspopup="true" data-disable-hover="false" tabindex="2" title="Photo ID number"></span>
-            <input class="advanced_search_field" name="photos_number" type="text" placeholder="Example: 'HUMFA_A8291_NS'">
-          </label>
-          <!-- <label>Photographer:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+      <!-- PHOTOS -->
+      <section id="section-photos" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
+        <label>Keywords:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="Keywords"></span>
+          <input class="advanced_search_field" name="photos_keywords" type="text" placeholder="Example: 'G 1169'">
+        </label>
+        <label>Photo ID Number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2" title="Photo ID number"></span>
+          <input class="advanced_search_field" name="photos_number" type="text" placeholder="Example: 'HUMFA_A8291_NS'">
+        </label>
+        <!-- <label>Photographer:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
               aria-haspopup="true" data-disable-hover="false" tabindex="2" title="Photographer"></span>
             <input class="advanced_search_field" name="photos_people" type="text" placeholder="Example: 'Mohammedani Ibrahim'">
           </label> -->
-          <label>Date of Photograph:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
-              aria-haspopup="true" data-disable-hover="false" tabindex="2" title="Date of Photograph"></span>
-            <input class="advanced_search_field" name="photos_date" type="text" placeholder="Example: '02/04/1915' or 'January 12th 1915'">
-          </label>
-        </section>
+        <label>Date of Photograph:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2" title="Date of Photograph"></span>
+          <input class="advanced_search_field" name="photos_date" type="text"
+            placeholder="Example: '02/04/1915' or 'January 12th 1915'">
+        </label>
+      </section>
 
-        <!-- UNPUBLISHED DOCUMENTS -->
-        <section id="section-unpubdocs" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
-          <label>Author:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="Author"></span>
-            <input class="advanced_search_field" name="unpubdocs_author" type="text" placeholder="Example: 'Reisner'">
-          </label>
-          <label>Site:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+      <!-- UNPUBLISHED DOCUMENTS -->
+      <section id="section-unpubdocs" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
+        <label>Author:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
             data-disable-hover="false" tabindex="2" title="Author"></span>
-            <input class="advanced_search_field" name="unpubdocs_site" type="text" placeholder="Example: 'Eastern Cemetery'">
-          </label>
-          <!-- <label>Object number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+          <input class="advanced_search_field" name="unpubdocs_author" type="text" placeholder="Example: 'Reisner'">
+        </label>
+        <label>Site:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="Author"></span>
+          <input class="advanced_search_field" name="unpubdocs_site" type="text"
+            placeholder="Example: 'Eastern Cemetery'">
+        </label>
+        <!-- <label>Object number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
               aria-haspopup="true" data-disable-hover="false" tabindex="2"
               title="Object number(s) mentioned in the document."></span>
             <input class="advanced_search_field" name="unpubdocs_number" type="text" placeholder="Example: '12-11-49' or '21.351'">
           </label> -->
-          <label>Date:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="Specific date or date-range of the document."></span>
-            <input class="advanced_search_field" name="unpubdocs_date" type="text"
-              placeholder="Example: '04/13/1913' or '15-12-1904 through 1-3-1905'">
-          </label>
-        </section>
+        <label>Date:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="Specific date or date-range of the document."></span>
+          <input class="advanced_search_field" name="unpubdocs_date" type="text"
+            placeholder="Example: '04/13/1913' or '15-12-1904 through 1-3-1905'">
+        </label>
+      </section>
 
-        <!-- PUBLISHED DOCUMENTS -->
-        <section id="section-pubdocs" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
-          <label>Author:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="Site(s) mentioned in the document."></span>
-            <input class="advanced_search_field" name="pubdocs_author" type="text" placeholder="Example: 'George Reisner'">
-          </label>
-          <label>Title:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="Title of the publication"></span>
-            <input class="advanced_search_field" name="pubdocs_title" type="text" placeholder="Example: 'A History of the Giza Necropolis'">
-          </label>
-          <label>Year:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="Year of the publication"></span>
-            <input class="advanced_search_field" name="pubdocs_year" type="text" placeholder="Example: '1942'">
-          </label>
-          <label>Journal/Series & Volume/Issue:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
-              aria-haspopup="true" data-disable-hover="false" tabindex="2"
-              title="Series or journal, with or without series number or volume and/or issue."></span>
-            <input class="advanced_search_field" name="pubdocs_journal-series" type="text"
-              placeholder="Example: 'Harvard Egyptological Series 14' or 'Journal of Egyptian Archaeology 12/3">
-          </label>
-          <label>City/Publisher:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
-              aria-haspopup="true" data-disable-hover="false" tabindex="2"
-              title="Place of publication and/or publishing house"></span>
-            <input class="advanced_search_field" name="pubdocs_city-publisher" type="text"
-              placeholder="Example: 'Harvard University Press'">
-          </label>
-        </section>
+      <!-- PUBLISHED DOCUMENTS -->
+      <section id="section-pubdocs" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
+        <label>Author:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="Site(s) mentioned in the document."></span>
+          <input class="advanced_search_field" name="pubdocs_author" type="text"
+            placeholder="Example: 'George Reisner'">
+        </label>
+        <label>Title:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="Title of the publication"></span>
+          <input class="advanced_search_field" name="pubdocs_title" type="text"
+            placeholder="Example: 'A History of the Giza Necropolis'">
+        </label>
+        <label>Year:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="Year of the publication"></span>
+          <input class="advanced_search_field" name="pubdocs_year" type="text" placeholder="Example: '1942'">
+        </label>
+        <label>Journal/Series & Volume/Issue:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2"
+            title="Series or journal, with or without series number or volume and/or issue."></span>
+          <input class="advanced_search_field" name="pubdocs_journal-series" type="text"
+            placeholder="Example: 'Harvard Egyptological Series 14' or 'Journal of Egyptian Archaeology 12/3">
+        </label>
+        <label>City/Publisher:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2"
+            title="Place of publication and/or publishing house"></span>
+          <input class="advanced_search_field" name="pubdocs_city-publisher" type="text"
+            placeholder="Example: 'Harvard University Press'">
+        </label>
+      </section>
 
-        <!-- DRAWINGS  -->
-        <section id="section-drawings" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
-          <label>Author:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="Author of drawing"></span>
-            <input class="advanced_search_field" name="drawings_people" type="text" placeholder="Example: 'Clarence Fisher'">
-          </label>
-          <label>Object or tomb number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
-              aria-haspopup="true" data-disable-hover="false" tabindex="2"
-              title="Object number(s) mentioned on the drawing"></span>
-            <input class="advanced_search_field" name="drawings_object" type="text" placeholder="Example: '12-11-49' or 'G 5412'">
-          </label>
-          <label>Date:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-              data-disable-hover="false" tabindex="2" title="Specific date or date-range of the drawing."></span>
-            <input class="advanced_search_field" name="drawings_date" type="text"
-              placeholder="Example: '04/13/1913' or '15-12-1904 through 1-3-1905'">
-          </label>
-        </section>
+      <!-- DRAWINGS  -->
+      <section id="section-drawings" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
+        <label>Author:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="Author of drawing"></span>
+          <input class="advanced_search_field" name="drawings_people" type="text"
+            placeholder="Example: 'Clarence Fisher'">
+        </label>
+        <label>Object or tomb number:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2"
+            title="Object number(s) mentioned on the drawing"></span>
+          <input class="advanced_search_field" name="drawings_object" type="text"
+            placeholder="Example: '12-11-49' or 'G 5412'">
+        </label>
+        <label>Date:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+            data-disable-hover="false" tabindex="2" title="Specific date or date-range of the drawing."></span>
+          <input class="advanced_search_field" name="drawings_date" type="text"
+            placeholder="Example: '04/13/1913' or '15-12-1904 through 1-3-1905'">
+        </label>
+      </section>
 
-        <!-- PEOPLE  -->
-        <!-- <section id="section-people" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
+      <!-- PEOPLE  -->
+      <!-- <section id="section-people" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
           <label>Name:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
               data-disable-hover="false" tabindex="2" title="Name of the ancient or modern person"></span>
             <input class="advanced_search_field" name="people_name" type="text" placeholder="Example: 'George Reisner' or 'Khafre'">
@@ -221,39 +233,38 @@
           </label>
         </section> -->
 
-        <!-- MAPS AND PLANS -->
-        <section id="section-mapsandplans" style="display: none;"
-          class="medium-8 medium-pull-4 columns category-section">
-          <!-- <label>Author:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+      <!-- MAPS AND PLANS -->
+      <section id="section-mapsandplans" style="display: none;" class="medium-8 medium-pull-4 columns category-section">
+        <!-- <label>Author:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
               data-disable-hover="false" tabindex="2" title="Author of the diary."></span>
             <input class="advanced_search_field" name="mapsandplans_author" type="text" placeholder="Example: 'George Reisner'">
           </label> -->
-          <!-- <label>Date:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+        <!-- <label>Date:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
               data-disable-hover="false" tabindex="2" title="Specific date or date-range."></span>
             <input class="advanced_search_field" name="mapsandplans_date" type="text"
               placeholder="Example: '04/13/1913' or '15-12-1904 through 1-3-1905'">
           </label> -->
-          <label>Tomb or monument:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
-            data-disable-hover="false" tabindex="2" title="People mentioned."></span>
+        <label>Tomb or monument:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+            aria-haspopup="true" data-disable-hover="false" tabindex="2" title="People mentioned."></span>
           <input class="advanced_search_field" name="mapsandplans_monument" type="text" placeholder="Example: 'G 7215'">
         </label>
-          <!-- <label>People:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
+        <!-- <label>People:<span class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true"
               data-disable-hover="false" tabindex="2" title="People mentioned."></span>
             <input class="advanced_search_field" name="mapsandplans_people" type="text" placeholder="Example: 'Flinders Petrie'">
           </label> -->
-        </section>
-      </div>
+      </section>
+    </div>
 
-      <div class="row">
-        <div class="large-12 columns">
-          <button class="button primary" id=advanced-search-form-btn type="submit">Search</button>
-            <!-- onclick="document.getElementById('advanced-search-form').submit()">Search</button> -->
-        </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <button class="button primary" id=advanced-search-form-btn type="submit">Search</button>
+        <!-- onclick="document.getElementById('advanced-search-form').submit()">Search</button> -->
       </div>
-    </form>
+    </div>
+  </form>
 
-  </section>
-  <!-- <section class="large-4 columns">
+</section>
+<!-- <section class="large-4 columns">
       {% include 'partials/feature-block-start.html' with feature_title="My Saved Searches" feature_block_class="secondary" %}
         <ul class="feature-block__list">
         {% for x in saved_searches_sb %}
@@ -269,3 +280,48 @@
         </ul>
       {% include 'partials/feature-block-end.html' %}
     </section> -->
+
+<script>
+  $(document).foundation()
+
+  $(document).ready(() => {
+
+    // ADVANCED SEARCH: SHOW/HIDE SECTIONS FOR SEARCHING IN CATEGORIES
+    $('fieldset#category-radio-selector input').click(e => showHideMenu(e))
+
+    // This function shows/hides parts of the advanced search categories
+    showHideMenu = e => {
+      if (e != undefined) {
+        // RETAIN REFERENCE OF CURRENT CATEGORY
+        selected_option = $('input.advanced_search_field:checked').val()
+
+        $('#advanced-search-form').trigger("reset") // RESET THE SEARCH FORM WHEN CHANGING SEARCH OPTION
+        $('.category-section').hide() // HIDE THE SECTIONS
+
+        // DETERMINE TARGET SECTION
+        target = e.type == "click" ? $(e.currentTarget).attr('data-for-id') : e
+
+        // SHOW RELEVANT ITEMS
+        $('#' + selected_option).prop('checked', true)
+        $('#' + target).show() // SHOW RELEVANT SECTION ONLY
+      }
+    }
+
+    addHidden = elem => {
+      hidden = $('<input>').attr('type', 'hidden').addClass('hidden_field').attr('name', elem.attr('name')).val(
+        elem.val())
+
+      // if (elem.parent().find(`.hidden_field[name=${elem.attr('name')}]`).length) {
+      // elem.parent().find(`.hidden_field[name=${elem.attr('name')}]`).remove()
+      // }
+
+      elem.parent().append(hidden)
+    }
+
+
+    // SHOW DEFAULT ADVANCED SEARCH OPTION
+    selected_option = $('input.advanced_search_field:checked').attr('data-for-id')
+    if (!$($('#' + selected_option)).is(':visible')) showHideMenu($('#' + selected_option).attr('id'))
+    addHidden($('#' + selected_option))
+  })
+</script>

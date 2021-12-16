@@ -3,14 +3,45 @@
     <div class="large-12 columns">
       {% if backlink_url %}
       <div class="text-smaller m-x-negqt m-t-neg1 p-y-half">
-        <a class="pointer-back" href="{{backlink_url}}">{{backlink_text|default:'Back'}}</a>
+        <a class="pointer-back my-giza-lnk" data-url="{{ backlink_url }}">{{ backlink_text|default:'Back'}}</a>
       </div>
       {% endif %}
       <div class="text-heading">
         {% block 'subheader_content' %}
-          <h2 class="text-medium">{{subtitle}}</h2>
+          <h2 class="text-medium">{{ subtitle }}</h2>
         {% endblock %}
       </div>
     </div>
   </div>
 </div>
+<script>
+  $(document).ready(() => {
+    $('.my-giza-lnk').on('click', e => {
+      $.get($(e.currentTarget).data('url'))
+        .done(response => {
+          if (response.success) {
+            $('#main_content').empty().html(response.html)
+          }
+        })
+    })
+
+    $('.my-giza-lnk').on('click', e => {
+      $.get($(e.currentTarget).data('url'))
+        .done(response => {
+          if (response.success) {
+            $('#main_content').empty().html(response.html)
+          }
+        })
+    })
+
+    $('#sign_out_wrong_user').on('click', e => {
+      $.get($(e.currentTarget).data('url'))
+        .done(response => {
+          if (response.success) {
+            $('#header_bar').empty().html(response.html)
+            $('#main_content').empty().html(response.body)
+          }
+        })
+    })
+  })
+</script>
