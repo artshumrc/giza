@@ -3,14 +3,14 @@
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {% block 'page_headers' %}
-{% include 'partials/page-header.html' with bg="6" title="About the Giza Project" %}
+{% include 'page-header.html' with bg="6" title="About the Giza Project" %}
 {% endblock  %}
 
 {% block 'main_content' %}
 <div class="row">
 
   <aside class="medium-4 medium-push-8 columns">
-    {% include 'partials/feature-block-start.html' with feature_title="Contents" feature_block_class="secondary" feature_icon="list" %}
+    {% include 'feature-block-start.html' with feature_title="Contents" feature_block_class="secondary" feature_icon="list" %}
     <ul class="menu vertical">
       <li><a href="#about">About the Giza Project</a></li>
       <li><a href="#staff">Giza Project Staff</a></li>
@@ -19,7 +19,7 @@
       <li><a href="#card">The Digital Brain behind Digital Giza</a></li>
       <li><a href="#abbrev">Database Abbreviations</a></li>
     </ul>
-    {% include 'partials/feature-block-end.html' %}
+    {% include 'feature-block-end.html' %}
   </aside>
 
 

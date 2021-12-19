@@ -8,7 +8,7 @@
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {% block 'page_headers' %}
-  {% include 'partials/page-header.html' with bg="1" title=object.displaytext page_header_meta_text=object.sitename %}
+  {% include 'page-header.html' with bg="1" title=object.displaytext page_header_meta_text=object.sitename %}
 {% endblock  %}
 
 {% block 'main_content' %}
@@ -39,7 +39,7 @@
                 {% endif %}
               </p>
 
-              {% include 'partials/jump-menu-full.html' %}
+              {% include 'jump-menu-full.html' %}
 
             </div>
           </div>
@@ -732,7 +732,7 @@
       TEMPORARY FIX:
       Include modals and styles for Adding items to Collections
     -->
-    {% include 'partials/modals.html' %}
+    {% include 'modals.html' %}
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 {% endblock %}
 

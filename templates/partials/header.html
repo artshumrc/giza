@@ -16,7 +16,7 @@
         </div>
         <div class="top-bar" id="main-menu">
           <div class="top-bar-left hide-for-small-only">
-            <a href="/">
+            <a class="my-giza-lnk" data-url="{% url 'home' %}">
               <img src="{% static 'images/navlogo.png' %}" alt="Digital Giza at Harvard University. Click for home.">
             </a>
           </div>
@@ -24,17 +24,17 @@
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown"
               data-alignment="left">
               <li {% if page == 'library' %} class="active" {% endif %}>
-                <a href='#' class="my-giza-lnk" data-url="{% url 'library' %}">Library</a>
+                <a class="my-giza-lnk" data-url="{% url 'library' %}">Library</a>
               </li>
               <li {% if section_school %} class="active" {% endif %}>
-                <a href='#' class="my-giza-lnk" data-url="{% url 'giza-at-school' %}">Giza @ School</a>
+                <a class="my-giza-lnk" data-url="{% url 'giza-at-school' %}">Giza @ School</a>
               </li>
               <li {% if section_giza3d %} class="active" {% endif %}>
                 <a class="my-giza-lnk" data-url="{% url 'giza-3d' %}">Giza 3D</a>
               </li>
               <li {% if section_mygiza %} class="active" {% endif %}>
                 {% if user.is_authenticated %}
-                <a class="my-giza-lnk" data-url="{% url 'my-giza' %}">My Giza</a>
+                <a class="my-giza-lnk" data-url="{% url 'my-giza-landing' %}">My Giza</a>
                 <ul class="vertical menu">
                   {% if user.full_name|length %}
                   <li><span class="menu-text-item"><i class="icon-user m-r-qt"></i>{{ user.full_name }}</span></li>
@@ -46,10 +46,11 @@
                     <a href="/admin/">Dashboard</a>
                   </li>
                   {% endif %}
-                  <li><a href="#" class="my-giza-lnk" data-url="{% url 'mygiza_searches' %}">My Saved Search Queries</a>
+                  <li><a class="my-giza-lnk" data-url="{% url 'my-giza' 'saved-search-queries' %}">My Saved Search
+                      Queries</a>
                   </li>
                   <!-- <li><a href="#" class="my_giza_lnk" data-id='/mygiza/collections/'>Browse Public Collections</a></li> -->
-                  <li><a href="#" class="my-giza-lnk" data-url="{% url 'mygiza-collections-all' %}">My Giza
+                  <li><a class="my-giza-lnk" data-url="{% url 'my-giza' 'collections' %}">My Giza
                       Collections</a>
                     {% if user_collections|length %}
                     <ul class="vertical menu nested">
@@ -60,18 +61,19 @@
                     </ul>
                     {% endif %}
                   </li>
-                  <li><a href="#" class="my-giza-lnk" data-url="{% url 'mygiza-collections-all' %}">My Lesson Topics</a>
+                  <li><a class="my-giza-lnk" data-url="{% url 'my-giza' 'lessons' %}">My Lesson Topics</a>
                   </li>
                   <!-- <li class="li-indented"><a href="/mygiza/collections"><em>View all</em></a></li> -->
-                  <li><a href="#" class="sign-out" data-url="{% url 'sign-out' %}">Sign Out</a></li>
+                  <li><a class="my-giza-lnk sign-out" data-url="{% url 'sign-out' %}">Sign Out</a></li>
                 </ul>
                 {% else %}
-                <a href="/mygiza/">My Giza</a>
+                <a class="my-giza-lnk" data-url="{% url 'my-giza-landing' %}">My Giza</a>
                 <ul class="vertical menu">
                   <li><span class="menu-text-item"><em>You are not logged in.</em></span></li>
-                  <li><a href='#' class='sign-up' data-url="{% url 'sign-up' %}">Create a MyGiza Account</a></li>
-                  <li><a href='#' class='sign-in' data-url="{% url 'sign-in' %}">Sign In to your MyGIZA Account</a></li>
-                  <li><a href="#" class='my-giza-lnk' data-url="{% url 'mygiza-collections-all' %}">Browse
+                  <li><a class='my-giza-lnk modal sign-up' data-url="{% url 'sign-up' %}">Create a MyGiza Account</a></li>
+                  <li><a class='my-giza-lnk modal sign-in' data-url="{% url 'sign-in' %}">Sign In to your MyGIZA Account</a>
+                  </li>
+                  <li><a class='my-giza-lnk' data-url="{% url 'mygiza-collections-all' %}">Browse
                       Collections</a></li>
                 </ul>
                 {% endif %}
@@ -88,17 +90,23 @@
                 <a href="https://community.alumni.harvard.edu/give/34086571">Donate</a>
               </li>
               <li {% if section_search %} class="active" {% endif %}>
-                <form id="search-form" method='post' action="/search/results/">
-                  <input type="text" name="query" placeholder="Keyword search" value="{{request.GET.q}}">
-                  <button class="icon-search button"
-                    onclick="document.getElementById('search-form').submit();"></button>
+                <!-- <form id="search-form" method='post' action="/search/results/"> -->
+                <form id="search-form">
+                  <input type="text" id="simple_search_input" name="query" data-url="{% url 'search_results' %}"
+                    placeholder="Type to search">
+                  <!-- <input type="text" name="query" placeholder="Keyword search" value="{{request.GET.q}}"> -->
+                  <button class="icon-search button my-giza-lnk post" style="border-radius:0px"
+                    data-url="{% url 'search_results' %}"></button>
+                  <!-- <button class="icon-search button" -->
+                  <!-- onclick="document.getElementById('search-form').submit();"></button> -->
                   <button class="icon-caret-down button" id="openAdvancedSearchPane" type="button"
                     data-toggle="sideMenuContainer"></button>
-                </form>
+                  </form>
+                <!-- </form> -->
 
                 <div id="sideMenuContainer" class="dropdown-pane" data-position="bottom" data-alignment="left"
                   data-dropdown data-hover="true" data-hover-pane="true">
-                  {% include 'pages/search-advanced-accordion.html' %}
+                  {% include 'search-advanced-accordion.html' %}
                 </div>
 
                 <!-- <div id="sideBarTab"> -->
@@ -136,33 +144,31 @@
 <!-- END TOPBAR -->
 <script>
   $(document).ready(() => {
-    $('.sign-in, .sign-up').on('click', e => {
-      $.get($(e.currentTarget).data('url'))
-        .done(response => {
-          if (response.success) {
-            $('#sign_new_form').empty().html(response.html)
-            $("#sign_new").foundation('open')
-          }
-        })
-    })
 
-    $('.sign-out').on('click', e => {
-      $.get($(e.currentTarget).data('url'))
-        .done(response => {
-          if (response.success) {
-            $('#header_bar').empty().html(response.html)
-            $('#main_content').empty().html(response.body)
-          }
-        })
-    })
+    $(document).foundation()
 
-    $('.my-giza-lnk').on('click', e => {
-      $.get($(e.currentTarget).data('url'))
-        .done(response => {
-          if (response.success) {
-            $('#main_content').empty().html(response.html)
-          }
-        })
+    // LOAD CATEGORIES FOR ADVANCED SEARCH
+    fetch('/search/categories/')
+    .then(response => response.json())
+    .then(response => $('#html').html(response.html).foundation())
+
+    $('#simple_search_input').on('keyup', e => {
+      if (e.keyCode == 13) {
+
+        fetch($(e.currentTarget).data('url'), {
+            method: 'POST',
+            query: $(e.currentTarget).val(),
+            headers: new Headers({
+              'X-CSRFToken': $.cookie('csrftoken')
+            })
+          })
+          .then(response => response.json())
+          .then(response => {
+            if (response.success) {
+              $('#main_content').empty().html(response.html)
+            }
+          })
+      }
     })
   })
 </script>

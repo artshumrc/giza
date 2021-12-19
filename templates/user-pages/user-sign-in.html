@@ -1,0 +1,25 @@
+<!-- BEGIN MAIN CONTENT ROWS -->
+<div class="auth-layout ">
+  <div class="auth-form sign_in_form">
+    <div id='user-sign-modal-content'>
+      <form>
+        <label for=username>Email address</label>
+        <input placeholder="Username" id=username name=username type="text" size="50" />
+        <label for=password>Password</label>
+        <input placeholder="Password" id=password name=password type="password" size="50" />
+        <div id="messages">
+          {% if messages %}
+          {{ messages }}
+          {% endif %}
+        </div>
+        <br>
+        <a class="my-giza-lnk post button primary" data-url="{% url 'sign-in' %}">Sign In</a>
+        <br>
+        <a class="my-giza-lnk modal" data-url="{% url 'forgot-password' %}">Forgot your password?</a>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(() => $('#messages').fadeOut(3000))
+</script>

@@ -37,7 +37,7 @@
                 <li data-accordion-item>
                     <a href='#'>
                         <h6>Categories</h6>
-                        {% include 'partials/search-categories-accordion.html' with search=search.search %}
+                        {% include 'search-categories-accordion.html' with search=search.search %}
                     </a>
                 </li>
 
@@ -46,7 +46,7 @@
                 <li data-accordion-item>
                     <a href="#">
                         <h6>Search fields</h6>
-                        {% include 'partials/search-fields.html' with fields=search.search.fields %}
+                        {% include 'search-fields.html' with fields=search.search.fields %}
                     </a>
                 </li>
                 {% endif %}
@@ -58,19 +58,19 @@
             
                 <!-- FACETS -->
                 <div id=search_facets>
-                    {% include 'partials/search-facets-accordion.html' with search=search.search %}
+                    {% include 'search-facets-accordion.html' with search=search.search %}
                 </div>
 
             </div>
             <div class="col">
                 <h5>MET</h5>
-                {% include 'partials/search-MET.html' with MET_tree=search.search.MET.MET_tree %}
+                {% include 'search-MET.html' with MET_tree=search.search.MET.MET_tree %}
             </div>    
         </div>
         <div class="row">
             <div class="columns medium-6">
             {% with email_modal=request.get_host|add:"/search/lookup?token="|add:search.key %}
-                {% include 'partials/share-links.html' with class="share-links--left" %}
+                {% include 'share-links.html' with class="share-links--left" %}
             {% endwith %}
             </div>
         </div>

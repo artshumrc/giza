@@ -24,22 +24,22 @@ CATEGORIES = {
 }
 
 FIELDS_PER_CATEGORY = {
+	'sites' : {
+		'displaytext' : 'Tomb/Monument number',
+		'sitename' : 'Tomb/Monument name',
+		# 'datevalues' : 'Site Dates',
+		'people' : 'People'
+	},
 	'objects' : {
 		'title' : 'Title',
 		'allnumbers' : 'ID',
 		'medium' : 'Material',
 		'provenance' : 'Findspot',
-		'entrydate' : 'Date of register entry',
-	},
-	'sites' : {
-		'displaytext' : 'Tomb/Monument number',
-		'sitename' : 'Tomb/Monument name',
-		'datevalues' : 'Site Dates',
-		'people' : 'People'
+		# 'entrydate' : 'Date of register entry',
 	},
 	'diarypages' : {
 		'diarytranscription' : 'Keywords',
-		'entrydate' : 'Dates',
+		# 'entrydate' : 'Dates',
 		'people' : 'People',
 		'monuments' : 'Tomb/Monument number'
 	},
@@ -47,37 +47,94 @@ FIELDS_PER_CATEGORY = {
 		'description' : 'Keyword',
 		'number' : 'Number',
 		'people' : 'Photographer',
-		'date' : 'Date of photograph',
-		'entrydate_ms' : 'Date of photograph in milliseconds'
+		# 'date' : 'Date of photograph',
+		# 'entrydate_ms' : 'Date of photograph in milliseconds'
 	},
 	'drawings' : {
 		'people' : 'Author',
 		'objects' : 'Object number',
-		'dates' : 'Date of drawing'
+		# 'dates' : 'Date of drawing'
 	},
 	'mapsandplans' : {
 		'author' : 'Author',
-		'date' : 'Date of plan',
+		# 'date' : 'Date of plan',
 		'people' : 'People associated with the plan'
 	},
 	# 'people' : {
 	# 	'name' : 'Name of a person',
 	# 	'dates' : 'Date range of person'
 	# },
-	'pubdocs' : {
-		'author' : 'Author of the document',
-		'title' : 'Title of the document',
-		'year' : 'Year the document was published',
-		'journal-series' : 'The journal or series number with volume/issue',
-		'city-publisher' : 'City and publisher'
-	},
-	'unpubdocs' : {
+    'unpubdocs' : {
 		'description' : 'Author of the document',
 		'site' : 'Site mentioned in the document',
 		'title' : 'Objects mentioned in the document',
-		'dates' : 'Date range of the document'
+		# 'dates' : 'Date range of the document'
+	},
+	'pubdocs' : {
+		'author' : 'Author of the document',
+		'title' : 'Title of the document',
+		# 'year' : 'Year the document was published',
+		'journal-series' : 'The journal or series number with volume/issue',
+		'city-publisher' : 'City and publisher'
 	}
 }
+
+# BACKUP
+# FIELDS_PER_CATEGORY = {
+# 	'objects' : {
+# 		'title' : 'Title',
+# 		'allnumbers' : 'ID',
+# 		'medium' : 'Material',
+# 		'provenance' : 'Findspot',
+# 		'entrydate' : 'Date of register entry',
+# 	},
+# 	'sites' : {
+# 		'displaytext' : 'Tomb/Monument number',
+# 		'sitename' : 'Tomb/Monument name',
+# 		'datevalues' : 'Site Dates',
+# 		'people' : 'People'
+# 	},
+# 	'diarypages' : {
+# 		'diarytranscription' : 'Keywords',
+# 		'entrydate' : 'Dates',
+# 		'people' : 'People',
+# 		'monuments' : 'Tomb/Monument number'
+# 	},
+# 	'photos' : {
+# 		'description' : 'Keyword',
+# 		'number' : 'Number',
+# 		'people' : 'Photographer',
+# 		'date' : 'Date of photograph',
+# 		'entrydate_ms' : 'Date of photograph in milliseconds'
+# 	},
+# 	'drawings' : {
+# 		'people' : 'Author',
+# 		'objects' : 'Object number',
+# 		'dates' : 'Date of drawing'
+# 	},
+# 	'mapsandplans' : {
+# 		'author' : 'Author',
+# 		'date' : 'Date of plan',
+# 		'people' : 'People associated with the plan'
+# 	},
+# 	# 'people' : {
+# 	# 	'name' : 'Name of a person',
+# 	# 	'dates' : 'Date range of person'
+# 	# },
+# 	'pubdocs' : {
+# 		'author' : 'Author of the document',
+# 		'title' : 'Title of the document',
+# 		'year' : 'Year the document was published',
+# 		'journal-series' : 'The journal or series number with volume/issue',
+# 		'city-publisher' : 'City and publisher'
+# 	},
+# 	'unpubdocs' : {
+# 		'description' : 'Author of the document',
+# 		'site' : 'Site mentioned in the document',
+# 		'title' : 'Objects mentioned in the document',
+# 		'dates' : 'Date range of the document'
+# 	}
+# }
 
 """
 This constant is a temporary stop-measure to resolving search parameters (esp. keywords on unindexed fields)

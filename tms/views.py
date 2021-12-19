@@ -36,9 +36,6 @@ def get_type_json(request, type, id):
 	except:
 		raise Http404("There was an error getting this item")
 
-def index(request):
-	return render(request, 'pages/index.html')
-
 def about(request, page_name):
 	return static_pages(request, page_name)
 

@@ -1,0 +1,90 @@
+{% load static %}
+
+{% block 'page_headers' %}
+{% include 'page-header.html' with bg="9" title="MyGiza" %}
+{% include 'page-subheader--mygiza.html' %}
+{% endblock  %}
+
+{% block 'main_content' %}
+
+{{ collections|json_script:"collections" }}
+{{ searches|json_script:"searches" }}
+{{ lessons|json_script:"lessons" }}
+
+<div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+  <div class="row">
+    <div class="columns">
+      <div class="titles">
+        <a class="my-giza-lnk my-giza {% if searches %}active{% endif %}" data-url="{% url 'my-giza-tab' 'saved-search-queries' %}">Search Queries</a>
+        <a class="my-giza-lnk my-giza {% if collections %}active{% endif %}" data-url="{% url 'my-giza-tab' 'collections' %}">Collections</a>
+        <a class="my-giza-lnk my-giza {% if lessons %}active{% endif %}" data-url="{% url 'my-giza-tab' 'lessons' %}">Lesson Topics</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION FOR JSON DATA -->
+<section class="accordion-section" id="MyGIZAdiv"></section>
+
+{% endblock %}
+<!-- END MAIN CONTENT ROWS -->
+
+<script>
+  $(document).ready(() => {
+
+    category = {}
+    category['saved-search-queries'] = JSON.parse($('#searches').text())
+    category['collections'] = JSON.parse($('#collections').text())
+    category['lessons'] = JSON.parse($('#lessons').text())
+
+    console.log(category)
+
+    idx = Object.values(category).findIndex(e => e != null)
+    html = Object.values(category)[idx]
+    cat = Object.entries(category)[idx][0]
+
+    $('.my-giza-lnk.my-giza').filter((i, e) => $(e).data('url').includes(cat)).addClass('active')
+    $('#MyGIZAdiv').empty().html(html)
+
+    // $('#all_saved_search_queries').on('click', e => {
+    //   $.get("")
+    //     .done(response => {
+    //       console.log(response)
+    //       if (response.success) {
+    //         $('#all_collections').removeClass('active')
+    //         $('#all_saved_search_queries').addClass('active')
+    //         // $('#MyGIZAdiv').empty().html(response.html)
+    //       } else {
+    //         console.log(response)
+    //         console.log('error')
+    //       }
+    //     })
+    // })
+
+    // $('#all_collections').on('click', () => {
+    //   fetch("{% url 'my_giza_collections_refresh' %}")
+    //   .then(response => response.json())
+    //   .then(response => {
+    //     if (response.success) {
+    //       $('#all_saved_search_queries').removeClass('active')
+    //       $('#all_collections').addClass('active')
+    //       // $('#MyGIZAdiv').empty().html(response.html)
+    //     } else {
+    //       console.log('error')
+    //     }
+    //   })
+    // })
+
+    // $('#my_collections_link').on('click', () => {
+    //   console.log('private collections')
+    //   $.get('/mygiza/collections/private/')
+    //     .done(response => {
+    //       console.log('ok')
+    //       if (response.success) {
+    //         console.log(response)
+    //         $('#private_collections').empty().html(response.html)
+    //       }
+    //     })
+    // })
+  })
+</script>

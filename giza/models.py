@@ -1,11 +1,13 @@
+# from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AbstractUser
-from django.contrib.postgres import fields
-from django.db import models
-from django.utils.text import slugify
-from django.core.files import File
+# from django.contrib.postgres import fields
+from django.db.models import JSONField, EmailField, CharField, TextField, ImageField, UUIDField, ManyToManyField, BooleanField, ForeignKey, IntegerField, Model, CASCADE
+# from django.db import models
+# from django.utils.text import slugify
+# from django.core.files import File
 import uuid, os
 from django.contrib.auth.base_user import BaseUserManager
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from tinymce.models import HTMLField
 
@@ -54,12 +56,14 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class CustomUser(AbstractUser):
-    username = models.CharField(max_length=256, blank=True)
-    email = models.EmailField(_('email address'), unique=True)
-    full_name = models.CharField(max_length=256, blank=True)
-    bio = models.TextField(blank=True)
-    tagline = models.TextField(blank=True)
-    picture = models.ImageField(upload_to='images', blank=True)
+    username = CharField(max_length=256, blank=True, unique=False)
+    email = EmailField(_('email address'), unique=True)
+    full_name = CharField(max_length=256, blank=True)
+    first_name = CharField(max_length=256)
+    last_name = CharField(max_length=256)
+    bio = TextField(blank=True)
+    tagline = TextField(blank=True)
+    picture = ImageField(upload_to='images', blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -75,75 +79,76 @@ class CustomUser(AbstractUser):
     def get_saved_searches(self):
         """ This method will retrieve all saved searches associated to a user's profile """
 
-class Search(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    owner = models.TextField(blank=False)
-    search = fields.JSONField(blank=False)
-    name = models.TextField(blank=False)
+class Search(Model):
+    id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    owner = TextField(blank=False)
+    search = JSONField(blank=False)
+    name = TextField(blank=False)
 
     def __str__(self):
         return str(self.id)
 
-class Topic(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=256)
-    slug = models.SlugField(blank=True)
-    picture = models.ImageField(upload_to='images', blank=True)
+class Topic(Model):
+    id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = CharField(max_length=256)
+    # slug = models.SlugField(blank=True)
+    picture = ImageField(default='/images/default.png', upload_to='images', blank=True)
 
     def __str__(self):
         return self.name
 
-    def _get_unique_slug(self):
-        unique_slug = slugify(self.name)
-        num = 1
-        for record in Topic.objects.filter(slug=unique_slug):
-            unique_slug = '{}-{}'.format(slugify(self.title), num)
-            num += 1
-        return unique_slug
+    # def _get_unique_slug(self):
+    #     unique_slug = slugify(self.name)
+    #     num = 1
+    #     for record in Topic.objects.filter(slug=unique_slug):
+    #         unique_slug = '{}-{}'.format(slugify(self.title), num)
+    #         num += 1
+    #     return unique_slug
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = self._get_unique_slug()
+        # if not self.slug:
+            # self.slug = self._get_unique_slug()
         super().save(*args, **kwargs)
 
-class Lesson(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=256, blank=True)
-    slug = models.SlugField(blank=True)
-    topics = models.ManyToManyField('Topic', related_name='lessons_topics', blank=True)
-    collections = models.ManyToManyField('Collection', related_name='collections_topics', blank=True)
-    picture = models.ImageField(upload_to='images', blank=True)
-    summary = models.TextField(blank=True)
+class Lesson(Model):
+    id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = CharField(max_length=256, blank=True)
+    # slug = models.SlugField(blank=True)
+    topics = ManyToManyField('Topic', related_name='lessons_topics', blank=True)
+    collections = ManyToManyField('Collection', related_name='collections_topics', blank=True)
+    picture = ImageField(default='/images/default.png', upload_to='images', blank=True)
+    summary = TextField(blank=True)
     content = HTMLField(blank=True)
 
     def __str__(self):
         return self.title
 
-    def _get_unique_slug(self):
-        unique_slug = slugify(self.title)
-        num = 1
-        for record in Lesson.objects.filter(slug=unique_slug):
-            unique_slug = '{}-{}'.format(slugify(self.title), num)
-            num += 1
-        return unique_slug
+    # def _get_unique_slug(self):
+    #     unique_slug = slugify(self.title)
+    #     num = 1
+    #     for record in Lesson.objects.filter(slug=unique_slug):
+    #         unique_slug = '{}-{}'.format(slugify(self.title), num)
+    #         num += 1
+    #     return unique_slug
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = self._get_unique_slug()
+        # if not self.slug:
+        #     self.slug = self._get_unique_slug()
         super().save(*args, **kwargs)
 
-class Collection(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=256)
-    slug = models.SlugField(blank=True)
-    public = models.BooleanField(blank=True, default=False)
-    owners = models.ManyToManyField('CustomUser', related_name='owners', blank=True)
-    topics = models.ManyToManyField('Topic', related_name='topics', blank=True)
-    contents = models.ManyToManyField('ElasticSearchItem', related_name='contents', blank=True)
-    picture = models.ImageField(upload_to=get_upload_path, blank=True)
+class Collection(Model):
+    id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = CharField(max_length=256)
+    # slug = models.SlugField(blank=True)
+    public = BooleanField(blank=True, default=False)
+    owners = ManyToManyField('CustomUser', related_name='owners', blank=True)
+    topics = ManyToManyField('Topic', related_name='topics', blank=True)
+    contents = ManyToManyField('ElasticSearchItem', related_name='contents', blank=True)
+    # picture = ImageField(upload_to=get_upload_path, blank=True)
+    picture = ImageField(default='/images/default.png', upload_to='images', blank=True)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.title)
 
     # def _get_unique_slug(self):
     #     unique_slug = slugify(self.title)
@@ -168,11 +173,11 @@ class Collection(models.Model):
         # self.slug = self._get_unique_slug()
         super().save(*args, **kwargs)
 
-class ElasticSearchItem(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    collection = models.ForeignKey(Collection, related_name='items', on_delete=models.CASCADE)
-    type = models.CharField(max_length=20)
-    es_id = models.IntegerField()
+class ElasticSearchItem(Model):
+    id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    collection = ForeignKey(Collection, related_name='items', on_delete=CASCADE)
+    type = CharField(max_length=20)
+    es_id = IntegerField()
 
     def __str__(self):
         return "{}-{}".format(self.es_id, self.type)

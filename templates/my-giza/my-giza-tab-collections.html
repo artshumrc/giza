@@ -1,0 +1,122 @@
+{% load static %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'main_content' %}
+<div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+  <div class="row">
+    <div class="columns">
+      <div>
+        <a class="my-giza-lnk my-giza {% if 'public' in collection_type %}active{% endif %}"
+          data-url="{% url 'my-giza-tab-public' %}">Giza collections</a>
+        <a class="my-giza-lnk my-giza {% if collections %}active{% endif %}"
+          data-url="{% url 'my-giza-tab-private' %}">My Collections</a>
+        <a class="my-giza-lnk add collection modal" data-url="{% url 'mygiza_collections_create' %}"><span
+            class="sr-only">add</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="collection-section" id="MyGIZAviewer">
+{% if 'public' in collection_type %}
+<div class="row save-heading">
+  <div class="columns">
+    <h3 id="saved_collections_total">There 
+      {% if collections|length == 0 %}
+        are no public collections.
+      {% else %}
+      is {{ collections|length }} public collection{{collections|pluralize}}.
+      {% endif %}</h3>
+  </div>
+</div>
+
+{% elif 'favorites' in collection_type %} {% else %}
+<div class="row save-heading">
+  <div class="columns">
+    <h3 id="saved_collections_total">You have 
+      {% if collections|length == 0 %}
+        not saved any collections.
+      {% else %}
+        {{ collections|length }} saved collection{{collections|pluralize}}.
+      {% endif %}</h3>
+  </div>
+</div>
+{% endif %}
+
+{% include 'mygiza-collections-view.html' %}
+
+</section>
+
+<!-- 
+<div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+  <div class="row">
+    <div class="columns">
+      <ul class="menu" >
+        <li class="menu-text">Title</li>
+      </ul>
+      a href="/collections/" class="go-back">Back to Individual Collections</a
+    </div>
+  </div>
+
+  <li class="{% if request.path == '/collections/' %}active{% endif %}">
+    <a href="#" id="public_collections_link">All Collections</a>
+  </li>
+  <li>
+    <a href="#" id="my_collections_link">My Private Collections</a>
+  </li>
+  <li><a href="#">Collections Shared with Me</a></li
+  <li> -->
+{% if user.is_superuser %}
+<a href="/admin/giza/collection/add" class="add"><span class="sr-only">add</span></a>
+<!-- <a href="#" class="collection_lnk" data-open="new_collection" aria-controls="new_collection" -->
+<!-- aria-haspopup="true" tabindex="0" class="add"><span class="sr-only">add</span></a> -->
+{% else %}
+<a class="my-giza-lnk add collection modal" data-url="{% url 'mygiza_collections_create' %}"><span
+    class="sr-only">add</span></a>
+{% endif %}
+</li>
+<!--li class="hide-for-small-only"><a href="#">Collections Shared with Me</a></li-->
+{% if collections|length %}
+
+
+{% endif %}
+</div>
+
+
+{% endblock %}
+<!-- END MAIN CONTENT ROWS -->
+<!-- <script>
+  $(document).foundation()
+  $(document).ready(() => {
+    $('#my_collections_link').on('click', () => {
+      $.get('/mygiza/collections/private/')
+        .done(response => {
+          if (response.success) {
+            $('#collections_view').empty().html(response.html).show()
+          }
+        })
+    })
+
+    $('#public_collections_link').on('click', () => {
+      $.get('/mygiza/collections/public/')
+        .done(response => {
+          console.log('ok')
+          if (response.success) {
+            console.log(response.html)
+            $('#collections_view').empty().html(response.html).show()
+          }
+        })
+    })
+
+    $('.collection_lnk').on('click', e => {
+      $.get($(e.currentTarget).data('id'))
+        .done(response => {
+          if (response.success) {
+            $('#edit_collection_form').empty().html(response.html)
+            $('#edit_collection').foundation('open')
+          }
+        })
+    })
+  })
+</script> -->

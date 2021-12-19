@@ -1,11 +1,11 @@
-Django~=2.2.0
-django-tinymce==2.8.0
+Django~=3.2.10
+django-tinymce==3.4.0
 elasticsearch==5.5.3
-Pillow==7.1.1
+Pillow==8.2.0
 pyodbc==4.0.30
 pytz==2019.1
-sqlparse==0.3.0
-urllib3==1.25.8
-requests==2.22.0
-django-webpack-loader==0.7.0
-psycopg2>=2.8,<2.9 # https://stackoverflow.com/questions/38807296/django-1-9-2-assertionerror-database-connection-isnt-set-to-utc
+sqlparse==0.4.2
+urllib3==1.26.7
+requests==2.26.0
+django-webpack-loader==1.4.1
+psycopg2>=2.9.2 # https://stackoverflow.com/questions/38807296/django-1-9-2-assertionerror-database-connection-isnt-set-to-utc

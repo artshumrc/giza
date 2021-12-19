@@ -14,34 +14,3 @@
     </div>
   </div>
 </div>
-<script>
-  $(document).ready(() => {
-    $('.my-giza-lnk').on('click', e => {
-      $.get($(e.currentTarget).data('url'))
-        .done(response => {
-          if (response.success) {
-            $('#main_content').empty().html(response.html)
-          }
-        })
-    })
-
-    $('.my-giza-lnk').on('click', e => {
-      $.get($(e.currentTarget).data('url'))
-        .done(response => {
-          if (response.success) {
-            $('#main_content').empty().html(response.html)
-          }
-        })
-    })
-
-    $('#sign_out_wrong_user').on('click', e => {
-      $.get($(e.currentTarget).data('url'))
-        .done(response => {
-          if (response.success) {
-            $('#header_bar').empty().html(response.html)
-            $('#main_content').empty().html(response.body)
-          }
-        })
-    })
-  })
-</script>

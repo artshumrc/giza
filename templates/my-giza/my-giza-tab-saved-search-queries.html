@@ -7,17 +7,27 @@
 <!-- START OF DIV WITH SEARCHES -->
 <div class="row save-heading">
   <div class="columns">
-    <span class="title" id="saved_searches_total">You have {% if searches|length == 0 %} no {% else %} {{ searches|length }} {% endif %} saved search {% if searches|length == 1 %} query. {% else %} queries. {% endif %}</span>
+    <h3 id="saved_searches_total">You have 
+      {% if searches|length == 0 %}
+        not saved any search queries.
+      {% else %}
+        {{ searches|length }} saved search 
+          {% if searches|length == 1 %} 
+            query.
+          {% else %}
+            queries.
+          {% endif %}
+      {% endif %}</h3>
   </div>
 </div>
 <div class="row row-padded" id="saved_searches">
-  {% include 'partials/mygiza-saved-searches.html' %}
+  {% include 'mygiza-saved-searches.html' %}
 </div>
 {% endblock %}
 <!-- END MAIN CONTENT ROWS -->
 
 <!-- JAVASCRIPT -->
-<script>
+<!-- <script>
   $(document).foundation()
 
   $(document).ready(() => {
@@ -88,4 +98,4 @@
         })
     })
   })
-</script>
+</script> -->

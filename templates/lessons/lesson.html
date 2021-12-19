@@ -12,9 +12,9 @@
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {% block 'page_headers' %}
-  {% include 'partials/page-header.html' with bg="9" title="Daily Life in Ancient Egypt"%}
+  {% include 'page-header.html' with bg="9" title="Daily Life in Ancient Egypt"%}
 
-  {% include 'partials/page-subheader.html' with backlink_url="/lessons/" backlink_text="Back to Lesson Topics" %}
+  {% include 'page-subheader.html' with backlink_url="lessons" backlink_text="Back to Lesson Topics" %}
 {% endblock  %}
 
 {% block 'main_content' %}
@@ -29,16 +29,16 @@
         </p>
       </div>
 
-      {% include 'partials/feature-block-start.html' with feature_title="MyGiza Collections" feature_block_class="collapsible" feature_icon="th" feature_counter=lesson.collections|length feature_anchor="collections" %}
+      {% include 'feature-block-start.html' with feature_title="MyGiza Collections" feature_block_class="collapsible" feature_icon="th" feature_counter=lesson.collections|length feature_anchor="collections" %}
 
         {% for collection in lesson.collections.all %}
-          {% include 'partials/mygiza-collection-blurb.html' %}
+          {% include 'mygiza-collection-blurb.html' %}
         {% endfor %}
 
-      {% include 'partials/feature-block-end.html' %}
+      {% include 'feature-block-end.html' %}
 
       <!--
-      {% include 'partials/feature-block-start.html' with feature_title="Videos" feature_block_class="collapsible" feature_icon="video-camera" feature_counter="5" feature_anchor="videos" %}
+      {% include 'feature-block-start.html' with feature_title="Videos" feature_block_class="collapsible" feature_icon="video-camera" feature_counter="5" feature_anchor="videos" %}
         <ul class="feature-block__list multicol-2 thumbsize-lg thumbs-square">
 
           <li class="video-border">
@@ -107,7 +107,7 @@
           </li>
 
         </ul>
-      {% include 'partials/feature-block-end.html' %}
+      {% include 'feature-block-end.html' %}
       -->
 
     </section>
@@ -115,18 +115,18 @@
     <aside class="large-4 columns">
 
       <!--
-      {% include 'partials/feature-block-start.html' with feature_title="3D Models" feature_block_class="secondary collapsible" feature_icon="pyramid-3d" feature_counter="1" feature_anchor="models" %}
+      {% include 'feature-block-start.html' with feature_title="3D Models" feature_block_class="secondary collapsible" feature_icon="pyramid-3d" feature_counter="1" feature_anchor="models" %}
         <ul class="feature-block__list thumbsize-full">
         {% for x in 3d_models %}
           <li>
-            {% include 'partials/list-item-thumbcaption.html' %}
+            {% include 'list-item-thumbcaption.html' %}
           </li>
         {% endfor %}
         </ul>
-      {% include 'partials/feature-block-end.html' %}
+      {% include 'feature-block-end.html' %}
       -->
 
-      {% include 'partials/feature-block-start.html' with feature_title="More Resources" feature_block_class="secondary collapsible" feature_icon="list" %}
+      {% include 'feature-block-start.html' with feature_title="More Resources" feature_block_class="secondary collapsible" feature_icon="list" %}
         <div class="m-b-1">
           <p class="text-smaller text-muted">
             <em>Explore these related lessons and topics.</em>
@@ -134,12 +134,12 @@
         </div>
 
         {% for lesson in lessons %}
-          {% include 'partials/list-item-resourcelink-start.html' with resource=lesson resource_url='lessons' internal=True %}
+          {% include 'list-item-resourcelink-start.html' with resource=lesson resource_url='lessons' internal=True %}
             {{lesson.content|truncatewords:14}}
-          {% include 'partials/list-item-resourcelink-end.html' %}
+          {% include 'list-item-resourcelink-end.html' %}
         {% endfor %}
 
-      {% include 'partials/feature-block-end.html' %}
+      {% include 'feature-block-end.html' %}
 
     </aside>
 

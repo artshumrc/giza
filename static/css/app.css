@@ -2453,12 +2453,13 @@ kbd {
   transition: background-color 0.25s ease-out, color 0.25s ease-out;
   vertical-align: middle;
   border: 1px solid transparent;
-  border-radius: 4px;
+  /* border-radius: 4px; */
   padding: 0.85em 1em;
   margin: 0 1rem 1rem 0;
   font-size: 0.9rem;
   background-color: #1164AD;
-  color: #fefefe; }
+  color: #fefefe;
+  }
   [data-whatinput='mouse'] .button {
     outline: 0; }
   .button:hover, .button:focus {
@@ -2647,7 +2648,8 @@ textarea[readonly] {
 [type='button'] {
   border-radius: 4px;
   -webkit-appearance: none;
-  -moz-appearance: none; }
+  -moz-appearance: none;
+  }
 
 input[type='search'] {
   box-sizing: border-box; }
@@ -6550,7 +6552,8 @@ select, input, textarea {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     color: #fefefe;
-    display: inline-block; }
+    display: inline-block;
+    }
   #search-form .icon-search::before {
     top: -0.1em; }
 

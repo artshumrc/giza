@@ -23,14 +23,7 @@ $(document).ready(() => {
   /**
    * SETTING UP ADVANCED SEARCH SLIDE DOWN PANEL
    */
-  $.ajax({
-    url : '/search/categories/'
-    })
-    .done(response => {
-    if (response.success) {
-      $('#html').html(response.html).foundation()
-    }
-  })
+
 
   // $('#openAdvancedSearchPane').on('click', () => ($('#sideMenuContainer').hasClass('open')) ? closeAdvancedSearchPane() : openAdvancedSearchPane())
  

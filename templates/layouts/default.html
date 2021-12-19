@@ -25,7 +25,7 @@
   <link rel="apple-touch-icon" sizes="144x144" href="{% static 'apple-touch-icon.png' %}">
   <link rel="icon" type="image/png" href="{% static 'images/favicon-16x16.png' %}">
   <link rel="icon" type="image/png" href="{% static 'images/favicon-32x32.png' %}">
-  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <!-- <link rel="manifest" href="{% static 'manifest.json' %}"> -->
   <link title="timeline-styles" rel="stylesheet"
     href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
   <meta name="theme-color" content="#ffffff">
@@ -33,32 +33,110 @@
 <!-- LOCAL JS DEPENDENCIES -->
 <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
 <script src="{% static 'js/jquery.cookie.js' %}"></script>
-<script>
-  $(document).ready(() => {
-    csrfSafeMethod = method => /^(GET|HEAD|OPTIONS|TRACE)$/.test(method)
-    $.ajaxSetup({
-      beforeSend: (xhr, settings) => {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-          xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'))
-        }
-      }
-    })
-  })
-</script>
-
 <script src="{% static 'js/foundation.min.new.js' %}"></script>
 <script src="{% static 'js/timeline.js' %}"></script>
 <script src="{% static 'js/slick.js' %}"></script>
 <script src="{% static 'js/picturefill.min.js' %}"></script>
 <script src="{% static 'js/jquery.vide.min.js' %}"></script>
 <script src="{% static 'js/giza.js' %}"></script>
+<script>
+  $(document).ready(() => {
+    console.log($.cookie('csrftoken'))
+    $('body').on('click', '.my-giza-lnk', e => {
+      e.preventDefault()
+
+      target = $(e.currentTarget)
+
+      if (target.data('active')) {
+        return
+      }
+
+      target.data('active', true)
+
+      settings = $(target).hasClass('post') ? {
+        method: 'POST',
+        // url : $(e.currentTarget).data('url'),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-CSRFToken': $.cookie('csrftoken')
+        }),
+        body: JSON.stringify($(target).parent('form').serializeArray().reduce((obj, item) => (obj[item.name] = item.value, obj) ,{}))
+      } : {
+        // url : $(e.currentTarget).data('url')
+      }
+
+      l = $(target).parent('form').serializeArray()
+
+      // $.ajax(settings, response => {
+        
+      // })
+
+      fetch($(e.currentTarget).data('url'), settings)
+        .then(response => response.json())
+        .then(response => {
+          if (response.success) {
+            if (response.hasOwnProperty('header')) {
+              $('#header_bar').empty().html(response.header)
+              // if($("#sign_new").hasClass('open')) {
+                $('#sign_new').foundation('close')
+              // }
+            }
+
+            if (response.hasOwnProperty('main_content')) {
+              $('#main_content').empty().html(response.main_content)
+            }
+
+            if (response.hasOwnProperty('modal')) {
+              console.log(1, response)
+              $('#sign_new_form').empty().html(response.modal)
+              $("#sign_new").foundation('open')
+            }
+
+            if (response.hasOwnProperty('MyGIZA-tab')) {
+              $('#MyGIZAdiv').empty().html(response.html)
+              $('.my-giza-lnk.my-giza').removeClass('active')
+              $(target).addClass('active')
+              $("#sign_new").foundation('close')
+            }
+            // } else if (urls.some(e => $(target).hasClass(e))) {
+              // console.log(2)
+              // console.log(response)
+              // $('#header_bar').empty().html(response.header_bar)
+              // $('#main_content').empty().html(response.main_content)
+              // $("#sign_new").foundation('close')
+            } else if ($(target).hasClass('my-giza')) {
+              console.log(3)
+
+
+            // } else if ($(target).data('url').includes('sign-out')) {
+              // $('#header_bar').empty().html(response.html)
+              // $('#main_content').empty().html(response.body)
+              // $("#sign_new").foundation('close')
+            // } else if ($(target).hasClass('password-reset')) {
+              // console.log(response)
+              // $('#header_bar').empty().html(response.html)
+              // $('#main_content').empty().html(response.body)
+            // } else {
+              // console.log(4)
+              // $('#main_content').empty().html(response.html)
+              // $("#sign_new").foundation('close')
+            // }
+          } else {
+            console.log(response)
+          }
+        })
+        .then(() => target.data('active', false))
+        .catch((error) => console.log(error))
+    })
+  })
+</script>
 
 <body class="{% block body_class %}{% endblock %}">
 
-  {% include 'partials/modals.html' %}
+  {% include 'modals.html' %}
 
   <div id="header_bar">
-    {% include 'partials/header.html' %}
+    {% include 'header.html' %}
   </div>
 
   {% block 'page_headers' %}
@@ -66,15 +144,22 @@
 
   <!-- GOOGLE ANALYTICS -->
   <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-        ga('create', 'UA-98043800-1', 'auto');
-        ga('send', 'pageview');
-    </script>
-    
+    ga('create', 'UA-98043800-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
   <div id="main_content">
     {% block 'content' %}{% endblock %}
   </div>
@@ -84,7 +169,7 @@
     {% endblock %}
   </div>
 
-  {% include 'partials/footer.html' %}
+  {% include 'footer.html' %}
 
   {% block extra_js %}{% endblock %}
 

@@ -33,7 +33,11 @@ def search_results(request, items=None):
 	- Render function with template
 	"""
 	if items is None:
-		return render(request, 'pages/search-results.html', compile_results(request))
+		return JsonResponse({ 
+			'success' : True,
+			'main_content' : render_to_string('search-results.html', compile_results(request))
+		})
+		# return render(request, 'pages/search-results.html', compile_results(request))
 	else:
 		if items:
 			return compile_results(items)
@@ -175,7 +179,7 @@ def library(request):
 
 	return JsonResponse({ 
 		'success' : True, 
-		'html' : render_to_string('pages/library.html', {
+		'main_content' : render_to_string('pages/library.html', {
 			'results' : hits,
 			'sort' : sort
 		}) 
@@ -217,7 +221,7 @@ def get_categories(request):
 	for category, fields in FIELDS_PER_CATEGORY.items():
 		categories['categories'].append({ 'fields' : fields, 'displaytext' : CATEGORIES[category], 'key' : category })
 	
-	return JsonResponse({ 'success' : True, 'html' : render_to_string('partials/search-advanced-accordion-category.html', { 'search' : categories }) })
+	return JsonResponse({ 'success' : True, 'html' : render_to_string('search-advanced-accordion-category.html', { 'search' : categories }) })
 
 ####################################
 ###				MET				 ###
@@ -353,19 +357,21 @@ def search_execute(request):
 	#		BASE PARAMS		#
 	#########################
 	items = {'search' : {} }
+
+	body = json.loads(request.body.decode("utf-8"))
 	
 	# IF A SEARCH IS SUBMITTED FOR THE FIRST TIME
 	if type(request) is WSGIRequest:
-		if request.method == 'POST' and not 'search' in request.POST:
-			items['search']['fields'] = list(request.POST.items())
+		if request.method == 'POST' and not 'search' in body:
+			items['search']['fields'] = list(body)
 			items['search']['query'], items['search']['category'] = '', ''
 
 			# COLLECT ALL SEARCH FIELDS IF ANY
-			items['search']['fields'] = { x[0].split('_')[0] : {} if '_' in x[0] else (json.loads(x[1]) if '{' in x[1] else x[1]) for x in list(request.POST.items()) }
+			items['search']['fields'] = { x[0].split('_')[0] : {} if '_' in x[0] else (json.loads(x[1]) if '{' in x[1] else x[1]) for x in list(body) }
 
 			# SIMPLE SEARCH
-			if 'query' in request.POST: 
-				items['search']['query'] = request.POST.get('query')
+			if 'query' in body: 
+				items['search']['query'] = body['query']
 
 			# ADVANCED SEARCH
 			if 'category' in items['search']['fields']:
@@ -374,7 +380,7 @@ def search_execute(request):
 
 				# REFORMAT SEARCH PARAMETERS FROM ADVANCED SEARCH FORM
 				# { items['search']['fields'][x].update({ 'key' : SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]], 'val' : y[1], 'text' : FIELDS_PER_CATEGORY[items['search']['category']][SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]]] }) for x in items['search']['fields'] for y in list(request.POST.items()) if x == y[0].split('_')[0] and type(items['search']['fields'][x]) is dict and items['search']['category'] in x }
-				{ items['search']['fields'][x].update({ SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]] : y[1] }) for x in items['search']['fields'] for y in list(request.POST.items()) if x == y[0].split('_')[0] and type(items['search']['fields'][x]) is dict and items['search']['category'] in x }
+				{ items['search']['fields'][x].update({ SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]] : y[1] }) for x in items['search']['fields'] for y in list(body) if x == y[0].split('_')[0] and type(items['search']['fields'][x]) is dict and items['search']['category'] in x }
 
 				# REMOVE IRRELEVANT FIELDS--REMOVE THIS AND UPDATE ABOVE LINE TO ENABLE CROSS-CATEGORY SEARCH
 				items['search']['fields'] = { k : v for k, v in items['search']['fields'].items() if type(v) is str or (type(v) is dict and items['search']['category'] in k) }
@@ -382,7 +388,7 @@ def search_execute(request):
 			items['search']['fields'] = { y : z for k, v in { k : v for k, v in items['search']['fields'].items() if isinstance(v, dict) }.items() for y, z in v.items() if z is not ''}
 			
 			# ADD MET
-			items['search']['MET'] = request.POST.get('MET') if request.POST.get('MET') else { 'MET_tree' : {}, 'MET_paths' : [], 'MET_terms' : [] }
+			items['search']['MET'] = body['MET'] if 'MET' in body else { 'MET_tree' : {}, 'MET_paths' : [], 'MET_terms' : [] }
 
 			# FACETS
 			items['search']['facets'] = {}
@@ -395,7 +401,7 @@ def search_execute(request):
 		else:
 
 			# IF SEARCH PARAMETERS ALREADY EXIST IN THE REQUEST POST
-			items['search'] = json.loads(request.POST.get('search'))
+			items['search'] = json.loads(body['search'])
 			items['user'] = request.user.is_authenticated
 	else:
 

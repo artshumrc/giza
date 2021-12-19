@@ -14,11 +14,12 @@
         </div>
   
         <div class="home-hero-content">
-          <div class="medium-8 columns">
-            <p class="lead text-alt" style="line-height: 1.4">The Giza Project gives you access to the largest collection of information, media, and research materials ever assembled about the Pyramids and related sites on Egypt&rsquo;s Giza Plateau. </p>
+          <div class="medium-12 columns">
+            <p class="lead text-alt" style="line-height: 1.4">The Giza Project gives you access to the largest collection of information, media, and research materials ever assembled about the Pyramids and related sites on Egypt&rsquo;s Giza Plateau. Start your journey to Giza in the archives today!</p>
           </div>
-          <div class="medium-4 columns">
-            <form method="post" action="/search/results/">
+          <!-- <div class="medium-4 columns"> -->
+            <!-- <em></em> -->
+            <!-- <form method="post" action="/search/results/">
               {% csrf_token %}
               <p class="text-alt" style="color: #fff; margin-bottom: 0.1rem;">
                 <em>Search the archives:</em>
@@ -30,27 +31,27 @@
                 </div>
               </div>
             </form>
-            <!-- <small>or go to <a class="link-lighter" href="{% url 'search' %}">Advanced Search</a></small> -->
             <small>or go to <a class="link-lighter" href="{% url 'search' %}">Advanced Search</a></small>
-          </div>
+            <small>or go to <a class="link-lighter" href="{% url 'search' %}">Advanced Search</a></small> -->
+          <!-- </div> -->
         </div>
   
         <div class="home-hero-overlay"></div>
       </div>
   
-        <!--<div id="hero-home" data-interchange="[partials/home/small.html, small], [partials/home/medium.html, medium], [partials/home/large.html, large]"></div> -->
+        <!--<div id="hero-home" data-interchange="[home/small.html, small], [home/medium.html, medium], [home/large.html, large]"></div> -->
   
     </div>
   </div>
   
   <div class="row p-r-1" data-equalizer data-equalize-on="medium">
   
-    {% include 'partials/home-4col-block--giza3d.html' with block_title="Explore Giza 3D"  block_button="Jump In" block_destination="/giza3d" %}
+    {% include 'home-4col-block--gizaatschool.html' with block_title="Giza @ School" block_button="View Resources" block_destination="giza-at-school" %}
+
+    {% include 'home-4col-block--giza3d.html' with block_title="Explore Giza 3D" block_button="Jump In" block_destination="giza-3d" %}
   
-    {% include 'partials/home-4col-block--gizaatschool.html' with block_title="Giza @ School" block_button="View Resources" block_destination="/gizaatschool" %}
+    {% include 'home-4col-block--mygiza.html' with block_title="Make it Yours: MyGiza" block_button="Start Collecting" block_destination="my-giza-landing" %}
   
-    {% include 'partials/home-4col-block--mygiza.html' with block_title="Make it Yours" block_button="Start Collecting" block_destination="/mygiza-landing" %}
-  
-    {% include 'partials/home-4col-block--donate.html' with block_title="Support the Project" block_button="Donate Now" block_destination="https://community.alumni.harvard.edu/give/34086571" %}
+    {% include 'home-4col-block--donate.html' with block_title="Support the Project" block_button="Donate Now" block_destination="https://community.alumni.harvard.edu/give/34086571" %}
   
   </div>
