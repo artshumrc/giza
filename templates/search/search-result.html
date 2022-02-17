@@ -1,24 +1,27 @@
 {% load static %}
+<div class="media-object-holder search-result-thumbnail-view">
 {% for result in search_result.hits %}
   <div class="media-object list-item search-result thumbsize-md thumbs-square">
     <div class="media-object-section">
-      {% if user %}
-        <div class="add-wrap" id="addToCollectionBtn" data-id="{{ result.type }}_{{ result.id }}">
-          <a data-open="add_collection" aria-controls="add_collection" aria-haspopup="true" tabindex="0">
-            <span class="ico"></span>
-          </a>
-        </div>
-      {% endif %}
+      <div class="add-wrap user-function" {% if not user %} style="display:none;" {% endif %}>
+        <a class="my-giza-lnk modal"
+          data-url="{% url 'get-form' form='collection_form' type=result.type id=result.id %}">
+          <span class="ico"></span>
+        </a>
+      </div>
       <!-- <a data-open="add_collection" aria-controls="add_collection" aria-haspopup="true" tabindex="0">
-        <span class="icon-plus-circle icon-fw"></span> Add this to a collection
-      </a> -->
+          <span class="icon-plus-circle icon-fw"></span> Add this to a collection
+        </a> -->
       <div class="thumbnail {% if not 'primarydisplay' in result.source %} no-img {% endif %}">
-        <a href="{% url 'get_type_html' result.type result.id 'full' %}">
-          <img src="{% if result.source.primarydisplay.thumbnail %}{{ result.source.primarydisplay.thumbnail }}{% else %}{% static 'images/object1.png' %}{% endif %}" alt="{{ result.title }}"></a>
+        <a class="my-giza-lnk modal" data-url="{% url 'get_type_html' result.type result.id 'full' %}">
+          <img
+            src="{% if result.source.primarydisplay.thumbnail %}{{ result.source.primarydisplay.thumbnail }}{% else %}{% static 'images/object1.png' %}{% endif %}"
+            alt="{{ result.title }}"></a>
       </div>
     </div>
     <div class="media-object-section">
-      <p class="media-object-title"><a href="{% url 'get_type_html' result.type result.id 'full' %}">{{ result.source.displaytext }}</a></p>
+      <p class="media-object-title"><a class="my-giza-lnk modal"
+          data-url="{% url 'get_type_html' result.type result.id 'full' %}">{{ result.source.displaytext }}</a></p>
       <ul class="subheader">
         {% if result.type == 'sites' %}
         <li>{{ result.source.sitename }}</li>
@@ -28,4 +31,43 @@
       </ul>
     </div>
   </div>
-{% endfor %}
+  {% endfor %}
+</div>
+
+<div class="media-object list-item thumbsize-md thumbs-square search-result-list-view" style="display:none;">
+  <ul>
+    {% for result in search_result.hits %}
+    <li>
+      <div class="grid-x">
+        <div class="row align-right search-result-list-view-item">
+          <div class="column small-2 text-left">
+            <a class="my-giza-lnk modal thumbnail {% if not 'primarydisplay' in result.source %} no-img {% endif %}"
+              data-url="{% url 'get_type_html' result.type result.id 'full' %}">
+              <img
+                src="{% if result.source.primarydisplay.thumbnail %}{{ result.source.primarydisplay.thumbnail }}{% else %}{% static 'images/object1.png' %}{% endif %}"
+                alt="{{ result.title }}"></a>
+          </div>
+          <div class="column {% if 'sites' in result.type %}small-4{% else %}small-8{% endif %}">
+            <p class="media-object-title"><a class="my-giza-lnk modal"
+                data-url="{% url 'get_type_html' result.type result.id 'full' %}">{{ result.source.displaytext }}</a>
+            </p>
+          </div>
+          {% if result.type == 'sites' %}
+          <div class="column small-4">
+            <p class="subheader">
+              ({% if 'sitename' in result.source %}{{ result.source.sitename }}{% else %}{{ result.source.number }}{% endif %})
+            </p>
+          </div>
+          {% endif %}
+          <div class="column small-2 text-right">
+            <a class="my-giza-lnk modal"
+              data-url="{% url 'get-form' form='collection_form' type=result.type id=result.id %}">
+              <span class="icon-plus-circle icon-fw"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>

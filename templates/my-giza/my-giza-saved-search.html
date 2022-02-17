@@ -1,0 +1,77 @@
+<li class="accordion-item" data-accordion-item name="{{ search.pk }}">
+
+    <a href="#" class="accordion-title">{{ search.fields.name }}</a>
+
+    <a class="my-giza-lnk button primary" data-url="{% url 'my-giza-del-search' pk=search.pk %}">
+        <i class="fas fa-trash-alt"></i>
+    </a>
+
+    <div class="accordion-content" data-tab-content>
+        <div class="content-wrap">
+            <div class="col">
+                <h5>Search Statistics</h5>
+                <div>
+                    <h6>Results</h6>
+                    <span
+                        id="{{ search.pk }}_total">{{ search.fields.search.result.overall }}/{{ search.fields.search.result.overall }}</span>
+                </div>
+            </div>
+            <div class="col">
+
+                <!-- SEARCH PARAMETERS -->
+                <h5>Search Parameters</h5>
+                <ul class="vertical menu accordion-menu" data-accordion-menu data-multi-open="false">
+
+                    <!-- QUERY -->
+                    <li data-accordion-item>
+                        <h6>Search terms:</h6>
+                        <input type="text"
+                            value="{% if search.fields.search.query|length %}{{ search.fields.search.query }}{% endif %}"
+                            placeholder="{% if not search.fields.search.query|length %}No query terms{% endif %}"
+                            id="query_{% if search.fields.search.query %}{{ search.fields.search.query }}{% else %}#{% endif %}"
+                            name="query_{{ search.fields.search.query }}">
+                    </li>
+
+                    <!-- CATEGORIES -->
+                    <li data-accordion-item>
+                        <a>
+                            <h6>Categories</h6>
+                            {% include 'search-categories-accordion.html' with search=search.fields.search %}
+                        </a>
+                    </li>
+
+                    <!-- SEARCH FIELDS -->
+                    {% if search.search.fields %}
+                    <li data-accordion-item>
+                        <a href="#">
+                            <h6>Search fields</h6>
+                            {% include 'search-fields.html' with fields=search.fields.search.fields %}
+                        </a>
+                    </li>
+                    {% endif %}
+                    <ul>
+            </div>
+
+            <div class="col">
+                <h5>Facets</h5>
+
+                <!-- FACETS -->
+                <div id=search_facets>
+                    {% include 'search-facets-accordion.html' with search=search.fields.search %}
+                </div>
+
+            </div>
+            <div class="col">
+                <h5>MET</h5>
+                {% include 'search-MET.html' with MET_tree=search.search.fields.MET.MET_tree %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns medium-6">
+                {% with email_modal=request.get_host|add:"/search/lookup?token="|add:search.pk %}
+                    {% include 'share-links.html' with class="share-links--left" %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</li>

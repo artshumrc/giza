@@ -7,39 +7,55 @@
     Narrow your search results using the advanced search fields below.
   </p>
 
-  <p class="text-medium">
-    Need help with abbreviations? Check out our <a href="{% url 'faq' %}#abbr">list of abbreviations on the FAQ page.</a>
-  </p>
+  <!-- <p class="text-medium">
+    Need help with abbreviations? Check out our <a class="my-giza-lnk" data-url="{% url 'faq' %}#abbr">list of abbreviations on the FAQ page.</a>
+  </p> -->
 
   <!-- <form id="advanced-search-form" method="post" action="{% url 'search_results' %}"> -->
-  <div>
-    <div class="text-medium" id="search_keywords">
-      <label for="advanced_search_keyword">Keywords</label>
-      <input type="text" id="advanced_search_keyword">
-    </div>
-    <div class="text-medium" id="date_range">
-      <label for="advanced_search_date">Date</label>
-      <input type="text" id="advanced_search_date">
-    </div>
-    
-    <!-- LOADS CATEGORIES COLLECTED FROM DATABASE; SEE HEADER.HTML -->
-    <div id='html' class="text-smaller"></div>
+  <form>
+    <div>
 
-    <div class="row">
-      
-      <div class="large-12 columns">
-        <button class="button primary" id="advanced-search-form-btn" type="submit">Search</button>
+      <!-- LOADS CATEGORIES COLLECTED FROM DATABASE; SEE HEADER.HTML -->
+      <div id='html' class="text-smaller"></div>
+
+      <div class="row">
+
+        <div class="large-12 columns">
+          <button id="advanced_search_btn" class="button primary my-giza-lnk post" data-url="{% url 'search_results' %}"
+            id="advanced-search-form-btn" type="submit">Search</button>
+          <button class="button primary my-giza-lnk post" data-url="{% url 'search_results' %}"
+            id="advanced-search-form-btn" type="submit">MET</button>
+        </div>
+
       </div>
-      
     </div>
-  </div>
-  <!-- </form> -->
+    <input type=hidden name=category>
+  </form>
 
 </section>
 <script>
   // $(document).foundation()
 
-$(document).ready(() => {
+  $(document).ready(() => {
+
+    $('#sideMenuContainer').on('keydown', e => {
+    //   console.log(e)
+    // })
+
+    // $('#advanced_search_categories').on('change', e => {
+      console.log(e)
+      $('input[name="category"]').val($('#advanced_search_categories').find('[aria-expanded=true]').data('category'))
+    })
+
+    // window.addEventListener('keydown', e => {
+    //   if (e.keyCode == 32 && e.target instanceof HTMLInputElement) {
+    //     $(e.target).parent().attr('aria-expanded', true)
+    //     // e.preventDefault()
+    //     // $(e.target).focus()
+    //   }
+    //   console.log(e)
+    //   // (e.keyCode == 32 && e.target instanceof HTMLInputElement) ? e.preventDefault() : null
+    // })
 
     // ADVANCED SEARCH: SHOW/HIDE SECTIONS FOR SEARCHING IN CATEGORIES
     // $('fieldset#category-radio-selector input').click(e => showHideMenu(e))
@@ -49,13 +65,13 @@ $(document).ready(() => {
     //     if (e != undefined) {
     //     // RETAIN REFERENCE OF CURRENT CATEGORY
     //         selected_option = $('input.advanced_search_field:checked').val()
-        
+
     //         $('#advanced-search-form').trigger("reset") // RESET THE SEARCH FORM WHEN CHANGING SEARCH OPTION
     //         $('.category-section').hide()               // HIDE THE SECTIONS
-        
+
     //         // DETERMINE TARGET SECTION
     //         target = e.type == "click" ? $(e.currentTarget).attr('data-for-id') : e
-        
+
     //         // SHOW RELEVANT ITEMS
     //         $('#'+selected_option).prop('checked', true)
     //         $('#'+target).show()                        // SHOW RELEVANT SECTION ONLY
@@ -77,5 +93,5 @@ $(document).ready(() => {
     // selected_option = $('input.advanced_search_field:checked').attr('data-for-id')
     // if (!$($('#'+selected_option)).is(':visible')) showHideMenu($('#'+selected_option).attr('id'))
     // addHidden($('#'+selected_option))
-})
+  })
 </script>

@@ -1,7 +1,7 @@
 {% load static %}
 
 <!-- Modal: Image Gallery -->
-
+<!-- 
 <div class="large reveal modal-inverse photo-gallery-modal" id="gallery1" data-reveal data-v-offset="65">
 
   <h2>Name of this image</h2>
@@ -15,25 +15,44 @@
 
 
   {% include 'close-button.html' with label="Close modal" %}
-</div>
+</div> -->
 
 <!-- /Modal: Image Gallery -->
 
 
 <!-- SIGN UP/IN MODAL -->
-<div class="reveal modal sign_up-reveal" id="sign_new" data-reveal>
+<div class="reveal modal sign_up-reveal" id="sign_modal" data-reveal>
   {% include 'user-sign-navbar.html' %}
-  <div class="auth-form sign_form" id="sign_new_form"></div>
+  <div class="auth-form sign_form" id="sign_modal_form"></div>
+</div>
+
+<!-- SEARCH RESULT VIEWING MODAL -->
+<div class="record-details modal search_result_modal-reveal" data-multiple-opened="true" id="search_result_modal" data-reveal>
+  <div class="search_result_form" id="search_result_modal_form"></div>
 </div>
 
 <!-- COLLECTION ADD/EDIT MODAL -->
-<div class="reveal modal collection_edit-reveal" id="collection_new" data-reveal>
-  <div class="collection_form" id="collection_new_form"></div>
+<div class="reveal modal collection_edit-reveal" data-multiple-opened="true" id="collection_modal" data-reveal>
+  <div class="collection_form" id="collection_modal_form"></div>
 </div>
 
-<!-- Modal: Email Collection -->
+<!-- SAVED SEARCH MODAL -->
+<div class="reveal modal saved_search_modal-reveal" data-multiple-opened="true" id="saved_search_modal" data-reveal>
+  <div class="saved_search_form" id="saved_search_modal_form"></div>
+</div>
 
-<div class="reveal modal email-reveal" id="email_collection" data-reveal>
+<!-- LESSON MODAL -->
+<div class="reveal modal lesson_modal-reveal" data-multiple-opened="true" id="lesson_modal" data-reveal>
+  <div class="lesson_form" id="lesson_modal_form"></div>
+</div>
+
+<!-- MODAL: ADD TO COLLECTION -->
+<!-- <div class="reveal modal add-reveal" id="add_collection" data-reveal>
+
+</div> -->
+
+<!-- Modal: Email Collection -->
+<!-- <div class="reveal modal email-reveal" id="email_collection" data-reveal>
   <span class="title">Email ‘My Latest Project’ Collection</span>
   <form class="new_form" action="#">
     <div class="email-wrap">
@@ -80,75 +99,15 @@
     </ul>
   </div>
   {% include 'close-button.html' with label="Close modal" %}
-</div>
+</div> -->
 
 <!-- /Modal: Email Collection -->
 
 
 
-<!-- MODAL: ADD TO COLLECTION -->
-<div class="reveal modal add-reveal" id="add_collection" data-reveal>
-  <span class="title">Add to a MyGiza Collection</span>
-  <br>
-  <span class="info-line">Hi {% if user.full_name %}{{ user.full_name }}{% else %}{{ user.username }}{% endif %}! (not
-    you? <a href="/sign-in">Sign in to your account</a>.)</span>
-  <div class="jcf-scrollable">
 
-    <form id="collection_create_form" method="post"
-      action="{% url 'mygiza_collections_create' %}?redirect_to={{redirect_to}}" enctype="multipart/form-data">
-      {% csrf_token %}
-      {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-        {% endfor %}
-      </ul>
-      <br>
-      {% endif %}
-
-      {# {{ collection_form.as_p }} #}
-      <div class="btn-row">
-        <!--button type="submit" class="button btn-white">Cancel</button-->
-        <button type="submit" class="button">Create</button>
-      </div>
-    </form>
-
-    <ul class="add-lists">
-      {% for collection in user_collections %}
-
-      {# <!-- <form id=form_{{type}}_{{object.id}} action="{% url 'collections_add' collection.slug %}"> --> #}
-      <!-- <a href="#" onclick="document.getElementById('form_{{type}}_{{object.id}}').submit();">{{collection.title}}<span class="ico"></span></a></li> -->
-      <!-- <input type=hidden name={{type}}_{{object.id}}> -->
-      collection
-      <li>
-        <a href='#' class="add_to_collection_modal" data-collection-id="{{ collection }}">{{ collection.title }}<span
-            class="ico"></span></a>
-        <!-- <a href="/collections/{{collection.slug}}/edit?add_item_id={{object.id}}&add_item_type={{type}}">{{collection.title}} -->
-        <!-- <span class="ico"></span> -->
-        <!-- </a> -->
-      </li>
-      {% endfor %}
-    </ul>
-
-  </div>
-  <!--div class="bottom-info-block">
-    <div class="img-wrap">
-      <picture>
-        <source srcset="{% static 'images/thumb60-1.jpg' %}, {% static 'images/thumb60-1@2x.jpg' %} 2x"/>
-        <img src="{% static 'images/thumb60-1.jpg' %}" alt="image description" width="60" height="60">
-      </picture>
-    </div>
-    <ul>
-      <li>Sphinx</li>
-      <li>Tombs & Monuments</li>
-      <li>Sphinx Complex</li>
-    </ul>
-  </div-->
-  {% include 'close-button.html' with label="Close modal" %}
-</div>
 
 <!-- MODAL: EDIT COLLECTION -->
 <div class="reveal modal add-reveal" id="edit_collection" data-reveal>
   <div id="edit_collection_form"></div>
 </div>
-

@@ -1,0 +1,36 @@
+<div>
+    <span class="title">Add to a MyGiza Collection</span>
+    <br>
+    <h3>Add to a new collection...</h3>
+    <div class="jcf-scrollable">
+        <form method="post">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            <br>
+            {% endif %}
+            {{ collection_form.as_p }}
+            <input type="hidden" name="type" value="{{type}}">
+            <input type="hidden" name="id" value="{{id}}">
+            <div class="btn-row">
+                <a class="button primary my-giza-lnk modal post" data-url="{% url 'add-to-my-giza-collection' tab='collection' type=type id=id %}">New Collection</a>
+            </div>
+        </form>
+    </div>
+    <h3>or an existing one</h3>
+    <form>
+        <ul class="add-lists">
+            {% for collection in user_collections %}
+            <li>
+                <a class="my-giza-lnk modal post"
+                    data-url="{% url 'add-to-my-giza-collection' tab='collection' type=type id=id name=collection.title %}">
+                    <span class="icon-plus-circle icon-fw"></span> {{ collection.title }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </form>
+</div>

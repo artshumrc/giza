@@ -13,7 +13,7 @@
 
     <section class="large-8 columns">
 
-      {% include 'school-hilite-item--lessontopics.html' with primary="true" hilite_title="Lesson Topics" hilite_link="lessons" hilite_img="lessontopics" hilite_link_text="View Topics" %}
+      {% include 'school-hilite-item--lessontopics.html' with hilite_title="Lesson Topics" hilite_link="lessons" hilite_img="lessontopics" hilite_link_text="View Topics" %}
 
       {% include 'school-hilite-item--commontopics.html' with hilite_title="People and Places of Giza" hilite_link="common-topics" hilite_img="people" hilite_link_text="View People and Places" %}
 
@@ -113,3 +113,16 @@
 {% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->
+
+<script>
+  $(document).ready(() => {
+
+    $('.content-hilite').on('mouseover', e => {
+      $(e.currentTarget).addClass('highlight-school-item')
+    })
+
+    $('.content-hilite').on('mouseout', e => {
+      $(e.currentTarget).removeClass('highlight-school-item')
+    })
+  })
+</script>

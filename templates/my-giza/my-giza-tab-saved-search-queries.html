@@ -7,11 +7,11 @@
 <!-- START OF DIV WITH SEARCHES -->
 <div class="row save-heading">
   <div class="columns">
-    <h3 id="saved_searches_total">You have 
+    <h3 id="saved_searches_total">You
       {% if searches|length == 0 %}
-        not saved any search queries.
+      do not have any saved search queries.
       {% else %}
-        {{ searches|length }} saved search 
+        have {{ searches|length }} saved search 
           {% if searches|length == 1 %} 
             query.
           {% else %}
@@ -21,81 +21,7 @@
   </div>
 </div>
 <div class="row row-padded" id="saved_searches">
-  {% include 'mygiza-saved-searches.html' %}
+  {% include 'my-giza-saved-searches.html' %}
 </div>
 {% endblock %}
 <!-- END MAIN CONTENT ROWS -->
-
-<!-- JAVASCRIPT -->
-<!-- <script>
-  $(document).foundation()
-
-  $(document).ready(() => {
-
-    // COPY SEARCH LINK TO THE CLIPBOARD
-    $('#copy_to_clipboard').on('click', e => navigator.clipboard.writeText($(e.currentTarget).data('id')))
-
-    // UPDATE SAVED SEARCH
-    $('.accordion-menu input').on('click keyup', e => {
-      key = true
-      if ($(e.currentTarget).attr('type') == 'text') {
-        $(e.currentTarget).attr('id', `query_${$(e.currentTarget).val()}`)
-        keycode = (e.keyCode ? e.keyCode : e.which) && e.keyCode
-        key = keycode != '13' ? false : true
-      }
-
-      if (key) {
-        $('.accordion-menu input').attr('disabled', true)
-        $.post('/mygiza/search/all/update/', {
-            'id': $('li.is-active[name]').attr('name'),
-            'param': $(e.currentTarget).attr('id')
-          })
-          .done(response => {
-            if (response.success) {
-              console.log(response)
-              id = $('li.is-active[name]').attr('name')
-              $('.accordion-menu input').attr('disabled', false)
-              $('#' + id + '_total').text(
-                `${response['search']['result']['total']}/${response['search']['result']['overall']}`)
-              // UPDATE SEARCH STATISTICS
-            }
-          }).fail(response => {
-            console.log(response)
-          })
-      }
-    })
-
-    // DELETE SAVED SEARCH
-    $('.del_search').on('click', e => {
-      $.post('/mygiza/search/all/del/', {
-          'id': $(e.currentTarget).data('id')
-        })
-        .done(response => {
-          if (response.success) {
-            $('#saved_searches').empty().html(response.html)
-            $('#saved_searches_total').text(
-              `${response.total} Saved Search${response.total == 1 ? '' : 'es'}`)
-          } else {
-            console.log(response)
-          }
-        })
-        .fail(response => {
-          console.log(response)
-        })
-    })
-
-    // RUN SAVED SEARCH
-    $('.run_search').on('click', e => {
-      console.log('ok')
-      $.get('/mygiza/search/lookup/', {
-          'token': $(e.currentTarget).data('id')
-        })
-        .done(response => {
-          //     console.log(response)
-          $('body').empty().html(response)
-        }).fail(response => {
-          console.log(response)
-        })
-    })
-  })
-</script> -->

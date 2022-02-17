@@ -24,12 +24,13 @@ div.row {
         width: 100%;
     }
 
-    .medium-pull-9-right {
+    /* .medium-pull-9-right {
 
-    }
+    } */
 
     ul.accordion {
         margin-bottom: 0;
+        background-color: #FFFAF5;
     }
 
     .add-wrap a span {

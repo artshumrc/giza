@@ -24,13 +24,13 @@
       </a>
     </li>
     <li>
-      <span id="copy_to_clipboard" data-id="{{ request.get_host|add:'/search/lookup?token='|add:search.key }}">
+      <span id="copy_to_clipboard" data-id="{{ request.get_host|add:'/search/lookup?token='|add:search.pk }}">
         <i class="fas fa-clipboard"></i>
       </span>
     </li>
     <li>
-      <a href="{{ request.get_host|add:'/search/lookup?token='|add:search.key }}" target="_blank" rel="noopener noreferrer">
-        <span id="load_new_window" data-id="{{ request.get_host|add:'/search/lookup?token='|add:search.key }}">
+      <a href="{{ request.get_host|add:'/search/lookup?token='|add:search.pk }}" target="_blank" rel="noopener noreferrer">
+        <span id="load_new_window" data-id="{{ request.get_host|add:'/search/lookup?token='|add:search.pk }}">
           <i class="fas fa-clipboard"></i>
         </span>
       </a>

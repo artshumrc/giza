@@ -1,0 +1,9 @@
+<!-- MODAL: NEW COLLECTION -->
+<div id="new_collection">
+    <form>
+        <span class="title">Add a New MyGiza Collection</span>
+        {{ collection_form.as_p }}
+        <a class="my-giza-lnk post button primary"
+            data-url="{% url 'my-giza-add-collection' tab='collections' %}">Add</a>
+    </form>
+</div>

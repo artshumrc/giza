@@ -1,0 +1,21 @@
+<div class="feature-block secondary" id="jumpmenu">
+    <div class="feature-block__body">
+        <ul class="vertical menu">
+            {% if user %}
+            <h5 class="heading-em">Hi {{ user.first_name }}</h5>
+            <li>
+                <a class="my-giza-lnk modal" data-url="">
+                    <span class="icon-plus-circle icon-fw"></span> Add this to a collection
+                </a>
+            </li>
+            {% endif %}
+            <h5 class="heading-em">Jump to:</h5>
+            <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
+            {% for type, item in items.items %}
+            <li><a href='#{{ type }}'><span class="icon-{{ item.icon }} icon-fw"></span> {{ item.category }}
+                    <span class="badge">{{ item.items|length }}</span>
+                </a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

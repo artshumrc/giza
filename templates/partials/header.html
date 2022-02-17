@@ -41,11 +41,9 @@
                   {% else %}
                   <li><span class="menu-text-item"><i class="icon-user m-r-qt"></i>{{ user }}</span></li>
                   {% endif %}
-                  {% if user.is_superuser %}
                   <li>
                     <a href="/admin/">Dashboard</a>
                   </li>
-                  {% endif %}
                   <li><a class="my-giza-lnk" data-url="{% url 'my-giza' 'saved-search-queries' %}">My Saved Search
                       Queries</a>
                   </li>
@@ -70,10 +68,12 @@
                 <a class="my-giza-lnk" data-url="{% url 'my-giza-landing' %}">My Giza</a>
                 <ul class="vertical menu">
                   <li><span class="menu-text-item"><em>You are not logged in.</em></span></li>
-                  <li><a class='my-giza-lnk modal sign-up' data-url="{% url 'sign-up' %}">Create a MyGiza Account</a></li>
-                  <li><a class='my-giza-lnk modal sign-in' data-url="{% url 'sign-in' %}">Sign In to your MyGIZA Account</a>
+                  <li><a class='my-giza-lnk modal sign-up' data-url="{% url 'sign-up' %}">Create a MyGiza Account</a>
                   </li>
-                  <li><a class='my-giza-lnk' data-url="{% url 'mygiza-collections-all' %}">Browse
+                  <li><a class='my-giza-lnk modal sign-in' data-url="{% url 'sign-in' %}">Sign In to your MyGIZA
+                      Account</a>
+                  </li>
+                  <li><a class='my-giza-lnk' data-url="{% url 'my-giza-collections-all' %}">Browse
                       Collections</a></li>
                 </ul>
                 {% endif %}
@@ -86,26 +86,20 @@
                   <li><a class="my-giza-lnk" data-url="{% url 'archaeology' %}">Archaeology at Giza</a></li>
                 </ul>
               </li>
-              <li {% if page == 'donate' %} class="active" {% endif %}>
+              <li {% if "donate" in page %} class="active" {% endif %}>
                 <a href="https://community.alumni.harvard.edu/give/34086571">Donate</a>
               </li>
               <li {% if section_search %} class="active" {% endif %}>
-                <!-- <form id="search-form" method='post' action="/search/results/"> -->
                 <form id="search-form">
-                  <input type="text" id="simple_search_input" name="query" data-url="{% url 'search_results' %}"
-                    placeholder="Type to search">
-                  <!-- <input type="text" name="query" placeholder="Keyword search" value="{{request.GET.q}}"> -->
+                  <input type="text" id="simple_search_input" name="query" placeholder="Type to search">
                   <button class="icon-search button my-giza-lnk post" style="border-radius:0px"
                     data-url="{% url 'search_results' %}"></button>
-                  <!-- <button class="icon-search button" -->
-                  <!-- onclick="document.getElementById('search-form').submit();"></button> -->
                   <button class="icon-caret-down button" id="openAdvancedSearchPane" type="button"
                     data-toggle="sideMenuContainer"></button>
-                  </form>
-                <!-- </form> -->
+                </form>
 
                 <div id="sideMenuContainer" class="dropdown-pane" data-position="bottom" data-alignment="left"
-                  data-dropdown data-hover="true" data-hover-pane="true">
+                  data-dropdown data-hover="true" data-hover-pane="true" data-responsive-toggle="true">
                   {% include 'search-advanced-accordion.html' %}
                 </div>
 
@@ -149,26 +143,25 @@
 
     // LOAD CATEGORIES FOR ADVANCED SEARCH
     fetch('/search/categories/')
-    .then(response => response.json())
-    .then(response => $('#html').html(response.html).foundation())
+      .then(response => response.json())
+      .then(response => $('#html').html(response.html).foundation())
 
-    $('#simple_search_input').on('keyup', e => {
-      if (e.keyCode == 13) {
+    // $('#simple_search_input').on('keyup', e => {
+    //   if (e.keyCode == 13) {
 
-        fetch($(e.currentTarget).data('url'), {
-            method: 'POST',
-            query: $(e.currentTarget).val(),
-            headers: new Headers({
-              'X-CSRFToken': $.cookie('csrftoken')
-            })
-          })
-          .then(response => response.json())
-          .then(response => {
-            if (response.success) {
-              $('#main_content').empty().html(response.html)
-            }
-          })
-      }
-    })
+    //     fetch($(e.currentTarget).data('url'), {
+    //         method: 'POST',
+    //         query: $(e.currentTarget).val(),
+    //         headers: new Headers({
+    //           'X-CSRFToken': $.cookie('csrftoken')
+    //         })
+    //       })
+    //       .then(response => response.json())
+    //       .then(response => {
+    //         if (response.success) {
+    //           $('#main_content').empty().html(response.html)
+    //         }
+    //       })
+    //   }
   })
 </script>

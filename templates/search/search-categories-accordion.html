@@ -1,21 +1,18 @@
 {% if search.categories|length %}
-  <!-- <ul class="accordion-menu" data-accordion> -->
-    {% for category in search.categories %}
-      <li>
-        <a href='#'>
-          <h1 class="search-facet-title">{{ category.displaytext }}</h6>
-          <ul class="menu vertical nested"> 
-            {% for key, val in category.fields.items %}
-            <a href='#'>
-              <li class="search-facet-item">                
-                <label for="{{ category.key }}_{{ key }}">{{ val }}</label>
-                <input id="{{ category.key }}_{{ key }}" name="{{ category.key }}_{{ key }}">
-              </li>
-            </a>
-            {% endfor %}
-          </ul>
-        </a>        
-      </li>
-    {% endfor %}
-  <!-- </ul> -->
+  {% for category in search.categories %}
+    <li data-category="{{ category.key }}">
+      <a href='#'>
+        <h1 class="search-facet-title">{{ category.displaytext }} {% if 'doc_count' in category %}({{ category.doc_count }}) {% endif %}</h1>
+        <ul class="menu vertical nested">
+          {% for key, val in category.fields.items %}
+          <a href='#'>
+            <li class="search-facet-item">
+              <input type="text" id="{{ category.key }}_{{ key }}" placeholder="{{ val }}" name="{{ category.key }}_{{ key }}">
+            </li>
+          </a>
+          {% endfor %}
+        </ul>
+      </a>        
+    </li>
+  {% endfor %}
 {% endif %}

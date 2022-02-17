@@ -48,4 +48,4 @@ def ending(value, total):
     category = CATEGORIES[value]
     if total == 1:
         category = " ".join([x.lower() if not x.endswith('s') else x[:-1] for x in category.split(' ')])
-    return category.lower()
+    return category['key'].lower()

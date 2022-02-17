@@ -52,30 +52,16 @@ def static_pages(request, page_name):
 	except TemplateDoesNotExist:
 		raise Http404("This page does not exist!")
 
-def get_type_html(request, type, id, view):
-	# get site in elasticsearch and render or return 404
-	# try:
-	if view == "intro":
-		view = "full"
-	type_object = models.get_item(id, type, ES_INDEX)
-
-	# add form for creating a new collection in modal
-	collection_form = CollectionForm()
-
-	return render(request, 'pages/'+view+'.html', {'object': type_object, 'type': type, 'collection_form': collection_form})
-	# except:
-	# 	raise Http404("There was an error getting this item")
-
 def add_headers(response):
 	response["Access-Control-Allow-Origin"] = "*"
 	response["Content-Type"] = "application/ld+json"
 	return response
 
-
-def get_manifest_data(request, id):
+def get_manifest_data(request, type, id):
 	ES_INDEX_IIIF = 'iiif'
 	try:
 		base_uri = request.build_absolute_uri('/manifests/')
+		id = f'{type}-{id}'
 		data = models.get_item(id, "manifest", ES_INDEX_IIIF)
 		manifest = data['manifest']
 		manifest['@id'] = base_uri + manifest['@id']
@@ -93,8 +79,8 @@ def get_manifest_data(request, id):
 		return None
 
 
-def get_manifest(request, id):
-	manifest = get_manifest_data(request, id)
+def get_manifest(request, type, id):
+	manifest = get_manifest_data(request, type, id)
 	if manifest:
 		response = JsonResponse(manifest)
 		response["Access-Control-Allow-Origin"] = "*"

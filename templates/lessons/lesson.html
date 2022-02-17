@@ -1,21 +1,6 @@
-{% extends 'layouts/default.html' %}
 {% load static %}
-{% set
-  title: "Giza @ School",
-  subtitle: "Daily Life in Ancient Egypt",
-  section: "school",
-  section_school: true
-%}
-
-{% block title %}{{ "Daily Life in Ancient Egypt" }}{% endblock %}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
-
-{% block 'page_headers' %}
-  {% include 'page-header.html' with bg="9" title="Daily Life in Ancient Egypt"%}
-
-  {% include 'page-subheader.html' with backlink_url="lessons" backlink_text="Back to Lesson Topics" %}
-{% endblock  %}
 
 {% block 'main_content' %}
   <div class="row">

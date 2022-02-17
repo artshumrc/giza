@@ -14,6 +14,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage, EmailMultiAlternatives, send_mail
 from django.utils.html import strip_tags
+from django.db.models import Q
+from django.core.serializers.json import DjangoJSONEncoder
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 # from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
@@ -211,23 +214,53 @@ RESULTS_SIZE = 20
 
 def giza_at_school(request):
     return JsonResponse(
-        {"success": True, "main_content": render_to_string("gizaatschool.html")}
+        {
+            "success": True,
+            "html": {
+                "#main_content": {
+                    "html": render_to_string("gizaatschool.html"),
+                },
+            },
+        }
     )
 
 
 def common_topics(request):
     return JsonResponse(
-        {"success": True, "main_content": render_to_string("commontopics.html")}
+        {
+            "success": True,
+            "html": {
+                "#main_content": {
+                    "html": render_to_string("commontopics.html"),
+                },
+            },
+        }
     )
 
 
 def faq(request):
-    return JsonResponse({"success": True, "main_content": render_to_string("faq.html")})
+    return JsonResponse(
+        {
+            "success": True,
+            "html": {
+                "#main_content": {
+                    "html": render_to_string("faq.html"),
+                },
+            },
+        }
+    )
 
 
 def giza_intro(request):
     return JsonResponse(
-        {"success": True, "main_content": render_to_string("gizaintro.html")}
+        {
+            "success": True,
+            "html": {
+                "#main_content": {
+                    "html": render_to_string("gizaintro.html"),
+                },
+            },
+        }
     )
 
 
@@ -235,7 +268,11 @@ def giza_3d(request):
     return JsonResponse(
         {
             "success": True,
-            "main_content": render_to_string("giza3d.html"),
+            "html": {
+                "#main_content": {
+                    "html": render_to_string("giza3d.html"),
+                },
+            },
         }
     )
 
@@ -244,28 +281,56 @@ def mygiza(request):
     return JsonResponse(
         {
             "success": True,
-            "main_content": render_to_string(
-                "my-giza-landing.html", {"user": request.user}
-            ),
+            "html": {
+                "#main_content": {
+                    "html": render_to_string(
+                        "my-giza-landing.html",
+                        {
+                            "user": request.user,
+                        },
+                    ),
+                },
+            },
         }
     )
 
 
 def about(request):
     return JsonResponse(
-        {"success": True, "main_content": render_to_string("about.html")}
+        {
+            "success": True,
+            "html": {
+                "#main_content": {
+                    "html": render_to_string("about.html"),
+                },
+            },
+        }
     )
 
 
 def archaeology(request):
     return JsonResponse(
-        {"success": True, "main_content": render_to_string("archaeology.html")}
+        {
+            "success": True,
+            "html": {
+                "#main_content": {
+                    "html": render_to_string("archaeology.html"),
+                },
+            },
+        }
     )
 
 
 def contact(request):
     return JsonResponse(
-        {"success": True, "main_content": render_to_string("contact.html")}
+        {
+            "success": True,
+            "html": {
+                "#main_content": {
+                    "html": render_to_string("contact.html"),
+                },
+            },
+        }
     )
 
 
@@ -275,7 +340,8 @@ def sign_in(request):
         user = CustomUser.objects.get(email=data["username"])
         if user:
             if not user.is_active:
-                body = render_to_string("user-registration-email.html",
+                body = render_to_string(
+                    "user-registration-email.html",
                     {
                         "site_name": "Digital Giza",
                         "domain": get_current_site(request),
@@ -285,7 +351,11 @@ def sign_in(request):
                     },
                 )
                 # text = 'blabla'
-                mail = EmailMultiAlternatives(subject="Digital Giza account activation!", from_email="uildriks.m@gmail.com", to=[user.email])
+                mail = EmailMultiAlternatives(
+                    subject="Digital Giza account activation!",
+                    from_email="uildriks.m@gmail.com",
+                    to=[user.email],
+                )
                 # mail.content_subtype = 'html'
                 mail.attach_alternative(body, "text/html")
                 mail.send(fail_silently=False)
@@ -293,10 +363,16 @@ def sign_in(request):
                 return JsonResponse(
                     {
                         "success": True,
-                        "modal": render_to_string(
-                            "user-registration-email-resent.html",
-                            {"user": user},
-                        ),
+                        "html": {
+                            "#sign_modal_form": {
+                                "html": render_to_string(
+                                    "user-registration-email-resent.html",
+                                    {
+                                        "user": user,
+                                    },
+                                ),
+                            },
+                        },
                     }
                 )
             else:
@@ -307,27 +383,51 @@ def sign_in(request):
                 return JsonResponse(
                     {
                         "success": True,
-                        "header": render_to_string("header.html", {"user": user}),
+                        "html": {
+                            "#header_bar": {
+                                "html": render_to_string(
+                                    "header.html",
+                                    {
+                                        "user": user,
+                                    },
+                                ),
+                            },
+                            "#sign_modal": {
+                                "action": "close",
+                            },
+                        },
                     }
                 )
         else:
             return JsonResponse(
                 {
                     "success": True,
-                    "modal": render_to_string(
-                        "user-sign-in.html",
-                        {
-                            "messages": "Uh-oh! We did not find a user with that username and password!"
+                    "html": {
+                        "#sign_modal": {
+                            "html": render_to_string(
+                                "user-sign-in.html",
+                                {
+                                    "messages": "Uh-oh! We did not find a user with that username and password!"
+                                },
+                            ),
+                            "action": "open",
                         },
-                    ),
-                }
+                    },
+                },
             )
     else:
         return JsonResponse(
             {
                 "success": True,
-                "modal": render_to_string("user-sign-in.html"),
-            }
+                "html": {
+                    "#sign_modal_form": {
+                        "html": render_to_string("user-sign-in.html"),
+                    },
+                    "#sign_modal": {
+                        "action": "open",
+                    },
+                },
+            },
         )
 
 
@@ -343,7 +443,7 @@ def sign_up(request):
         user = None
         user = CustomUserCreationForm(data=data)
 
-        # IF CUSTOM USER FORM SUCCESSFULLY EVALUATED
+        # IF CUSTOM USER FORM SUCCESSFULLY EVALUATES
         if user.is_valid():
 
             try:
@@ -379,7 +479,23 @@ def sign_up(request):
                 return JsonResponse(
                     {
                         "success": True,
-                        "modal": render_to_string("user-registration-email-sent.html"),
+                        "html": {
+                            "#sign_modal_form": {
+                                "html": render_to_string(
+                                    "user-registration-email-sent.html"
+                                ),
+                            },
+                        },
+                        # "modal": render_to_string("user-registration-email-sent.html"),
+                        # "target": "sign_modal",
+                        # "html": {
+                        #     "header_bar": render_to_string("header.html", {"user": user}),
+                        # },
+                        # "modals": {
+                        #     "sign_modal": {
+                        #         "action": "close"
+                        #     }
+                        # }
                     }
                 )
             except Exception as e:
@@ -411,11 +527,17 @@ def sign_up(request):
                     return JsonResponse(
                         {
                             "success": True,
-                            "modal": render_to_string(
-                                "user-registration-email-resent.html",
-                                {"user": existing_user},
-                            ),
-                        }
+                            "html": {
+                                "#sign_modal_form": {
+                                    "html": render_to_string(
+                                        "user-registration-email-resent.html",
+                                        {
+                                            "user": existing_user,
+                                        },
+                                    ),
+                                },
+                            },
+                        },
                     )
                 else:
                     messages.add_message(request, messages.WARNING, user.errors)
@@ -428,15 +550,19 @@ def sign_up(request):
     return JsonResponse(
         {
             "success": True,
-            "modal": render_to_string(
-                "user-sign-up.html",
-                {
-                    "messages": messages.get_messages(request)._queued_messages,
-                    "custom_user_form": user,
-                    "registered": registered,
+            "html": {
+                "#sign_modal_form": {
+                    "html": render_to_string(
+                        "user-sign-up.html",
+                        {
+                            "messages": messages.get_messages(request)._queued_messages,
+                            "custom_user_form": user,
+                            "registered": registered,
+                        },
+                        request=request,
+                    ),
                 },
-                request=request,
-            ),
+            },
         }
     )
 
@@ -454,22 +580,29 @@ def activate_account(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return HttpResponseRedirect("/", { user : user })
+        return HttpResponseRedirect("/", {user: user})
         # REDIRECT TO HOME-PAGE WITH USER SIGNED IN
-        return JsonResponse({"header": render_to_string("header.html", {"user": user})})
+        # return JsonResponse({"header": render_to_string("header.html", {"user": user})})
     else:
         # REMOVE USER DATA FROM DATABASE: TOKEN IS INVALID, RESEND LINK
         # REDIRECT TO HOME-PAGE WITH ERROR MESSAGE
         return JsonResponse({"header": render_to_string("header.html", {"user": user})})
 
-
+@ensure_csrf_cookie
 def index(request):
     return render(request, "index.html")
 
 
 def home(request):
     return JsonResponse(
-        {"success": True, "main_content": render_to_string("intro.html")}
+        {
+            "success": True,
+            "html": {
+                "#main_content": {
+                    "html": render_to_string("intro.html"),
+                },
+            },
+        }
     )
 
 
@@ -503,11 +636,22 @@ def forgot_password(request):
                         return JsonResponse(
                             {
                                 "success": True,
-                                "modal": render_to_string(
-                                    "user-reset-password-email-sent.html",
-                                    {"user": user},
-                                ),
-                            }
+                                "html": {
+                                    "#sign_modal_form": {
+                                        "html": render_to_string(
+                                            "user-reset-password-email-sent.html",
+                                            {
+                                                "user": user,
+                                            },
+                                        ),
+                                    },
+                                },
+                                # "modal": render_to_string(
+                                #     "user-reset-password-email-sent.html",
+                                #     {"user": user},
+                                # ),
+                                # "target": "sign_modal",
+                            },
                         )
                     except:
                         messages.add_message(
@@ -539,10 +683,19 @@ def forgot_password(request):
             return JsonResponse(
                 {
                     "success": True,
-                    "modal": render_to_string(
-                        "user-reset-password.html", context, request=request
-                    ),
-                }
+                    "html": {
+                        "#sign_modal_form": {
+                            "html": render_to_string(
+                                "user-reset-password.html", context, request=request
+                            ),
+                        },
+                    },
+                    # },
+                    # "modal": render_to_string(
+                    #     "user-reset-password.html", context, request=request
+                    # ),
+                    # "target": "sign_modal",
+                },
             )
     else:
         password_reset_form = CustomPasswordResetForm()
@@ -557,10 +710,18 @@ def forgot_password(request):
     return JsonResponse(
         {
             "success": True,
-            "modal": render_to_string(
-                "user-reset-password.html", context, request=request
-            ),
-        }
+            "html": {
+                "#sign_modal_form": {
+                    "html": render_to_string(
+                        "user-reset-password.html", context, request=request
+                    ),
+                },
+            },
+            # "modal": render_to_string(
+            #     "user-reset-password.html", context, request=request
+            # ),
+            # "target": "sign_modal",
+        },
     )
 
     # return JsonResponse(
@@ -588,12 +749,18 @@ def change_password(request, token):
                         return JsonResponse(
                             {
                                 "success": True,
-                                "header": render_to_string(
-                                    "header.html", {"user": user}
-                                ),
-                                "main_content": render_to_string(
-                                    "user-reset-password-complete.html"
-                                ),
+                                "html": {
+                                    "#header_bar": {
+                                        "html": render_to_string(
+                                            "header.html", {"user": user}
+                                        ),
+                                    },
+                                    "#main_content": {
+                                        "html": render_to_string(
+                                            "user-reset-password-complete.html"
+                                        ),
+                                    },
+                                },
                             }
                         )
                         # return render('index.html', { 'user' : user } )
@@ -623,9 +790,15 @@ def sign_out(request):
     return JsonResponse(
         {
             "success": True,
-            "header": render_to_string("header.html"),
-            "main_content": render_to_string("intro.html"),
-        }
+            "html": {
+                "#header_bar": {
+                    "html": render_to_string("header.html"),
+                },
+                "#main_content": {
+                    "html": render_to_string("intro.html"),
+                },
+            },
+        },
     )
 
 
@@ -640,50 +813,273 @@ def my_giza(request, tab):
     - collections for collections
     - lessons for lesson topics
     """
+    return refresh_my_giza(request.user, tab)
+
+
+def get_form(request, form, type=None, id=None):
+    if "collection_form" in form:
+        return JsonResponse(
+            {
+                "success": True,
+                "html": {
+                    "#collection_modal_form": {
+                        "html": render_to_string(
+                            "search-details-add-to-my-giza-collection.html",
+                            {
+                                "user": request.user,
+                                "collection_form": CollectionForm(),
+                                "user_collections": __getPublicCollections(
+                                    uid=request.user.id
+                                ),
+                                "type": type,
+                                "id": id,
+                            },
+                        ),
+                    },
+                    "#collection_modal": {"action": "open"},
+                },
+            }
+        )
+
+
+def my_giza_add(request, tab, type=None, id=None, name=None):
+    """This route adds new saved search queries, collections or lesson plans for the current user"""
+    print(tab)
+
+    # FORM FOR NEW SAVED SEARCH, COLLECTION OR LESSON PLAN IS REQUESTED
+    if request.method == "GET":
+        if "saved-search-queries" in tab:
+            return JsonResponse(
+                {
+                    "success": True,
+                    "html": {
+                        "#save_search_modal_form": {
+                            "html": render_to_string(
+                                "my-giza-new-saved-search-query.html",
+                                {
+                                    "temp": {},
+                                },
+                            ),
+                        },
+                    },
+                }
+            )
+            # return build_JsonResponse(True, "save_search_modal", {"temp": {}})
+        #     if "collection" in tab:
+        #         return JsonResponse(
+        #             {
+        #                 "success": True,
+        #                 "modal": render_to_string(
+        #                     "search-details-add-to-my-giza-collection.html",
+        #                     {
+        #                         "user": request.user,
+        #                         "collection_form": CollectionForm(),
+        #                         "user_collections": __getPublicCollections(
+        #                             uid=request.user.id
+        #                         ),
+        #                         "type" : type,
+        #                         "id" : id
+        #                     },
+        #                 ),
+        #                 "target" : "collection_modal"
+        #             }
+        #         )
+
+        if "collections" in tab:
+            return JsonResponse(
+                {
+                    "success": True,
+                    "html": {
+                        "#collection_modal_form": {
+                            "html": render_to_string(
+                                "search-details-add-to-my-giza-collection.html",
+                                {
+                                    "tab": "collections",
+                                    "collection_form": CollectionForm(),
+                                    "type": "none",
+                                    "id": "none",
+                                },
+                            ),
+                        },
+                    },
+                }
+            )
+            # return build_JsonResponse(
+            #     True,
+            #     "collection_modal_form",
+            #     {
+            #         "tab": "collections",
+            #         "type": "none",
+            #         "id": "none",
+            #         "collection_form": CollectionForm(),
+            #     },
+            # )
+
+    # NEW SAVED SEARCH, COLLECTION OR LESSON PLAN IS POSTED
+    else:
+        try:
+            if "collection" in tab:
+                collections = __getPublicCollections(uid=request.user.id)
+                collection = collections[0]
+                collection.contents.all()
+                # collections_add()
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "html": {
+                            "#collection_modal_form": {
+                                "html": render_to_string(
+                                    "search-details-add-to-my-giza-collection.html",
+                                    {
+                                        "user": request.user,
+                                        "collection_form": CollectionForm(),
+                                        "user_collections": __getPublicCollections(
+                                            uid=request.user.id
+                                        ),
+                                    },
+                                ),
+                            },
+                        }
+                        # "modal":
+                        # "target": "collection_modal",
+                    }
+                )
+            if "collections" in tab:
+                collection_form = CollectionForm(
+                    data=json.loads(request.body.decode("utf-8"))
+                )
+                if collection_form.is_valid():
+                    collection = collection_form.save()
+                    collection.owners.add(request.user)
+                    collection.save()
+                    collections = __getPublicCollections()
+                    return JsonResponse(
+                        {
+                            "success": True,
+                            "html": {
+                                "#MyGizaDiv": {
+                                    "html": render_to_string(
+                                        "my-giza.html",
+                                        {
+                                            "collections": len(collections),
+                                            "MyGIZA-tab": render_to_string(
+                                                "mygiza-collections.html",
+                                                {
+                                                    "collections": collections,
+                                                    "user": request.user,
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            },
+                        },
+                    )
+                    # return build_JsonResponse(
+                    #     True,
+                    #     "MyGIZADiv",
+                    #     {
+                    #         "collections": len(collections),
+                    #         "MyGIZA-tab": render_to_string(
+                    #             "mygiza-collections.html",
+                    #             {"collections": collections, "user": request.user},
+                    #         ),
+                    #     },
+                    # )
+
+                # return redirect('/collections/{}'.format(collection.slug)) # RETURN UUID?
+        except Exception as e:
+            print(e)
+
+            # else:
+            # messages.error(request, "Error creating collection.")
+
+            # pass
+            return refresh_my_giza(request.user, tab)
+
+
+def refresh_my_giza(user, tab):
+    searches = json.loads(
+        serializers.serialize("json", __findSavedSearches(uid=user.id))
+    )
+    collections = json.loads(
+        serializers.serialize("json", __getPublicCollections(uid=user.id))
+    )
+
     return JsonResponse(
         {
             "success": True,
-            "main_content": render_to_string(
-                "my-giza.html",
-                {
-                    "searches": render_to_string(
-                        f"my-giza-tab-saved-search-queries.html",
-                        {"searches": __findSavedSearches(user=request.user.id)},
-                    )
-                    if "saved-search-queries" in tab
-                    else None,
-                    "collections": render_to_string(
-                        "my-giza-tab-collections.html",
+            "html": {
+                "#main_content": {
+                    "html": render_to_string(
+                        "my-giza.html",
                         {
-                            "collection_type": "public",
-                            "collections": __getPublicCollections(),
+                            "tab": tab,
+                            "searches_html": render_to_string(
+                                "my-giza-tab-saved-search-queries.html",
+                                {
+                                    "searches": searches,
+                                },
+                            ),
+                            # if "saved-search-queries" in tab
+                            # else None,
+                            "collections_html": render_to_string(
+                                "my-giza-tab-collections.html",
+                                {
+                                    "collection_type": "public",
+                                    "collections": collections,
+                                },
+                            ),
+                            "searches": searches,
+                            "collections": collections,
+                            # if "collections" in tab
+                            # else None,
+                            "lessons_html": [] if "lessons" in tab else None,
+                            "user": user,
                         },
-                    )
-                    if "collections" in tab
-                    else None,
-                    "lessons": [] if "lessons" in tab else None,
-                    "user": request.user,
+                    ),
                 },
-            ),
-        }
+            },
+        },
     )
     # return render(request, )
     # return JsonResponse({ 'success' : True, 'html' : render_to_string('mygiza-saved-search-queries.html', { 'searches' : __findSavedSearches(user=request.user.id) }) })
     # return render(request, 'mygiza-saved-search-queries.html', { 'searches' : __findSavedSearches(user=request.user.id) })
 
 
-def my_giza_tab(request, tab):
-    query = __findSavedSearches(user=request.user.id)
-    if "collectons" in tab:
-        query = (__getPublicCollections(),)
-    if "lessons" in tab:
-        query = []
-    return JsonResponse(
-        {
-            "success": True,
-            "MyGIZA-tab": render_to_string(f"my-giza-tab-{tab}.html", {tab: query}),
-        }
-    )
+# def my_giza_tab(request, tab):
+#     """This user route returns the my-giza tab with the requested information to my-giza.html"""
+#     query = __findSavedSearches(uid=request.user.id)
+#     if "collectons" in tab:
+#         query = (__getPublicCollections(uid=request.used.id),)
+#     if "lessons" in tab:
+#         query = []
+#     print(tab)
+#     term = "searches" if "saved-search-queries" in tab else tab
+#     print(term)
+#     return JsonResponse(
+#         {
+#             "success": True,
+#             tab: query,
+#             "html": {
+#                 "#MyGIZAdiv": {
+#                     "html": render_to_string(
+#                         f"my-giza-tab-{tab}.html",
+#                         {
+#                             term: query,
+#                         },
+#                     ),
+#                     ".modal.reveal": {"action": "close"},
+#                 },
+#             },
+#             # "MyGIZA-tab": render_to_string(
+#             #     f"my-giza-tab-{tab}.html",
+#             #     {
+#             #         term: query,
+#             #     },
+#             # ),
+#         }
+#     )
 
 
 def searches_all(request):
@@ -692,8 +1088,10 @@ def searches_all(request):
         {
             "success": True,
             "html": render_to_string(
-                "mygiza-saved-search-queries.html",
-                {"searches": __findSavedSearches(user=request.user.id)},
+                "#mygiza-saved-search-queries.html",
+                {
+                    "searches": __findSavedSearches(user=request.user.id),
+                },
             ),
         }
     )
@@ -702,24 +1100,77 @@ def searches_all(request):
 @login_required
 def search_save(request):
     """This user route saves the user's current search parameters as a new Search model instance"""
-    search = json.loads(request.POST.get("search"))
-    search["result"]["hits"] = []
-    return JsonResponse(
-        {
-            "result": Search(
-                owner=request.user.id, search=search, name=request.POST.get("name")
-            ).save()
-        }
-    )
+
+    if "GET" in request.method:
+        return JsonResponse(
+            {
+                "success": True,
+                "html": {
+                    "#saved_search_modal_form": {
+                        "html": render_to_string("my-giza-new-saved-search-query.html"),
+                    },
+                    "#saved_search_modal": {
+                        "action": "open",
+                    },
+                },
+            },
+        )
+    else:
+        try:
+            name = json.loads(request.body.decode("utf-8"))["saved_search_name"]
+            search = json.loads(json.loads(request.body.decode("utf-8"))["search"])
+            search["result"]["hits"] = []
+
+            Search(owner=request.user.id, search=search, name=name).save()
+
+            return JsonResponse(
+                {
+                    "success": True,
+                    "html": {
+                        "#saved_search_modal_form": {
+                            "html": render_to_string(
+                                "my-giza-new-saved-search-query-success.html"
+                            ),
+                        },
+                        "#saved_search_modal": {
+                            "action": "open",
+                        },
+                    },
+                }
+            )
+        except Exception as e:
+            print(e)
 
 
 @login_required
-def search_del(request):
+def search_del(request, pk):
     """This user route deletes a single search by id"""
-    searches = __findSavedSearches(user=request.user.id, ssid=request.POST.get("id"))
-    html = render_to_string("mygiza-saved-search-queries.html", searches)
-    return JsonResponse({"success": True, "response": html, "total": len(searches)})
-    # return render(request, 'pages/mygiza-saved-searches.html', { 'searches' : __findSavedSearches(user=request.user.id, ssid=token) })
+    searches = json.loads(
+        serializers.serialize(
+            "json",
+            __findSavedSearches(
+                uid=request.user.id,
+                ssid=pk,
+            ),
+        )
+    )
+    return JsonResponse(
+        {
+            "success": True,
+            "html": {
+                "#MyGIZAdiv": {
+                    "html": render_to_string(
+                        "my-giza-tab-saved-search-queries.html",
+                        {
+                            "searches": searches,
+                            "total": len(searches),
+                        },
+                    )
+                },
+                ".modal.reveal": {"action": "close"},
+            },
+        }
+    )
 
 
 @login_required
@@ -760,8 +1211,13 @@ def search_token(request):
             if items:
 
                 # RETURN IF TOKEN IS RESOLVED FROM SEARCH PAGE
-                return JsonResponse(
-                    {"success": True, "response": search_results_update(request, items)}
+                return (
+                    JsonResponse(
+                        {
+                            "success": True,
+                            "response": search_results_update(request, items),
+                        }
+                    ),
                 )
             else:
 
@@ -802,38 +1258,54 @@ def search_token(request):
 ################################
 ### PRIVATE HELPER FUNCTIONS ###
 ################################
-def __findSavedSearches(user=None, ssid=None):
+def __getPublicCollections(uid=None):
+    """This method returns all public and user owned collections in JSON format"""
+    return Collection.objects.filter(Q(owners=uid) | Q(public=True))
+
+
+def __findSavedSearches(uid=None, ssid=None):
     """This private helper method finds saved searches for user id or search id"""
     """ If both are given, the record will be deleted """
     """ ### PARAMETERS """
-    try:
-        results = []
-        if user:
-            results = Search.objects.filter(owner=user)
-        if ssid:
-            results = Search.objects.filter(id=ssid)
 
-        if user and ssid:
-            results.delete()
-            results = Search.objects.filter(owner=user)
+    def complete(uid=None, ssid=None):
+        return Search.objects.filter(Q(owner=uid) | Q(id=ssid))
 
-        if results:
+    if uid and ssid:
+        Search.objects.filter(Q(owner=uid) & Q(id=ssid)).delete()
 
-            items = json.loads(serializers.serialize("json", results))
+    return complete(uid, ssid)
 
-            # SERIALIZE DATA FOR TEMPLATE
-            return [
-                {
-                    "key": x["pk"],
-                    "name": x["fields"]["name"],
-                    "search": x["fields"]["search"],
-                }
-                for x in items
-            ]
+    # try:
 
-        return {}
-    except:
-        raise
+    #     results = []
+    #     if uid:
+    #         results = Search.objects.filter(owner=uid)
+    #     if ssid:
+    #         results = Search.objects.filter(id=ssid)
+
+    #     if uid and ssid:
+    #         results.delete()
+    #         results = Search.objects.filter(owner=uid)
+
+    # if results:
+
+    #     items = json.loads(serializers.serialize("json", results))
+
+    #     # SERIALIZE DATA FOR TEMPLATE
+    #     return [
+    #         {
+    #             "key": x["pk"],
+    #             "name": x["fields"]["name"],
+    #             "search": x["fields"]["search"],
+    #         }
+    #         for x in items
+    #     ]
+
+    # return {}
+    #     return results
+    # except:
+    #     raise
 
 
 ################################
@@ -857,7 +1329,7 @@ def collections_all(request):
     )
 
 
-@login_required
+# @login_required
 # def collections(request):
 #     """ This user route returns all collections marked as public """
 #     res = Collection.objects.filter(public=True)
@@ -866,35 +1338,38 @@ def collections_all(request):
 
 def collections(request):
     """This public route returns all public collections"""
-    collections = __getPublicCollections()
-    # saved_search_queries = __findSavedSearches(request.user.id)
+    collections = __getPublicCollections(uid=request.user.id)
     return JsonResponse(
-        {
-            "success": True,
-            "html": render_to_string(
-                "my-giza.html",
-                {
-                    "collections": {
-                        "collections": len(collections),
-                        "html": render_to_string(
-                            "mygiza-collections.html",
-                            {
-                                "collections": collections,
-                                "user": request.user.is_authenticated,
-                            },
-                        ),
-                    },
-                    "user": request.user,
-                },
-            )
-            # 'searches' : {
-            # 'searches' : saved_search_queries,
-            # 'html' : render_to_string('mygiza-saved-search-queries.html', {
-            # 'searches' : saved_search_queries
-            # })
-            # }
-        }
+        {"collections": serializers.serialize("json", list(collections))}
     )
+    # saved_search_queries = __findSavedSearches(request.user.id)
+    # return JsonResponse(
+    #     {
+    #         "success": True,
+    #         "html": render_to_string(
+    #             "my-giza.html",
+    #             {
+    #                 "collections": {
+    #                     "collections": len(collections),
+    #                     "html": render_to_string(
+    #                         "mygiza-collections.html",
+    #                         {
+    #                             "collections": collections,
+    #                             "user": request.user.is_authenticated,
+    #                         },
+    #                     ),
+    #                 },
+    #                 "user": request.user,
+    #             },
+    #         )
+    #         # 'searches' : {
+    #         # 'searches' : saved_search_queries,
+    #         # 'html' : render_to_string('mygiza-saved-search-queries.html', {
+    #         # 'searches' : saved_search_queries
+    #         # })
+    #         # }
+    #     }
+    # )
 
 
 def collections_public(request):
@@ -923,9 +1398,8 @@ def __getCollectionsView(uid=None):
     )
 
 
-@login_required
-def edit_collection(request):
-    collection = Collection.objects.get(id=request.POST.get("token"))
+def edit_collection(request, token):
+    collection = Collection.objects.get(id=token)
     items = collection.contents.all()
 
     for item in items:
@@ -934,24 +1408,17 @@ def edit_collection(request):
     return JsonResponse(
         {
             "success": True,
-            "html": render_to_string(
-                "mygiza-collection-edit.html", {"collection": collection.contents.all()}
+            "modal": render_to_string(
+                "mygiza-collection-edit.html",
+                {
+                    "collection": collection
+                    # "title": collection.title,
+                    # "collection": collection.contents.all()
+                },
             ),
+            "target": "collection_modal",
         }
     )
-
-
-def __getPublicCollections(uid=None):
-    """This method returns all collections in JSON format
-
-    fields tuple
-    """
-    return (
-        Collection.objects.filter(owners=uid)
-        if uid
-        else Collection.objects.filter(public=True)
-    )
-    # json.loads(serializers.serialize("json",
 
 
 @login_required
@@ -1133,7 +1600,6 @@ def collection(request, slug):
     )
 
 
-@login_required
 def collections_create(request):
 
     # METHOD IS 'POST': NEW COLLECTION IS POSTED
@@ -1178,7 +1644,7 @@ def collections_create(request):
                 "html": render_to_string(
                     "mygiza-collection-new.html",
                     {
-                        "collection_form": CollectionForm(),
+                        "#collection_form": CollectionForm(),
                     },
                 ),
             }
@@ -1189,18 +1655,22 @@ def collections_create(request):
     # })
 
 
-@login_required
-def collections_add(request):
+# def add_to_collection(request):
+#     if request.method == "GET":
+#         pass
+#     else:
+#         pass
+
+
+def collections_add(collection, type, id):
     """
     This route adds a record to a collection using the little '+' ico class
     """
-    if request.POST.get("collection") and request.POST.get("object"):
-        collection = Collection.objects.filter(
-            id=uuid.UUID(request.POST.get("collection").replace('"', ""))
-        ).first()
+    try:
+        collection = Collection.objects.filter(id=uuid.UUID(collection)).first()
         elasticsearch_item = ElasticSearchItem(
-            es_id=int(request.POST.get("object").replace('"', "").split("_")[1]),
-            type=request.POST.get("object").replace('"', "").split("_")[0],
+            es_id=int(id),
+            type=type,
             collection=collection,
         )
         elasticsearch_item.save()
@@ -1210,7 +1680,26 @@ def collections_add(request):
                 "response": f"You have added this record to collection {collection.title}",
             }
         )
-    return JsonResponse({"success": False, "response": "Something went wrong"})
+    except Exception as e:
+        return JsonResponse({"success": False, "response": "Something went wrong"})
+
+
+def collections_delete(request, token):
+    try:
+        print(token)
+        collection = Collection.objects.filter(Q(owners=request.user.id) & Q(id=token))
+        collection.delete()
+        # query = __getPublicCollections(uid=request.used.id)
+        return refresh_my_giza(request.user, "collections")
+        # return JsonResponse(
+        # {
+        # "success": True,
+        # "collections": query,
+        # "MyGIZA-tab": render_to_string(f"my-giza-tab-collections.html", {"collections" : query}),
+        # }
+    # )
+    except Exception as e:
+        print(e)
 
 
 @login_required
@@ -1265,7 +1754,7 @@ def collections_edit(request, id):
         request,
         "mygiza-collection-edit.html",
         {
-            "collection_form": collection_form,
+            "#collection_form": collection_form,
         },
     )
 
@@ -1278,7 +1767,7 @@ def collection_view(request, id):
         request,
         "mygiza-collection-edit.html",
         {
-            "collection_form": collection_form,
+            "#collection_form": collection_form,
         },
     )
 
@@ -1287,33 +1776,43 @@ def collection_view(request, id):
 ###         LESSONS          ###
 ################################
 def lessons(request):
+    return JsonResponse(
+        {
+            "success": True,
+            "html": {
+                "#main_content": {
+                    "html": render_to_string(
+                        "lessons.html",
+                        {
+                            "lessons": Lesson.objects.all(),
+                        },
+                    ),
+                }
+            },
+        }
+    )
+
+
+def lesson(request, pk):
+    lesson = get_object_or_404(Lesson, pk=pk)
     lessons = Lesson.objects.all()
 
     return JsonResponse(
         {
             "success": True,
-            "main_content": render_to_string("lessons.html", {"lessons": lessons}),
+            "html": {
+                "#lesson_modal_form": {
+                    "html": render_to_string(
+                        "lesson.html",
+                        {
+                            "lesson": lesson,
+                            "lessons": lessons,
+                        },
+                    )
+                },
+                "#lesson_modal" : {
+                    "action" : "open"
+                }
+            },
         }
-    )
-
-    # return render(
-    # request,
-    # "pages/lessons.html",
-    # {
-    # "lessons": lessons,
-    # },
-    # )
-
-
-def lesson(request, slug):
-    lesson = get_object_or_404(Lesson, slug=slug)
-    lessons = Lesson.objects.all()
-
-    return render(
-        request,
-        "lesson.html",
-        {
-            "lesson": lesson,
-            "lessons": lessons,
-        },
     )

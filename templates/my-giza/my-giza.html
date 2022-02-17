@@ -7,84 +7,51 @@
 
 {% block 'main_content' %}
 
-{{ collections|json_script:"collections" }}
-{{ searches|json_script:"searches" }}
-{{ lessons|json_script:"lessons" }}
+{{ collections_html|json_script:"collections_html" }}
+{{ searches_html|json_script:"searches_html" }}
+{{ lessons_html|json_script:"lessons_html" }}
 
 <div class="collection-heading p-t-half m-b-1 hide-for-small-only">
   <div class="row">
     <div class="columns">
       <div class="titles">
-        <a class="my-giza-lnk my-giza {% if searches %}active{% endif %}" data-url="{% url 'my-giza-tab' 'saved-search-queries' %}">Search Queries</a>
-        <a class="my-giza-lnk my-giza {% if collections %}active{% endif %}" data-url="{% url 'my-giza-tab' 'collections' %}">Collections</a>
-        <a class="my-giza-lnk my-giza {% if lessons %}active{% endif %}" data-url="{% url 'my-giza-tab' 'lessons' %}">Lesson Topics</a>
+        <a class="my-giza-tab {% if 'saved-search-queries' in tab %}active{% endif %}"
+          data-url="saved-search-queries">Search Queries</a>
+        <a class="my-giza-tab {% if 'collections' in tab %}active{% endif %}" data-url="collections">Collections</a>
+        <a class="my-giza-tab {% if 'lessons' in tab %}active{% endif %}" data-url="lessons">Lesson Topics</a>
+        <a id="new-my-giza-item-lnk"><i class="icon-plus-circle my-giza-lnk modal" data-url="{% url 'my-giza-add' tab=tab %}"></i></a>
+        <!-- <a class="my-giza-lnk add collection modal" data-url="{% url 'my-giza-add' tab=tab %}"><span class="sr-only">add</span></a> -->
       </div>
     </div>
   </div>
 </div>
 
 <!-- SECTION FOR JSON DATA -->
-<section class="accordion-section" id="MyGIZAdiv"></section>
+<section class="accordion-section" id="MyGIZAdiv">
+  <div id="saved-search-queries"></div>
+  <div id="collections"></div>
+  <div id="lessons"></div>
+</section>
 
 {% endblock %}
 <!-- END MAIN CONTENT ROWS -->
 
 <script>
   $(document).ready(() => {
+    html = {}
+    html['saved-search-queries'] = JSON.parse($('#searches_html').text())
+    html['collections'] = JSON.parse($('#collections_html').text())
+    html['lessons'] = JSON.parse($('#lessons_html').text())
+    Object.keys(html).forEach(key => $('#' + key).empty().html(html[key]).hide())
 
-    category = {}
-    category['saved-search-queries'] = JSON.parse($('#searches').text())
-    category['collections'] = JSON.parse($('#collections').text())
-    category['lessons'] = JSON.parse($('#lessons').text())
+    $('#' + $('.my-giza-tab.active').data('url')).toggle()
 
-    console.log(category)
-
-    idx = Object.values(category).findIndex(e => e != null)
-    html = Object.values(category)[idx]
-    cat = Object.entries(category)[idx][0]
-
-    $('.my-giza-lnk.my-giza').filter((i, e) => $(e).data('url').includes(cat)).addClass('active')
-    $('#MyGIZAdiv').empty().html(html)
-
-    // $('#all_saved_search_queries').on('click', e => {
-    //   $.get("")
-    //     .done(response => {
-    //       console.log(response)
-    //       if (response.success) {
-    //         $('#all_collections').removeClass('active')
-    //         $('#all_saved_search_queries').addClass('active')
-    //         // $('#MyGIZAdiv').empty().html(response.html)
-    //       } else {
-    //         console.log(response)
-    //         console.log('error')
-    //       }
-    //     })
-    // })
-
-    // $('#all_collections').on('click', () => {
-    //   fetch("{% url 'my_giza_collections_refresh' %}")
-    //   .then(response => response.json())
-    //   .then(response => {
-    //     if (response.success) {
-    //       $('#all_saved_search_queries').removeClass('active')
-    //       $('#all_collections').addClass('active')
-    //       // $('#MyGIZAdiv').empty().html(response.html)
-    //     } else {
-    //       console.log('error')
-    //     }
-    //   })
-    // })
-
-    // $('#my_collections_link').on('click', () => {
-    //   console.log('private collections')
-    //   $.get('/mygiza/collections/private/')
-    //     .done(response => {
-    //       console.log('ok')
-    //       if (response.success) {
-    //         console.log(response)
-    //         $('#private_collections').empty().html(response.html)
-    //       }
-    //     })
-    // })
+    $('.my-giza-tab').on('click', e => {
+      $('#MyGIZAdiv').children().each((i, child) => $(child).hide())
+      $('.my-giza-tab').removeClass('active')
+      $(e.currentTarget).addClass('active')
+      $('#new-my-giza-item-lnk i').data('url', 'mygiza/collections/add/'+$(e.currentTarget).data('url'))
+      $('#' + $(e.currentTarget).data('url')).show()
+    })
   })
 </script>

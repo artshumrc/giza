@@ -1,0 +1,16 @@
+<!-- MODAL: NEW SAVED SEARCH -->
+<div id="new_saved_search">
+    {% include 'close-button.html' with label="Close modal" %}
+    <span class="title">Save this search</span>
+    <form>
+        <label for="new_saved_search_query">Name for new saved search</label>
+        <input type="hidden" id="new_saved_search_query_parameters" name="search">
+        <input name="saved_search_name" id="new_saved_search_query" placeholder="Name" value="Simple">
+        <a class="my-giza-lnk post button primary" data-url="{% url 'my-giza-save-search' %}">Save</a>
+    </form>
+</div>
+<script>
+    $(document).ready(() => {
+        $('#new_saved_search_query_parameters').val(JSON.stringify(st))
+    })
+</script>

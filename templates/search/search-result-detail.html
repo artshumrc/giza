@@ -1,0 +1,270 @@
+{% load static %}
+
+{% block content %}
+
+{{ object|json_script:"search_result_detail" }}
+<!-- MODAL TITLE -->
+<div class="page-header header-bg-1" id="content">
+  <div class="row title">
+    <header class="large-12 columns">
+      <h1>{{ object.displaytext }}<a name="top"></a></h1>
+      {% if type == 'sites' %}<h3 class="page-header__meta">{{ object.sitename }}</h3>{% endif %}
+    </header>
+  </div>
+</div>
+
+<!-- MODAL CONTENT -->
+<div class="row content-start">
+
+  <!-- CONTENT CONTAINERS -->
+  <section class="large-8 columns content-col-primary">
+
+    <!-- PRIMARY DISPLAY IMAGE: MIRADOR, VIDEO, 3DMODEL, STILL -->
+    {% if object.primarydisplay.main %}
+    <div class="item__featured-image">
+      <div style="height:500px;width:100%;">
+        <div id="mirador"></div>
+      </div>
+      {% if type == '3dmodels' %}
+      <iframe allowfullscreen height="500px" width="100%" src="{{ object.primarydisplay.main }}"></iframe>
+      {% elif type == 'pubdocs' and object.pdf %}
+      <a href="{{ object.pdf }}"><img src="{{ object.primarydisplay.main }}" alt=""></a>
+      {% elif type == 'videos' %}
+      <video width="100%" height="100%"
+        {% if object.primarydisplay.thumbnail %}poster="{{ object.primarydisplay.thumbnail }}" {% endif %} controls>
+        <source src="{{ object.primarydisplay.main }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      {% elif type == 'photos' %}
+      <img src="{{ object.primarydisplay.main }}" alt="">
+      {% endif %}
+
+      {% if object.primarydisplay.displaytext %}
+      <p class="item__featured-image__caption">
+        {{ object.primarydisplay.displaytext }}
+      </p>
+      {% endif %}
+
+    </div>
+    {% endif %}
+
+    <!-- PRIMARY TEXT: DIARY TRANSCRIPTION, OBJECT DESCRIPTION -->
+    {% if object.diarytranscription %}
+    <div class="item__overview text-alt">
+      <h5>Diary Transcription:</h5>
+      {{ object.diarytranscription|linebreaks }}
+    </div>
+    {% elif object.description %}
+    <div class="item__overview">
+
+      <p class="lead text-alt">
+        {{ object.description }}
+      </p>
+
+    </div>
+    {% endif %}
+
+    <ul class="accordion" data-accordion data-multi-expand="true" data-allow-all-closed="true">
+
+      <!-- DETAILS -->
+      <li class="accordion-item is-active" data-accordion-item id="details_accordion_div">
+        <a name="details" class="accordion-title feature-block__header" name="{{ type }}">
+          <h3 class="feature-block__title">
+            <i class="icon-info-circle icon-padded"></i>Details
+          </h3>
+        </a>
+        <div class="accordion-content feature-block__body" data-tab-content>
+          {% with template_name="tms/"|add:type|add:".html" %}
+          {% include template_name %}
+          {% endwith %}
+        </div>
+        {% for type, items in object.relateditems.items %}
+        {% if not '3dmodels' in type and not 'videos' in type and not 'people' in type and not 'institutions' in type and not 'groups' in type and not 'animals' in type %}
+        {% include 'search-details-relateditems.html' with type=type items=items %}
+        {% endif %}
+        {% endfor %}
+      </li>
+
+      <!-- RELATED ITEMS BELOW -->
+    </ul>
+
+  </section>
+
+  <section class="large-4 columns content-col-secondary">
+
+    <!-- JUMP MENU -->
+    <div class="title-bar" data-responsive-toggle="jumpmenu" data-hide-for="medium">
+      <button class="icon-bars icon-padded title-bar-title" type="button" data-toggle>Jump to...</button>
+    </div>
+    {% include 'search-details-jumpmenu.html' with items=object.relateditems user=user type=object.type id=object.id %}
+
+    <!-- RELATED ITEMS ON THE RIGHT-HAND SIDE -->
+    <ul class="accordion" data-accordion data-multi-expand="true" data-allow-all-closed="true">
+      {% for type, items in object.relateditems.items %}
+      {% if '3dmodels' in type or 'videos' in type or 'people' in type or 'institutions' in type or 'groups' in type or 'animals' in type %}
+      {% include 'search-details-relateditems.html' with type=type items=items %}
+      {% endif %}
+      {% endfor %}
+    </ul>
+  </section>
+  </section>
+</div>
+
+<!-- PHOTO VIEWING MODAL -->
+
+
+{% endblock %}
+<script>
+  $(document).ready(() => {
+
+    $(document).foundation()
+
+    search_result_detail = JSON.parse($('#search_result_detail').text())
+
+    let url = "{% url 'iiif-manifest' type=type id=object.id %}";
+
+    mir = Mirador.viewer({
+      id: 'mirador',
+      selectedTheme: 'light',
+      themes: {
+        light: {
+          palette: {
+            type: 'light',
+            primary: {
+              main: '#731422',
+            },
+          },
+        },
+      },
+
+      windows: [{
+        manifestId: url
+      }]
+    })
+
+    // SUBSCRIBE TO MIRADOR'S REDUX STORE
+    mir.store.subscribe(() => {
+      let state = this.mir.store.getState()
+      for (let w in state.windows) {
+        // CHANGE IN MIRADOR
+        console.log(state.windows[w].canvasId)
+      }
+    })
+
+    current_canvas = () => {
+      state = mir.store.getState().windows
+      canvas = []
+      for (let w in state) {
+        canvas.push(state[w].canvasId)
+      }
+      return canvas
+    }
+
+    canvas = current_canvas()
+
+    if (canvas != current_canvas()) {
+      canvas = current_canvas()
+      console.log(canvas)
+    }
+
+
+    
+    // CHECK WHICH ITEMS ARE LOADED IN TABS
+
+    // CHECK WHICH ITEMS ARE ON SCREEN
+
+    // ON SCROLL:
+    // IF SCROLL IS AT BOTTOM
+    // LOAD ITEMS NOT ON SCREEN AND NOT ALREADY LOADED IN TABS
+
+    // GET ALL ACTIVE TABS
+    active_divs = $('.accordion-item*[id*=_accordion_div].is-active')
+
+    $('.accordion-item*[id*=_accordion_div]').on('click', e => {
+      active_divs = $('.accordion-item*[id*=_accordion_div].is-active')
+    })
+
+    for (div of active_divs) {
+      $('.reveal-overlay').on('scroll', e => {
+        bottom_of_screen = $(window).scrollTop() + $(window).innerHeight()
+        top_of_screen = $(window).scrollTop()
+        console.log(div)
+      })
+    }
+
+      // if ($('#{{type}}_accordion_div').hasClass('is-active')) {
+
+    //     $('.reveal-overlay').on('scroll', e => {
+    //       bottom_of_screen = $(window).scrollTop() + $(window).innerHeight()
+    //       top_of_screen = $(window).scrollTop()
+
+    //       for (item of elements.items) {
+
+    //         // if ($(`#${elements.category}_accordion_div`).hasClass('is-active')) {
+
+    //         // FIND ITEMS IN LIST THAT ARE LOADED
+    //         element = "#{{type}}" + item.id
+    //         element = $(element)
+
+    //         if (elem != 'undefined') {
+    //           top_of_element = element.offset().top;
+    //           bottom_of_element = element.offset().top + element.outerHeight()
+    //           console.log(element, top_of_element, bottom_of_element, top_of_screen,
+    //             bottom_of_screen)
+
+    //           if ((bottom_of_screen > top_of_element) && (top_of_screen <
+    //               bottom_of_element)) {
+    //             // CHECK IF DIV FROM elements IS VISIBLE
+    //             // IF NOT, ADD TO DIV
+
+    //             console.log('element visible')
+
+    //             // addElements(elements, $('#{{ items.category }}_items'))
+    //           } else {
+    //             console.log('element not visible')
+    //           }
+    //         }
+    //         // }
+    //       }
+
+    //       // var top_of_element = $("#{{type}}_accordion_div").offset().top;
+    //       // var bottom_of_element = $("#{{type}}_accordion_div").offset().top + $(
+    //       // "#{{type}}_accordion_div")
+    //       // .outerHeight();
+
+    //       // } else {
+
+    //       // console.log(
+    //       // '{{type}} not visible')
+
+    //     });
+
+
+    //     // $(window).scroll(() => {
+    //     //     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+    //     //         // WHAT DIV IS CURRENTLY ON SCREEN
+
+    //     //         //         from = ''
+    //     //         //         to = ''
+    //     //         //         elems = elements['items'].slice(from, to)
+    //     //         //         // 
+    //     //         //         // ADD ELEMENTS TO DIV CURRENTLY OPEN
+    //     //         //         // REMOVE ELEMENTS FROM elements
+    //     //         //         addElements(elements)
+    //     //         //         //Add something at the end of the page
+    //     //     }
+    //     //     // });
+
+    //     //     create_pages(elements, page_range(elements.items.length, 20, 1), $(
+    //     //         '#{{ type }}_thumbnail_pagination'), $('#{{ items.category }}_items'))
+    //     // })
+    //   }
+    // }
+
+
+
+
+
+
+  })
+</script>

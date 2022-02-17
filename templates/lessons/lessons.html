@@ -16,7 +16,7 @@
       {% include 'feature-block-start.html' with feature_title="Contents" feature_block_class="secondary" feature_icon="list" %}
         <ul class="menu vertical">
           {% for lesson in lessons %}
-            <li><a href="/lessons/{{lesson.slug}}">{{lesson.title}}</a></li>
+            <li><a class="my-giza-lnk modal" data-url="{% url 'lesson' pk=lesson.pk %}">{{lesson.title}}</a></li>
           {% endfor %}
         </ul>
       {% include 'feature-block-end.html' %}

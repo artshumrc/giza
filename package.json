@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "foundation-sites": "^6.7.4",
+    "mirador": "^3.3.0",
+    "vscode-css-languageservice": "^5.1.9"
+  }
+}

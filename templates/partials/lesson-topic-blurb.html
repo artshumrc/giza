@@ -4,7 +4,8 @@
   {% if lesson.title %}
   <div class="topic-blurb-header">
     <h3>
-      <a href="/lessons/{{lesson.slug}}">
+      <a class="my-giza-lnk modal" data-url="{% url 'lesson' pk=lesson.pk %}">
+        {{ lesson}}
         {{lesson.title}}
       </a>
       {% if lesson.anchor %}
@@ -13,7 +14,6 @@
     </h3>
   </div>
   {% endif %}
-  {{ lesson }}
   <div class="topic-blurb-body">
 
     <div class="topic-blurb-image">
@@ -24,7 +24,7 @@
         <div class="collection-thumb-grid grid-images-1">
           <div class="grid-image">
             {% if lesson.picture %}
-            <img src="{% get_media_prefix %}{{lesson.picture}}">
+            <img src="{% get_media_prefix %}{{ lesson.picture }}">
             {% else %}
             <img src="{% static 'images/thumb-default.png' %}">
             {% endif %}
@@ -37,7 +37,7 @@
       {{lesson.summary|truncatewords:24}}
       </p>
       <div class="topic-blurb-footer">
-        <a class="text-bold pointer-fwd" href="/lessons/{{lesson.slug}}">View topic</a>
+        <a class="text-bold pointer-fwd my-giza-lnk" data-url="{% url 'lesson' pk=lesson.pk %}">View topic</a>
       </div>
     </div>
   </div>

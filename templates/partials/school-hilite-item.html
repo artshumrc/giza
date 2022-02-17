@@ -1,28 +1,14 @@
-<div class="content-hilite{% if primary %} content-hilite-primary{% endif %}">
+<div class="content-hilite{% if primary %} content-hilite-primary{% endif %} my-giza-lnk" data-url="{{ hilite_link }}">
   <div class="content-hilite-content">
     <div class="content-hilite-header">
       <h2 class="text-bold">
-        {% if hilite_link %}
-        <a class="my-giza-lnk" data-url="{% url hilite_link %}">
-          {{hilite_title}}
-        </a>
-        {% else %}
-        {{hilite_title}}
-        {% endif %}
+        {{ hilite_title }}
       </h2>
     </div>
     <div class="content-hilite-body">
       {% block 'hilite_content' %}
       {% endblock %}
     </div>
-    {% if hilite_link %}
-    <div class="content-hilite-footer">
-      <a class="button{% if not primary %} secondary{% endif %} my-giza-lnk" data-url="{{ hilite_link }}">
-        {{hilite_link_text}}
-        <i class="icon-angle-right"></i>
-      </a>
-    </div>
-    {% endif %}
   </div>
   <div class="content-hilite-image img-{{ hilite_img }}"></div>
 </div>

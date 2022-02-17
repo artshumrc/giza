@@ -1,0 +1,43 @@
+{% load static %}
+
+<!-- SHOW ALL COLLECTIONS -->
+{% for collection in collections %}
+<li data-title="{{ collection.title }}">
+  <div class="item-wrap" data-id="{{ collection }}">
+    <ul class="no-bullet share-links__icons">
+      <a class="my-giza-lnk modal post"
+        data-url='{% url "my-giza-collections-edit" token=collection.pk|stringformat:"s" %}'>
+        <picture>
+          <img src="{% static 'images/thumb-default.png' %}" alt="image description" width="250" height="250">
+        </picture>
+        <div class="caption">
+          <strong>{{ collection.title }}</strong>
+          <span>{{ collection.items.all|length }} items</span>
+        </div>
+        <i class="fas fa-chevron-right show-for-small-only"></i>
+      </a>
+      <li>
+        <a class="share-facebook my-giza-lnk modal post"
+          data-url='{% url "my-giza-collections-delete" token=collection.pk|stringformat:"s" %}'>
+          <i class="icon-trash-o"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="list-row">
+    <div class="check-hold">
+      <label>
+        <input type="checkbox">
+        <span class="fake-input"></span>
+        <span>{{ collection.title }} <em>({{ collection.items.all|length }} items)</em></span>
+      </label>
+    </div>
+    <div class="btn-hold">
+      {% if user.is_superuser %}
+      <a class="button primary">View this collection</a>
+      <a class="button primary">Delete</a>
+      {% endif %}
+    </div>
+  </div>
+</li>
+{% endfor %}

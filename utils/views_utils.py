@@ -1,82 +1,86 @@
 from datetime import date
 
 CATEGORIES = {
-	'sites' 			: 'Tombs and Monuments',
-	'objects' 			: 'Objects',
-	'diarypages' 		: 'Diary Pages',
-	'plansanddrawings' 	: 'Plans and Drawings', # being phased out
-	'mapsandplans'		: 'Maps and Plans',
-	'drawings'			: 'Drawings',
-	'unpubdocs' 		: 'Unpublished Documents',
-	'pubdocs' 			: 'Published Documents',
-	'photos' 			: 'Photos',
-	'ancientpeople' 	: 'Ancient People',
-	'modernpeople' 		: 'Modern People',
-	'institutions' 		: 'Institutions',
-	'groups' 			: 'Groups', # Uncertain
-	'animals'			: 'Animals',
-	'3dmodels'			: '3D Models',
-	'videos'			: 'Videos',
-	'audio'				: 'Audio',
-	'microfilm'			: 'Microfilm',  # Not yet in TMS?
-	'document'			: 'Document',   # Default Media type?? authority table: not used because subdivisions?: file-type;
-	'iiifmanifest'		: 'IIIF Manifest'
+    "sites": {"key": "Tombs and Monuments", "icon": "map-marker"},
+    "objects": {"key": "Objects", "icon": "vase"},
+    "diarypages": {"key": "Diary Pages", "icon": "sticky-note-o"},
+    "plansanddrawings": {"key": "Plans and Drawings", "icon": "pencil-square-o"},  # being phased out
+    "mapsandplans": {"key": "Maps and Plans", "icon": "map-o"},
+    "drawings": {"key": "Drawings", "icon": "pencil-square-o"},
+    "unpubdocs": {"key": "Unpublished Documents", "icon": "file-text-o"},
+    "bibreferences" : {"key" : "Full Bibliography", "icon" : "info-circle" },
+    "pubdocs": {"key": "Published Documents", "icon": "book"},
+    "photos": {"key": "Photos", "icon": "camera"},
+    "ancientpeople": {"key": "Ancient People", "icon": "user"},
+    "modernpeople": {"key": "Modern People", "icon": "user"},
+    "institutions": {"key": "Institutions", "icon": "university"},
+    "groups": {"key": "Groups", "icon": "users"},  # Uncertain
+    "animals": {"key": "Animals", "icon": "users"},
+    "3dmodels": {"key": "3D Models", "icon": "pyramid-3d"},
+    "videos": {"key": "Videos", "icon": "video-camera"},
+    "audio": {"key": "Audio", "icon": "volume-up"},
+    "microfilm": {"key": "Microfilm", "icon": ""},  # Not yet in TMS?
+    "document": {
+        "key": "Document",
+        "icon": "",
+    },  # Default Media type?? authority table: not used because subdivisions?: file-type;
+    "iiifmanifest": {"key": "IIIF Manifest", "icon": ""},
 }
 
 FIELDS_PER_CATEGORY = {
-	'sites' : {
-		'displaytext' : 'Tomb/Monument number',
-		'sitename' : 'Tomb/Monument name',
-		# 'datevalues' : 'Site Dates',
-		'people' : 'People'
-	},
-	'objects' : {
-		'title' : 'Title',
-		'allnumbers' : 'ID',
-		'medium' : 'Material',
-		'provenance' : 'Findspot',
-		# 'entrydate' : 'Date of register entry',
-	},
-	'diarypages' : {
-		'diarytranscription' : 'Keywords',
-		# 'entrydate' : 'Dates',
-		'people' : 'People',
-		'monuments' : 'Tomb/Monument number'
-	},
-	'photos' : {
-		'description' : 'Keyword',
-		'number' : 'Number',
-		'people' : 'Photographer',
-		# 'date' : 'Date of photograph',
-		# 'entrydate_ms' : 'Date of photograph in milliseconds'
-	},
-	'drawings' : {
-		'people' : 'Author',
-		'objects' : 'Object number',
-		# 'dates' : 'Date of drawing'
-	},
-	'mapsandplans' : {
-		'author' : 'Author',
-		# 'date' : 'Date of plan',
-		'people' : 'People associated with the plan'
-	},
-	# 'people' : {
-	# 	'name' : 'Name of a person',
-	# 	'dates' : 'Date range of person'
-	# },
-    'unpubdocs' : {
-		'description' : 'Author of the document',
-		'site' : 'Site mentioned in the document',
-		'title' : 'Objects mentioned in the document',
-		# 'dates' : 'Date range of the document'
-	},
-	'pubdocs' : {
-		'author' : 'Author of the document',
-		'title' : 'Title of the document',
-		# 'year' : 'Year the document was published',
-		'journal-series' : 'The journal or series number with volume/issue',
-		'city-publisher' : 'City and publisher'
-	}
+    "sites": {
+        "monument": "Tomb/Monument number",
+        "sitename": "Tomb/Monument name",
+        # 'datevalues' : 'Site Dates',
+        "people": "People",
+    },
+    "objects": {
+        "title": "Title",
+        "allnumbers": "ID",
+        "medium": "Material",
+        "provenance": "Findspot",
+        # 'entrydate' : 'Date of register entry',
+    },
+    "diarypages": {
+        "diarytranscription": "Keywords",
+        # 'entrydate' : 'Dates',
+        "people": "People",
+        "monuments": "Tomb/Monument number",
+    },
+    "photos": {
+        "description": "Keyword",
+        "number": "Number",
+        "people": "Photographer",
+        # 'date' : 'Date of photograph',
+        # 'entrydate_ms' : 'Date of photograph in milliseconds'
+    },
+    "drawings": {
+        "people": "Author",
+        "objects": "Object number",
+        # 'dates' : 'Date of drawing'
+    },
+    "mapsandplans": {
+        "author": "Author",
+        # 'date' : 'Date of plan',
+        "people": "People associated with the plan",
+    },
+    # 'people' : {
+    # 	'name' : 'Name of a person',
+    # 	'dates' : 'Date range of person'
+    # },
+    "unpubdocs": {
+        "description": "Author of the document",
+        "site": "Site mentioned in the document",
+        "title": "Objects mentioned in the document",
+        # 'dates' : 'Date range of the document'
+    },
+    "pubdocs": {
+        "author": "Author of the document",
+        "title": "Title of the document",
+        # 'year' : 'Year the document was published',
+        "journal-series": "The journal or series number with volume/issue",
+        "city-publisher": "City and publisher",
+    },
 }
 
 # BACKUP
@@ -140,56 +144,47 @@ FIELDS_PER_CATEGORY = {
 This constant is a temporary stop-measure to resolving search parameters (esp. keywords on unindexed fields)
 """
 SEARCH_FIELDS_PER_CATEGORY = {
-    'sites' : {
-        'monument' : "displaytext",
-        'sitename' : 'sitename.keyword',
-        'people' : 'people'
+    "sites": {
+        "monument": "displaytext",
+        "sitename": "sitename.keyword",
+        "people": "people",
     },
-    'objects' : {
-        'title' : 'title',
-        'number' : 'allnumbers',
-        'medium' : 'medium',
-        'provenance' : 'provenance',
-        'entrydate' : 'entrydate'
+    "objects": {
+        "title": "title",
+        "number": "allnumbers",
+        "medium": "medium",
+        "provenance": "provenance",
+        "entrydate": "entrydate",
     },
-    'diarypages' : {
-        'keywords' : 'diarytranscription',
-        'entrydate' : 'entrydate',
-        'monuments' : 'diarytranscription'
+    "diarypages": {
+        "keywords": "diarytranscription",
+        "entrydate": "entrydate",
+        "monuments": "diarytranscription",
     },
-    'photos' : { 
-        'keywords' : 'description',
-        'number' : 'allnumbers',
-        'date' : 'entrydate'
-    },
-    'unpubdocs' : {
-        'author' : 'relateditems.modernpeople.displayname',
-        'site' : 'relateditems.sites.sitename',
+    "photos": {"keywords": "description", "number": "allnumbers", "date": "entrydate"},
+    "unpubdocs": {
+        "author": "relateditems.modernpeople.displayname",
+        "site": "relateditems.sites.sitename",
         # 'number' : 'title',
-        'date' : 'entrydate'
+        "date": "entrydate",
     },
-    'pubdocs' : {
-        'author' : 'authors',
-        'title' : 'title',
-        'year' : 'entrydate',
-        'journal-series' : 'journal',
-        'city-publisher' : 'relateditems.institutions.displayname.keyword'
+    "pubdocs": {
+        "author": "authors",
+        "title": "title",
+        "year": "entrydate",
+        "journal-series": "journal",
+        "city-publisher": "relateditems.institutions.displayname.keyword",
     },
-    'drawings' : {
-        'people' : 'relateditems.modernpeople.displayname',
-        'object' : 'description',
-        'date' : 'entrydate'
+    "drawings": {
+        "people": "relateditems.modernpeople.displayname",
+        "object": "description",
+        "date": "entrydate",
     },
     # 'people' : {
     #     'name' : 'name',
     #     'date' : 'date'
     # },
-    'mapsandplans' : {
-        'author' : '',
-        'date' : '',
-        'people' : '',
-        'monument' : 'title'
-    }
+    "mapsandplans": {"author": "", "date": "", "people": "", "monument": "title"},
 }
 
 """
@@ -197,53 +192,48 @@ This constant provides the sort options per document type.
 Values map directly onto the ElasticSearch database field names.
 """
 SORT_FIELDS_PER_CATEGORY = {
-    'sites' : {
-        'Name' : 'sitesortnumber.keyword',
-        'Tomb owner' : 'tombowner'
+    "sites": {"Name": "sitesortnumber.keyword", "Tomb owner": "tombowner"},
+    "objects": {
+        "Number": "number.keyword",
+        "With photo": "hasphoto",
+        "Date": "entrydate_ms",
+        "Title": "displaytext.keyword",
+        "Classification": "classificationtext.keyword",
+        "Material": "medium.keyword",
     },
-    'objects' : {
-        'Number' : 'number.keyword', 
-        'With photo' : 'hasphoto', 
-        'Date' : 'entrydate_ms', 
-        'Title' : 'displaytext.keyword',
-        'Classification' : 'classificationtext.keyword',
-        'Material' : 'medium.keyword'
-    },
-    'photos' : {
+    "photos": {
         # 'Number' : 'number.keyword',
-        'Date' : 'entrydate_ms',
-        'Department' : 'department.keyword'
+        "Date": "entrydate_ms",
+        "Department": "department.keyword",
     },
-    'diarypages' : {
-        'Date' : 'entrydate_ms',
+    "diarypages": {
+        "Date": "entrydate_ms",
     },
-    'drawings' : {
-        'Medium' : 'medium.keyword',
-        'Department' : 'department.keyword',
-        'Photo' : 'hasphoto'
+    "drawings": {
+        "Medium": "medium.keyword",
+        "Department": "department.keyword",
+        "Photo": "hasphoto",
     },
-    'mapsandplans' : {
-        'Title' : 'title',
-        'Department' : 'department',
-        'Date' : 'entrydate_ms',
-        'Photo' : 'hasphoto'
+    "mapsandplans": {
+        "Title": "title",
+        "Department": "department",
+        "Date": "entrydate_ms",
+        "Photo": "hasphoto",
     },
-    'ancientpeople' : {
-        'Name' : 'displayname',
-        'Year' : 'begindate',
-        'Nationality' : 'nationality',
-        'Department' : 'institution'
+    "ancientpeople": {
+        "Name": "displayname",
+        "Year": "begindate",
+        "Nationality": "nationality",
+        "Department": "institution",
     },
-    'modernpeople' : {
-        'Name' : 'displayname'
-    },
-    'videos' : {},
-    'pubdocs' : {},
-    'unpubdocs' : {},
-    'institutions' : {},
-    '3dmodels' : {},
-    'groups' : {},
-    'animals' : {}
+    "modernpeople": {"Name": "displayname"},
+    "videos": {},
+    "pubdocs": {},
+    "unpubdocs": {},
+    "institutions": {},
+    "3dmodels": {},
+    "groups": {},
+    "animals": {},
 }
 
 """
@@ -254,34 +244,16 @@ shown on the front end). Changes to this constant should cascade to elasticsearc
 """
 FACETS_PER_CATEGORY = {
     # 'sites' document type
-	'sites' : {
-		'Site Type' : {
-	    	"terms": {
-				'field' : 'sitetype.sitetype.keyword'
-			}
-		},
-		'Site Name' : {
-	    	"terms": {
-				'field' : 'sitename.keyword'
-			}
-		},
-		'Site Date' : {
-			"nested": {
-               "path": "sitedates"
+    "sites": {
+        "Site Type": {"terms": {"field": "sitetype.sitetype.keyword"}},
+        "Site Name": {"terms": {"field": "sitename.keyword"}},
+        "Site Date": {
+            "nested": {"path": "sitedates"},
+            "aggregations": {
+                "Site Date": {"terms": {"field": "sitedates.date.keyword"}}
             },
-			"aggregations": {
-	             "Site Date": {
-	                "terms": {
-	                   "field": "sitedates.date.keyword"
-	                }
-	             }
-			}
-		},
-		'Has Tomb Owner' : {
-	    	"terms": {
-				'field' : 'tombowner'
-			}
-		},
+        },
+        "Has Tomb Owner": {"terms": {"field": "tombowner"}},
         # "Tomb Owner": {
         #     "nested": {
         #         "path": "relateditems"
@@ -325,15 +297,11 @@ FACETS_PER_CATEGORY = {
         #     }
         # },
         "Excavator": {
-            "nested": {
-                "path": "relateditems"
-            },
+            "nested": {"path": "relateditems"},
             "aggregations": {
                 "excavator_aggs": {
                     "filter": {
-                        "term": {
-                            "relateditems.modernpeople.role.keyword": "Excavator"
-                        }
+                        "term": {"relateditems.modernpeople.role.keyword": "Excavator"}
                     },
                     "aggregations": {
                         "Excavator": {
@@ -341,166 +309,87 @@ FACETS_PER_CATEGORY = {
                                 "field": "relateditems.modernpeople.displayname.keyword"
                             }
                         }
-                    }
+                    },
                 }
-            }
+            },
         },
-        'MET_path' : {
-            'nested' : {
-                'path' : 'MET.Codes'
-            }
-        },
-        'MET_code' : { 
-            'nested' : {
-                'path' : 'MET.Path'
-            }
-        }
-	},
-
+        "MET_path": {"nested": {"path": "MET.Codes"}},
+        "MET_code": {"nested": {"path": "MET.Path"}},
+    },
     # 'objects' document type
-	'objects' : {
-        'Year of Registration_daterange': {
-            "filter": {
-				"type": {
-				   "value": "objects"
-				}
-			},
-            "aggregations" : {
-                'Year of Registration_daterange' : {
-			    	"terms": {
-			        	"field": 'entrydate_ms',
-                        "size" : 10000
-					}
-				}
-            }
+    "objects": {
+        "Year of Registration_daterange": {
+            "filter": {"type": {"value": "objects"}},
+            "aggregations": {
+                "Year of Registration_daterange": {
+                    "terms": {"field": "entrydate_ms", "size": 10000}
+                }
+            },
         },
-        'Findspot' : {
-	    	"terms": {
-	        	"field": "provenance.keyword"
-	     	}
-		},
-        'Has Related Photo' : {
-	    	"terms": {
-				'field' : 'hasphoto'
-			}
-		},
-		'Classification' : {
-			"filter": {
-				"type": {
-				   "value": "objects"
-				}
-			},
-			"aggregations": {
-				"Classification": {
-			    	"terms": {
-			        	"field": 'classificationtext.keyword'
-					}
-				}
-			}
-		},
-		"Material": {
-			"filter": {
-				"type": {
-				   "value": "objects"
-				}
-			},
-			"aggregations": {
-				"Material": {
-				   "terms": {
-				      "field": "medium.keyword"
-				   }
-				}
-			}
-	  	},
-		'Owning Institution' : {
-			"filter": {
-				"type": {
-				   "value": "objects"
-				}
-			},
-			"aggregations": {
-				'Owning Institution' : {
-			    	"terms": {
-			        	"field": 'department.keyword'
-					}
-				}
-			}
-		},
-		'Period' : {
-	    	"terms": {
-	        	"field": 'period.keyword'
-			}
-		},
-        'MET_path' : {
-            'nested' : {
-                'path' : 'MET.Codes'
-            }
+        "Findspot": {"terms": {"field": "provenance.keyword"}},
+        "Has Related Photo": {"terms": {"field": "hasphoto"}},
+        "Classification": {
+            "filter": {"type": {"value": "objects"}},
+            "aggregations": {
+                "Classification": {"terms": {"field": "classificationtext.keyword"}}
+            },
         },
-        'MET_code' : { 
-            'nested' : {
-                'path' : 'MET.Path'
-            }
-        }
-	},
-
+        "Material": {
+            "filter": {"type": {"value": "objects"}},
+            "aggregations": {"Material": {"terms": {"field": "medium.keyword"}}},
+        },
+        "Owning Institution": {
+            "filter": {"type": {"value": "objects"}},
+            "aggregations": {
+                "Owning Institution": {"terms": {"field": "department.keyword"}}
+            },
+        },
+        "Period": {"terms": {"field": "period.keyword"}},
+        "MET_path": {"nested": {"path": "MET.Codes"}},
+        "MET_code": {"nested": {"path": "MET.Path"}},
+    },
     # 'diarypages' document type
-	'diarypages' : {
-		'Classification' : {
-			"filter": {
-				"type": {
-				   "value": "diarypages"
-				}
-			},
-			"aggregations": {
-				"Classification": {
-			    	"terms": {
-			        	"field": 'classificationtext.keyword'
-					}
-				}
-			}
-		},
-		'Owning Institution' : {
-			"filter": {
-				"type": {
-				   "value": "diarypages"
-				}
-			},
-			"aggregations": {
-				'Owning Institution' : {
-			    	"terms": {
-			        	"field": 'department.keyword'
-					}
-				}
-			}
-		},
+    "diarypages": {
+        "Classification": {
+            "filter": {"type": {"value": "diarypages"}},
+            "aggregations": {
+                "Classification": {"terms": {"field": "classificationtext.keyword"}}
+            },
+        },
+        "Owning Institution": {
+            "filter": {"type": {"value": "diarypages"}},
+            "aggregations": {
+                "Owning Institution": {"terms": {"field": "department.keyword"}}
+            },
+        },
         # "Sites Mentioned": {
-		# 	"filter": {
-		# 		"type": {
-		# 			"value": "diarypages"
-		# 		}
-		# 	},
-		# 	"aggregations": {
-		# 		"Sites Mentioned": {
-		# 			"nested": {
-		# 				"path": "relateditems"
-		# 			},
-		# 			"aggregations": {
-		# 				"Sites Mentioned": {
-		# 					"nested": {
-		# 						"path": "relateditems.sites"
-		# 					},
-		# 					"aggregations": {
-		# 						"Sites Mentioned": {
-		# 							"terms": {
-		# 								"field": "relateditems.sites.sitenumber.keyword"
-		# 							}
-		# 						}
-		# 					}
-		# 				}
-		# 			}
-		# 		}
-		# 	}
-		# },
+        # 	"filter": {
+        # 		"type": {
+        # 			"value": "diarypages"
+        # 		}
+        # 	},
+        # 	"aggregations": {
+        # 		"Sites Mentioned": {
+        # 			"nested": {
+        # 				"path": "relateditems"
+        # 			},
+        # 			"aggregations": {
+        # 				"Sites Mentioned": {
+        # 					"nested": {
+        # 						"path": "relateditems.sites"
+        # 					},
+        # 					"aggregations": {
+        # 						"Sites Mentioned": {
+        # 							"terms": {
+        # 								"field": "relateditems.sites.sitenumber.keyword"
+        # 							}
+        # 						}
+        # 					}
+        # 				}
+        # 			}
+        # 		}
+        # 	}
+        # },
         # 'Individuals Mentioned' : {
         #     "filter" : {
         #         "type" : {
@@ -515,516 +404,255 @@ FACETS_PER_CATEGORY = {
         #         }
         #     }
         # },
-        'Year_daterange': {
-            "filter": {
-				"type": {
-				   "value": "diarypages"
-				}
-			},
-            "aggregations" : {
-                'Year_daterange' : {
-			    	"terms": {
-			        	"field": 'entrydate_ms',
-                        "size" : 10000
-					}
-				}
-            }
-        },
-        'MET_path' : {
-            'nested' : {
-                'path' : 'MET.Codes'
-            }
-        },
-        'MET_code' : { 
-            'nested' : {
-                'path' : 'MET.Path'
-            }
-        }
-	},
-
-    # 'plansanddrawings' document type; being phased out?
-	'plansanddrawings' : {},
-
-    # 'mapsandplans' document type
-	'mapsandplans' : {
-		'Owning Institution' : {
-			"filter": {
-				"type": {
-				   "value": "mapsandplans"
-				}
-			},
-			"aggregations": {
-				'Owning Institution' : {
-			    	"terms": {
-			        	"field": 'department.keyword'
-					}
-				}
-			}
-		},
-		"Material": {
-			"filter": {
-				"type": {
-				   "value": "mapsandplans"
-				}
-			},
-			"aggregations": {
-				"Material": {
-				   "terms": {
-				      "field": "medium.keyword"
-				   }
-				}
-			}
-	  	},
-        'MET_path' : {
-            'nested' : {
-                'path' : 'MET.Codes'
-            }
-        },
-        'MET_code' : { 
-            'nested' : {
-                'path' : 'MET.Path'
-            }
-        }
-	},
-
-    # 'drawings' document type
-	'drawings' : {
-		'Owning Institution' : {
-			"filter": {
-				"type": {
-				   "value": "drawings"
-				}
-			},
-			"aggregations": {
-				'Owning Institution' : {
-			    	"terms": {
-			        	"field": 'department.keyword'
-					}
-				}
-			}
-		},
-		"Material": {
-			"filter": {
-				"type": {
-				   "value": "drawings"
-				}
-			},
-			"aggregations": {
-				"Material": {
-				   "terms": {
-				      "field": "medium.keyword"
-				   }
-				}
-			}
-	  	},
-        'MET_path' : {
-            'nested' : {
-                'path' : 'MET.Codes'
-            }
-        },
-        'MET_code' : { 
-            'nested' : {
-                'path' : 'MET.Path'
-            }
-        }
-	},
-
-    # 'unpubdocs' document type
-	'unpubdocs' : {
-		'Owning Institution' : {
-			"filter": {
-				"type": {
-				   "value": "unpubdocs"
-				}
-			},
-			"aggregations": {
-				'Owning Institution' : {
-			    	"terms": {
-			        	"field": 'department.keyword'
-					}
-				}
-			}
-		},
-        'Year_daterange': {
-            "filter": {
-				"type": {
-				   "value": "unpubdocs"
-				}
-			},
-            "aggregations" : {
-                'Year_daterange' : {
-			    	"terms": {
-			        	"field": 'entrydate_ms',
-                        "size" : 10000
-					}
-				}
-            }
-        },
-        'MET_path' : {
-            'nested' : {
-                'path' : 'MET.Codes'
-            }
-        },
-        'MET_code' : { 
-            'nested' : {
-                'path' : 'MET.Path'
-            }
-        }
-	},
-
-    # 'pubdocs' document type
-	'pubdocs' : {
-		'Format' : {
-			'terms' : {
-				'field' : 'format.keyword'
-			}
-		},
-		'Language' : {
-			'terms' : {
-				'field' : 'language.keyword'
-			}
-		},
-        'Year of Publication_daterange': {
-            "filter": {
-				"type": {
-				   "value": "pubdocs"
-				}
-			},
-            "aggregations" : {
-                'Year of Publication_daterange' : {
-			    	"terms": {
-			        	"field": 'entrydate_ms',
-                        "size" : 10000
-					}
-				}
-            }
-        },
-		"Author": {
-	         "nested": {
-	            "path": "relateditems"
-	         },
-			  "aggregations": {
-	             "author_aggs": {
-			         "filter": {
-			            "term": {
-			               "relateditems.modernpeople.role.keyword" : "Author"
-			            }
-			         },
-			         "aggregations": {
-			            "Author": {
-			               "terms": {
-			                  "field": "relateditems.modernpeople.displayname.keyword"
-			               }
-			            }
-			         }
-				}
-			}
-      	},
-	  	"Publisher": {
-	         "nested": {
-	            "path": "relateditems"
-	         },
-			 "aggregations": {
-				"publisher_aggs": {
-			         "filter": {
-			            "term": {
-			               "relateditems.institutions.role.keyword" : "Publisher"
-			            }
-			         },
-			         "aggregations": {
-			            "Publisher": {
-			               "terms": {
-			                  "field": "relateditems.institutions.displayname.keyword"
-			               }
-			            }
-			         }
-				}
-			}
-      	},
-		# 'Number of Pages' : {
-		# 	'terms' : {
-		# 		'field' : 'numofpages'
-		# 	}
-		# },
-		'Journal' : {
-			'terms' : {
-				'field' : 'journal.keyword'
-			}
-		},
-		'Series' : {
-			'terms' : {
-				'field' : 'series.keyword'
-			}
-		},
-        'MET_path' : {
-            'nested' : {
-                'path' : 'MET.Codes'
-            }
-        },
-        'MET_code' : { 
-            'nested' : {
-                'path' : 'MET.Path'
-            }
-        }
-	},
-
-    # 'photos' document type
-	'photos' : {
-		'Owning Institution' : {
-			"filter": {
-				"type": {
-				   "value": "photos"
-				}
-			},
-			"aggregations": {
-				'Owning Institution' : {
-			    	"terms": {
-			        	"field": 'department.keyword'
-					}
-				}
-			}
-		},
-		'Media View' : {
-	    	"terms": {
-				'field' : 'mediaview.keyword'
-			}
-		},
-        'Date of Photograph_daterange': {
-            "filter": {
-				"type": {
-				   "value": "photos"
-				}
-			},
-            "aggregations" : {
-                'Date of Photograph_daterange' : {
-			    	"terms": {
-			        	"field": 'entrydate_ms',
-                        "size" : 10000
-					}
-				}
-            }
-        },
-		"Photographer": {
-			"nested": {
-			   "path": "relateditems"
-			},
-			"aggregations": {
-	            "photographer_aggs": {
-			         "filter": {
-			            "term": {
-			               "relateditems.modernpeople.role.keyword" : "Photographer"
-			            }
-			         },
-			         "aggregations": {
-			            "Photographer": {
-			               "terms": {
-			                  "field": "relateditems.modernpeople.displayname.keyword"
-			               }
-			            }
-			         }
-				}
-			}
-      	},
-        'MET' : {
-            'nested' : {
-                'path' : 'MET'
+        "Year_daterange": {
+            "filter": {"type": {"value": "diarypages"}},
+            "aggregations": {
+                "Year_daterange": {"terms": {"field": "entrydate_ms", "size": 10000}}
             },
-            "aggregations" : {
-                "Codes" : {
-                    "terms" : {
-                        "field" : "MET.Codes.keyword",
-                        "size" : 1000
-                    }
-                },
-                "Paths" : {
-                    "terms" : {
-                        "field" : "MET.Path.keyword",
-                        "size" : 1000
-                    }
+        },
+        "MET_path": {"nested": {"path": "MET.Codes"}},
+        "MET_code": {"nested": {"path": "MET.Path"}},
+    },
+    # 'plansanddrawings' document type; being phased out?
+    "plansanddrawings": {},
+    # 'mapsandplans' document type
+    "mapsandplans": {
+        "Owning Institution": {
+            "filter": {"type": {"value": "mapsandplans"}},
+            "aggregations": {
+                "Owning Institution": {"terms": {"field": "department.keyword"}}
+            },
+        },
+        "Material": {
+            "filter": {"type": {"value": "mapsandplans"}},
+            "aggregations": {"Material": {"terms": {"field": "medium.keyword"}}},
+        },
+        "MET_path": {"nested": {"path": "MET.Codes"}},
+        "MET_code": {"nested": {"path": "MET.Path"}},
+    },
+    # 'drawings' document type
+    "drawings": {
+        "Owning Institution": {
+            "filter": {"type": {"value": "drawings"}},
+            "aggregations": {
+                "Owning Institution": {"terms": {"field": "department.keyword"}}
+            },
+        },
+        "Material": {
+            "filter": {"type": {"value": "drawings"}},
+            "aggregations": {"Material": {"terms": {"field": "medium.keyword"}}},
+        },
+        "MET_path": {"nested": {"path": "MET.Codes"}},
+        "MET_code": {"nested": {"path": "MET.Path"}},
+    },
+    # 'unpubdocs' document type
+    "unpubdocs": {
+        "Owning Institution": {
+            "filter": {"type": {"value": "unpubdocs"}},
+            "aggregations": {
+                "Owning Institution": {"terms": {"field": "department.keyword"}}
+            },
+        },
+        "Year_daterange": {
+            "filter": {"type": {"value": "unpubdocs"}},
+            "aggregations": {
+                "Year_daterange": {"terms": {"field": "entrydate_ms", "size": 10000}}
+            },
+        },
+        "MET_path": {"nested": {"path": "MET.Codes"}},
+        "MET_code": {"nested": {"path": "MET.Path"}},
+    },
+    # 'pubdocs' document type
+    "pubdocs": {
+        "Format": {"terms": {"field": "format.keyword"}},
+        "Language": {"terms": {"field": "language.keyword"}},
+        "Year of Publication_daterange": {
+            "filter": {"type": {"value": "pubdocs"}},
+            "aggregations": {
+                "Year of Publication_daterange": {
+                    "terms": {"field": "entrydate_ms", "size": 10000}
                 }
-            }
-        }
-	},
-
+            },
+        },
+        "Author": {
+            "nested": {"path": "relateditems"},
+            "aggregations": {
+                "author_aggs": {
+                    "filter": {
+                        "term": {"relateditems.modernpeople.role.keyword": "Author"}
+                    },
+                    "aggregations": {
+                        "Author": {
+                            "terms": {
+                                "field": "relateditems.modernpeople.displayname.keyword"
+                            }
+                        }
+                    },
+                }
+            },
+        },
+        "Publisher": {
+            "nested": {"path": "relateditems"},
+            "aggregations": {
+                "publisher_aggs": {
+                    "filter": {
+                        "term": {"relateditems.institutions.role.keyword": "Publisher"}
+                    },
+                    "aggregations": {
+                        "Publisher": {
+                            "terms": {
+                                "field": "relateditems.institutions.displayname.keyword"
+                            }
+                        }
+                    },
+                }
+            },
+        },
+        # 'Number of Pages' : {
+        # 	'terms' : {
+        # 		'field' : 'numofpages'
+        # 	}
+        # },
+        "Journal": {"terms": {"field": "journal.keyword"}},
+        "Series": {"terms": {"field": "series.keyword"}},
+        "MET_path": {"nested": {"path": "MET.Codes"}},
+        "MET_code": {"nested": {"path": "MET.Path"}},
+    },
+    # 'photos' document type
+    "photos": {
+        "Owning Institution": {
+            "filter": {"type": {"value": "photos"}},
+            "aggregations": {
+                "Owning Institution": {"terms": {"field": "department.keyword"}}
+            },
+        },
+        "Media View": {"terms": {"field": "mediaview.keyword"}},
+        "Date of Photograph_daterange": {
+            "filter": {"type": {"value": "photos"}},
+            "aggregations": {
+                "Date of Photograph_daterange": {
+                    "terms": {"field": "entrydate_ms", "size": 10000}
+                }
+            },
+        },
+        "Photographer": {
+            "nested": {"path": "relateditems"},
+            "aggregations": {
+                "photographer_aggs": {
+                    "filter": {
+                        "term": {
+                            "relateditems.modernpeople.role.keyword": "Photographer"
+                        }
+                    },
+                    "aggregations": {
+                        "Photographer": {
+                            "terms": {
+                                "field": "relateditems.modernpeople.displayname.keyword"
+                            }
+                        }
+                    },
+                }
+            },
+        },
+        "MET": {
+            "nested": {"path": "MET"},
+            "aggregations": {
+                "Codes": {"terms": {"field": "MET.Codes.keyword", "size": 1000}},
+                "Paths": {"terms": {"field": "MET.Path.keyword", "size": 1000}},
+            },
+        },
+    },
     # 'people' document type
-	'people' : {
-		'Gender' : {
-			"filter": {
-				"type": {
-				   "value": "ancientpeople"
-				}, "type" : { 
-                    "value" : "modernpeople"
-				}
-			},
-			"aggregations": {
-				'Gender' : {
-					'terms' : {
-						'field' : 'gender.keyword'
-					}
-				}
-			}
-		}
-	},
-
+    "people": {
+        "Gender": {
+            "filter": {
+                "type": {"value": "ancientpeople"},
+                "type": {"value": "modernpeople"},
+            },
+            "aggregations": {"Gender": {"terms": {"field": "gender.keyword"}}},
+        }
+    },
     # 'ancientpeople' document type
-	'ancientpeople' : {
-		"Gender" : {
-			"filter": {
-				"type": {
-				   "value": "ancientpeople"
-				}
-			},
-			"aggregations": {
-				"Gender" : {
-					'terms' : {
-						"field" : "gender.keyword"
-					}
-				}
-			}
-		},
-		"Associated Tombs": {
-			"nested": {
-				"path": "relateditems"
-			},
-			"aggregations": {
-				"relateditems.sites": {
-					"filter": {
-						"type": {
-							"value": "sitenumber.keyword"
-						}
-					}
-				},
-				"Associated Tombs": {
-					"terms": {
-						"field": "relateditems.sites.sitenumber.keyword"
-					}
-				}
-			}
-		}
-	},
-
+    "ancientpeople": {
+        "Gender": {
+            "filter": {"type": {"value": "ancientpeople"}},
+            "aggregations": {"Gender": {"terms": {"field": "gender.keyword"}}},
+        },
+        "Associated Tombs": {
+            "nested": {"path": "relateditems"},
+            "aggregations": {
+                "relateditems.sites": {
+                    "filter": {"type": {"value": "sitenumber.keyword"}}
+                },
+                "Associated Tombs": {
+                    "terms": {"field": "relateditems.sites.sitenumber.keyword"}
+                },
+            },
+        },
+    },
     # 'modernpeople' document type
-	'modernpeople' : {
-		'Gender' : {
-			"filter": {
-				"type": {
-				   "value": "modernpeople"
-				}
-			},
-			"aggregations": {
-				'Gender' : {
-					'terms' : {
-						'field' : 'gender.keyword'
-					}
-				}
-			}
-		},
-		'Nationality' : {
-			'terms' : {
-				'field' : 'nationality.keyword'
-			}
-		},
-		'Institution' : {
-			'terms' : {
-				'field' : 'institution.keyword'
-			}
-		},
-		'Year of Birth' : {
-			'terms' : {
-				'field' : 'begindate.keyword'
-			}
-		},
-		'Year of Death' : {
-			'terms' : {
-				'field' : 'enddate.keyword'
-			}
-		}
-	},
-
+    "modernpeople": {
+        "Gender": {
+            "filter": {"type": {"value": "modernpeople"}},
+            "aggregations": {"Gender": {"terms": {"field": "gender.keyword"}}},
+        },
+        "Nationality": {"terms": {"field": "nationality.keyword"}},
+        "Institution": {"terms": {"field": "institution.keyword"}},
+        "Year of Birth": {"terms": {"field": "begindate.keyword"}},
+        "Year of Death": {"terms": {"field": "enddate.keyword"}},
+    },
     # 'institutions' document type
-	'institutions' : {},
-
+    "institutions": {},
     # 'groups' document type
-	'groups' : {},
-
+    "groups": {},
     # 'animals' document type
-	'animals' : {},
-
+    "animals": {},
     # '3dmodels' document type
-	'3dmodels' : {},
-
+    "3dmodels": {},
     # 'videos' document type
-	'videos' : {
-		'Owning Institution' : {
-			"filter": {
-				"type": {
-				   "value": "videos"
-				}
-			},
-			"aggregations": {
-				'Owning Institution' : {
-			    	"terms": {
-			        	"field": 'department.keyword'
-					}
-				}
-			}
-		},
-		'Media View' : {
-	    	"terms": {
-				'field' : 'mediaview.keyword'
-			}
-		}
-	},
-
+    "videos": {
+        "Owning Institution": {
+            "filter": {"type": {"value": "videos"}},
+            "aggregations": {
+                "Owning Institution": {"terms": {"field": "department.keyword"}}
+            },
+        },
+        "Media View": {"terms": {"field": "mediaview.keyword"}},
+    },
     # 'audio' document type
-	'audio' : {
-		'Owning Institution' : {
-			"filter": {
-				"type": {
-				   "value": "audio"
-				}
-			},
-			"aggregations": {
-				'Owning Institution' : {
-			    	"terms": {
-			        	"field": 'department.keyword'
-					}
-				}
-			}
-		},
-		'Media View' : {
-	    	"terms": {
-				'field' : 'mediaview.keyword'
-			}
-		}
-	},
-
+    "audio": {
+        "Owning Institution": {
+            "filter": {"type": {"value": "audio"}},
+            "aggregations": {
+                "Owning Institution": {"terms": {"field": "department.keyword"}}
+            },
+        },
+        "Media View": {"terms": {"field": "mediaview.keyword"}},
+    },
     # 'iiifmanifest' document type
-	'iiifmanifest' : {},
-
+    "iiifmanifest": {},
     # 'microfilm' document type
-	'microfilm' : {},
-
+    "microfilm": {},
     # 'document' document type
-	'document' : {}
+    "document": {},
 }
 
 """
 This constant is used for resolving dates in the __chkDatePattern function.
 """
 MONTHS = [
-    'january',
-    'february',
-    'march',
-    'april',
-    'may',
-    'june',
-    'july',
-    'august',
-    'september',
-    'october',
-    'november',
-    'december'
+    "january",
+    "february",
+    "march",
+    "april",
+    "may",
+    "june",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december",
 ]
 
 """
@@ -6653,7 +6281,7 @@ MET_SIMPLE = {
     "AAO_AAM": "temporary loan",
     "AAO_AAN": "transfer",
     "AAO_AAO": "unspecified",
-    "AAO_AAP": "unknown"
+    "AAO_AAP": "unknown",
 }
 
 """
@@ -6661,14 +6289,8 @@ This is the MET for quick indexing into values by term. Note that terms are not 
 may result in multiple matches.
 """
 MET_SIMPLE_REVERSED = {
-    "...djefare": [
-        "AAF_AAG_AAA_AAI",
-        "AAN_AAA"
-    ],
-    "...ubenre": [
-        "AAF_AAG_AAA_AAJ",
-        "AAN_AAB"
-    ],
+    "...djefare": ["AAF_AAG_AAA_AAI", "AAN_AAA"],
+    "...ubenre": ["AAF_AAG_AAA_AAJ", "AAN_AAB"],
     "11th dynasty": "AAF_AAF_AAA",
     "12th dynasty": "AAF_AAF_AAB",
     "13th dynasty": "AAF_AAF_AAC",
@@ -6704,16 +6326,10 @@ MET_SIMPLE_REVERSED = {
     "[nubian dating]": "AAF_AAP",
     "a-group": "AAF_AAP_AAD",
     "aachen": "AAD_AAV_AAA",
-    "aaqen": [
-        "AAF_AAF_AAC_ABQ",
-        "AAN_AAC"
-    ],
+    "aaqen": ["AAF_AAF_AAC_ABQ", "AAN_AAC"],
     "ab`adiyeh": "AAE_AAB_AAE_AAB",
     "abacus": "AAA_AAB_AAB_AAC_AAA",
-    "abai": [
-        "AAF_AAF_AAC_ABP",
-        "AAN_AAD"
-    ],
+    "abai": ["AAF_AAF_AAC_ABP", "AAN_AAD"],
     "abegg-stiftung bern [08/016]": "AAD_ACC_AAZ_AAA",
     "aberdeen": "AAD_ACK_AAA",
     "abid": "AAE_AAC_AAK_AAB",
@@ -6743,36 +6359,24 @@ MET_SIMPLE_REVERSED = {
     "accessory (including regalia)": "AAA_AAA",
     "account": "AAL_AAA_AAA",
     "accra": "AAD_AAW_AAA",
-    "achoris/heker/khnemenmaatre": [
-        "AAF_AAJ_AAD_AAC",
-        "AAN_AAE"
-    ],
+    "achoris/heker/khnemenmaatre": ["AAF_AAJ_AAD_AAC", "AAN_AAE"],
     "acrobats": "AAB_AAJ_AAN_AAA",
     "action": "AAB_AAA",
     "addis abeba": "AAD_AAR_AAA",
     "address to the living": "AAL_AAU_AAA",
     "adelaide": "AAD_AAC_AAA",
     "aden": "AAD_ACO_AAA",
-    "adjib/anedjib": [
-        "AAF_AAC_AAA_AAF",
-        "AAN_AAF"
-    ],
+    "adjib/anedjib": ["AAF_AAC_AAA_AAF", "AAN_AAF"],
     "administrative text": "AAL_AAA",
     "adoption contract": "AAL_AAG_AAB_AAA",
     "adoration (dwa-ntr)": "AAB_AAJ_AAE_AAA",
     "adoring": "AAB_AAA_AAA",
     "adrano": "AAD_ABF_AAA",
-    "adze": [
-        "AAA_AAE_AAD_AAA",
-        "AAA_AAL_AAL_AAA"
-    ],
+    "adze": ["AAA_AAE_AAD_AAA", "AAA_AAL_AAL_AAA"],
     "adze (model)": "AAA_AAG_AAR_AAA",
     "aegis": "AAA_AAL_AAA",
     "aegis with counterpoise": "AAA_AAL_AAA_AAA",
-    "aemilian": [
-        "AAF_AAK_AAC_ABK",
-        "AAN_AAG"
-    ],
+    "aemilian": ["AAF_AAK_AAC_ABK", "AAN_AAG"],
     "aetiological text": "AAL_AAK_AAA",
     "aftercastle (model)": "AAA_AAG_AAC_AAC_AAA",
     "agate": "AAC_AAC_AAC_AAA",
@@ -6780,21 +6384,11 @@ MET_SIMPLE_REVERSED = {
     "agricultural and horticultural scene": "AAB_AAJ_AAA",
     "agricultural equipment": "AAA_AAE_AAA",
     "agrigento": "AAD_ABF_AAB",
-    "aha": [
-        "AAF_AAC_AAA_AAA",
-        "AAM_AAA_AAA",
-        "AAN_AAH"
-    ],
+    "aha": ["AAF_AAC_AAA_AAA", "AAM_AAA_AAA", "AAN_AAH"],
     "ahead": "AAB_AAC_AAD_AAA",
     "ahmose nofretari": "AAM_AAB_AAA",
-    "ahmose/nebpehtyre": [
-        "AAF_AAH_AAA_AAA",
-        "AAN_AAI"
-    ],
-    "ahotepre": [
-        "AAF_AAG_AAC_AAK",
-        "AAN_AAJ"
-    ],
+    "ahmose/nebpehtyre": ["AAF_AAH_AAA_AAA", "AAN_AAI"],
+    "ahotepre": ["AAF_AAG_AAC_AAK", "AAN_AAJ"],
     "ain `askar": "AAE_AAE_AAA_AAD_AAB",
     "ain amur": "AAE_AAE_AAA_AAD_AAA",
     "ain asil": "AAE_AAE_AAA_AAB_AAA",
@@ -6822,27 +6416,15 @@ MET_SIMPLE_REVERSED = {
     "akkadian": "AAI_AAA",
     "aksha/serra west": "AAE_AAA_AAB",
     "alam el-rum": "AAE_AAC_AAJ_AAO",
-    "alara": [
-        "AAF_AAI_AAG_AAA",
-        "AAN_AAK"
-    ],
+    "alara": ["AAF_AAI_AAG_AAA", "AAN_AAK"],
     "albenga": "AAD_ABF_AAC",
     "albi": "AAD_AAT_AAC",
     "albright-knox art gallery, the buffalo fine arts academy [57/014]": "AAD_ACI_AAM_AAA",
     "aleppo": "AAD_ACD_AAA",
     "aleppo national museum [52/001]": "AAD_ACD_AAA_AAA",
-    "alexander iv": [
-        "AAF_AAK_AAA_AAC",
-        "AAN_AAM"
-    ],
-    "alexander the great": [
-        "AAF_AAK_AAA_AAA",
-        "AAN_AAL"
-    ],
-    "alexandria": [
-        "AAD_AAO_AAA",
-        "AAE_AAC_AAI_AAA"
-    ],
+    "alexander iv": ["AAF_AAK_AAA_AAC", "AAN_AAM"],
+    "alexander the great": ["AAF_AAK_AAA_AAA", "AAN_AAL"],
+    "alexandria": ["AAD_AAO_AAA", "AAE_AAC_AAI_AAA"],
     "alfred university, allen steinheim museum [57/055]": "AAD_ACI_ABQ_AAA",
     "alicante": "AAD_ABY_AAA",
     "allard pierson museum [06/002]": "AAD_ABO_AAA_AAA",
@@ -6856,79 +6438,31 @@ MET_SIMPLE_REVERSED = {
     "amada": "AAE_AAB_AAA_AAA_AAD",
     "amara east": "AAE_AAA_AAC",
     "amara west": "AAE_AAA_AAD",
-    "amasis/khenemibre": [
-        "AAF_AAJ_AAA_AAE",
-        "AAN_AAN"
-    ],
+    "amasis/khenemibre": ["AAF_AAJ_AAA_AAE", "AAN_AAN"],
     "amaunet": "AAM_AAB_AAC",
     "amazonite": "AAC_AAC_AAC_AAB",
     "amduat": "AAL_AAE_AAA",
-    "amenemhat i/sehetepibre": [
-        "AAF_AAF_AAB_AAA",
-        "AAN_AAO"
-    ],
-    "amenemhat ii/nebukaure": [
-        "AAF_AAF_AAB_AAC",
-        "AAN_AAP"
-    ],
-    "amenemhat iii/nimaatre": [
-        "AAF_AAF_AAB_AAF",
-        "AAN_AAQ"
-    ],
-    "amenemhat iv/makherure": [
-        "AAF_AAF_AAB_AAG",
-        "AAN_AAR"
-    ],
-    "amenemhat senebef/sekhemkare": [
-        "AAF_AAF_AAC_AAB",
-        "AAN_AAV"
-    ],
-    "amenemhat v/sekhemkare": [
-        "AAF_AAF_AAC_AAD",
-        "AAN_AAS"
-    ],
-    "amenemhat vi/seankhibre": [
-        "AAF_AAF_AAC_AAG",
-        "AAN_AAT"
-    ],
-    "amenemhat vii/sedjefakare": [
-        "AAF_AAF_AAC_AAO",
-        "AAN_AAU"
-    ],
-    "amenemnesut/neferkare-heqawaset": [
-        "AAF_AAI_AAA_AAB",
-        "AAN_AAW"
-    ],
-    "amenemope/usermaatre-setepenamun": [
-        "AAF_AAI_AAA_AAD",
-        "AAN_AAX"
-    ],
+    "amenemhat i/sehetepibre": ["AAF_AAF_AAB_AAA", "AAN_AAO"],
+    "amenemhat ii/nebukaure": ["AAF_AAF_AAB_AAC", "AAN_AAP"],
+    "amenemhat iii/nimaatre": ["AAF_AAF_AAB_AAF", "AAN_AAQ"],
+    "amenemhat iv/makherure": ["AAF_AAF_AAB_AAG", "AAN_AAR"],
+    "amenemhat senebef/sekhemkare": ["AAF_AAF_AAC_AAB", "AAN_AAV"],
+    "amenemhat v/sekhemkare": ["AAF_AAF_AAC_AAD", "AAN_AAS"],
+    "amenemhat vi/seankhibre": ["AAF_AAF_AAC_AAG", "AAN_AAT"],
+    "amenemhat vii/sedjefakare": ["AAF_AAF_AAC_AAO", "AAN_AAU"],
+    "amenemnesut/neferkare-heqawaset": ["AAF_AAI_AAA_AAB", "AAN_AAW"],
+    "amenemope/usermaatre-setepenamun": ["AAF_AAI_AAA_AAD", "AAN_AAX"],
     "amenhotep i": "AAM_AAA_AAC",
-    "amenhotep i/amenophis i/djeserkare": [
-        "AAF_AAH_AAA_AAB",
-        "AAN_AAY"
-    ],
-    "amenhotep ii/amenophis ii/aakheperure": [
-        "AAF_AAH_AAA_AAG",
-        "AAN_AAZ"
-    ],
-    "amenhotep iii/amenophis iii/nebmaatre": [
-        "AAF_AAH_AAA_AAI",
-        "AAN_ABA"
-    ],
+    "amenhotep i/amenophis i/djeserkare": ["AAF_AAH_AAA_AAB", "AAN_AAY"],
+    "amenhotep ii/amenophis ii/aakheperure": ["AAF_AAH_AAA_AAG", "AAN_AAZ"],
+    "amenhotep iii/amenophis iii/nebmaatre": ["AAF_AAH_AAA_AAI", "AAN_ABA"],
     "amenhotep iv/amenophis iv/neferkheperure/akhenaten": [
         "AAF_AAH_AAA_AAJ",
-        "AAN_ABB"
+        "AAN_ABB",
     ],
     "amenhotep son of hapu": "AAM_AAA_AAD",
-    "ameni": [
-        "AAF_AAF_AAC_ABO",
-        "AAN_ABC"
-    ],
-    "amenmesse/menmire": [
-        "AAF_AAH_AAB_AAF",
-        "AAN_ABD"
-    ],
+    "ameni": ["AAF_AAF_AAC_ABO", "AAN_ABC"],
+    "amenmesse/menmire": ["AAF_AAH_AAB_AAF", "AAN_ABD"],
     "american museum of natural history [57/056]": "AAD_ACI_ABQ_AAB",
     "amethyst": "AAC_AAC_AAC_AAC",
     "amhada": "AAE_AAE_AAA_AAB_AAB",
@@ -6939,10 +6473,7 @@ MET_SIMPLE_REVERSED = {
     "amratian": "AAF_AAA_AAC_AAC",
     "amset": "AAM_AAA_AAE",
     "amsterdam": "AAD_ABO_AAA",
-    "amu": [
-        "AAF_AAG_AAC_AAT",
-        "AAN_ABE"
-    ],
+    "amu": ["AAF_AAG_AAC_AAT", "AAN_ABE"],
     "amulet": "AAA_AAF_AAA",
     "amulet mould": "AAA_AAE_AAN_AAA",
     "amuletic text": "AAL_AAU_AAB",
@@ -6950,33 +6481,18 @@ MET_SIMPLE_REVERSED = {
     "amun temple": "AAE_AAB_AAC_AAA_AAB_AAA",
     "amun-min": "AAM_AAA_AAG",
     "amun-re": "AAM_AAA_AAH",
-    "amyrtaios/amunirdies": [
-        "AAF_AAJ_AAC_AAA",
-        "AAN_ABF"
-    ],
-    "anastasius i": [
-        "AAF_AAK_AAD_AAH",
-        "AAN_ABG"
-    ],
+    "amyrtaios/amunirdies": ["AAF_AAJ_AAC_AAA", "AAN_ABF"],
+    "anastasius i": ["AAF_AAK_AAD_AAH", "AAN_ABG"],
     "anat": "AAM_AAH_AAA",
-    "anat-her": [
-        "AAF_AAG_AAC_AAA",
-        "AAN_ABH"
-    ],
-    "anati": [
-        "AAF_AAG_AAA_AAZ",
-        "AAN_ABI"
-    ],
+    "anat-her": ["AAF_AAG_AAC_AAA", "AAN_ABH"],
+    "anati": ["AAF_AAG_AAA_AAZ", "AAN_ABI"],
     "anbish/inebis": "AAE_AAB_AAD_AAJ",
     "ancient kerma": "AAF_AAP_AAF_AAB",
     "ancient oriental museum [54/002]": "AAD_ACG_AAB_AAA",
     "ancona": "AAD_ABF_AAD",
     "andrews university [57/006]": "AAD_ACI_AAE_AAA",
     "anedjti": "AAM_AAA_AAI",
-    "aneterire": [
-        "AAF_AAG_AAC_AAL",
-        "AAN_ABJ"
-    ],
+    "aneterire": ["AAF_AAG_AAC_AAL", "AAN_ABJ"],
     "angers": "AAD_AAT_AAE",
     "anhydrite": "AAC_AAC_AAC_AAD",
     "aniba": "AAE_AAB_AAA_AAA_AAE",
@@ -6988,10 +6504,7 @@ MET_SIMPLE_REVERSED = {
     "ankara": "AAD_ACG_AAA",
     "ankh": "AAA_AAL_AAQ",
     "ankh-amulet": "AAA_AAF_AAA_AAA",
-    "ankhkare": [
-        "AAF_AAG_AAA_AAV",
-        "AAN_ABK"
-    ],
+    "ankhkare": ["AAF_AAG_AAA_AAV", "AAN_ABK"],
     "anklet": "AAA_AAF_AAB",
     "ann arbor (mi)": "AAD_ACI_AAA",
     "annals": "AAK_AAA",
@@ -7007,16 +6520,10 @@ MET_SIMPLE_REVERSED = {
     "antikmuseet [20/005]": "AAD_AAN_AAA_AAA",
     "antimony": "AAC_AAC_AAB_AAA",
     "antiquities museum [01/015]": "AAD_AAO_AAL_AAA",
-    "antoninus pius": [
-        "AAF_AAK_AAC_AAO",
-        "AAN_ABL"
-    ],
+    "antoninus pius": ["AAF_AAK_AAC_AAO", "AAN_ABL"],
     "antwerp": "AAD_AAF_AAA",
     "anty": "AAM_AAA_AAJ",
-    "anu/neferkamin ii": [
-        "AAF_AAE_AAA_AAM",
-        "AAN_ABM"
-    ],
+    "anu/neferkamin ii": ["AAF_AAE_AAA_AAM", "AAN_ABM"],
     "anubis": "AAM_AAA_AAK",
     "anukis/anuqet": "AAM_AAB_AAD",
     "apedemak": "AAM_AAE_AAA",
@@ -7028,39 +6535,21 @@ MET_SIMPLE_REVERSED = {
     "apollo": "AAM_AAC_AAB",
     "apollonia museum [39/002]": "AAD_ABK_AAB_AAA",
     "apophis": "AAM_AAA_AAM",
-    "apophis i/nebkhepeshre": [
-        "AAF_AAG_AAB_AAC",
-        "AAN_ABN"
-    ],
-    "apophis ii/aaenqenenre": [
-        "AAF_AAG_AAB_AAH",
-        "AAN_ABO"
-    ],
+    "apophis i/nebkhepeshre": ["AAF_AAG_AAB_AAC", "AAN_ABN"],
+    "apophis ii/aaenqenenre": ["AAF_AAG_AAB_AAH", "AAN_ABO"],
     "appearing from the palace": "AAB_AAJ_AAE_AAB",
     "appenzell": "AAD_ACC_AAA",
     "application": "AAG_AAB_AAA",
-    "apries/haaibre": [
-        "AAF_AAJ_AAA_AAD",
-        "AAN_ABP"
-    ],
+    "apries/haaibre": ["AAF_AAJ_AAA_AAD", "AAN_ABP"],
     "apron": "AAA_AAC_AAA",
     "aquila": "AAD_ABF_AAE",
     "aquileia": "AAD_ABF_AAF",
     "arab el-`aliqat": "AAE_AAC_AAD_AAB",
     "arab el-hisn": "AAE_AAB_AAJ_AAB",
     "arab miteir": "AAE_AAB_AAE_AAE",
-    "arabic": [
-        "AAI_AAB",
-        "AAJ_AAB"
-    ],
-    "aramaic": [
-        "AAI_AAC",
-        "AAJ_AAC"
-    ],
-    "arcadius": [
-        "AAF_AAK_AAD_AAA",
-        "AAN_ABQ"
-    ],
+    "arabic": ["AAI_AAB", "AAJ_AAB"],
+    "aramaic": ["AAI_AAC", "AAJ_AAC"],
+    "arcadius": ["AAF_AAK_AAD_AAA", "AAN_ABQ"],
     "archaeological museum [27/003]": "AAD_AAY_AAB_AAA",
     "archaeological museum [27/008]": "AAD_AAY_AAG_AAA",
     "archaeological museum of st. vladimir university [55/004]": "AAD_ACJ_AAD_AAA",
@@ -7073,10 +6562,7 @@ MET_SIMPLE_REVERSED = {
     "architectural model": "AAA_AAG_AAA",
     "architectural unit": "AAA_AAB_AAC",
     "architecture": "AAA_AAB",
-    "architrave": [
-        "AAA_AAB_AAB_AAB_AAA",
-        "AAA_AAB_AAB_AAF_AAF"
-    ],
+    "architrave": ["AAA_AAB_AAB_AAB_AAA", "AAA_AAB_AAB_AAF_AAF"],
     "archives et mus\u00e9e de la litt\u00e9rature, biblioth\u00e8que royale albert i [07/002]": "AAD_AAF_AAC_AAA",
     "arch\u00e4ologische sammlung der universit\u00e4t [04/023]": "AAD_AAV_AAT_AAA",
     "arch\u00e4ologische sammlung der universit\u00e4t z\u00fcrich [08/024]": "AAD_ACC_ABJ_AAA",
@@ -7113,61 +6599,37 @@ MET_SIMPLE_REVERSED = {
     "arrabet abydos": "AAE_AAB_AAD_AAM",
     "arrow": "AAA_AAE_AAT_AAA",
     "arrow head": "AAA_AAE_AAT_AAA_AAA",
-    "arses": [
-        "AAF_AAJ_AAF_AAB",
-        "AAN_ABR"
-    ],
-    "arsinoe ii": [
-        "AAF_AAK_AAB_AAC",
-        "AAN_ABS"
-    ],
+    "arses": ["AAF_AAJ_AAF_AAB", "AAN_ABR"],
+    "arsinoe ii": ["AAF_AAK_AAB_AAC", "AAN_ABS"],
     "art gallery and museum [03/117]": "AAD_ACK_ABC_AAA",
     "art gallery and museum, north gate house [03/027]": "AAD_ACK_AAK_AAA",
     "art institute [57/030]": "AAD_ACI_AAV_AAA",
     "art museum [57/072]": "AAD_ACI_ABW_AAA",
     "art museum of georgia [64/003]": "AAD_AAU_AAC_AAA",
-    "artaxerxes i": [
-        "AAF_AAJ_AAB_AAD",
-        "AAN_ABT"
-    ],
-    "artaxerxes iii": [
-        "AAF_AAJ_AAF_AAA",
-        "AAN_ABU"
-    ],
+    "artaxerxes i": ["AAF_AAJ_AAB_AAD", "AAN_ABT"],
+    "artaxerxes iii": ["AAF_AAJ_AAF_AAA", "AAN_ABU"],
     "artemis": "AAM_AAD_AAB",
     "aryballos": "AAA_AAJ_AAB",
     "asfun el-mata'na": "AAE_AAB_AAB_AAF",
     "asfun el-mata`na": "AAE_AAB_AAC_AAB_AAA",
-    "ash": [
-        "AAC_AAD_AAF_AAC",
-        "AAM_AAA_AAN"
-    ],
+    "ash": ["AAC_AAD_AAF_AAC", "AAM_AAA_AAN"],
     "ashes": "AAC_AAD_AAB",
     "ashkhabad": "AAD_ACH_AAA",
     "ashmolean museum [03/074]": "AAD_ACK_ACJ_AAA",
-    "asiatic": [
-        "AAB_AAF_AAA_AAL_AAA",
-        "AAB_AAF_AAB_AAK_AAA"
-    ],
+    "asiatic": ["AAB_AAF_AAA_AAL_AAA", "AAB_AAF_AAB_AAK_AAA"],
     "asiut": "AAE_AAB_AAE_AAA",
     "asklepios-imhotep": "AAM_AAC_AAD",
     "askut island": "AAE_AAA_AAJ",
     "asmant": "AAE_AAE_AAA_AAB_AAC",
     "asmant el-kharab": "AAE_AAE_AAA_AAB_AAD",
     "asola": "AAD_ABF_AAG",
-    "asosi/djedkare": [
-        "AAF_AAD_AAC_AAH",
-        "AAN_ABV"
-    ],
+    "asosi/djedkare": ["AAF_AAD_AAC_AAH", "AAN_ABV"],
     "assisi": "AAD_ABF_AAH",
     "astarte": "AAM_AAH_AAB",
     "asti": "AAD_ABF_AAI",
     "astronomic scene": "AAB_AAJ_AAB",
     "astronomical/astrological text": "AAL_AAQ_AAA",
-    "aswan": [
-        "AAD_AAO_AAB",
-        "AAE_AAB_AAA_AAB_AAC"
-    ],
+    "aswan": ["AAD_AAO_AAB", "AAE_AAB_AAA_AAB_AAC"],
     "aswan and the rest of the governorate": "AAE_AAB_AAA_AAB",
     "aswan museum [01/023]": "AAD_AAO_AAB_AAA",
     "aswan west": "AAE_AAB_AAA_AAB_AAD",
@@ -7179,14 +6641,8 @@ MET_SIMPLE_REVERSED = {
     "athena": "AAM_AAD_AAC",
     "athens": "AAD_AAY_AAA",
     "atlanta (ga)": "AAD_ACI_AAB",
-    "atoti": [
-        "AAF_AAC_AAA_AAB",
-        "AAN_ABW"
-    ],
-    "attendant": [
-        "AAB_AAF_AAA_AAS",
-        "AAB_AAF_AAB_AAP"
-    ],
+    "atoti": ["AAF_AAC_AAA_AAB", "AAN_ABW"],
+    "attendant": ["AAB_AAF_AAA_AAS", "AAB_AAF_AAB_AAP"],
     "attending to the cult statue": "AAB_AAJ_AAE_AAC",
     "attitude": "AAB_AAC",
     "attitude of arms/hands": "AAB_AAC_AAA",
@@ -7197,23 +6653,14 @@ MET_SIMPLE_REVERSED = {
     "auch": "AAD_AAT_AAH",
     "auckland": "AAD_ABP_AAA",
     "augst": "AAD_ACC_AAB",
-    "augustus": [
-        "AAF_AAK_AAC_AAA",
-        "AAN_ABX"
-    ],
-    "aurelian": [
-        "AAF_AAK_AAC_ABQ",
-        "AAN_ABY"
-    ],
+    "augustus": ["AAF_AAK_AAC_AAA", "AAN_ABX"],
+    "aurelian": ["AAF_AAK_AAC_ABQ", "AAN_ABY"],
     "ausim": "AAE_AAB_AAI_AAH",
     "australia [12]": "AAD_AAC",
     "australian institute of archaeology [12/004]": "AAD_AAC_AAC_AAA",
     "australian museum [12/008]": "AAD_AAC_AAE_AAA",
     "austria [09]": "AAD_AAD",
-    "autibre": [
-        "AAF_AAG_AAA_AAK",
-        "AAN_ABZ"
-    ],
+    "autibre": ["AAF_AAG_AAA_AAK", "AAN_ABZ"],
     "autun": "AAD_AAT_AAI",
     "auxerre": "AAD_AAT_AAJ",
     "avenches": "AAD_ACC_AAC",
@@ -7224,25 +6671,13 @@ MET_SIMPLE_REVERSED = {
     "awlad `azzaz": "AAE_AAB_AAD_AAN",
     "awlad salama": "AAE_AAB_AAD_AAO",
     "awlad yehia": "AAE_AAB_AAD_AAP",
-    "axe": [
-        "AAA_AAE_AAD_AAC",
-        "AAA_AAE_AAT_AAB"
-    ],
+    "axe": ["AAA_AAE_AAD_AAC", "AAA_AAE_AAT_AAB"],
     "axe (model)": "AAA_AAG_AAR_AAB",
-    "ay/kheperkheperure": [
-        "AAF_AAH_AAA_AAM",
-        "AAN_ACA"
-    ],
-    "ay/meryneferre": [
-        "AAF_AAF_AAC_ABA",
-        "AAN_ACB"
-    ],
+    "ay/kheperkheperure": ["AAF_AAH_AAA_AAM", "AAN_ACA"],
+    "ay/meryneferre": ["AAF_AAF_AAC_ABA", "AAN_ACB"],
     "azerbaijan [63]": "AAD_AAE",
     "azure (egyptian blue)": "AAC_AAC_AAC_AAE",
-    "ba": [
-        "AAF_AAC_AAB_AAM",
-        "AAN_ACC"
-    ],
+    "ba": ["AAF_AAC_AAB_AAM", "AAN_ACC"],
     "ba-bird": "AAB_AAG_AAE_AAB_AAA",
     "baal": "AAM_AAG_AAA",
     "back": "AAB_AAC_AAD_AAB",
@@ -7258,10 +6693,7 @@ MET_SIMPLE_REVERSED = {
     "baghdad": "AAD_ABD_AAA",
     "bagshaw museum [03/018]": "AAD_ACK_AAD_AAA",
     "bahriya oases": "AAE_AAE_AAA_AAA",
-    "bakenrenef/bokkhoris/wahkare": [
-        "AAF_AAI_AAF_AAE",
-        "AAN_ACD"
-    ],
+    "bakenrenef/bokkhoris/wahkare": ["AAF_AAI_AAF_AAE", "AAN_ACD"],
     "bakery": "AAB_AAJ_AAH_AAA",
     "bakery (model)": "AAA_AAG_AAB",
     "bakhchisarai": "AAD_ACJ_AAA",
@@ -7270,10 +6702,7 @@ MET_SIMPLE_REVERSED = {
     "balance": "AAA_AAE_AAM_AAA",
     "balansura": "AAE_AAB_AAF_AAE",
     "balat": "AAE_AAE_AAA_AAB_AAE",
-    "balbinus": [
-        "AAF_AAK_AAC_ABE",
-        "AAN_ACE"
-    ],
+    "balbinus": ["AAF_AAK_AAC_ABE", "AAN_ACE"],
     "ball": "AAA_AAE_AAR_AAA",
     "ball game": "AAB_AAJ_AAQ_AAA",
     "ball of sling": "AAA_AAE_AAT_AAO_AAA",
@@ -7299,10 +6728,7 @@ MET_SIMPLE_REVERSED = {
     "base": "AAA_AAB_AAB_AAC_AAB",
     "base-ring juglet": "AAA_AAJ_AAC",
     "basel": "AAD_ACC_AAD",
-    "basiliscus": [
-        "AAF_AAK_AAD_AAG",
-        "AAN_ACF"
-    ],
+    "basiliscus": ["AAF_AAK_AAD_AAG", "AAN_ACF"],
     "basin": "AAA_AAJ_AAD",
     "basket": "AAA_AAD_AAA",
     "basket lid": "AAA_AAD_AAA_AAA",
@@ -7317,26 +6743,14 @@ MET_SIMPLE_REVERSED = {
     "bawit": "AAE_AAB_AAE_AAM",
     "bayonne": "AAD_AAT_AAM",
     "bead": "AAA_AAF_AAK_AAA",
-    "bead net": [
-        "AAA_AAC_AAB",
-        "AAA_AAO_AAJ_AAB"
-    ],
+    "bead net": ["AAA_AAC_AAB", "AAA_AAO_AAJ_AAB"],
     "beaune": "AAD_AAT_AAN",
-    "bebankh": [
-        "AAF_AAG_AAC_AAH",
-        "AAN_ACG"
-    ],
-    "bebnem": [
-        "AAF_AAG_AAA_ABA",
-        "AAN_ACH"
-    ],
+    "bebankh": ["AAF_AAG_AAC_AAH", "AAN_ACG"],
+    "bebnem": ["AAF_AAG_AAA_ABA", "AAN_ACH"],
     "bebon": "AAM_AAA_AAS",
     "bed": "AAA_AAD_AAB",
     "bed (model)": "AAA_AAG_AAJ_AAA",
-    "bedouin": [
-        "AAB_AAF_AAA_AAL_AAB",
-        "AAB_AAF_AAB_AAK_AAB"
-    ],
+    "bedouin": ["AAB_AAF_AAA_AAL_AAB", "AAB_AAF_AAB_AAK_AAB"],
     "beech": "AAC_AAD_AAF_AAD",
     "beer wort": "AAA_AAI_AAC_AAA",
     "beeswax": "AAC_AAD_AAA_AAA",
@@ -7354,11 +6768,7 @@ MET_SIMPLE_REVERSED = {
     "belgium [07]": "AAD_AAF",
     "belgrade": "AAD_ACP_AAA",
     "belida": "AAE_AAE_AAA_AAD_AAG",
-    "bell": [
-        "AAA_AAE_AAB_AAA_AAA",
-        "AAA_AAE_AAB_AAC_AAA",
-        "AAA_AAE_AAO_AAA_AAA"
-    ],
+    "bell": ["AAA_AAE_AAB_AAA_AAA", "AAA_AAE_AAB_AAC_AAA", "AAA_AAE_AAO_AAA_AAA"],
     "bellinzona": "AAD_ACC_AAE",
     "below": "AAB_AAI_AAE",
     "belt": "AAA_AAC_AAC",
@@ -7378,18 +6788,9 @@ MET_SIMPLE_REVERSED = {
     "benu/phoenix": "AAM_AAA_AAU",
     "bequest": "AAO_AAA",
     "berbe`a": "AAE_AAE_AAA_AAB_AAG",
-    "berenice ii": [
-        "AAF_AAK_AAB_AAE",
-        "AAN_ACI"
-    ],
-    "berenice iii": [
-        "AAF_AAK_AAB_AAP",
-        "AAN_ACJ"
-    ],
-    "berenice iv": [
-        "AAF_AAK_AAB_AAT",
-        "AAN_ACK"
-    ],
+    "berenice ii": ["AAF_AAK_AAB_AAE", "AAN_ACI"],
+    "berenice iii": ["AAF_AAK_AAB_AAP", "AAN_ACJ"],
+    "berenice iv": ["AAF_AAK_AAB_AAT", "AAN_ACK"],
     "bergamo": "AAD_ABF_AAK",
     "bergen": "AAD_ABQ_AAA",
     "berkeley (ca)": "AAD_ACI_AAD",
@@ -7417,10 +6818,7 @@ MET_SIMPLE_REVERSED = {
     "bier": "AAA_AAO_AAA",
     "bigga": "AAE_AAB_AAA_AAB_AAE",
     "bijbels museum [06/003]": "AAD_ABO_AAA_AAB",
-    "bikheris": [
-        "AAF_AAD_AAB_AAE",
-        "AAN_ACL"
-    ],
+    "bikheris": ["AAF_AAD_AAB_AAE", "AAN_ACL"],
     "bilad el-mal bahari": "AAE_AAB_AAB_AAJ",
     "bilad el-mal qibli": "AAE_AAB_AAB_AAK",
     "bilifya": "AAE_AAB_AAG_AAG",
@@ -7442,10 +6840,7 @@ MET_SIMPLE_REVERSED = {
     "bir shenifa": "AAE_AAC_AAJ_AAQ",
     "bir yusef": "AAE_AAE_AAA_AAA_AAJ",
     "birch": "AAC_AAD_AAF_AAE",
-    "bird": [
-        "AAA_AAI_AAA",
-        "AAB_AAB_AAB"
-    ],
+    "bird": ["AAA_AAI_AAA", "AAB_AAB_AAB"],
     "bird mummy": "AAA_AAI_AAA_AAA",
     "bird trap": "AAA_AAE_AAT_AAC",
     "bird with head of ram": "AAB_AAG_AAE_AAA",
@@ -7457,20 +6852,13 @@ MET_SIMPLE_REVERSED = {
     "birqash": "AAE_AAB_AAI_AAL",
     "birth (human/animal)": "AAB_AAJ_AAT_AAB",
     "birth legend": "AAB_AAJ_AAO_AAB",
-    "bit": [
-        "AAA_AAE_AAB_AAA_AAB",
-        "AAA_AAE_AAB_AAC_AAB",
-        "AAA_AAE_AAD_AAF_AAA"
-    ],
+    "bit": ["AAA_AAE_AAB_AAA_AAB", "AAA_AAE_AAB_AAC_AAB", "AAA_AAE_AAD_AAF_AAA"],
     "biting": "AAB_AAA_AAB",
     "biyahmu": "AAE_AAB_AAH_AAD",
     "blackburn": "AAD_ACK_AAH",
     "blackburn museum and art gallery [03/023]": "AAD_ACK_AAH_AAA",
     "blade": "AAA_AAE_AAD_AAI_AAA",
-    "blinker": [
-        "AAA_AAE_AAB_AAA_AAC",
-        "AAA_AAE_AAB_AAC_AAC"
-    ],
+    "blinker": ["AAA_AAE_AAB_AAA_AAC", "AAA_AAE_AAB_AAC_AAC"],
     "block": "AAA_AAB_AAB_AAV_AAA",
     "bloomfield hills (mi)": "AAD_ACI_AAG",
     "bloomington (in)": "AAD_ACI_AAH",
@@ -7486,10 +6874,7 @@ MET_SIMPLE_REVERSED = {
     "bochum": "AAD_AAV_AAD",
     "bogota": "AAD_AAI_AAA",
     "bologna": "AAD_ABF_AAM",
-    "bolt": [
-        "AAA_AAB_AAB_AAE_AAA",
-        "AAA_AAD_AAE_AAA"
-    ],
+    "bolt": ["AAA_AAB_AAB_AAE_AAA", "AAA_AAD_AAE_AAA"],
     "bolton": "AAD_ACK_AAI",
     "bolton museum and art gallery [03/024]": "AAD_ACK_AAI_AAA",
     "bombay": "AAD_ABB_AAB",
@@ -7514,10 +6899,7 @@ MET_SIMPLE_REVERSED = {
     "bourg-en-bresse": "AAD_AAT_AAT",
     "bourges": "AAD_AAT_AAU",
     "bournemouth": "AAD_ACK_AAJ",
-    "bow": [
-        "AAA_AAE_AAD_AAF_AAB",
-        "AAA_AAE_AAT_AAD"
-    ],
+    "bow": ["AAA_AAE_AAD_AAF_AAB", "AAA_AAE_AAT_AAD"],
     "bow-case": "AAA_AAE_AAT_AAE",
     "bowdoin college museum of art [57/012]": "AAD_ACI_AAK_AAA",
     "bowing": "AAB_AAC_AAB_AAA",
@@ -7549,10 +6931,7 @@ MET_SIMPLE_REVERSED = {
     "brick": "AAA_AAB_AAB_AAV_AAB",
     "brick mould": "AAA_AAE_AAC_AAA",
     "bridgestone museum of art, ishibashi foundation [35/004]": "AAD_ABG_AAD_AAA",
-    "bridle": [
-        "AAA_AAE_AAB_AAA_AAD",
-        "AAA_AAE_AAB_AAC_AAD"
-    ],
+    "bridle": ["AAA_AAE_AAB_AAA_AAD", "AAA_AAE_AAB_AAC_AAD"],
     "brighton": "AAD_ACK_AAK",
     "bringing funerary offerings": "AAB_AAJ_AAJ_AAA",
     "bringing of the foot (ini.t-rd)": "AAB_AAJ_AAE_AAW_AAA",
@@ -7590,10 +6969,7 @@ MET_SIMPLE_REVERSED = {
     "bulb": "AAA_AAI_AAH_AAC",
     "bull mummy": "AAA_AAI_AAF_AAD_AAA",
     "bulls fighting": "AAB_AAJ_AAD_AAC",
-    "burg el-`arab": [
-        "AAE_AAC_AAJ_AAC",
-        "AAE_AAC_AAJ_AAL"
-    ],
+    "burg el-`arab": ["AAE_AAC_AAJ_AAC", "AAE_AAC_AAJ_AAL"],
     "burgdorf": "AAD_ACC_AAJ",
     "burial chamber": "AAA_AAB_AAC_AAB_AAA",
     "burial procession": "AAB_AAJ_AAJ_AAB",
@@ -7626,16 +7002,10 @@ MET_SIMPLE_REVERSED = {
     "calcite/alabaster": "AAC_AAC_AAE_AAD",
     "calcutta": "AAD_ABB_AAC",
     "calendar": "AAK_AAC",
-    "caligula": [
-        "AAF_AAK_AAC_AAC",
-        "AAN_ACM"
-    ],
+    "caligula": ["AAF_AAK_AAC_AAC", "AAN_ACM"],
     "cambridge": "AAD_ACK_AAO",
     "cambridge (ma)": "AAD_ACI_AAN",
-    "cambyses/mestiure": [
-        "AAF_AAJ_AAB_AAA",
-        "AAN_ACN"
-    ],
+    "cambyses/mestiure": ["AAF_AAJ_AAB_AAA", "AAN_ACN"],
     "camel trappings": "AAA_AAE_AAB_AAA",
     "canada [14]": "AAD_AAH",
     "candelabrum": "AAA_AAE_AAI_AAA",
@@ -7656,27 +7026,15 @@ MET_SIMPLE_REVERSED = {
     "canopic shrine panel": "AAA_AAO_AAE_AAB",
     "canterbury": "AAD_ACK_AAP",
     "cantharos": "AAA_AAJ_AAG",
-    "cap": [
-        "AAA_AAC_AAF",
-        "AAA_AAO_AAJ_AAE"
-    ],
+    "cap": ["AAA_AAC_AAF", "AAA_AAO_AAJ_AAE"],
     "cape town": "AAD_ABX_AAA",
     "capital": "AAA_AAB_AAB_AAC_AAD",
     "capital of column (model)": "AAA_AAG_AAA_AAA",
     "caption": "AAK_AAD",
-    "caracalla": [
-        "AAF_AAK_AAC_AAV",
-        "AAN_ACO"
-    ],
+    "caracalla": ["AAF_AAK_AAC_AAV", "AAN_ACO"],
     "caracas": "AAD_ACN_AAA",
-    "carian": [
-        "AAI_AAD",
-        "AAJ_AAD"
-    ],
-    "carinus and numerius": [
-        "AAF_AAK_AAC_ABU",
-        "AAN_ACP"
-    ],
+    "carian": ["AAI_AAD", "AAJ_AAD"],
+    "carinus and numerius": ["AAF_AAK_AAC_ABU", "AAN_ACP"],
     "carnegie museum [06/007]": "AAD_ABO_AAD_AAA",
     "carnelian": "AAC_AAC_AAC_AAG",
     "carob": "AAC_AAD_AAF_AAG",
@@ -7689,16 +7047,10 @@ MET_SIMPLE_REVERSED = {
     "carrying ring for razor, tweezers, pick": "AAA_AAE_AAF_AAA",
     "carthage": "AAD_ACF_AAA",
     "cartouche": "AAN_ARB",
-    "carus": [
-        "AAF_AAK_AAC_ABT",
-        "AAN_ACQ"
-    ],
+    "carus": ["AAF_AAK_AAC_ABT", "AAN_ACQ"],
     "carved": "AAG_AAE_AAA",
     "casale monferrato": "AAD_ABF_AAP",
-    "case": [
-        "AAA_AAE_AAF_AAG_AAA",
-        "AAA_AAE_AAF_AAL_AAA"
-    ],
+    "case": ["AAA_AAE_AAF_AAG_AAA", "AAA_AAE_AAF_AAL_AAA"],
     "casing stone": "AAA_AAB_AAB_AAV_AAC",
     "castanet": "AAA_AAE_AAO_AAA_AAB",
     "castel grande [08/006]": "AAD_ACC_AAE_AAA",
@@ -7736,17 +7088,11 @@ MET_SIMPLE_REVERSED = {
     "chalcolithic period": "AAF_AAA_AAC",
     "chalice": "AAA_AAJ_AAH",
     "chalon-sur-sa\u00f4ne": "AAD_AAT_ABA",
-    "chapel": [
-        "AAA_AAB_AAC_AAA_AAA",
-        "AAA_AAB_AAC_AAB_AAB"
-    ],
+    "chapel": ["AAA_AAB_AAC_AAA_AAA", "AAA_AAB_AAC_AAB_AAB"],
     "chapel (model)": "AAA_AAG_AAA_AAB",
     "chapel hill (nc)": "AAD_ACI_AAO",
     "charcoal": "AAC_AAD_AAC",
-    "chariot": [
-        "AAA_AAE_AAS_AAB",
-        "AAB_AAJ_AAM_AAD"
-    ],
+    "chariot": ["AAA_AAE_AAS_AAB", "AAB_AAJ_AAM_AAD"],
     "chariot workshop": "AAB_AAJ_AAL_AAC",
     "charleston (sc)": "AAD_ACI_AAP",
     "charterhouse school museum [03/045]": "AAD_ACK_ABE_AAA",
@@ -7758,14 +7104,8 @@ MET_SIMPLE_REVERSED = {
     "cheironomy": "AAB_AAJ_AAN_AAB",
     "chelmsford": "AAD_ACK_AAQ",
     "chelmsford and essex museum [03/034]": "AAD_ACK_AAQ_AAA",
-    "cheops/khufu": [
-        "AAF_AAD_AAB_AAB",
-        "AAN_AGU"
-    ],
-    "chephren/khafre": [
-        "AAF_AAD_AAB_AAD",
-        "AAN_ACR"
-    ],
+    "cheops/khufu": ["AAF_AAD_AAB_AAB", "AAN_AGU"],
+    "chephren/khafre": ["AAF_AAD_AAB_AAD", "AAN_ACR"],
     "cherasco": "AAD_ABF_AAR",
     "cherbourg": "AAD_AAT_ABE",
     "chicago (il)": "AAD_ACI_AAQ",
@@ -7807,39 +7147,15 @@ MET_SIMPLE_REVERSED = {
     "clark museum [57/032]": "AAD_ACI_AAX_AAA",
     "clasp": "AAA_AAF_AAK_AAB",
     "classical kerma": "AAF_AAP_AAF_AAD",
-    "claudius": [
-        "AAF_AAK_AAC_AAD",
-        "AAN_ACS"
-    ],
-    "claudius ii": [
-        "AAF_AAK_AAC_ABO",
-        "AAN_ACT"
-    ],
+    "claudius": ["AAF_AAK_AAC_AAD", "AAN_ACS"],
+    "claudius ii": ["AAF_AAK_AAC_ABO", "AAN_ACT"],
     "clay": "AAC_AAC_AAD_AAC",
-    "cleopatra i": [
-        "AAF_AAK_AAB_AAH",
-        "AAN_ACU"
-    ],
-    "cleopatra ii": [
-        "AAF_AAK_AAB_AAL",
-        "AAN_ACV"
-    ],
-    "cleopatra iii": [
-        "AAF_AAK_AAB_AAM",
-        "AAN_ACW"
-    ],
-    "cleopatra v": [
-        "AAF_AAK_AAB_AAR",
-        "AAN_ACX"
-    ],
-    "cleopatra vi": [
-        "AAF_AAK_AAB_AAU",
-        "AAN_ACY"
-    ],
-    "cleopatra vii philopator": [
-        "AAF_AAK_AAB_AAV",
-        "AAN_ACZ"
-    ],
+    "cleopatra i": ["AAF_AAK_AAB_AAH", "AAN_ACU"],
+    "cleopatra ii": ["AAF_AAK_AAB_AAL", "AAN_ACV"],
+    "cleopatra iii": ["AAF_AAK_AAB_AAM", "AAN_ACW"],
+    "cleopatra v": ["AAF_AAK_AAB_AAR", "AAN_ACX"],
+    "cleopatra vi": ["AAF_AAK_AAB_AAU", "AAN_ACY"],
+    "cleopatra vii philopator": ["AAF_AAK_AAB_AAV", "AAN_ACZ"],
     "clepsydra": "AAA_AAE_AAK_AAA",
     "clermont ferrand": "AAD_AAT_ABF",
     "cleveland (oh)": "AAD_ACI_AAS",
@@ -7885,17 +7201,11 @@ MET_SIMPLE_REVERSED = {
     "columbus (oh)": "AAD_ACI_AAT",
     "column (model)": "AAA_AAG_AAA_AAC",
     "column/pillar": "AAA_AAB_AAB_AAC",
-    "comb": [
-        "AAA_AAE_AAF_AAB",
-        "AAA_AAE_AAQ_AAA"
-    ],
+    "comb": ["AAA_AAE_AAF_AAB", "AAA_AAE_AAQ_AAA"],
     "commemorative scarab": "AAA_AAM_AAB_AAA",
     "commemorative text": "AAK_AAE",
     "commercial museum [57/068]": "AAD_ACI_ABV_AAA",
-    "commodos": [
-        "AAF_AAK_AAC_AAR",
-        "AAN_ADA"
-    ],
+    "commodos": ["AAF_AAK_AAC_AAR", "AAN_ADA"],
     "como": "AAD_ABF_AAT",
     "compi\u00e8gne": "AAD_AAT_ABI",
     "complete": "AAH_AAA",
@@ -7906,10 +7216,7 @@ MET_SIMPLE_REVERSED = {
     "conical": "AAB_AAK_AAE",
     "consecration of a temple": "AAB_AAJ_AAE_AAF",
     "consecration of offerings": "AAB_AAJ_AAE_AAE",
-    "constantine the great": [
-        "AAF_AAK_AAC_ABX",
-        "AAN_ADB"
-    ],
+    "constantine the great": ["AAF_AAK_AAC_ABX", "AAN_ADB"],
     "constructing": "AAB_AAJ_AAC_AAA",
     "contra apollonospolis": "AAE_AAB_AAA_AAB_AAI",
     "contract": "AAL_AAG_AAB",
@@ -7920,10 +7227,7 @@ MET_SIMPLE_REVERSED = {
     "copenhagen": "AAD_AAN_AAB",
     "coping block": "AAA_AAB_AAB_AAV_AAD",
     "copper": "AAC_AAC_AAB_AAB",
-    "coptic": [
-        "AAI_AAE",
-        "AAJ_AAE"
-    ],
+    "coptic": ["AAI_AAE", "AAJ_AAE"],
     "coptic museum [01/002]": "AAD_AAO_AAD_AAF",
     "coptic period": "AAF_AAL",
     "coptic textile": "AAA_AAC_AAE",
@@ -7935,10 +7239,7 @@ MET_SIMPLE_REVERSED = {
     "corneto": "AAD_ABF_AAU",
     "cornice": "AAA_AAB_AAB_AAB_AAB",
     "coronation of the king": "AAB_AAJ_AAO_AAC",
-    "corridor": [
-        "AAA_AAB_AAC_AAA_AAE",
-        "AAA_AAB_AAC_AAB_AAF"
-    ],
+    "corridor": ["AAA_AAB_AAC_AAA_AAE", "AAA_AAB_AAC_AAB_AAF"],
     "cortona": "AAD_ABF_AAV",
     "coru\u00f1a, la": "AAD_ABY_AAE",
     "cosmetic and medical equipment and implements": "AAA_AAE_AAF",
@@ -8003,18 +7304,9 @@ MET_SIMPLE_REVERSED = {
     "dancing dwarfs": "AAA_AAE_AAR_AAB",
     "daraw": "AAE_AAB_AAA_AAB_AAJ",
     "darb el-`arba`in": "AAE_AAB_AAE_AAF",
-    "darius i/setutre-merienre": [
-        "AAF_AAJ_AAB_AAB",
-        "AAN_ADC"
-    ],
-    "darius ii": [
-        "AAF_AAJ_AAB_AAE",
-        "AAN_ADD"
-    ],
-    "darius iii": [
-        "AAF_AAJ_AAF_AAC",
-        "AAN_ADE"
-    ],
+    "darius i/setutre-merienre": ["AAF_AAJ_AAB_AAB", "AAN_ADC"],
+    "darius ii": ["AAF_AAJ_AAB_AAE", "AAN_ADD"],
+    "darius iii": ["AAF_AAJ_AAF_AAC", "AAN_ADE"],
     "darmstadt": "AAD_AAV_AAI",
     "dartmouth college museum and galleries [57/035]": "AAD_ACI_AAZ_AAA",
     "das deutsche brotmuseum [04/053]": "AAD_AAV_ABQ_AAA",
@@ -8026,22 +7318,13 @@ MET_SIMPLE_REVERSED = {
     "debris": "AAC_AAC_AAD_AAG",
     "deceased drinking": "AAB_AAJ_AAS_AAD",
     "deceased quenched by the tree goddess": "AAB_AAJ_AAS_AAE",
-    "decius": [
-        "AAF_AAK_AAC_ABI",
-        "AAN_ADF"
-    ],
+    "decius": ["AAF_AAK_AAC_ABI", "AAN_ADF"],
     "deckhouse (model)": "AAA_AAG_AAC_AAC_AAE",
     "decorated on the potter's wheel": "AAG_AAF_AAC",
     "decree": "AAK_AAF",
     "dedication": "AAK_AAG",
-    "dedumose i/djedneferre": [
-        "AAF_AAF_AAC_ABG",
-        "AAN_ADG"
-    ],
-    "dedumose ii/djedhotepre": [
-        "AAF_AAF_AAC_ABV",
-        "AAN_ADH"
-    ],
+    "dedumose i/djedneferre": ["AAF_AAF_AAC_ABG", "AAN_ADG"],
+    "dedumose ii/djedhotepre": ["AAF_AAF_AAC_ABV", "AAN_ADH"],
     "dedwen": "AAM_AAA_AAX",
     "deed": "AAK_AAH",
     "deed of association": "AAL_AAG_AAB_AAC",
@@ -8062,10 +7345,7 @@ MET_SIMPLE_REVERSED = {
     "deir el-banat": "AAE_AAB_AAH_AAF",
     "deir el-gabrawi": "AAE_AAB_AAE_AAU",
     "deir el-hadid": "AAE_AAB_AAG_AAH",
-    "deir el-hagar": [
-        "AAE_AAE_AAA_AAB_AAI",
-        "AAE_AAE_AAA_AAD_AAK"
-    ],
+    "deir el-hagar": ["AAE_AAE_AAA_AAB_AAI", "AAE_AAE_AAA_AAD_AAK"],
     "deir el-medinah": "AAE_AAB_AAC_AAB_AAG",
     "deir el-quseir": "AAE_AAB_AAE_ABG",
     "deir el-shalwit": "AAE_AAB_AAC_AAB_AAH",
@@ -8076,10 +7356,7 @@ MET_SIMPLE_REVERSED = {
     "demon": "AAB_AAE_AAC",
     "demon with bizarre head": "AAB_AAE_AAC_AAA",
     "demon with double head": "AAB_AAE_AAC_AAB",
-    "demotic": [
-        "AAI_AAF",
-        "AAJ_AAL"
-    ],
+    "demotic": ["AAI_AAF", "AAJ_AAL"],
     "dendur": "AAE_AAB_AAA_AAA_AAJ",
     "denisa": "AAE_AAE_AAA_AAA_AAK",
     "denmark [20]": "AAD_AAN",
@@ -8092,36 +7369,23 @@ MET_SIMPLE_REVERSED = {
     "detmold": "AAD_AAV_AAJ",
     "detroit (mi)": "AAD_ACI_AAX",
     "deutsches ledermuseum mit deutschem schuhmuseum [04/046]": "AAD_AAV_ABJ_AAA",
-    "dewen/udimu": [
-        "AAF_AAC_AAA_AAE",
-        "AAN_ADI"
-    ],
+    "dewen/udimu": ["AAF_AAC_AAA_AAE", "AAN_ADI"],
     "dewsbury": "AAD_ACK_AAW",
     "diadem": "AAA_AAF_AAE",
-    "diadumenianus": [
-        "AAF_AAK_AAC_AAY",
-        "AAN_ADJ"
-    ],
+    "diadumenianus": ["AAF_AAK_AAC_AAY", "AAN_ADJ"],
     "diakonie-museum [04/031]": "AAD_AAV_ABA_AAA",
     "dibeira east": "AAE_AAA_AAP",
     "dibeira west": "AAE_AAA_AAQ",
     "dice/astragal": "AAA_AAE_AAH_AAA",
     "dijon": "AAD_AAT_ABJ",
     "dimu": "AAE_AAB_AAH_AAG",
-    "diocletian": [
-        "AAF_AAK_AAC_ABV",
-        "AAN_ADK"
-    ],
+    "diocletian": ["AAF_AAK_AAC_ABV", "AAN_ADK"],
     "dionysus": "AAM_AAC_AAE",
     "diorite": "AAC_AAC_AAE_AAE",
     "dira` abu el-naga": "AAE_AAB_AAC_AAB_AAI",
     "disc": "AAA_AAE_AAF_AAG_AAB",
     "discourse": "AAL_AAI_AAA",
-    "dish": [
-        "AAA_AAE_AAF_AAC",
-        "AAA_AAG_AAU_AAA",
-        "AAA_AAJ_AAK"
-    ],
+    "dish": ["AAA_AAE_AAF_AAC", "AAA_AAG_AAU_AAA", "AAA_AAJ_AAK"],
     "dishasha": "AAE_AAB_AAG_AAI",
     "dishna": "AAE_AAB_AAB_AAP",
     "distaff": "AAA_AAE_AAQ_AAB",
@@ -8140,42 +7404,15 @@ MET_SIMPLE_REVERSED = {
     "division after excavation": "AAO_AAD",
     "divorce document": "AAL_AAG_AAB_AAJ",
     "djed-amulet": "AAA_AAF_AAA_AAC",
-    "djedefre": [
-        "AAF_AAD_AAB_AAC",
-        "AAN_ADL"
-    ],
-    "djedkare": [
-        "AAF_AAG_AAA_AAX",
-        "AAN_ADM"
-    ],
-    "djedkherure": [
-        "AAF_AAG_AAA_AAO",
-        "AAN_ADN"
-    ],
-    "djedkhonsiufankh": [
-        "AAF_AAI_AAB_AAD",
-        "AAN_ADO"
-    ],
-    "djehutiemhat/neferkheperre-khakhau": [
-        "AAF_AAI_AAF_AAB",
-        "AAN_ADP"
-    ],
-    "djehuty/sekhemresementawy": [
-        "AAF_AAG_AAD_AAD",
-        "AAN_ADQ"
-    ],
-    "djer": [
-        "AAF_AAC_AAA_AAC",
-        "AAN_ADR"
-    ],
-    "djoser teti/sekhemkhet": [
-        "AAF_AAD_AAA_AAC",
-        "AAN_ADS"
-    ],
-    "djoser/netjerikhet": [
-        "AAF_AAD_AAA_AAB",
-        "AAN_ADT"
-    ],
+    "djedefre": ["AAF_AAD_AAB_AAC", "AAN_ADL"],
+    "djedkare": ["AAF_AAG_AAA_AAX", "AAN_ADM"],
+    "djedkherure": ["AAF_AAG_AAA_AAO", "AAN_ADN"],
+    "djedkhonsiufankh": ["AAF_AAI_AAB_AAD", "AAN_ADO"],
+    "djehutiemhat/neferkheperre-khakhau": ["AAF_AAI_AAF_AAB", "AAN_ADP"],
+    "djehuty/sekhemresementawy": ["AAF_AAG_AAD_AAD", "AAN_ADQ"],
+    "djer": ["AAF_AAC_AAA_AAC", "AAN_ADR"],
+    "djoser teti/sekhemkhet": ["AAF_AAD_AAA_AAC", "AAN_ADS"],
+    "djoser/netjerikhet": ["AAF_AAD_AAA_AAB", "AAN_ADT"],
     "dnapropetrovsk": "AAD_ACJ_AAB",
     "dnapropetrovsk museum of history [55/002]": "AAD_ACJ_AAB_AAA",
     "document of exchange": "AAL_AAG_AAB_AAK",
@@ -8187,10 +7424,7 @@ MET_SIMPLE_REVERSED = {
     "dom palm": "AAC_AAD_AAF_AAL",
     "domestic equipment and utensils": "AAA_AAE_AAG",
     "dominion museum [44/005]": "AAD_ABP_AAE_AAA",
-    "domitian": [
-        "AAF_AAK_AAC_AAK",
-        "AAN_ADU"
-    ],
+    "domitian": ["AAF_AAK_AAC_AAK", "AAN_ADU"],
     "domodossola": "AAD_ABF_AAX",
     "donation text": "AAL_AAU_AAD",
     "door": "AAA_AAB_AAB_AAE",
@@ -8205,10 +7439,7 @@ MET_SIMPLE_REVERSED = {
     "dovetail (joint)": "AAG_AAB_AAC",
     "dowel": "AAA_AAE_AAD_AAE",
     "drainage channel": "AAA_AAB_AAB_ABE",
-    "dramatic text": [
-        "AAL_AAS_AAA_AAB",
-        "AAL_AAS_AAB_AAA"
-    ],
+    "dramatic text": ["AAL_AAS_AAA_AAB", "AAL_AAS_AAB_AAA"],
     "dramatical text": "AAK_AAI",
     "drawing": "AAG_AAB_AAD",
     "dream interpretation": "AAL_AAC",
@@ -8219,11 +7450,7 @@ MET_SIMPLE_REVERSED = {
     "drilling": "AAB_AAJ_AAL_AAI_AAA",
     "drinking": "AAB_AAA_AAH",
     "driving of four calves": "AAB_AAJ_AAE_AAK",
-    "drum": [
-        "AAA_AAB_AAB_AAC_AAE",
-        "AAA_AAB_AAB_AAE_AAB",
-        "AAA_AAB_AAB_AAF_AAA"
-    ],
+    "drum": ["AAA_AAB_AAB_AAC_AAE", "AAA_AAB_AAB_AAE_AAB", "AAA_AAB_AAB_AAF_AAA"],
     "drying (fish/meat)": "AAB_AAJ_AAH_AAE",
     "dua": "AAM_AAA_AAY",
     "duai": "AAM_AAA_AAZ",
@@ -8316,10 +7543,7 @@ MET_SIMPLE_REVERSED = {
     "el-`arky": "AAE_AAB_AAB_AAD",
     "el-`atamna": "AAE_AAB_AAE_AAG",
     "el-`aziziya": "AAE_AAB_AAI_AAI",
-    "el-`idwa": [
-        "AAE_AAB_AAF_AAM",
-        "AAE_AAB_AAH_AAU"
-    ],
+    "el-`idwa": ["AAE_AAB_AAF_AAM", "AAE_AAB_AAH_AAU"],
     "el-`omayyid": "AAE_AAC_AAJ_AAG",
     "el-`uyun": "AAE_AAE_AAA_AAA_ABS",
     "el-aghana": "AAE_AAB_AAD_AAC",
@@ -8331,10 +7555,7 @@ MET_SIMPLE_REVERSED = {
     "el-assasif": "AAE_AAB_AAC_AAB_AAB",
     "el-atawla": "AAE_AAB_AAE_AAH",
     "el-badari": "AAE_AAB_AAE_AAJ",
-    "el-bahari qamula": [
-        "AAE_AAB_AAB_AAG",
-        "AAE_AAB_AAB_AAQ"
-    ],
+    "el-bahari qamula": ["AAE_AAB_AAB_AAG", "AAE_AAB_AAB_AAQ"],
     "el-bahnasa": "AAE_AAB_AAF_AAD",
     "el-bahrain": "AAE_AAE_AAC_AAB",
     "el-balabish": "AAE_AAB_AAD_AAQ",
@@ -8372,10 +7593,7 @@ MET_SIMPLE_REVERSED = {
     "el-hagz el-qibli": "AAE_AAB_AAA_AAB_AAT",
     "el-haiyz": "AAE_AAE_AAA_AAA_AAQ",
     "el-halfaya qibli": "AAE_AAB_AAB_AAZ",
-    "el-hammam": [
-        "AAE_AAB_AAG_AAL",
-        "AAE_AAC_AAJ_AAM"
-    ],
+    "el-hammam": ["AAE_AAB_AAG_AAL", "AAE_AAC_AAJ_AAM"],
     "el-hammamiya": "AAE_AAB_AAE_AAW",
     "el-hamuli": "AAE_AAB_AAH_AAR",
     "el-haraga": "AAE_AAB_AAG_AAM",
@@ -8384,10 +7602,7 @@ MET_SIMPLE_REVERSED = {
     "el-hawata el-sharqiya": "AAE_AAB_AAE_AAX",
     "el-hawawish": "AAE_AAB_AAD_ABK",
     "el-hazindariya": "AAE_AAB_AAD_ABQ",
-    "el-hiba": [
-        "AAE_AAB_AAF_AAQ",
-        "AAE_AAB_AAG_AAN"
-    ],
+    "el-hiba": ["AAE_AAB_AAF_AAQ", "AAE_AAB_AAG_AAN"],
     "el-hilla/contra latopolis": "AAE_AAB_AAB_AAL",
     "el-hisar": "AAE_AAB_AAI_AAR",
     "el-hosh": "AAE_AAB_AAA_AAB_AAY",
@@ -8409,10 +7624,7 @@ MET_SIMPLE_REVERSED = {
     "el-kiman el-homr": "AAE_AAB_AAF_AAT",
     "el-kom el-ahmar": "AAE_AAB_AAB_AAC",
     "el-kom el-ahmar/hierakonpolis/nekhen": "AAE_AAB_AAA_AAB_AAB",
-    "el-kula (1)": [
-        "AAE_AAB_AAA_AAB_ABJ",
-        "AAE_AAB_AAD_ABR"
-    ],
+    "el-kula (1)": ["AAE_AAB_AAA_AAB_ABJ", "AAE_AAB_AAD_ABR"],
     "el-kula (2)": "AAE_AAB_AAD_ABS",
     "el-kureimat": "AAE_AAB_AAI_AAW",
     "el-kurru": "AAE_AAA_ABA",
@@ -8420,14 +7632,8 @@ MET_SIMPLE_REVERSED = {
     "el-lessiya": "AAE_AAB_AAA_AAA_AAR",
     "el-lisht": "AAE_AAB_AAI_AAX",
     "el-ma`adi": "AAE_AAB_AAJ_AAF",
-    "el-ma`sara": [
-        "AAE_AAE_AAA_AAB_AAJ",
-        "AAE_AAE_AAB_AAN"
-    ],
-    "el-mahamid qibli": [
-        "AAE_AAB_AAA_AAB_ABL",
-        "AAE_AAB_AAC_AAB_AAM"
-    ],
+    "el-ma`sara": ["AAE_AAE_AAA_AAB_AAJ", "AAE_AAE_AAB_AAN"],
+    "el-mahamid qibli": ["AAE_AAB_AAA_AAB_ABL", "AAE_AAB_AAC_AAB_AAM"],
     "el-mahasna": "AAE_AAB_AAD_ABT",
     "el-malha": "AAE_AAE_AAA_AAD_AAO",
     "el-malqata": "AAE_AAB_AAC_AAB_AAN",
@@ -8449,21 +7655,14 @@ MET_SIMPLE_REVERSED = {
     "el-nazla el-`emara": "AAE_AAB_AAD_ABX",
     "el-nazla el-mustagidda": "AAE_AAB_AAD_ABW",
     "el-qadi": "AAE_AAB_AAD_ABZ",
-    "el-qal`a": [
-        "AAE_AAB_AAB_ABQ",
-        "AAE_AAE_AAA_AAD_AAQ"
-    ],
+    "el-qal`a": ["AAE_AAB_AAB_ABQ", "AAE_AAE_AAA_AAD_AAQ"],
     "el-qara el-kebira": "AAE_AAE_AAA_AAA_AAS",
     "el-qara walkarnak": "AAE_AAB_AAB_ABR",
     "el-qaraya": "AAE_AAB_AAB_ABT",
     "el-qarya bel-duweir": "AAE_AAB_AAD_ACA",
     "el-qasaba el-gharbiyya": "AAE_AAC_AAJ_AAH",
     "el-qasaba el-sharqiyya": "AAE_AAC_AAJ_AAI",
-    "el-qasr": [
-        "AAE_AAC_AAJ_AAJ",
-        "AAE_AAE_AAA_AAA_ABO",
-        "AAE_AAE_AAA_AAB_AAN"
-    ],
+    "el-qasr": ["AAE_AAC_AAJ_AAJ", "AAE_AAE_AAA_AAA_ABO", "AAE_AAE_AAA_AAB_AAN"],
     "el-qasr wal-saiyad/khenoboskion": "AAE_AAB_AAB_ABH",
     "el-qatana": "AAE_AAB_AAD_ACB",
     "el-qatta": "AAE_AAB_AAI_ABD",
@@ -8478,10 +7677,7 @@ MET_SIMPLE_REVERSED = {
     "el-rezeiqat": "AAE_AAB_AAC_AAB_AAU",
     "el-riqqeh": "AAE_AAB_AAH_ABO",
     "el-rizeiqat": "AAE_AAB_AAB_ABX",
-    "el-roda": [
-        "AAE_AAB_AAE_ABI",
-        "AAE_AAB_AAH_ABP"
-    ],
+    "el-roda": ["AAE_AAB_AAE_ABI", "AAE_AAB_AAH_ABP"],
     "el-rubiyat": "AAE_AAB_AAH_ABQ",
     "el-salamuni": "AAE_AAB_AAD_ACE",
     "el-salbiya welhait": "AAE_AAB_AAB_ABY",
@@ -8518,10 +7714,7 @@ MET_SIMPLE_REVERSED = {
     "el-zawayda": "AAE_AAB_AAB_ACJ",
     "el-zawya": "AAE_AAB_AAE_ABO",
     "el-zirbi": "AAE_AAB_AAH_ABU",
-    "elagabal": [
-        "AAF_AAK_AAC_AAZ",
-        "AAN_ADV"
-    ],
+    "elagabal": ["AAF_AAK_AAC_AAZ", "AAN_ADV"],
     "electrum": "AAC_AAC_AAA_AAC",
     "element of human mummy": "AAA_AAI_AAD_AAD_AAB",
     "elephantine": "AAE_AAB_AAA_AAB_AAM",
@@ -8539,19 +7732,12 @@ MET_SIMPLE_REVERSED = {
     "enamelled": "AAG_AAB_AAF",
     "encaustic": "AAG_AAB_AAO_AAA",
     "encircling the walls (of memphis)": "AAB_AAJ_AAF_AAB",
-    "enclosure wall": [
-        "AAA_AAB_AAC_AAC_AAG_AAA",
-        "AAA_AAB_AAC_AAG"
-    ],
+    "enclosure wall": ["AAA_AAB_AAC_AAC_AAG_AAA", "AAA_AAB_AAC_AAG"],
     "encrustation": "AAG_AAI_AAC",
     "encrusted engraving": "AAG_AAI_AAE",
     "endowment offering": "AAB_AAJ_AAE_AAW_AAC",
     "engobe": "AAG_AAF_AAD",
-    "engraved": [
-        "AAG_AAB_AAG",
-        "AAG_AAF_AAE",
-        "AAG_AAI_AAA"
-    ],
+    "engraved": ["AAG_AAB_AAG", "AAG_AAF_AAE", "AAG_AAI_AAA"],
     "engraved relief": "AAG_AAB_AAQ_AAA",
     "ennead": "AAM_AAA_ABD",
     "entrance": "AAA_AAB_AAB_AAE_AAL",
@@ -8567,10 +7753,7 @@ MET_SIMPLE_REVERSED = {
     "estable `antar/speos artemidos": "AAE_AAB_AAF_AAN",
     "estonia [22]": "AAD_AAQ",
     "ethiopia [23]": "AAD_AAR",
-    "ethiopian": [
-        "AAI_AAH",
-        "AAJ_AAM"
-    ],
+    "ethiopian": ["AAI_AAH", "AAJ_AAM"],
     "ethnographical museum [43/003]": "AAD_ABQ_AAC_AAA",
     "ethnographische sammlung (naturwissenschaftliche sammlungen) [08/058]": "AAD_ACC_ABH_AAB",
     "eton college [03/041]": "AAD_ACK_ADQ_AAA",
@@ -8617,10 +7800,7 @@ MET_SIMPLE_REVERSED = {
     "faras": "AAE_AAA_AAU",
     "fat": "AAC_AAD_AAA_AAC",
     "fayence": "AAG_AAF_AAF",
-    "feather": [
-        "AAA_AAI_AAA_AAB",
-        "AAC_AAD_AAA_AAD"
-    ],
+    "feather": ["AAA_AAI_AAA_AAB", "AAC_AAD_AAA_AAD"],
     "feet together": "AAB_AAC_AAC_AAC",
     "felspar": "AAC_AAC_AAC_AAK",
     "female dwarf": "AAB_AAF_AAB_AAB",
@@ -8640,10 +7820,7 @@ MET_SIMPLE_REVERSED = {
     "fidimin": "AAE_AAB_AAH_AAK",
     "field museum of natural history [57/022]": "AAD_ACI_AAQ_AAA",
     "field of rushes": "AAB_AAJ_AAS_AAF",
-    "field worker": [
-        "AAB_AAF_AAA_AAR",
-        "AAB_AAF_AAB_AAO"
-    ],
+    "field worker": ["AAB_AAF_AAA_AAR", "AAB_AAF_AAB_AAO"],
     "fiesole": "AAD_ABF_ABA",
     "figeac": "AAD_AAT_ABM",
     "fighting": "AAB_AAA_AAK",
@@ -8661,10 +7838,7 @@ MET_SIMPLE_REVERSED = {
     "fire-drill": "AAA_AAE_AAI_AAB",
     "first cataract": "AAE_AAB_AAA_AAA_AAG",
     "fiscal document": "AAL_AAA_AAC",
-    "fish": [
-        "AAA_AAI_AAB",
-        "AAB_AAB_AAC"
-    ],
+    "fish": ["AAA_AAI_AAB", "AAB_AAB_AAC"],
     "fish mummy": "AAA_AAI_AAB_AAA",
     "fishing boat (model)": "AAA_AAG_AAC_AAA",
     "fishing scene": "AAB_AAJ_AAG",
@@ -8681,10 +7855,7 @@ MET_SIMPLE_REVERSED = {
     "floating": "AAB_AAA_AAL",
     "floor": "AAA_AAB_AAB_AAG",
     "florence": "AAD_ABF_ABB",
-    "flower": [
-        "AAA_AAI_AAH_AAD",
-        "AAB_AAL_AAA"
-    ],
+    "flower": ["AAA_AAI_AAH_AAD", "AAB_AAL_AAA"],
     "fluorite": "AAC_AAC_AAC_AAL",
     "flute": "AAA_AAE_AAO_AAC_AAD",
     "fly whisk": "AAA_AAA_AAD",
@@ -8705,10 +7876,7 @@ MET_SIMPLE_REVERSED = {
     "foot stool": "AAA_AAD_AAH_AAE",
     "force-feeding": "AAB_AAJ_AAD_AAD",
     "forecastle (model)": "AAA_AAG_AAC_AAC_AAF",
-    "foreigner": [
-        "AAB_AAF_AAA_AAL",
-        "AAB_AAF_AAB_AAK"
-    ],
+    "foreigner": ["AAB_AAF_AAA_AAL", "AAB_AAF_AAB_AAK"],
     "foreroom": "AAA_AAB_AAC_AAA_AAG",
     "fork": "AAA_AAE_AAA_AAB",
     "formed around sand-kernel": "AAG_AAC_AAB",
@@ -8734,10 +7902,7 @@ MET_SIMPLE_REVERSED = {
     "frieze": "AAA_AAB_AAB_AAI",
     "front side": "AAB_AAI_AAF",
     "frontal": "AAB_AAC_AAB_AAF",
-    "fruit": [
-        "AAA_AAI_AAH_AAE",
-        "AAB_AAL_AAB"
-    ],
+    "fruit": ["AAA_AAI_AAH_AAE", "AAB_AAL_AAB"],
     "full cast": "AAG_AAD_AAA_AAB",
     "fundaci\u00f3 arqueol\u00f2gica clos [21/004]": "AAD_ABY_AAC_AAA",
     "fundaci\u00f3n cristobal gabarr\u00f3n [21/021]": "AAD_ABY_AAO_AAA",
@@ -8782,21 +7947,12 @@ MET_SIMPLE_REVERSED = {
     "gabal siqdit": "AAE_AAD_AAC_ABL",
     "gabal william": "AAE_AAE_AAA_AAA_AAM",
     "gabbro": "AAC_AAC_AAE_AAI",
-    "galba": [
-        "AAF_AAK_AAC_AAF",
-        "AAN_ADW"
-    ],
+    "galba": ["AAF_AAK_AAC_AAF", "AAN_ADW"],
     "galena": "AAC_AAC_AAC_AAM",
     "galleria e museo di palazzo ducale [05/030]": "AAD_ABF_ABE_AAA",
     "galleria sabauda [05/083]": "AAD_ABF_ACE_AAA",
-    "gallienus": [
-        "AAF_AAK_AAC_ABM",
-        "AAN_ADX"
-    ],
-    "gallus and volusianu": [
-        "AAF_AAK_AAC_ABJ",
-        "AAN_ADY"
-    ],
+    "gallienus": ["AAF_AAK_AAC_ABM", "AAN_ADX"],
+    "gallus and volusianu": ["AAF_AAK_AAC_ABJ", "AAN_ADY"],
     "game": "AAA_AAE_AAH",
     "game component": "AAA_AAE_AAH_AAB",
     "game piece": "AAA_AAE_AAH_AAB_AAB",
@@ -8816,18 +7972,12 @@ MET_SIMPLE_REVERSED = {
     "gebel barkal": "AAE_AAA_AAS",
     "gebel dosha": "AAE_AAA_AAT",
     "gebel el-mawta": "AAE_AAE_AAB_AAP",
-    "gebel el-teir": [
-        "AAE_AAB_AAF_ABI",
-        "AAE_AAE_AAA_AAD_AAW"
-    ],
+    "gebel el-teir": ["AAE_AAB_AAF_ABI", "AAE_AAE_AAA_AAD_AAW"],
     "gebel siwa": "AAE_AAE_AAB_AAV",
     "gebel yebsa": "AAE_AAE_AAA_AAD_AAY",
     "gemeentelijk museum het princessehof [06/010]": "AAD_ABO_AAE_AAA",
     "gemersk\u00e9 muzeum [65/004]": "AAD_ABV_AAC_AAA",
-    "gemnefkhonsbak/shepseskare": [
-        "AAF_AAI_AAG_AAH",
-        "AAN_ADZ"
-    ],
+    "gemnefkhonsbak/shepseskare": ["AAF_AAI_AAG_AAH", "AAN_ADZ"],
     "general technique": "AAG_AAB",
     "geneva": "AAD_ACC_AAO",
     "gent": "AAD_AAF_AAD",
@@ -8837,10 +7987,7 @@ MET_SIMPLE_REVERSED = {
     "germany [04]": "AAD_AAV",
     "gerzian": "AAF_AAA_AAC_AAE",
     "gesso": "AAC_AAB_AAC",
-    "geta": [
-        "AAF_AAK_AAC_AAW",
-        "AAN_AEA"
-    ],
+    "geta": ["AAF_AAK_AAC_AAW", "AAN_AEA"],
     "gezira public gardens [01/009]": "AAD_AAO_AAD_AAH",
     "geziret sehel": "AAE_AAB_AAA_AAB_ABR",
     "ghaiyada el-sharqiya": "AAE_AAB_AAG_AAJ",
@@ -8863,7 +8010,7 @@ MET_SIMPLE_REVERSED = {
         "AAE_AAB_AAE_AAV",
         "AAE_AAB_AAG_AAK",
         "AAE_AAB_AAH_AAO",
-        "AAE_AAB_AAI_AAO"
+        "AAE_AAB_AAI_AAO",
     ],
     "giving life": "AAB_AAJ_AAE_AAO",
     "giza": "AAD_AAO_AAE",
@@ -8915,18 +8062,9 @@ MET_SIMPLE_REVERSED = {
     "gold": "AAC_AAC_AAB_AAC",
     "gold foiled": "AAG_AAB_AAH_AAA",
     "golden horus": "AAL_AAP_AAF_AAC",
-    "gordian i": [
-        "AAF_AAK_AAC_ABC",
-        "AAN_AEB"
-    ],
-    "gordian ii": [
-        "AAF_AAK_AAC_ABD",
-        "AAN_AEC"
-    ],
-    "gordian iii": [
-        "AAF_AAK_AAC_ABG",
-        "AAN_AED"
-    ],
+    "gordian i": ["AAF_AAK_AAC_ABC", "AAN_AEB"],
+    "gordian ii": ["AAF_AAK_AAC_ABD", "AAN_AEC"],
+    "gordian iii": ["AAF_AAK_AAC_ABG", "AAN_AED"],
     "gotha": "AAD_AAV_AAS",
     "governorate of alexandria": "AAE_AAC_AAI",
     "governorate of asiut": "AAE_AAB_AAE",
@@ -8957,10 +8095,7 @@ MET_SIMPLE_REVERSED = {
     "graeco-roman museum [01/026]": "AAD_AAO_AAA_AAB",
     "graeco-roman period": "AAF_AAK",
     "graffiti": "AAL_AAX",
-    "graffito": [
-        "AAG_AAB_AAJ",
-        "AAK_AAL"
-    ],
+    "graffito": ["AAG_AAB_AAJ", "AAK_AAL"],
     "grain-measure": "AAA_AAE_AAL_AAA",
     "granada": "AAD_ABY_AAF",
     "granary (model)": "AAA_AAG_AAL",
@@ -8972,12 +8107,7 @@ MET_SIMPLE_REVERSED = {
     "graz": "AAD_AAD_AAB",
     "grease": "AAA_AAI_AAC_AAD",
     "greece [27]": "AAD_AAY",
-    "greek": [
-        "AAB_AAF_AAA_AAL_AAC",
-        "AAB_AAF_AAB_AAK_AAC",
-        "AAI_AAJ",
-        "AAJ_AAN"
-    ],
+    "greek": ["AAB_AAF_AAA_AAL_AAC", "AAB_AAF_AAB_AAK_AAC", "AAI_AAJ", "AAJ_AAN"],
     "greek god": "AAM_AAC",
     "greek goddess": "AAM_AAD",
     "greenock": "AAD_ACK_ABG",
@@ -8985,14 +8115,8 @@ MET_SIMPLE_REVERSED = {
     "grenoble": "AAD_AAT_ABO",
     "greywacke": "AAC_AAC_AAE_AAL",
     "griffin": "AAB_AAG_AAD",
-    "grill": [
-        "AAA_AAB_AAB_AAW_AAA",
-        "AAA_AAE_AAG_AAC"
-    ],
-    "grinder": [
-        "AAA_AAE_AAF_AAD",
-        "AAA_AAE_AAU_AAC"
-    ],
+    "grill": ["AAA_AAB_AAB_AAW_AAA", "AAA_AAE_AAG_AAC"],
+    "grinder": ["AAA_AAE_AAF_AAD", "AAA_AAE_AAU_AAC"],
     "grinding grain": "AAB_AAJ_AAH_AAD",
     "groningen": "AAD_ABO_AAC",
     "groninger museum [06/006]": "AAD_ABO_AAC_AAA",
@@ -9011,10 +8135,7 @@ MET_SIMPLE_REVERSED = {
     "g\u00f6ttingen": "AAD_AAV_AAR",
     "ha": "AAM_AAA_ABG",
     "haags gemeentemuseum [06/008]": "AAD_ABO_AAD_AAB",
-    "hadrian": [
-        "AAF_AAK_AAC_AAN",
-        "AAN_AEE"
-    ],
+    "hadrian": ["AAF_AAK_AAC_AAN", "AAN_AEE"],
     "haematite/red ochre": "AAC_AAC_AAC_AAQ",
     "hagar edfu": "AAE_AAB_AAA_AAB_AAR",
     "hagir armant": "AAE_AAB_AAB_AAY",
@@ -9032,11 +8153,7 @@ MET_SIMPLE_REVERSED = {
     "hammering": "AAG_AAD_AAF",
     "hamra dom": "AAE_AAB_AAB_ABC",
     "hancock museum [03/068]": "AAD_ACK_ACF_AAA",
-    "handle": [
-        "AAA_AAD_AAE_AAC",
-        "AAA_AAE_AAD_AAI_AAB",
-        "AAA_AAE_AAF_AAG_AAC"
-    ],
+    "handle": ["AAA_AAD_AAE_AAC", "AAA_AAE_AAD_AAI_AAB", "AAA_AAE_AAF_AAG_AAC"],
     "hands advanced": "AAB_AAC_AAA_AAK",
     "hands clenched": "AAB_AAC_AAA_AAL",
     "hands crossed": "AAB_AAC_AAA_AAM",
@@ -9066,10 +8183,7 @@ MET_SIMPLE_REVERSED = {
     "harrow": "AAD_ACK_ABJ",
     "harsaphes/herishef": "AAM_AAA_ABQ",
     "harsiese": "AAM_AAA_ABR",
-    "harsiese/hedjkheperre-setepenamun": [
-        "AAF_AAI_AAC_AAF",
-        "AAN_AEF"
-    ],
+    "harsiese/hedjkheperre-setepenamun": ["AAF_AAI_AAC_AAF", "AAN_AEF"],
     "harsomtus": "AAM_AAA_ABS",
     "hartford (ct)": "AAD_ACI_ABA",
     "harvest ceremony": "AAB_AAJ_AAE_AAP",
@@ -9084,10 +8198,7 @@ MET_SIMPLE_REVERSED = {
     "hatiyet gilati": "AAE_AAE_AAB_AAJ",
     "hatiyet zawa": "AAE_AAE_AAB_AAK",
     "hatmehit": "AAM_AAB_AAJ",
-    "hatshepsut/maatkare": [
-        "AAF_AAH_AAA_AAE",
-        "AAN_AEG"
-    ],
+    "hatshepsut/maatkare": ["AAF_AAH_AAA_AAE", "AAN_AEG"],
     "hauron": "AAM_AAG_AAB",
     "havana": "AAD_AAK_AAA",
     "hawwara": "AAE_AAB_AAH_AAT",
@@ -9099,10 +8210,7 @@ MET_SIMPLE_REVERSED = {
     "headrest (model)": "AAA_AAG_AAJ_AAC",
     "headrest cushion": "AAA_AAD_AAF_AAA",
     "heart scarab": "AAA_AAM_AAB_AAB",
-    "hebrew": [
-        "AAI_AAK",
-        "AAJ_AAO"
-    ],
+    "hebrew": ["AAI_AAK", "AAJ_AAO"],
     "heckscher museum [57/039]": "AAD_ACI_ABD_AAA",
     "hedjwer": "AAM_AAA_ABT",
     "heh": "AAM_AAA_ABU",
@@ -9115,28 +8223,16 @@ MET_SIMPLE_REVERSED = {
     "hemen": "AAM_AAA_ABW",
     "hemp": "AAC_AAD_AAD_AAE",
     "hepi": "AAM_AAA_ABH",
-    "hepu": [
-        "AAF_AAG_AAA_AAY",
-        "AAN_AEH"
-    ],
+    "hepu": ["AAF_AAG_AAA_AAY", "AAN_AEH"],
     "heqa-sceptrecrook": "AAA_AAA_AAF_AAA",
     "heqaib": "AAM_AAA_ABX",
     "heqet": "AAM_AAB_AAK",
     "heracles": "AAM_AAC_AAG",
-    "heraclius": [
-        "AAF_AAK_AAD_AAO",
-        "AAN_AEI"
-    ],
+    "heraclius": ["AAF_AAK_AAD_AAO", "AAN_AEI"],
     "heraklion": "AAD_AAY_AAD",
     "herb": "AAB_AAL_AAC",
-    "heribre": [
-        "AAF_AAG_AAA_AAL",
-        "AAN_AEJ"
-    ],
-    "herihor/hemnetjer-tepyenamun": [
-        "AAF_AAI_AAB_AAA",
-        "AAN_AEK"
-    ],
+    "heribre": ["AAF_AAG_AAA_AAL", "AAN_AEJ"],
+    "herihor/hemnetjer-tepyenamun": ["AAF_AAI_AAB_AAA", "AAN_AEK"],
     "herisau": "AAD_ACC_AAP",
     "heriyet rezna museum [01/032]": "AAD_AAO_AAS_AAA",
     "hermes": "AAM_AAC_AAH",
@@ -9151,17 +8247,11 @@ MET_SIMPLE_REVERSED = {
     "higaza": "AAE_AAB_AAB_ABD",
     "high": "AAB_AAK_AAL",
     "high relief": "AAG_AAB_AAQ_AAB",
-    "high-priests and priest-kings of thebes": [
-        "AAF_AAI_AAB",
-        "AAF_AAI_AAD"
-    ],
+    "high-priests and priest-kings of thebes": ["AAF_AAI_AAB", "AAF_AAI_AAD"],
     "highclere castle": "AAD_ACK_AAS",
     "hihya": "AAE_AAB_AAF_AAR",
     "hildesheim": "AAD_AAV_AAZ",
-    "hinge": [
-        "AAA_AAB_AAB_AAE_AAC",
-        "AAA_AAD_AAE_AAD"
-    ],
+    "hinge": ["AAA_AAB_AAB_AAE_AAC", "AAA_AAD_AAE_AAD"],
     "hirshhorn museum and sculpture gallery [57/092]": "AAD_ACI_ACK_AAD",
     "historical and archaeological institute [47/004]": "AAD_ABT_AAC_AAA",
     "historical scene": "AAB_AAJ_AAT_AAL",
@@ -9171,12 +8261,7 @@ MET_SIMPLE_REVERSED = {
     "historisches museum [08/041]": "AAD_ACC_AAP_AAA",
     "historisches museum aargau, kantonale sammlungen [08/013]": "AAD_ACC_AAS_AAA",
     "hitting the ball": "AAB_AAJ_AAE_AAQ",
-    "hittite": [
-        "AAB_AAF_AAA_AAL_AAD",
-        "AAB_AAF_AAB_AAK_AAD",
-        "AAI_AAL",
-        "AAJ_AAR"
-    ],
+    "hittite": ["AAB_AAF_AAA_AAL_AAD", "AAB_AAF_AAB_AAK_AAD", "AAI_AAL", "AAJ_AAR"],
     "hiw/hu/diospolis parva": "AAE_AAB_AAB_ABE",
     "hobart": "AAD_AAC_AAB",
     "hoe": "AAA_AAE_AAA_AAC",
@@ -9187,36 +8272,18 @@ MET_SIMPLE_REVERSED = {
     "honolulu (hi)": "AAD_ACI_ABB",
     "honolulu academy of arts [57/096]": "AAD_ACI_ABB_AAA",
     "hook": "AAA_AAE_AAT_AAI",
-    "hor i/autibre": [
-        "AAF_AAF_AAC_AAN",
-        "AAN_AEL"
-    ],
-    "hor ii": [
-        "AAF_AAF_AAC_ABI",
-        "AAN_AEM"
-    ],
-    "horemheb/djeserkheperure-setepenre": [
-        "AAF_AAH_AAA_AAN",
-        "AAN_AEN"
-    ],
+    "hor i/autibre": ["AAF_AAF_AAC_AAN", "AAN_AEL"],
+    "hor ii": ["AAF_AAF_AAC_ABI", "AAN_AEM"],
+    "horemheb/djeserkheperure-setepenre": ["AAF_AAH_AAA_AAN", "AAN_AEN"],
     "horhekenu": "AAM_AAA_ABY",
-    "hori/swadjkare": [
-        "AAF_AAF_AAC_ABE",
-        "AAN_AEO"
-    ],
+    "hori/swadjkare": ["AAF_AAF_AAC_ABE", "AAN_AEO"],
     "horn": "AAC_AAD_AAA_AAH",
     "hornbeam": "AAC_AAD_AAF_AAP",
-    "hornedjheritef/hotepibre": [
-        "AAF_AAF_AAC_ABR",
-        "AAN_AEP"
-    ],
+    "hornedjheritef/hotepibre": ["AAF_AAF_AAC_ABR", "AAN_AEP"],
     "horniman museum [03/004]": "AAD_ACK_ABY_AAE",
     "hornonitrianske muzeum [65/007]": "AAD_ABV_AAF_AAA",
     "horsemsu": "AAM_AAA_ABZ",
-    "horsiesis": [
-        "AAF_AAI_AAD_AAE",
-        "AAN_AEQ"
-    ],
+    "horsiesis": ["AAF_AAI_AAD_AAE", "AAN_AEQ"],
     "horus": "AAM_AAA_ACA",
     "horus name": "AAL_AAP_AAF_AAA",
     "horus of edfu": "AAM_AAA_ACB",
@@ -9227,28 +8294,16 @@ MET_SIMPLE_REVERSED = {
     "horus saviour": "AAM_AAA_ACG",
     "horus-khentekhtai": "AAM_AAA_ACH",
     "hotep": "AAM_AAA_ACI",
-    "hotepsekhemui": [
-        "AAF_AAC_AAB_AAA",
-        "AAN_AER"
-    ],
+    "hotepsekhemui": ["AAF_AAC_AAB_AAA", "AAN_AER"],
     "hounds and jackals board": "AAA_AAE_AAH_AAC_AAA",
-    "house (model)": [
-        "AAA_AAG_AAA_AAD",
-        "AAA_AAG_AAM"
-    ],
+    "house (model)": ["AAA_AAG_AAA_AAD", "AAA_AAG_AAM"],
     "houston (tx)": "AAD_ACI_ABC",
     "hovering": "AAB_AAC_AAB_AAG",
     "hu": "AAM_AAA_ACJ",
-    "hudjefa": [
-        "AAF_AAC_AAB_AAJ",
-        "AAN_AES"
-    ],
+    "hudjefa": ["AAF_AAC_AAB_AAJ", "AAN_AES"],
     "huelva": "AAD_ABY_AAG",
     "hull (model)": "AAA_AAG_AAC_AAC_AAG",
-    "human": [
-        "AAA_AAI_AAD",
-        "AAB_AAF"
-    ],
+    "human": ["AAA_AAI_AAD", "AAB_AAF"],
     "human bone": "AAA_AAI_AAD_AAA",
     "human cranium": "AAA_AAI_AAD_AAB",
     "human figurine": "AAA_AAN_AAB_AAB",
@@ -9257,10 +8312,7 @@ MET_SIMPLE_REVERSED = {
     "human mummy": "AAA_AAI_AAD_AAD",
     "human skeleton": "AAA_AAI_AAD_AAE",
     "hungary [28]": "AAD_AAZ",
-    "huni": [
-        "AAF_AAD_AAA_AAE",
-        "AAN_AET"
-    ],
+    "huni": ["AAF_AAD_AAA_AAE", "AAN_AET"],
     "hunterian museum [03/119]": "AAD_ACK_ABC_AAC",
     "hunting of birds": "AAB_AAJ_AAI_AAA",
     "hunting of birds with fixed net": "AAB_AAJ_AAI_AAB",
@@ -9274,29 +8326,17 @@ MET_SIMPLE_REVERSED = {
     "hybrid bird": "AAB_AAG_AAE",
     "hybrid scarab": "AAB_AAG_AAF",
     "hybrid serpent": "AAB_AAG_AAG",
-    "hymn": [
-        "AAL_AAS_AAA_AAC",
-        "AAL_AAS_AAB_AAB"
-    ],
+    "hymn": ["AAL_AAS_AAA_AAC", "AAL_AAS_AAB_AAB"],
     "hypocephalus": "AAA_AAO_AAJ_AAJ",
     "hy\u00e8res": "AAD_AAT_ABP",
     "iah": "AAM_AAA_ACK",
     "iahes/rahes": "AAM_AAA_ACL",
-    "iaib/wahibre": [
-        "AAF_AAF_AAC_AAZ",
-        "AAN_AEU"
-    ],
+    "iaib/wahibre": ["AAF_AAF_AAC_AAZ", "AAN_AEU"],
     "iasi": "AAD_ABT_AAC",
     "iati": "AAM_AAA_ACM",
     "ibgag el-hatab": "AAE_AAB_AAF_AAA",
-    "ibi i/qakare": [
-        "AAF_AAE_AAA_AAN",
-        "AAN_AEV"
-    ],
-    "ibi ii": [
-        "AAF_AAF_AAC_ABH",
-        "AAN_AEW"
-    ],
+    "ibi i/qakare": ["AAF_AAE_AAA_AAN", "AAN_AEV"],
+    "ibi ii": ["AAF_AAF_AAC_ABH", "AAN_AEW"],
     "ibis mummy": "AAA_AAI_AAA_AAA_AAB",
     "ibiza": "AAD_ABY_AAH",
     "iceland [29]": "AAD_ABA",
@@ -9309,15 +8349,9 @@ MET_SIMPLE_REVERSED = {
     "ihy": "AAM_AAA_ACN",
     "illness scene": "AAB_AAJ_AAT_AAM",
     "imentet": "AAM_AAB_AAM",
-    "imhotep": [
-        "AAF_AAE_AAA_AAU",
-        "AAN_AEY"
-    ],
+    "imhotep": ["AAF_AAE_AAA_AAU", "AAN_AEY"],
     "imhotep i": "AAM_AAA_ACO",
-    "imiramesha/semenekhkare": [
-        "AAF_AAF_AAC_AAR",
-        "AAN_AEZ"
-    ],
+    "imiramesha/semenekhkare": ["AAF_AAF_AAC_AAR", "AAN_AEZ"],
     "imit-per document/will": "AAL_AAG_AAB_AAM",
     "imitation vessel": "AAA_AAJ_AAP",
     "imperial museum of the russian archaeological society [10/026]": "AAD_ABU_AAK_AAA",
@@ -9327,10 +8361,7 @@ MET_SIMPLE_REVERSED = {
     "in front": "AAB_AAI_AAI",
     "in profile": "AAB_AAC_AAB_AAH",
     "in the centre": "AAB_AAI_AAJ",
-    "inaros": [
-        "AAF_AAJ_AAB_AAF",
-        "AAN_AFA"
-    ],
+    "inaros": ["AAF_AAJ_AAB_AAF", "AAN_AFA"],
     "incense": "AAC_AAB_AAF",
     "incense burner": "AAA_AAL_AAE",
     "incised": "AAG_AAH_AAA",
@@ -9341,26 +8372,13 @@ MET_SIMPLE_REVERSED = {
     "indiana university art museum [57/009]": "AAD_ACI_AAH_AAA",
     "indianapolis (in)": "AAD_ACI_ABE",
     "industrial scene": "AAB_AAJ_AAL",
-    "ined/merysekhemre": [
-        "AAF_AAF_AAC_ABD",
-        "AAN_AFB"
-    ],
-    "ini i/merihotepre": [
-        "AAF_AAF_AAC_ABB",
-        "AAN_AFC"
-    ],
-    "ini ii/merishepsesre": [
-        "AAF_AAF_AAC_ACB",
-        "AAN_AFD"
-    ],
+    "ined/merysekhemre": ["AAF_AAF_AAC_ABD", "AAN_AFB"],
+    "ini i/merihotepre": ["AAF_AAF_AAC_ABB", "AAN_AFC"],
+    "ini ii/merishepsesre": ["AAF_AAF_AAC_ACB", "AAN_AFD"],
     "ink cake": "AAA_AAE_AAU_AAD",
     "ink pot": "AAA_AAE_AAU_AAE",
     "inlaid": "AAG_AAD_AAG",
-    "inlay": [
-        "AAA_AAB_AAA_AAA",
-        "AAA_AAD_AAD_AAA",
-        "AAG_AAB_AAM"
-    ],
+    "inlay": ["AAA_AAB_AAA_AAA", "AAA_AAD_AAD_AAA", "AAG_AAB_AAM"],
     "innsbruck": "AAD_AAD_AAD",
     "input": "AAM_AAB_AAN",
     "insect": "AAA_AAI_AAE",
@@ -9383,43 +8401,16 @@ MET_SIMPLE_REVERSED = {
     "institute of history of the academy of sciences [67/001]": "AAD_ACH_AAA_AAA",
     "institute of history, archaeology and ethnography of the academy of sciences of tadjikistan [66/001]": "AAD_ACE_AAA_AAA",
     "instituut jozef m.a. janssen katholieke universiteit [06/011]": "AAD_ABO_AAG_AAA",
-    "instruction": [
-        "AAK_AAM",
-        "AAL_AAI_AAB"
-    ],
+    "instruction": ["AAK_AAM", "AAL_AAI_AAB"],
     "intaglio": "AAA_AAM_AAA",
-    "intef i/sehertawy": [
-        "AAF_AAF_AAA_AAB",
-        "AAN_AFE"
-    ],
-    "intef ii/wahankh": [
-        "AAF_AAF_AAA_AAC",
-        "AAN_AFF"
-    ],
-    "intef iii/nakhtnebtepnefer": [
-        "AAF_AAF_AAA_AAD",
-        "AAN_AFG"
-    ],
-    "intef iv/sehotepkare": [
-        "AAF_AAF_AAC_AAS",
-        "AAN_AFH"
-    ],
-    "intef v/nebukheperre": [
-        "AAF_AAG_AAD_AAA",
-        "AAN_AFI"
-    ],
-    "intef vi/sekhemrewepmaat": [
-        "AAF_AAG_AAD_AAK",
-        "AAN_AFJ"
-    ],
-    "intef vii/sekhemreheruhermaat": [
-        "AAF_AAG_AAD_AAL",
-        "AAN_AFK"
-    ],
-    "intef/qakare": [
-        "AAF_AAF_AAA_AAH",
-        "AAN_AFL"
-    ],
+    "intef i/sehertawy": ["AAF_AAF_AAA_AAB", "AAN_AFE"],
+    "intef ii/wahankh": ["AAF_AAF_AAA_AAC", "AAN_AFF"],
+    "intef iii/nakhtnebtepnefer": ["AAF_AAF_AAA_AAD", "AAN_AFG"],
+    "intef iv/sehotepkare": ["AAF_AAF_AAC_AAS", "AAN_AFH"],
+    "intef v/nebukheperre": ["AAF_AAG_AAD_AAA", "AAN_AFI"],
+    "intef vi/sekhemrewepmaat": ["AAF_AAG_AAD_AAK", "AAN_AFJ"],
+    "intef vii/sekhemreheruhermaat": ["AAF_AAG_AAD_AAL", "AAN_AFK"],
+    "intef/qakare": ["AAF_AAF_AAA_AAH", "AAN_AFL"],
     "interment": "AAB_AAJ_AAJ_AAK",
     "introduction of the king": "AAB_AAJ_AAO_AAE",
     "inventory": "AAL_AAA_AAD",
@@ -9445,10 +8436,7 @@ MET_SIMPLE_REVERSED = {
     "isis-satis": "AAM_AAB_AAR",
     "isis-selkis": "AAM_AAB_AAS",
     "isis-sothis": "AAM_AAB_AAT",
-    "islamic period": [
-        "AAF_AAM",
-        "AAF_AAP_AAJ"
-    ],
+    "islamic period": ["AAF_AAM", "AAF_AAP_AAJ"],
     "islington museum [03/005]": "AAD_ACK_ABY_AAF",
     "ismailiiya": "AAD_AAO_AAF",
     "ismailiiya museum [01/018]": "AAD_AAO_AAF_AAA",
@@ -9457,65 +8445,29 @@ MET_SIMPLE_REVERSED = {
     "issoudun": "AAD_AAT_ABQ",
     "istanbul": "AAD_ACG_AAB",
     "istv\u00e1n kir\u00e1ly m\u00fazeum [28/005]": "AAD_AAZ_AAD_AAA",
-    "isu": [
-        "AAF_AAE_AAA_AAV",
-        "AAN_AFM"
-    ],
+    "isu": ["AAF_AAE_AAA_AAV", "AAN_AFM"],
     "italy [05]": "AAD_ABF",
     "ithaca (ny)": "AAD_ACI_ABF",
-    "iti": [
-        "AAF_AAE_AAA_AAT",
-        "AAN_AFN"
-    ],
-    "iufny": [
-        "AAF_AAF_AAC_AAF",
-        "AAN_AFO"
-    ],
+    "iti": ["AAF_AAE_AAA_AAT", "AAN_AFN"],
+    "iufny": ["AAF_AAF_AAC_AAF", "AAN_AFO"],
     "iunmutef": "AAM_AAA_ACS",
-    "iuput": [
-        "AAF_AAI_AAD_AAA",
-        "AAN_AFP"
-    ],
-    "iuput i": [
-        "AAF_AAI_AAE_AAB",
-        "AAN_AFQ"
-    ],
-    "iuput ii/usermaatre": [
-        "AAF_AAI_AAE_AAG",
-        "AAN_AFR"
-    ],
-    "iuwelot": [
-        "AAF_AAI_AAD_AAD",
-        "AAN_AFS"
-    ],
+    "iuput": ["AAF_AAI_AAD_AAA", "AAN_AFP"],
+    "iuput i": ["AAF_AAI_AAE_AAB", "AAN_AFQ"],
+    "iuput ii/usermaatre": ["AAF_AAI_AAE_AAG", "AAN_AFR"],
+    "iuwelot": ["AAF_AAI_AAD_AAD", "AAN_AFS"],
     "ivanova": "AAD_ABU_AAD",
     "ivanova regional museum of art [10/007]": "AAD_ABU_AAD_AAA",
     "ivory": "AAC_AAD_AAA_AAI",
-    "iybkhenetre": [
-        "AAF_AAF_AAA_AAI",
-        "AAN_AEX"
-    ],
-    "iytjenu": [
-        "AAF_AAE_AAA_AAW",
-        "AAN_AFT"
-    ],
+    "iybkhenetre": ["AAF_AAF_AAA_AAI", "AAN_AEX"],
+    "iytjenu": ["AAF_AAE_AAA_AAW", "AAN_AFT"],
     "j.f.willumsens museum [20/006]": "AAD_AAN_AAC_AAA",
     "jacksonville (fl)": "AAD_ACI_ABG",
     "jade": "AAC_AAC_AAC_AAR",
     "jadeite": "AAC_AAC_AAC_AAS",
-    "jakbam": [
-        "AAF_AAG_AAC_AAR",
-        "AAN_AFU"
-    ],
-    "jamb": [
-        "AAA_AAB_AAB_AAE_AAD",
-        "AAA_AAB_AAB_AAF_AAB"
-    ],
+    "jakbam": ["AAF_AAG_AAC_AAR", "AAN_AFU"],
+    "jamb": ["AAA_AAB_AAB_AAE_AAD", "AAA_AAB_AAB_AAF_AAB"],
     "japan [35]": "AAD_ABG",
-    "jar": [
-        "AAA_AAG_AAU_AAB",
-        "AAA_AAJ_AAQ"
-    ],
+    "jar": ["AAA_AAG_AAU_AAB", "AAA_AAJ_AAQ"],
     "jar label": "AAA_AAP_AAB",
     "jasper": "AAC_AAC_AAE_AAN",
     "jelgava": "AAD_ABI_AAA",
@@ -9524,10 +8476,7 @@ MET_SIMPLE_REVERSED = {
     "jewellery mould": "AAA_AAE_AAN_AAC",
     "jewellery museum [01/027]": "AAD_AAO_AAA_AAC",
     "jewelry": "AAA_AAF",
-    "joam": [
-        "AAF_AAG_AAC_AAS",
-        "AAN_AFV"
-    ],
+    "joam": ["AAF_AAG_AAC_AAS", "AAN_AFV"],
     "john herron art institute [57/040]": "AAD_ACI_ABE_AAA",
     "john rylands library [03/133]": "AAD_ACK_ACB_AAB",
     "johns hopkins university museum [57/003]": "AAD_ACI_AAC_AAA",
@@ -9535,34 +8484,16 @@ MET_SIMPLE_REVERSED = {
     "journey on the river": "AAB_AAJ_AAT_AAO",
     "journey to abydos": "AAB_AAJ_AAS_AAI",
     "journey to buto": "AAB_AAJ_AAS_AAJ",
-    "jovian": [
-        "AAF_AAK_AAC_ABZ",
-        "AAN_AFW"
-    ],
+    "jovian": ["AAF_AAK_AAC_ABZ", "AAN_AFW"],
     "judgement of the dead": "AAB_AAJ_AAS_AAK",
     "judicial scene": "AAB_AAJ_AAT_AAP",
     "jug": "AAA_AAJ_AAR",
-    "julian": [
-        "AAF_AAK_AAC_ABY",
-        "AAN_AFX"
-    ],
+    "julian": ["AAF_AAK_AAC_ABY", "AAN_AFX"],
     "juniper": "AAC_AAD_AAF_AAQ",
-    "justin i": [
-        "AAF_AAK_AAD_AAI",
-        "AAN_AFY"
-    ],
-    "justin ii": [
-        "AAF_AAK_AAD_AAK",
-        "AAN_AFZ"
-    ],
-    "justinian i": [
-        "AAF_AAK_AAD_AAJ",
-        "AAN_AGA"
-    ],
-    "ka/sekhen": [
-        "AAF_AAB_AAA_AAA",
-        "AAN_AGB"
-    ],
+    "justin i": ["AAF_AAK_AAD_AAI", "AAN_AFY"],
+    "justin ii": ["AAF_AAK_AAD_AAK", "AAN_AFZ"],
+    "justinian i": ["AAF_AAK_AAD_AAJ", "AAN_AGA"],
+    "ka/sekhen": ["AAF_AAB_AAA_AAA", "AAN_AGB"],
     "kadesh/qudshu": "AAM_AAH_AAD",
     "kafr `ammar": "AAE_AAB_AAI_AAS",
     "kafr abu hadid": "AAE_AAB_AAI_AAT",
@@ -9572,37 +8503,22 @@ MET_SIMPLE_REVERSED = {
     "kafr nassar": "AAE_AAB_AAI_AAV",
     "kagemni": "AAM_AAA_ACT",
     "kaiserswerth": "AAD_AAV_ABA",
-    "kakemure": [
-        "AAF_AAG_AAA_AAS",
-        "AAN_AGC"
-    ],
+    "kakemure": ["AAF_AAG_AAA_AAS", "AAN_AGC"],
     "kalabsha": "AAE_AAB_AAA_AAA_AAO",
     "kalabsha temple (new site)": "AAE_AAB_AAA_AAB_ABB",
     "kaliningrad": "AAD_ABU_AAE",
-    "kamose/wadjkhepere": [
-        "AAF_AAG_AAD_AAO",
-        "AAN_AGD"
-    ],
+    "kamose/wadjkhepere": ["AAF_AAG_AAD_AAO", "AAN_AGD"],
     "kamutef": "AAM_AAA_ACU",
     "kanayis": "AAE_AAD_AAC_AAV",
-    "kanefertemre": [
-        "AAF_AAG_AAA_AAQ",
-        "AAN_AGE"
-    ],
+    "kanefertemre": ["AAF_AAG_AAA_AAQ", "AAN_AGE"],
     "kanellopoulos museum [27/001]": "AAD_AAY_AAA_AAA",
     "kansas city (mo)": "AAD_ACI_ABH",
     "kantonsmuseum [08/022]": "AAD_ACC_AAT_AAA",
     "karl ziegler-gymnasium [04/041]": "AAD_AAV_ABG_AAA",
     "karlsruhe": "AAD_AAV_ABB",
-    "karnak": [
-        "AAD_AAO_AAH",
-        "AAE_AAB_AAC_AAA_AAB"
-    ],
+    "karnak": ["AAD_AAO_AAH", "AAE_AAB_AAC_AAA_AAB"],
     "karnak cache": "AAE_AAB_AAC_AAA_AAB_AAB",
-    "kashta/maatre": [
-        "AAF_AAI_AAG_AAB",
-        "AAN_AGF"
-    ],
+    "kashta/maatre": ["AAF_AAI_AAG_AAB", "AAN_AGF"],
     "kasr-ico": "AAE_AAA_AAV",
     "kassel": "AAD_AAV_ABC",
     "katedra archeologii srodziemnomorskiej uniwersytetu jagiellonskiego [45/002]": "AAD_ABR_AAB_AAA",
@@ -9619,79 +8535,34 @@ MET_SIMPLE_REVERSED = {
     "kerma culture": "AAF_AAP_AAF",
     "kestner-museum [04/028]": "AAD_AAV_AAX_AAA",
     "kettledrum": "AAA_AAE_AAO_AAA_AAE",
-    "key": [
-        "AAA_AAB_AAB_AAE_AAE",
-        "AAA_AAD_AAE_AAE"
-    ],
+    "key": ["AAA_AAB_AAB_AAE_AAE", "AAA_AAD_AAE_AAE"],
     "kfar menahem": "AAD_ABE_AAF",
-    "kha...re": [
-        "AAF_AAG_AAA_AAU",
-        "AAN_AGG"
-    ],
-    "khaba": [
-        "AAF_AAD_AAA_AAD",
-        "AAN_AGH"
-    ],
-    "khababash/senensetepenptah": [
-        "AAF_AAJ_AAF_AAD",
-        "AAN_AGI"
-    ],
-    "khaian/weserenre": [
-        "AAF_AAG_AAB_AAB",
-        "AAN_AGJ"
-    ],
+    "kha...re": ["AAF_AAG_AAA_AAU", "AAN_AGG"],
+    "khaba": ["AAF_AAD_AAA_AAD", "AAN_AGH"],
+    "khababash/senensetepenptah": ["AAF_AAJ_AAF_AAD", "AAN_AGI"],
+    "khaian/weserenre": ["AAF_AAG_AAB_AAB", "AAN_AGJ"],
     "khameisah": "AAE_AAE_AAB_AAL",
-    "khamudi/aasehre": [
-        "AAF_AAG_AAB_AAD",
-        "AAN_AGK"
-    ],
-    "khamure": [
-        "AAF_AAG_AAC_AAP",
-        "AAN_AGL"
-    ],
+    "khamudi/aasehre": ["AAF_AAG_AAB_AAD", "AAN_AGK"],
+    "khamure": ["AAF_AAG_AAC_AAP", "AAN_AGL"],
     "kharga": "AAD_AAO_AAI",
     "kharga oases": "AAE_AAE_AAA_AAD",
     "khartum": "AAD_ACA_AAA",
-    "khasekhemui/horseth": [
-        "AAF_AAC_AAB_AAK",
-        "AAN_AGM"
-    ],
+    "khasekhemui/horseth": ["AAF_AAC_AAB_AAK", "AAN_AGM"],
     "khashm el-`eish": "AAE_AAC_AAJ_AAE",
     "khater": "AAE_AAB_AAD_ABP",
-    "khatire": [
-        "AAF_AAG_AAA_AAB",
-        "AAN_AGN"
-    ],
-    "khauserre": [
-        "AAF_AAG_AAC_AAO",
-        "AAN_AGO"
-    ],
-    "khendjer/userkare": [
-        "AAF_AAF_AAC_AAQ",
-        "AAN_AGP"
-    ],
-    "khendu/neferkare iv": [
-        "AAF_AAE_AAA_AAF",
-        "AAN_AGQ"
-    ],
+    "khatire": ["AAF_AAG_AAA_AAB", "AAN_AGN"],
+    "khauserre": ["AAF_AAG_AAC_AAO", "AAN_AGO"],
+    "khendjer/userkare": ["AAF_AAF_AAC_AAQ", "AAN_AGP"],
+    "khendu/neferkare iv": ["AAF_AAE_AAA_AAF", "AAN_AGQ"],
     "khentekhtai": "AAM_AAA_ACV",
     "khentimentiu": "AAM_AAA_ACW",
     "khepry": "AAM_AAA_ACX",
     "kherep-sceptre": "AAA_AAA_AAF_AAB",
     "khersones state collection of history and archaeology [55/012]": "AAD_ACJ_AAI_AAA",
     "kherti": "AAM_AAA_ACY",
-    "khety i/wahkare": [
-        "AAF_AAE_AAB_AAB",
-        "AAN_AGR"
-    ],
-    "khety ii/nebkaure": [
-        "AAF_AAE_AAB_AAC",
-        "AAN_AGS"
-    ],
-    "khety iii/meriibre": [
-        "AAF_AAE_AAB_AAD",
-        "AAN_AGT"
-    ],
+    "khety i/wahkare": ["AAF_AAE_AAB_AAB", "AAN_AGR"],
+    "khety ii/nebkaure": ["AAF_AAE_AAB_AAC", "AAN_AGS"],
+    "khety iii/meriibre": ["AAF_AAE_AAB_AAD", "AAN_AGT"],
     "khnum": "AAM_AAA_ACZ",
     "khons": "AAM_AAA_ADA",
     "khons temple": "AAE_AAB_AAC_AAA_AAB_AAC",
@@ -9714,10 +8585,7 @@ MET_SIMPLE_REVERSED = {
     "kneeling on one knee": "AAB_AAC_AAB_AAJ_AAA",
     "kneeling with one leg stretched behind": "AAB_AAC_AAB_AAJ_AAB",
     "knife": "AAA_AAE_AAG_AAD",
-    "knob": [
-        "AAA_AAD_AAE_AAF",
-        "AAA_AAE_AAM_AAA_AAB"
-    ],
+    "knob": ["AAA_AAD_AAE_AAF", "AAA_AAE_AAM_AAA_AAB"],
     "knucklebone": "AAA_AAE_AAH_AAB_AAC",
     "kohl": "AAA_AAE_AAF_AAF",
     "kohl pot": "AAA_AAE_AAF_AAF_AAA",
@@ -9792,10 +8660,7 @@ MET_SIMPLE_REVERSED = {
     "lassoing the bull": "AAB_AAJ_AAE_AAR",
     "late egyptian": "AAI_AAG_AAC",
     "late period": "AAF_AAJ",
-    "latin": [
-        "AAI_AAM",
-        "AAJ_AAS"
-    ],
+    "latin": ["AAI_AAM", "AAJ_AAS"],
     "latrine": "AAA_AAB_AAB_AAL",
     "lattaqia": "AAD_ACD_AAC",
     "latvia [37]": "AAD_ABI",
@@ -9805,10 +8670,7 @@ MET_SIMPLE_REVERSED = {
     "le havre, le": "AAD_AAT_ABT",
     "le puy en velay": "AAD_AAT_ABU",
     "lead": "AAC_AAC_AAB_AAE",
-    "leaf": [
-        "AAA_AAB_AAB_AAE_AAF",
-        "AAA_AAI_AAH_AAG"
-    ],
+    "leaf": ["AAA_AAB_AAB_AAE_AAF", "AAA_AAI_AAH_AAG"],
     "leamington spa": "AAD_ACK_ABS",
     "lease": "AAL_AAG_AAB_AAN",
     "leash": "AAA_AAE_AAB_AAB_AAB",
@@ -9847,20 +8709,11 @@ MET_SIMPLE_REVERSED = {
     "leiden": "AAD_ABO_AAF",
     "leipzig": "AAD_AAV_ABD",
     "lenzburg": "AAD_ACC_AAS",
-    "leo i": [
-        "AAF_AAK_AAD_AAD",
-        "AAN_AGV"
-    ],
-    "leo ii": [
-        "AAF_AAK_AAD_AAE",
-        "AAN_AGW"
-    ],
+    "leo i": ["AAF_AAK_AAD_AAD", "AAN_AGV"],
+    "leo ii": ["AAF_AAK_AAD_AAE", "AAN_AGW"],
     "leopard skin": "AAA_AAA_AAE",
     "leqeita": "AAE_AAD_AAC_AAW",
-    "letter": [
-        "AAK_AAN",
-        "AAL_AAH"
-    ],
+    "letter": ["AAK_AAN", "AAL_AAH"],
     "letter (to the living)": "AAL_AAH_AAA",
     "letter to the dead": "AAL_AAH_AAB",
     "letter to the gods": "AAL_AAH_AAC",
@@ -9870,10 +8723,7 @@ MET_SIMPLE_REVERSED = {
     "libation": "AAB_AAJ_AAE_AAS",
     "libation text": "AAL_AAE_AAM_AAB",
     "libya [39]": "AAD_ABK",
-    "libyan": [
-        "AAB_AAF_AAA_AAL_AAE",
-        "AAB_AAF_AAB_AAK_AAE"
-    ],
+    "libyan": ["AAB_AAF_AAA_AAL_AAE", "AAB_AAF_AAB_AAK_AAE"],
     "licking": "AAB_AAA_ABF",
     "liebieghaus, museum alter plastik [04/017]": "AAD_AAV_AAO_AAA",
     "liestal": "AAD_ACC_AAT",
@@ -9889,10 +8739,7 @@ MET_SIMPLE_REVERSED = {
     "lincoln": "AAD_ACK_ABV",
     "linen": "AAC_AAB_AAG",
     "link\u00f6ping": "AAD_ACB_AAB",
-    "lintel": [
-        "AAA_AAB_AAB_AAE_AAG",
-        "AAA_AAB_AAB_AAF_AAC"
-    ],
+    "lintel": ["AAA_AAB_AAB_AAE_AAG", "AAA_AAB_AAB_AAF_AAC"],
     "linz": "AAD_AAD_AAF",
     "lippisches landesmuseum [04/012]": "AAD_AAV_AAJ_AAA",
     "lips slotenmuseum [06/005]": "AAD_ABO_AAB_AAA",
@@ -9914,10 +8761,7 @@ MET_SIMPLE_REVERSED = {
     "li\u00e8ge": "AAD_AAF_AAF",
     "ljubljana": "AAD_ABW_AAA",
     "loading or unloading boats": "AAB_AAJ_AAR_AAC",
-    "lock": [
-        "AAA_AAB_AAB_AAE_AAH",
-        "AAA_AAD_AAE_AAH"
-    ],
+    "lock": ["AAA_AAB_AAB_AAE_AAH", "AAA_AAD_AAE_AAH"],
     "log book": "AAL_AAA_AAH",
     "loin-cloth": "AAA_AAC_AAK",
     "london": "AAD_ACK_ABY",
@@ -9935,10 +8779,7 @@ MET_SIMPLE_REVERSED = {
     "lower paleolithic": "AAF_AAA_AAA_AAA",
     "lower side": "AAB_AAI_AAN",
     "lower yard (model)": "AAA_AAG_AAC_AAC_AAH",
-    "lucius verus": [
-        "AAF_AAK_AAC_AAQ",
-        "AAN_AGX"
-    ],
+    "lucius verus": ["AAF_AAK_AAC_AAQ", "AAN_AGX"],
     "lucknow": "AAD_ABB_AAD",
     "lund": "AAD_ACB_AAC",
     "lustration": "AAB_AAJ_AAE_AAW_AAE",
@@ -9966,14 +8807,8 @@ MET_SIMPLE_REVERSED = {
     "macedonian period": "AAF_AAK_AAA",
     "maclean museum and art gallery [03/120]": "AAD_ACK_ABG_AAA",
     "macquarie university, school of history, philosophy and politics [12/009]": "AAD_AAC_AAE_AAB",
-    "macrianus and quietus": [
-        "AAF_AAK_AAC_ABN",
-        "AAN_AGY"
-    ],
-    "macrinus": [
-        "AAF_AAK_AAC_AAX",
-        "AAN_AGZ"
-    ],
+    "macrianus and quietus": ["AAF_AAK_AAC_ABN", "AAN_AGY"],
+    "macrinus": ["AAF_AAK_AAC_AAX", "AAN_AGZ"],
     "madbotat el-athar museum (confiscated antiquities museum) (citadel of salah el-din) [01/030]": "AAD_AAO_AAD_AAK",
     "madrid": "AAD_ABY_AAI",
     "mafdet": "AAM_AAB_AAV",
@@ -9994,17 +8829,11 @@ MET_SIMPLE_REVERSED = {
     "male mummy": "AAA_AAI_AAD_AAD_AAD",
     "male musician": "AAB_AAF_AAA_AAC",
     "male offering bearer": "AAB_AAF_AAA_AAD",
-    "mallawi": [
-        "AAD_AAO_AAL",
-        "AAE_AAB_AAF_AAW"
-    ],
+    "mallawi": ["AAD_AAO_AAL", "AAE_AAB_AAF_AAW"],
     "mallet": "AAA_AAE_AAD_AAG",
     "malmaison": "AAD_AAT_ACB",
     "malta [41]": "AAD_ABM",
-    "mammal": [
-        "AAA_AAI_AAF",
-        "AAB_AAB_AAE"
-    ],
+    "mammal": ["AAA_AAI_AAF", "AAB_AAB_AAE"],
     "mammal bone": "AAA_AAI_AAF_AAA",
     "mammal cranium": "AAA_AAI_AAF_AAB",
     "mammal horn": "AAA_AAI_AAF_AAC",
@@ -10020,14 +8849,8 @@ MET_SIMPLE_REVERSED = {
     "mantua": "AAD_ABF_ABE",
     "manyal ghidan": "AAE_AAB_AAG_AAQ",
     "marble": "AAC_AAC_AAE_AAP",
-    "marcian": [
-        "AAF_AAK_AAD_AAC",
-        "AAN_AHA"
-    ],
-    "marcus aurelius": [
-        "AAF_AAK_AAC_AAP",
-        "AAN_AHB"
-    ],
+    "marcian": ["AAF_AAK_AAD_AAC", "AAN_AHA"],
+    "marcus aurelius": ["AAF_AAK_AAC_AAP", "AAN_AHB"],
     "maribor": "AAD_ABW_AAB",
     "mariemont": "AAD_AAF_AAG",
     "marimda beni salama": "AAE_AAB_AAI_AAY",
@@ -10043,16 +8866,10 @@ MET_SIMPLE_REVERSED = {
     "marseille": "AAD_AAT_ACC",
     "marsh scene": "AAB_AAJ_AAT_AAZ",
     "martin von wagner-museum, antikensammlung [04/058]": "AAD_AAV_ABT_AAA",
-    "masaharty": [
-        "AAF_AAI_AAB_AAC",
-        "AAN_AHC"
-    ],
+    "masaharty": ["AAF_AAI_AAB_AAC", "AAN_AHC"],
     "masgid musa": "AAE_AAB_AAI_AAZ",
     "mashay`a": "AAE_AAB_AAE_ABB",
-    "mask": [
-        "AAA_AAL_AAF",
-        "AAA_AAO_AAJ_AAL"
-    ],
+    "mask": ["AAA_AAL_AAF", "AAA_AAO_AAJ_AAL"],
     "masmas:-nag`farkhi": "AAE_AAB_AAA_AAA_AAS",
     "masmas:-nag`gamus": "AAE_AAB_AAA_AAA_AAT",
     "masmas:-nag`sawesra": "AAE_AAB_AAA_AAA_AAU",
@@ -10065,18 +8882,9 @@ MET_SIMPLE_REVERSED = {
     "mathematical text": "AAL_AAQ_AAB",
     "matsuoka museum of art [35/006]": "AAD_ABG_AAD_AAC",
     "maul": "AAA_AAE_AAC_AAD",
-    "maurice": [
-        "AAF_AAK_AAD_AAM",
-        "AAN_AHD"
-    ],
-    "maximinian": [
-        "AAF_AAK_AAC_ABB",
-        "AAN_AHF"
-    ],
-    "maximinian daia": [
-        "AAF_AAK_AAC_ABW",
-        "AAN_AHE"
-    ],
+    "maurice": ["AAF_AAK_AAD_AAM", "AAN_AHD"],
+    "maximinian": ["AAF_AAK_AAC_ABB", "AAN_AHF"],
+    "maximinian daia": ["AAF_AAK_AAC_ABW", "AAN_AHE"],
     "mazura": "AAE_AAB_AAG_AAR",
     "mcgill university ethnological museum [14/001]": "AAD_AAH_AAA_AAA",
     "measuring grain": "AAB_AAJ_AAA_AAI",
@@ -10108,81 +8916,30 @@ MET_SIMPLE_REVERSED = {
     "mendes": "AAE_AAC_AAB_AAD",
     "menet/mentit": "AAM_AAB_AAY",
     "menhyt": "AAM_AAB_AAZ",
-    "menkare": [
-        "AAF_AAE_AAA_AAB",
-        "AAN_AHG"
-    ],
-    "menkauhor/kaiuhor": [
-        "AAF_AAD_AAC_AAG",
-        "AAN_AHH"
-    ],
+    "menkare": ["AAF_AAE_AAA_AAB", "AAN_AHG"],
+    "menkauhor/kaiuhor": ["AAF_AAD_AAC_AAG", "AAN_AHH"],
     "menkaure quarry cemetery": "AAA_AAB_AAC_AAC_AAD",
-    "menkheperre/hemnetjer-tepyenamun": [
-        "AAF_AAI_AAB_AAE",
-        "AAN_AHI"
-    ],
-    "mentuhotep i/tepia": [
-        "AAF_AAF_AAA_AAA",
-        "AAN_AHJ"
-    ],
-    "mentuhotep ii/nebhepetre": [
-        "AAF_AAF_AAA_AAE",
-        "AAN_AHK"
-    ],
-    "mentuhotep iii/seankhkare": [
-        "AAF_AAF_AAA_AAF",
-        "AAN_AHL"
-    ],
-    "mentuhotep iv/nebtawyre": [
-        "AAF_AAF_AAA_AAG",
-        "AAN_AHM"
-    ],
-    "mentuhotep v/meriankhre": [
-        "AAF_AAF_AAC_ABX",
-        "AAN_AHN"
-    ],
-    "mentuhotep vi/swadjre": [
-        "AAF_AAF_AAC_ACC",
-        "AAN_AHO"
-    ],
-    "mentuhotep vii/seankhenre": [
-        "AAF_AAG_AAD_AAE",
-        "AAN_AHP"
-    ],
-    "merdjefare": [
-        "AAF_AAG_AAA_AAE",
-        "AAN_AHQ"
-    ],
-    "merenhor": [
-        "AAF_AAE_AAA_AAG",
-        "AAN_AHR"
-    ],
-    "merenptah/baenre": [
-        "AAF_AAH_AAB_AAD",
-        "AAN_AHS"
-    ],
+    "menkheperre/hemnetjer-tepyenamun": ["AAF_AAI_AAB_AAE", "AAN_AHI"],
+    "mentuhotep i/tepia": ["AAF_AAF_AAA_AAA", "AAN_AHJ"],
+    "mentuhotep ii/nebhepetre": ["AAF_AAF_AAA_AAE", "AAN_AHK"],
+    "mentuhotep iii/seankhkare": ["AAF_AAF_AAA_AAF", "AAN_AHL"],
+    "mentuhotep iv/nebtawyre": ["AAF_AAF_AAA_AAG", "AAN_AHM"],
+    "mentuhotep v/meriankhre": ["AAF_AAF_AAC_ABX", "AAN_AHN"],
+    "mentuhotep vi/swadjre": ["AAF_AAF_AAC_ACC", "AAN_AHO"],
+    "mentuhotep vii/seankhenre": ["AAF_AAG_AAD_AAE", "AAN_AHP"],
+    "merdjefare": ["AAF_AAG_AAA_AAE", "AAN_AHQ"],
+    "merenhor": ["AAF_AAE_AAA_AAG", "AAN_AHR"],
+    "merenptah/baenre": ["AAF_AAH_AAB_AAD", "AAN_AHS"],
     "meret": "AAM_AAB_ABA",
     "meretseger": "AAM_AAB_ABB",
-    "merihathor": [
-        "AAF_AAE_AAB_AAF",
-        "AAN_AHT"
-    ],
-    "merikare": [
-        "AAF_AAE_AAB_AAG",
-        "AAF_AAF_AAC_ABN"
-    ],
+    "merihathor": ["AAF_AAE_AAB_AAF", "AAN_AHT"],
+    "merikare": ["AAF_AAE_AAB_AAG", "AAF_AAF_AAC_ABN"],
     "merikare ii": "AAN_AHV",
     "merikaure": "AAN_AHU",
-    "merikheperre": [
-        "AAF_AAF_AAC_ABM",
-        "AAN_AHW"
-    ],
+    "merikheperre": ["AAF_AAF_AAC_ABM", "AAN_AHW"],
     "meroe": "AAD_ACA_AAB",
     "meroe museum [51/002]": "AAD_ACA_AAB_AAA",
-    "meroitic": [
-        "AAI_AAN",
-        "AAJ_AAT"
-    ],
+    "meroitic": ["AAI_AAN", "AAJ_AAT"],
     "meroitic god": "AAM_AAE",
     "meroitic goddess": "AAM_AAF",
     "meroitic period": "AAF_AAP_AAG_AAC",
@@ -10269,17 +9026,10 @@ MET_SIMPLE_REVERSED = {
     "montrose": "AAD_ACK_ACD",
     "montrose museum and art gallery [03/121]": "AAD_ACK_ACD_AAA",
     "montu": "AAM_AAA_ADK",
-    "montuemsaf/djedankhre": [
-        "AAF_AAF_AAC_ABU",
-        "AAN_AHX"
-    ],
+    "montuemsaf/djedankhre": ["AAF_AAF_AAC_ABU", "AAN_AHX"],
     "mora": "AAD_ACB_AAD",
     "moravsk\u00e1 t\u00feebov\u00e1": "AAD_AAM_AAB",
-    "mortar": [
-        "AAA_AAE_AAF_AAH",
-        "AAA_AAE_AAG_AAG",
-        "AAC_AAB_AAH"
-    ],
+    "mortar": ["AAA_AAE_AAF_AAH", "AAA_AAE_AAG_AAG", "AAC_AAB_AAH"],
     "moscow": "AAD_ABU_AAH",
     "mosul": "AAD_ABD_AAB",
     "mother of pearl": "AAC_AAD_AAA_AAK",
@@ -10588,10 +9338,7 @@ MET_SIMPLE_REVERSED = {
     "mus\u00e9e toulouse-lautrec [02/004]": "AAD_AAT_AAC_AAA",
     "mus\u00e9e turpin de crisse [02/006]": "AAD_AAT_AAE_AAA",
     "mus\u00e9e-chateau [02/007]": "AAD_AAT_AAF_AAA",
-    "mut": [
-        "AAE_AAE_AAA_AAB_AAK",
-        "AAM_AAB_ABD"
-    ],
+    "mut": ["AAE_AAE_AAA_AAB_AAK", "AAM_AAB_ABD"],
     "mut el-kharab": "AAE_AAE_AAA_AAB_AAL",
     "mut temple": "AAE_AAB_AAC_AAA_AAB_AAD",
     "muu-dance": "AAB_AAJ_AAJ_AAM",
@@ -10606,10 +9353,7 @@ MET_SIMPLE_REVERSED = {
     "muzeum narodowe w poznaniu [45/005]": "AAD_ABR_AAC_AAB",
     "muzeum okregowe [45/001]": "AAD_ABR_AAA_AAA",
     "muzeum w raciborzu [45/007]": "AAD_ABR_AAD_AAA",
-    "mycerinus/menkaure": [
-        "AAF_AAD_AAB_AAF",
-        "AAN_AHY"
-    ],
+    "mycerinus/menkaure": ["AAF_AAD_AAB_AAF", "AAN_AHY"],
     "myers museum [03/042]": "AAD_ACK_ADQ_AAB",
     "myrrh": "AAC_AAD_AAE_AAC",
     "mythological text": "AAL_AAK",
@@ -10647,19 +9391,13 @@ MET_SIMPLE_REVERSED = {
     "napatan period": "AAF_AAP_AAG_AAB",
     "naples": "AAD_ABF_ABJ",
     "naq`a": "AAE_AAA_ABE",
-    "naqada": [
-        "AAE_AAB_AAB_ABP",
-        "AAF_AAA_AAC_AAA"
-    ],
+    "naqada": ["AAE_AAB_AAB_ABP", "AAF_AAA_AAC_AAA"],
     "naqada i": "AAF_AAA_AAC_AAB",
     "naqada ii": "AAF_AAA_AAC_AAD",
     "naqada iii": "AAF_AAA_AAC_AAF",
     "narbonne": "AAD_AAT_ACF",
     "nariwa": "AAD_ABG_AAB",
-    "narmer/menes": [
-        "AAF_AAB_AAA_AAB",
-        "AAN_AHZ"
-    ],
+    "narmer/menes": ["AAF_AAB_AAA_AAB", "AAN_AHZ"],
     "narodni muzej [49/001]": "AAD_ABW_AAA_AAA",
     "narodni muzej [60/002]": "AAD_ACP_AAA_AAB",
     "national archaeological museum [27/002]": "AAD_AAY_AAA_AAB",
@@ -10684,188 +9422,74 @@ MET_SIMPLE_REVERSED = {
     "nazza": "AAE_AAB_AAD_ABY",
     "near eastern god": "AAM_AAG",
     "near eastern goddess": "AAM_AAH",
-    "nebdjefare": [
-        "AAF_AAG_AAA_AAG",
-        "AAN_AIA"
-    ],
+    "nebdjefare": ["AAF_AAG_AAA_AAG", "AAN_AIA"],
     "nebethetepet": "AAM_AAB_ABF",
     "nebetu": "AAM_AAB_ABG",
-    "nebfaure": [
-        "AAF_AAG_AAA_AAC",
-        "AAN_AIB"
-    ],
-    "nebi/neferkare iii": [
-        "AAF_AAE_AAA_AAD",
-        "AAN_AIC"
-    ],
-    "nebirierau ii/neferkare": [
-        "AAF_AAG_AAD_AAG",
-        "AAN_AIE"
-    ],
-    "nebirieraw i/sewadjenre": [
-        "AAF_AAG_AAD_AAF",
-        "AAN_AID"
-    ],
-    "nebka": [
-        "AAF_AAD_AAA_AAA",
-        "AAN_AIF"
-    ],
-    "nebmare": [
-        "AAF_AAG_AAC_AAI",
-        "AAN_AIG"
-    ],
-    "nebre": [
-        "AAF_AAC_AAB_AAB",
-        "AAN_AIH"
-    ],
-    "nebsenre": [
-        "AAF_AAG_AAA_AAM",
-        "AAN_AII"
-    ],
+    "nebfaure": ["AAF_AAG_AAA_AAC", "AAN_AIB"],
+    "nebi/neferkare iii": ["AAF_AAE_AAA_AAD", "AAN_AIC"],
+    "nebirierau ii/neferkare": ["AAF_AAG_AAD_AAG", "AAN_AIE"],
+    "nebirieraw i/sewadjenre": ["AAF_AAG_AAD_AAF", "AAN_AID"],
+    "nebka": ["AAF_AAD_AAA_AAA", "AAN_AIF"],
+    "nebmare": ["AAF_AAG_AAC_AAI", "AAN_AIG"],
+    "nebre": ["AAF_AAC_AAB_AAB", "AAN_AIH"],
+    "nebsenre": ["AAF_AAG_AAA_AAM", "AAN_AII"],
     "nebty name": "AAL_AAP_AAF_AAB",
-    "necho i/menkheperre": [
-        "AAF_AAI_AAG_AAL",
-        "AAN_AIJ"
-    ],
-    "necho ii/wehemibre": [
-        "AAF_AAJ_AAA_AAB",
-        "AAN_AIK"
-    ],
+    "necho i/menkheperre": ["AAF_AAI_AAG_AAL", "AAN_AIJ"],
+    "necho ii/wehemibre": ["AAF_AAJ_AAA_AAB", "AAN_AIK"],
     "necklace": "AAA_AAF_AAK",
     "necklace terminal": "AAA_AAF_AAK_AAD",
     "necropolis journal": "AAL_AAA_AAI",
-    "nectanebo i/kheperkare": [
-        "AAF_AAJ_AAE_AAA",
-        "AAN_AIL"
-    ],
+    "nectanebo i/kheperkare": ["AAF_AAJ_AAE_AAA", "AAN_AIL"],
     "nectanebo ii/snedjemibre-setepeniniheret": "AAN_AIM",
-    "nedjemibre": [
-        "AAF_AAF_AAC_AAK",
-        "AAN_AIN"
-    ],
+    "nedjemibre": ["AAF_AAF_AAC_AAK", "AAN_AIN"],
     "needle": "AAA_AAE_AAP_AAA",
-    "neferefre/isi": [
-        "AAF_AAD_AAC_AAE",
-        "AAN_AIO"
-    ],
+    "neferefre/isi": ["AAF_AAD_AAC_AAE", "AAN_AIO"],
     "neferher/nepheros": "AAM_AAA_ADL",
     "neferhotep": "AAM_AAA_ADM",
-    "neferhotep i/khasekhemre": [
-        "AAF_AAF_AAC_AAV",
-        "AAN_AIP"
-    ],
-    "neferhotep ii/merisekhemre": [
-        "AAF_AAF_AAC_ABS",
-        "AAN_AIQ"
-    ],
-    "neferhotep iii/sekhemreseankhtawy": [
-        "AAF_AAF_AAC_ABW",
-        "AAN_AIR"
-    ],
-    "neferibre": [
-        "AAF_AAG_AAA_AAT",
-        "AAN_AIS"
-    ],
+    "neferhotep i/khasekhemre": ["AAF_AAF_AAC_AAV", "AAN_AIP"],
+    "neferhotep ii/merisekhemre": ["AAF_AAF_AAC_ABS", "AAN_AIQ"],
+    "neferhotep iii/sekhemreseankhtawy": ["AAF_AAF_AAC_ABW", "AAN_AIR"],
+    "neferibre": ["AAF_AAG_AAA_AAT", "AAN_AIS"],
     "neferirkare i/kakai": "AAN_AIT",
-    "neferirkare ii": [
-        "AAF_AAE_AAA_AAQ",
-        "AAN_AIU"
-    ],
+    "neferirkare ii": ["AAF_AAE_AAA_AAQ", "AAN_AIU"],
     "neferirkare/kakai": "AAF_AAD_AAC_AAC",
-    "neferkahor": [
-        "AAF_AAE_AAA_AAK",
-        "AAN_AIV"
-    ],
-    "neferkamin i": [
-        "AAF_AAE_AAA_AAH",
-        "AAN_AIW"
-    ],
-    "neferkare": [
-        "AAF_AAC_AAB_AAH",
-        "AAN_AIX"
-    ],
-    "neferkare ii": [
-        "AAF_AAE_AAA_AAC",
-        "AAN_AIY"
-    ],
-    "neferkare vii": [
-        "AAF_AAE_AAB_AAA",
-        "AAN_AIZ"
-    ],
-    "neferkasokar": [
-        "AAF_AAC_AAB_AAI",
-        "AAN_AJA"
-    ],
-    "neferkauhor": [
-        "AAF_AAE_AAA_AAP",
-        "AAN_AJB"
-    ],
-    "neferkaure": [
-        "AAF_AAE_AAA_AAO",
-        "AAN_AJC"
-    ],
+    "neferkahor": ["AAF_AAE_AAA_AAK", "AAN_AIV"],
+    "neferkamin i": ["AAF_AAE_AAA_AAH", "AAN_AIW"],
+    "neferkare": ["AAF_AAC_AAB_AAH", "AAN_AIX"],
+    "neferkare ii": ["AAF_AAE_AAA_AAC", "AAN_AIY"],
+    "neferkare vii": ["AAF_AAE_AAB_AAA", "AAN_AIZ"],
+    "neferkasokar": ["AAF_AAC_AAB_AAI", "AAN_AJA"],
+    "neferkauhor": ["AAF_AAE_AAA_AAP", "AAN_AJB"],
+    "neferkaure": ["AAF_AAE_AAA_AAO", "AAN_AJC"],
     "nefertem": "AAM_AAA_ADN",
-    "neferusobek/kasobekre": [
-        "AAF_AAF_AAB_AAH",
-        "AAN_AJD"
-    ],
+    "neferusobek/kasobekre": ["AAF_AAF_AAB_AAH", "AAN_AJD"],
     "negress": "AAB_AAF_AAB_AAK_AAF",
     "negro": "AAB_AAF_AAA_AAL_AAF",
-    "nehasy": [
-        "AAF_AAG_AAA_AAA",
-        "AAN_AJE"
-    ],
+    "nehasy": ["AAF_AAG_AAA_AAA", "AAN_AJE"],
     "nehebkau": "AAM_AAA_ADO",
     "nehmetaway": "AAM_AAB_ABH",
     "neith": "AAM_AAB_ABI",
     "nekhakha-sceptre/flail/flagellum": "AAA_AAA_AAF_AAC",
     "nekhbet": "AAM_AAB_ABJ",
-    "nekhepsos": [
-        "AAF_AAI_AAG_AAK",
-        "AAN_AJF"
-    ],
+    "nekhepsos": ["AAF_AAI_AAG_AAK", "AAN_AJF"],
     "nektanebo ii/snedjemibre-setepeniniheret": "AAF_AAJ_AAE_AAC",
     "nemes": "AAA_AAA_AAB_AAD",
-    "nemtiemsaf i/merenre i": [
-        "AAF_AAD_AAD_AAD",
-        "AAN_AJG"
-    ],
-    "nemtiemsaf ii/merenre ii": [
-        "AAF_AAD_AAD_AAF",
-        "AAN_AJH"
-    ],
+    "nemtiemsaf i/merenre i": ["AAF_AAD_AAD_AAD", "AAN_AJG"],
+    "nemtiemsaf ii/merenre ii": ["AAF_AAD_AAD_AAF", "AAN_AJH"],
     "neolithic period": "AAF_AAA_AAB",
     "neolithicum": "AAF_AAP_AAC",
     "neper": "AAM_AAA_ADP",
-    "nepherites i/baenre-merinetjeru": [
-        "AAF_AAJ_AAD_AAA",
-        "AAN_AJI"
-    ],
-    "nepherites ii/naiaaurudju ii": [
-        "AAF_AAJ_AAD_AAD",
-        "AAN_AJJ"
-    ],
+    "nepherites i/baenre-merinetjeru": ["AAF_AAJ_AAD_AAA", "AAN_AJI"],
+    "nepherites ii/naiaaurudju ii": ["AAF_AAJ_AAD_AAD", "AAN_AJJ"],
     "nephrite": "AAC_AAC_AAC_ABA",
     "nephthys": "AAM_AAB_ABK",
-    "nerkare": [
-        "AAF_AAF_AAC_ABY",
-        "AAN_AJK"
-    ],
-    "nero": [
-        "AAF_AAK_AAC_AAE",
-        "AAN_AJL"
-    ],
-    "nerva": [
-        "AAF_AAK_AAC_AAL",
-        "AAN_AJM"
-    ],
+    "nerkare": ["AAF_AAF_AAC_ABY", "AAN_AJK"],
+    "nero": ["AAF_AAK_AAC_AAE", "AAN_AJL"],
+    "nerva": ["AAF_AAK_AAC_AAL", "AAN_AJM"],
     "net": "AAA_AAE_AAT_AAK",
     "net for carrying vessels": "AAA_AAE_AAE_AAA",
     "netherlands [06]": "AAD_ABO",
-    "netrikare": [
-        "AAF_AAE_AAA_AAA",
-        "AAN_AJN"
-    ],
+    "netrikare": ["AAF_AAE_AAA_AAA", "AAN_AJN"],
     "netting": "AAB_AAJ_AAK_AAC",
     "neuch\u00e2tel": "AAD_ACC_AAV",
     "nevada city (ca)": "AAD_ACI_ABN",
@@ -10881,35 +9505,20 @@ MET_SIMPLE_REVERSED = {
     "newcastle-upon-tyne": "AAD_ACK_ACF",
     "niagara falls": "AAD_AAH_AAB",
     "niagara falls museum [14/007]": "AAD_AAH_AAB_AAA",
-    "niche": [
-        "AAA_AAB_AAB_AAF_AAD",
-        "AAA_AAB_AAB_AAN"
-    ],
+    "niche": ["AAA_AAB_AAB_AAF_AAD", "AAA_AAB_AAB_AAN"],
     "nicholson museum of antiquities [12/010]": "AAD_AAC_AAE_AAC",
     "nicosia": "AAD_AAL_AAB",
     "nijmegen": "AAD_ABO_AAG",
-    "nikare i": [
-        "AAF_AAE_AAA_AAI",
-        "AAN_AJO"
-    ],
-    "nikare ii": [
-        "AAF_AAG_AAC_AAJ",
-        "AAN_AJP"
-    ],
+    "nikare i": ["AAF_AAE_AAA_AAI", "AAN_AJO"],
+    "nikare ii": ["AAF_AAG_AAC_AAJ", "AAN_AJP"],
     "nikolayev": "AAD_ACJ_AAF",
     "nikolayev regional museum [55/009]": "AAD_ACJ_AAF_AAA",
     "nile mud": "AAC_AAC_AAD_AAD",
     "nile shell": "AAA_AAI_AAI_AAB",
     "nimlot/nemrud": "AAF_AAI_AAD_AAF",
     "nimlot/nemrud/nemarud": "AAN_AJQ",
-    "ninetjer": [
-        "AAF_AAC_AAB_AAC",
-        "AAN_AJR"
-    ],
-    "nitocris/neit-iqerti": [
-        "AAF_AAD_AAD_AAG",
-        "AAN_AJS"
-    ],
+    "ninetjer": ["AAF_AAC_AAB_AAC", "AAN_AJR"],
+    "nitocris/neit-iqerti": ["AAF_AAD_AAD_AAG", "AAN_AJS"],
     "nitra": "AAD_ABV_AAD",
     "nitrianske muzeum [65/005]": "AAD_ABV_AAD_AAA",
     "nomen": "AAL_AAP_AAF_AAE",
@@ -10921,35 +9530,20 @@ MET_SIMPLE_REVERSED = {
     "northampton (ma)": "AAD_ACI_ABT",
     "norway [43]": "AAD_ABQ",
     "norwich": "AAD_ACK_ACH",
-    "not identified": [
-        "AAI_AAU",
-        "AAJ_ABB"
-    ],
+    "not identified": ["AAI_AAU", "AAJ_ABB"],
     "nottingham": "AAD_ACK_ACI",
     "novara": "AAD_ABF_ABK",
-    "nubankhre": [
-        "AAF_AAG_AAC_AAM",
-        "AAN_AJT"
-    ],
+    "nubankhre": ["AAF_AAG_AAC_AAM", "AAN_AJT"],
     "nubia museum [01/024]": "AAD_AAO_AAB_AAB",
-    "nubian": [
-        "AAB_AAF_AAA_AAL_AAG",
-        "AAB_AAF_AAB_AAK_AAG"
-    ],
-    "nubuserre": [
-        "AAF_AAG_AAC_AAN",
-        "AAN_AJU"
-    ],
+    "nubian": ["AAB_AAF_AAA_AAL_AAG", "AAB_AAF_AAB_AAK_AAG"],
+    "nubuserre": ["AAF_AAG_AAC_AAN", "AAN_AJU"],
     "numismatics": "AAA_AAH",
     "nun": "AAM_AAA_ADQ",
     "nuri": "AAE_AAA_ABG",
     "nut": "AAM_AAB_ABL",
     "ny carlsberg glyptotek [20/002]": "AAD_AAN_AAB_AAB",
     "nyon": "AAD_ACC_AAW",
-    "nyuserre/ini": [
-        "AAF_AAD_AAC_AAF",
-        "AAN_AJV"
-    ],
+    "nyuserre/ini": ["AAF_AAD_AAC_AAF", "AAN_AJV"],
     "n\u00e1prstkovo muzeum [19/007]": "AAD_AAM_AAD_AAA",
     "n\u00e1rodn\u00ed galerie [19/008]": "AAD_AAM_AAD_AAB",
     "n\u00e1rodn\u00ed muzeum [19/009]": "AAD_AAM_AAD_AAC",
@@ -11022,14 +9616,8 @@ MET_SIMPLE_REVERSED = {
     "old egyptian": "AAI_AAG_AAA",
     "old kingdom": "AAF_AAD",
     "old man": "AAB_AAF_AAA_AAE",
-    "old nubian": [
-        "AAI_AAO",
-        "AAJ_AAU"
-    ],
-    "old persian": [
-        "AAI_AAP",
-        "AAJ_AAV"
-    ],
+    "old nubian": ["AAI_AAO", "AAJ_AAU"],
+    "old persian": ["AAI_AAP", "AAJ_AAV"],
     "old woman": "AAB_AAF_AAB_AAF",
     "oldenburg": "AAD_AAV_ABK",
     "olivinemi": "AAC_AAC_AAC_ABB",
@@ -11055,10 +9643,7 @@ MET_SIMPLE_REVERSED = {
     "on the sides": "AAB_AAI_ABF",
     "on the stomach": "AAB_AAI_ABG",
     "one-sided": "AAB_AAK_AAR",
-    "onomasticon": [
-        "AAK_AAQ",
-        "AAL_AAN"
-    ],
+    "onomasticon": ["AAK_AAQ", "AAL_AAN"],
     "onuris": "AAM_AAA_ADS",
     "onyx": "AAC_AAC_AAC_ABC",
     "open-air museum [01/013]": "AAD_AAO_AAH_AAA",
@@ -11085,54 +9670,27 @@ MET_SIMPLE_REVERSED = {
     "osiris enthroned": "AAB_AAJ_AAS_AAN",
     "osiris-khentimentiu": "AAM_AAA_ADU",
     "oslo": "AAD_ABQ_AAC",
-    "osochor/aakheperre-setepenre": [
-        "AAF_AAI_AAA_AAE",
-        "AAN_AJW"
-    ],
-    "osorkon": [
-        "AAF_AAI_AAD_AAG",
-        "AAN_AJX"
-    ],
-    "osorkon i/sekhemkheperre": [
-        "AAF_AAI_AAC_AAB",
-        "AAN_AJY"
-    ],
-    "osorkon ii/usermaatre-setepenamun": [
-        "AAF_AAI_AAC_AAE",
-        "AAN_AJZ"
-    ],
-    "osorkon iii/usermaatre": [
-        "AAF_AAI_AAE_AAD",
-        "AAN_AKA"
-    ],
-    "osorkon iv/aakheperre-setepenamun": [
-        "AAF_AAI_AAC_AAK",
-        "AAN_AKB"
-    ],
+    "osochor/aakheperre-setepenre": ["AAF_AAI_AAA_AAE", "AAN_AJW"],
+    "osorkon": ["AAF_AAI_AAD_AAG", "AAN_AJX"],
+    "osorkon i/sekhemkheperre": ["AAF_AAI_AAC_AAB", "AAN_AJY"],
+    "osorkon ii/usermaatre-setepenamun": ["AAF_AAI_AAC_AAE", "AAN_AJZ"],
+    "osorkon iii/usermaatre": ["AAF_AAI_AAE_AAD", "AAN_AKA"],
+    "osorkon iv/aakheperre-setepenamun": ["AAF_AAI_AAC_AAK", "AAN_AKB"],
     "ostia antica": "AAD_ABF_ABL",
     "ostracon": "AAA_AAP_AAD",
     "ostrich egg": "AAA_AAI_AAA_AAC",
     "ostrich egg-shell": "AAA_AAI_AAA_AAD",
     "otago museum [44/003]": "AAD_ABP_AAC_AAA",
-    "otho": [
-        "AAF_AAK_AAC_AAG",
-        "AAN_AKC"
-    ],
+    "otho": ["AAF_AAK_AAC_AAG", "AAN_AKC"],
     "otterlo": "AAD_ABO_AAH",
     "outer bands": "AAA_AAO_AAJ_AAM",
     "outside": "AAB_AAI_ABH",
     "outside egypt": "AAE_AAF",
     "oval": "AAB_AAK_AAS",
     "oxford": "AAD_ACK_ACJ",
-    "padimenet": [
-        "AAF_AAI_AAF_AAC",
-        "AAN_AKD"
-    ],
+    "padimenet": ["AAF_AAI_AAF_AAC", "AAN_AKD"],
     "padua": "AAD_ABF_ABM",
-    "painted": [
-        "AAG_AAB_AAO",
-        "AAG_AAI_AAB"
-    ],
+    "painted": ["AAG_AAB_AAO", "AAG_AAI_AAB"],
     "painted on stucco": "AAG_AAB_AAO_AAB",
     "pakhet": "AAM_AAB_ABM",
     "palace facade panelling": "AAA_AAB_AAA_AAE",
@@ -11141,37 +9699,25 @@ MET_SIMPLE_REVERSED = {
     "palais royal [07/004]": "AAD_AAF_AAC_AAC",
     "palazzo reale [05/002]": "AAD_ABF_ACE_AAC",
     "palermo": "AAD_ABF_ABN",
-    "palette": [
-        "AAA_AAE_AAF_AAI",
-        "AAA_AAE_AAU_AAF"
-    ],
+    "palette": ["AAA_AAE_AAF_AAI", "AAA_AAE_AAU_AAF"],
     "pall": "AAA_AAO_AAL",
     "pall framework": "AAA_AAO_AAL_AAA",
     "palma": "AAD_ABY_AAL",
     "palmerston north": "AAD_ABP_AAD",
     "palmiform": "AAB_AAK_AAT",
     "pal\u00e1cio ducal (colec\u00e7ao do rei d. lu\u00eds) [46/012]": "AAD_ABS_AAD_AAA",
-    "pami/usermaatre-setepenamun": [
-        "AAF_AAI_AAC_AAI",
-        "AAN_AKE"
-    ],
+    "pami/usermaatre-setepenamun": ["AAF_AAI_AAC_AAI", "AAN_AKE"],
     "panebtawy": "AAM_AAA_ADV",
     "panel": "AAA_AAB_AAB_AAF_AAE",
     "papa": "AAD_AAZ_AAC",
     "papyriform": "AAB_AAK_AAU",
-    "papyrus": [
-        "AAA_AAP_AAE",
-        "AAC_AAD_AAD_AAF"
-    ],
+    "papyrus": ["AAA_AAP_AAE", "AAC_AAD_AAD_AAF"],
     "papyrus boat (model)": "AAA_AAG_AAC_AAB",
     "papyrus harvest": "AAB_AAJ_AAA_AAK",
     "papyrus skiff": "AAB_AAJ_AAR_AAF",
     "parade": "AAB_AAJ_AAM_AAE",
     "paray-le-monial": "AAD_AAT_ACI",
-    "parchment": [
-        "AAA_AAP_AAF",
-        "AAC_AAD_AAA_AAL"
-    ],
+    "parchment": ["AAA_AAP_AAF", "AAC_AAD_AAA_AAL"],
     "paris": "AAD_AAT_ACJ",
     "parma": "AAD_ABF_ABO",
     "part of boat": "AAA_AAE_AAS_AAA_AAA",
@@ -11192,77 +9738,34 @@ MET_SIMPLE_REVERSED = {
     "pearl": "AAC_AAD_AAA_AAM",
     "pectoral": "AAA_AAF_AAL",
     "pedestal": "AAA_AAB_AAB_AAR",
-    "pedubastis i/usermaatre-setepenamun": [
-        "AAF_AAI_AAE_AAA",
-        "AAN_AKF"
-    ],
-    "pedubastis ii/sehetepibenre": [
-        "AAF_AAI_AAG_AAI",
-        "AAN_AKG"
-    ],
-    "pedubastis iii": [
-        "AAF_AAJ_AAB_AAG",
-        "AAN_AKH"
-    ],
-    "peftjauawybastet/neferkare": [
-        "AAF_AAI_AAF_AAA",
-        "AAN_AKI"
-    ],
+    "pedubastis i/usermaatre-setepenamun": ["AAF_AAI_AAE_AAA", "AAN_AKF"],
+    "pedubastis ii/sehetepibenre": ["AAF_AAI_AAG_AAI", "AAN_AKG"],
+    "pedubastis iii": ["AAF_AAJ_AAB_AAG", "AAN_AKH"],
+    "peftjauawybastet/neferkare": ["AAF_AAI_AAF_AAA", "AAN_AKI"],
     "pegli": "AAD_ABF_ABQ",
     "pelizaeus-museum [04/030]": "AAD_AAV_AAZ_AAA",
     "pelusium": "AAE_AAD_AAA_AAA",
     "pen": "AAA_AAE_AAU_AAG",
-    "penamun/meritawyre": [
-        "AAF_AAI_AAG_AAJ",
-        "AAN_AKJ"
-    ],
+    "penamun/meritawyre": ["AAF_AAI_AAG_AAJ", "AAN_AKJ"],
     "penzance": "AAD_ACK_ACK",
-    "pepi i/merire": [
-        "AAF_AAD_AAD_AAC",
-        "AAN_AKK"
-    ],
-    "pepi ii/neferkare i": [
-        "AAF_AAD_AAD_AAE",
-        "AAN_AKL"
-    ],
-    "pepi iii/sneferankhre": [
-        "AAF_AAG_AAC_AAG",
-        "AAN_AKM"
-    ],
-    "pepiseneb/neferkare vi": [
-        "AAF_AAE_AAA_AAL",
-        "AAN_AKN"
-    ],
+    "pepi i/merire": ["AAF_AAD_AAD_AAC", "AAN_AKK"],
+    "pepi ii/neferkare i": ["AAF_AAD_AAD_AAE", "AAN_AKL"],
+    "pepi iii/sneferankhre": ["AAF_AAG_AAC_AAG", "AAN_AKM"],
+    "pepiseneb/neferkare vi": ["AAF_AAE_AAA_AAL", "AAN_AKN"],
     "percussion instrument": "AAA_AAE_AAO_AAA",
-    "peribsen": [
-        "AAF_AAC_AAB_AAF",
-        "AAN_AKO"
-    ],
+    "peribsen": ["AAF_AAC_AAB_AAF", "AAN_AKO"],
     "peridot": "AAC_AAC_AAC_ABE",
     "perm": "AAD_ABU_AAJ",
     "perm state art gallery [10/020]": "AAD_ABU_AAJ_AAA",
     "perm state university [10/021]": "AAD_ABU_AAJ_AAB",
     "permanent loan": "AAO_AAK",
     "persea": "AAC_AAD_AAF_AAU",
-    "persian": [
-        "AAB_AAF_AAA_AAL_AAH",
-        "AAB_AAF_AAB_AAK_AAH"
-    ],
-    "pertinax": [
-        "AAF_AAK_AAC_AAS",
-        "AAN_AKP"
-    ],
-    "pescennius niger": [
-        "AAF_AAK_AAC_AAT",
-        "AAN_AKQ"
-    ],
+    "persian": ["AAB_AAF_AAA_AAL_AAH", "AAB_AAF_AAB_AAK_AAH"],
+    "pertinax": ["AAF_AAK_AAC_AAS", "AAN_AKP"],
+    "pescennius niger": ["AAF_AAK_AAC_AAT", "AAN_AKQ"],
     "pescia": "AAD_ABF_ABR",
     "peseshkaf": "AAA_AAL_AAL_AAB",
-    "pestle": [
-        "AAA_AAE_AAF_AAJ",
-        "AAA_AAE_AAG_AAH",
-        "AAA_AAE_AAU_AAH"
-    ],
+    "pestle": ["AAA_AAE_AAF_AAJ", "AAA_AAE_AAG_AAH", "AAA_AAE_AAU_AAH"],
     "petition": "AAL_AAO",
     "petition to official": "AAL_AAO_AAC",
     "petition to the gods": "AAL_AAO_AAA",
@@ -11272,27 +9775,12 @@ MET_SIMPLE_REVERSED = {
     "philadelphia (pa)": "AAD_ACI_ABV",
     "philadelphia museum of art [57/069]": "AAD_ACI_ABV_AAB",
     "philae": "AAE_AAB_AAA_AAB_ABM",
-    "philip arrhidaeus": [
-        "AAF_AAK_AAA_AAB",
-        "AAN_AKS"
-    ],
-    "philip i": [
-        "AAF_AAK_AAC_ABH",
-        "AAN_AKR"
-    ],
-    "philistine": [
-        "AAB_AAF_AAA_AAL_AAI",
-        "AAB_AAF_AAB_AAK_AAI"
-    ],
-    "phocas": [
-        "AAF_AAK_AAD_AAN",
-        "AAN_AKT"
-    ],
+    "philip arrhidaeus": ["AAF_AAK_AAA_AAB", "AAN_AKS"],
+    "philip i": ["AAF_AAK_AAC_ABH", "AAN_AKR"],
+    "philistine": ["AAB_AAF_AAA_AAL_AAI", "AAB_AAF_AAB_AAK_AAI"],
+    "phocas": ["AAF_AAK_AAD_AAN", "AAN_AKT"],
     "phoebe apperson hearst museum of anthropology [57/005]": "AAD_ACI_AAD_AAA",
-    "phoenician": [
-        "AAI_AAQ",
-        "AAJ_AAW"
-    ],
+    "phoenician": ["AAI_AAQ", "AAJ_AAW"],
     "phoenix (az)": "AAD_ACI_ABW",
     "piankhy/pye/useraatre": "AAN_AKU",
     "piankhy/pye/usermaatre": "AAF_AAI_AAG_AAC",
@@ -11301,20 +9789,11 @@ MET_SIMPLE_REVERSED = {
     "pierpont morgan library [57/061]": "AAD_ACI_ABQ_AAG",
     "pilaster": "AAA_AAB_AAB_AAS",
     "pilkington glass museum [03/134]": "AAD_ACK_ACZ_AAA",
-    "pillared court/portico": [
-        "AAA_AAB_AAC_AAA_AAD",
-        "AAA_AAB_AAC_AAB_AAG"
-    ],
+    "pillared court/portico": ["AAA_AAB_AAC_AAA_AAD", "AAA_AAB_AAC_AAB_AAG"],
     "pillared/hypostyle hall": "AAA_AAB_AAC_AAA_AAF",
     "pine": "AAC_AAD_AAF_AAV",
-    "pinudjem i/kheperkhaure": [
-        "AAF_AAI_AAB_AAB",
-        "AAN_AKV"
-    ],
-    "pinudjem ii": [
-        "AAF_AAI_AAB_AAG",
-        "AAN_AKW"
-    ],
+    "pinudjem i/kheperkhaure": ["AAF_AAI_AAB_AAB", "AAN_AKV"],
+    "pinudjem ii": ["AAF_AAI_AAB_AAG", "AAN_AKW"],
     "pipe": "AAA_AAE_AAO_AAC_AAE",
     "pisa": "AAD_ABF_ABS",
     "pit/shaft": "AAA_AAB_AAC_AAI",
@@ -11324,10 +9803,7 @@ MET_SIMPLE_REVERSED = {
     "pivot": "AAA_AAB_AAB_AAE_AAI",
     "plaited": "AAG_AAG_AAA",
     "plane": "AAA_AAE_AAD_AAJ",
-    "plant": [
-        "AAA_AAI_AAH_AAH",
-        "AAB_AAL_AAD"
-    ],
+    "plant": ["AAA_AAI_AAH_AAH", "AAB_AAL_AAD"],
     "plant product": "AAC_AAD_AAE",
     "plaster": "AAC_AAB_AAI",
     "plate": "AAA_AAJ_AAV",
@@ -11356,10 +9832,7 @@ MET_SIMPLE_REVERSED = {
     "poland [45]": "AAD_ABR",
     "polenova": "AAD_ABU_AAL",
     "police museum  (citadel of salah el-din) [01/029]": "AAD_AAO_AAD_AAO",
-    "polished": [
-        "AAG_AAB_AAP",
-        "AAG_AAE_AAC"
-    ],
+    "polished": ["AAG_AAB_AAP", "AAG_AAE_AAC"],
     "poltava": "AAD_ACJ_AAH",
     "poltava regional museum [55/011]": "AAD_ACJ_AAH_AAA",
     "polygonal": "AAB_AAK_AAW",
@@ -11376,10 +9849,7 @@ MET_SIMPLE_REVERSED = {
     "post-meroitic period": "AAF_AAP_AAH",
     "postmuseum [04/002]": "AAD_AAV_AAC_AAB",
     "potter's mark": "AAL_AAX_AAB",
-    "pottery": [
-        "AAB_AAJ_AAL_AAH",
-        "AAC_AAB_AAJ"
-    ],
+    "pottery": ["AAB_AAJ_AAL_AAH", "AAC_AAB_AAJ"],
     "poultry breeding": "AAB_AAJ_AAD_AAF",
     "powysland museum and montgomery canal centre [03/125]": "AAD_ACK_ADM_AAA",
     "pozna\u00f7": "AAD_ABR_AAC",
@@ -11408,15 +9878,9 @@ MET_SIMPLE_REVERSED = {
     "printed": "AAG_AAI_AAF",
     "prinz-johann-georg-sammlung [04/039]": "AAD_AAV_ABF_AAB",
     "prirodovedecke muzeum [65/009]": "AAD_ABV_AAB_AAC",
-    "prisoner": [
-        "AAB_AAF_AAA_AAH",
-        "AAB_AAF_AAB_AAI"
-    ],
+    "prisoner": ["AAB_AAF_AAA_AAH", "AAB_AAF_AAB_AAI"],
     "private collection [98]": "AAD_ACQ",
-    "probus": [
-        "AAF_AAK_AAC_ABS",
-        "AAN_AKX"
-    ],
+    "probus": ["AAF_AAK_AAC_ABS", "AAN_AKX"],
     "processing of flax": "AAB_AAJ_AAA_AAM",
     "procession of min": "AAB_AAJ_AAF_AAI",
     "procession of the divine standards": "AAB_AAJ_AAF_AAJ",
@@ -11426,39 +9890,18 @@ MET_SIMPLE_REVERSED = {
     "prophecy": "AAL_AAI_AAD",
     "prostration (sn-ta)": "AAB_AAJ_AAE_AAZ",
     "protecting": "AAB_AAA_AAR",
-    "proto-sinaitic": [
-        "AAI_AAR",
-        "AAJ_AAX"
-    ],
+    "proto-sinaitic": ["AAI_AAR", "AAJ_AAX"],
     "providence (ri)": "AAD_ACI_ABY",
     "pr\u00e4historische staatssammlung, museum f\u00fcr vor- und fr\u00fchgeschichte [04/043]": "AAD_AAV_ABI_AAA",
     "pr\u00e4historisches museum/heimathaus [09/005]": "AAD_AAD_AAC_AAA",
-    "psammetichus i/wahibre": [
-        "AAF_AAJ_AAA_AAA",
-        "AAN_AKY"
-    ],
-    "psammetichus ii/neferibre": [
-        "AAF_AAJ_AAA_AAC",
-        "AAN_AKZ"
-    ],
-    "psammetichus iii/ankhkaenre": [
-        "AAF_AAJ_AAA_AAF",
-        "AAN_ALA"
-    ],
-    "psammuthis/userre-setepenptah": [
-        "AAF_AAJ_AAD_AAB",
-        "AAN_ALB"
-    ],
+    "psammetichus i/wahibre": ["AAF_AAJ_AAA_AAA", "AAN_AKY"],
+    "psammetichus ii/neferibre": ["AAF_AAJ_AAA_AAC", "AAN_AKZ"],
+    "psammetichus iii/ankhkaenre": ["AAF_AAJ_AAA_AAF", "AAN_ALA"],
+    "psammuthis/userre-setepenptah": ["AAF_AAJ_AAD_AAB", "AAN_ALB"],
     "pseudo-hieroglyphs": "AAJ_AAY",
     "psusennes i/aakheperre-setepenamun": "AAN_ALC",
-    "psusennes ii/titkheperure": [
-        "AAF_AAI_AAA_AAG",
-        "AAN_ALD"
-    ],
-    "psusennes iii": [
-        "AAF_AAI_AAB_AAH",
-        "AAN_ALE"
-    ],
+    "psusennes ii/titkheperure": ["AAF_AAI_AAA_AAG", "AAN_ALD"],
+    "psusennes iii": ["AAF_AAI_AAB_AAH", "AAN_ALE"],
     "psusennes/aakheperre-setepenamun": "AAF_AAI_AAA_AAC",
     "ptah": "AAM_AAA_ADX",
     "ptah temple": "AAE_AAB_AAC_AAA_AAB_AAG",
@@ -11467,75 +9910,27 @@ MET_SIMPLE_REVERSED = {
     "ptah-sokar-osiris ritual": "AAB_AAJ_AAE_ABA",
     "ptah-tatenen": "AAM_AAA_AEA",
     "ptolemaic period": "AAF_AAK_AAB",
-    "ptolemy i soter i": [
-        "AAF_AAK_AAB_AAA",
-        "AAN_ALF"
-    ],
-    "ptolemy ii philadelphus": [
-        "AAF_AAK_AAB_AAB",
-        "AAN_ALG"
-    ],
-    "ptolemy iii euergetes i": [
-        "AAF_AAK_AAB_AAD",
-        "AAN_ALH"
-    ],
-    "ptolemy iv philopator": [
-        "AAF_AAK_AAB_AAF",
-        "AAN_ALI"
-    ],
-    "ptolemy ix soter ii": [
-        "AAF_AAK_AAB_AAN",
-        "AAN_ALN"
-    ],
-    "ptolemy v epiphanes": [
-        "AAF_AAK_AAB_AAG",
-        "AAN_ALJ"
-    ],
-    "ptolemy vi philometor": [
-        "AAF_AAK_AAB_AAI",
-        "AAN_ALK"
-    ],
-    "ptolemy vii neos philopator": [
-        "AAF_AAK_AAB_AAJ",
-        "AAN_ALL"
-    ],
-    "ptolemy viii euergetes ii": [
-        "AAF_AAK_AAB_AAK",
-        "AAN_ALM"
-    ],
-    "ptolemy x alexander i": [
-        "AAF_AAK_AAB_AAO",
-        "AAN_ALO"
-    ],
-    "ptolemy xi alexander ii": [
-        "AAF_AAK_AAB_AAQ",
-        "AAN_ALP"
-    ],
-    "ptolemy xii neos dionysos": [
-        "AAF_AAK_AAB_AAS",
-        "AAN_ALQ"
-    ],
-    "ptolemy xiii": [
-        "AAF_AAK_AAB_AAW",
-        "AAN_ALR"
-    ],
-    "ptolemy xiv": [
-        "AAF_AAK_AAB_AAX",
-        "AAN_ALS"
-    ],
-    "ptolemy xv caesarion": [
-        "AAF_AAK_AAB_AAY",
-        "AAN_ALT"
-    ],
+    "ptolemy i soter i": ["AAF_AAK_AAB_AAA", "AAN_ALF"],
+    "ptolemy ii philadelphus": ["AAF_AAK_AAB_AAB", "AAN_ALG"],
+    "ptolemy iii euergetes i": ["AAF_AAK_AAB_AAD", "AAN_ALH"],
+    "ptolemy iv philopator": ["AAF_AAK_AAB_AAF", "AAN_ALI"],
+    "ptolemy ix soter ii": ["AAF_AAK_AAB_AAN", "AAN_ALN"],
+    "ptolemy v epiphanes": ["AAF_AAK_AAB_AAG", "AAN_ALJ"],
+    "ptolemy vi philometor": ["AAF_AAK_AAB_AAI", "AAN_ALK"],
+    "ptolemy vii neos philopator": ["AAF_AAK_AAB_AAJ", "AAN_ALL"],
+    "ptolemy viii euergetes ii": ["AAF_AAK_AAB_AAK", "AAN_ALM"],
+    "ptolemy x alexander i": ["AAF_AAK_AAB_AAO", "AAN_ALO"],
+    "ptolemy xi alexander ii": ["AAF_AAK_AAB_AAQ", "AAN_ALP"],
+    "ptolemy xii neos dionysos": ["AAF_AAK_AAB_AAS", "AAN_ALQ"],
+    "ptolemy xiii": ["AAF_AAK_AAB_AAW", "AAN_ALR"],
+    "ptolemy xiv": ["AAF_AAK_AAB_AAX", "AAN_ALS"],
+    "ptolemy xv caesarion": ["AAF_AAK_AAB_AAY", "AAN_ALT"],
     "ptui": "AAD_ABW_AAC",
     "public library [44/004]": "AAD_ABP_AAD_AAA",
     "pula": "AAD_AAJ_AAB",
     "pulling": "AAB_AAA_AAS",
     "punishment scene": "AAB_AAJ_AAT_AAR",
-    "pupienus": [
-        "AAF_AAK_AAC_ABF",
-        "AAN_ALU"
-    ],
+    "pupienus": ["AAF_AAK_AAC_ABF", "AAN_ALU"],
     "puppet": "AAA_AAE_AAR_AAD",
     "purchase": "AAO_AAL",
     "pushing": "AAB_AAA_ABE",
@@ -11545,17 +9940,11 @@ MET_SIMPLE_REVERSED = {
     "pyramid-shaped": "AAB_AAK_AAX",
     "pyramide/pyramidion": "AAA_AAB_AAC_AAB_AAC",
     "p\u00e9rigueux": "AAD_AAT_ACK",
-    "qaa": [
-        "AAF_AAC_AAA_AAH",
-        "AAN_ALV"
-    ],
+    "qaa": ["AAF_AAC_AAA_AAH", "AAN_ALV"],
     "qalamshah": "AAE_AAB_AAH_ABG",
     "qalyub": "AAE_AAC_AAD_AAD",
     "qantir": "AAE_AAC_AAA_AAJ",
-    "qar": [
-        "AAF_AAG_AAC_AAF",
-        "AAN_ALW"
-    ],
+    "qar": ["AAF_AAG_AAC_AAF", "AAN_ALW"],
     "qaret `ain bashnin": "AAE_AAE_AAA_AAA_AAT",
     "qaret `ain el-beshmu": "AAE_AAE_AAA_AAA_AAU",
     "qaret `ain embash": "AAE_AAE_AAA_AAA_AAV",
@@ -11582,10 +9971,7 @@ MET_SIMPLE_REVERSED = {
     "qasr baris": "AAE_AAE_AAA_AAD_AAR",
     "qasr dush": "AAE_AAE_AAA_AAD_AAS",
     "qasr el-`aguz": "AAE_AAB_AAC_AAB_AAS",
-    "qasr el-banat": [
-        "AAE_AAB_AAH_ABJ",
-        "AAE_AAD_AAC_ABE"
-    ],
+    "qasr el-banat": ["AAE_AAB_AAH_ABJ", "AAE_AAD_AAC_ABE"],
     "qasr el-ghuweita": "AAE_AAE_AAA_AAD_AAT",
     "qasr el-me`ysreh": "AAE_AAE_AAA_AAA_ABK",
     "qasr el-meqysbeh (temple of alexander the great)": "AAE_AAE_AAA_AAA_ABL",
@@ -11610,10 +9996,7 @@ MET_SIMPLE_REVERSED = {
     "queen's college [03/076]": "AAD_ACK_ACJ_AAC",
     "queens college art collection [57/062]": "AAD_ACI_ABQ_AAH",
     "quimper": "AAD_AAT_ACL",
-    "quintillius": [
-        "AAF_AAK_AAC_ABP",
-        "AAN_ALX"
-    ],
+    "quintillius": ["AAF_AAK_AAC_ABP", "AAN_ALX"],
     "quiver": "AAA_AAE_AAT_AAL",
     "qureishat": "AAE_AAE_AAB_AAU",
     "qurnet mura`i": "AAE_AAB_AAC_AAB_AAT",
@@ -11626,73 +10009,31 @@ MET_SIMPLE_REVERSED = {
     "raciborz": "AAD_ABR_AAD",
     "raet": "AAM_AAB_ABN",
     "raettawy": "AAM_AAB_ABO",
-    "rahotep/sekhemrewahkhaw": [
-        "AAF_AAG_AAD_AAB",
-        "AAN_ALY"
-    ],
+    "rahotep/sekhemrewahkhaw": ["AAF_AAG_AAD_AAB", "AAN_ALY"],
     "raising of the djed-pillar": "AAB_AAJ_AAE_ABB",
     "raising up the sehenet": "AAB_AAJ_AAE_ABC",
     "raleigh (nc)": "AAD_ACI_ABZ",
     "ram mummy": "AAA_AAI_AAF_AAD_AAG",
-    "ramesses i/menpehtyre": [
-        "AAF_AAH_AAB_AAA",
-        "AAN_ALZ"
-    ],
-    "ramesses ii/usermaatre-setepenre": [
-        "AAF_AAH_AAB_AAC",
-        "AAN_AMA"
-    ],
-    "ramesses iii/usermaatre-meriamun": [
-        "AAF_AAH_AAC_AAB",
-        "AAN_AMB"
-    ],
-    "ramesses iv/usermaatre-setepenamun": [
-        "AAF_AAH_AAC_AAC",
-        "AAN_AMC"
-    ],
-    "ramesses ix/neferkare-setepenre": [
-        "AAF_AAH_AAC_AAH",
-        "AAN_AMH"
-    ],
-    "ramesses v//usermaatre-sekheperenre": [
-        "AAF_AAH_AAC_AAD",
-        "AAN_AMD"
-    ],
-    "ramesses vi/nebmaatre-meriamun": [
-        "AAF_AAH_AAC_AAE",
-        "AAN_AME"
-    ],
-    "ramesses vii/usermaatre-meriamun-setepenre": [
-        "AAF_AAH_AAC_AAF",
-        "AAN_AMF"
-    ],
-    "ramesses viii/usermaatre-akhenamun": [
-        "AAF_AAH_AAC_AAG",
-        "AAN_AMG"
-    ],
-    "ramesses x/khepermaatre-setepenre": [
-        "AAF_AAH_AAC_AAI",
-        "AAN_AMI"
-    ],
-    "ramesses xi/menmaatre-setepenptah": [
-        "AAF_AAH_AAC_AAJ",
-        "AAN_AMJ"
-    ],
+    "ramesses i/menpehtyre": ["AAF_AAH_AAB_AAA", "AAN_ALZ"],
+    "ramesses ii/usermaatre-setepenre": ["AAF_AAH_AAB_AAC", "AAN_AMA"],
+    "ramesses iii/usermaatre-meriamun": ["AAF_AAH_AAC_AAB", "AAN_AMB"],
+    "ramesses iv/usermaatre-setepenamun": ["AAF_AAH_AAC_AAC", "AAN_AMC"],
+    "ramesses ix/neferkare-setepenre": ["AAF_AAH_AAC_AAH", "AAN_AMH"],
+    "ramesses v//usermaatre-sekheperenre": ["AAF_AAH_AAC_AAD", "AAN_AMD"],
+    "ramesses vi/nebmaatre-meriamun": ["AAF_AAH_AAC_AAE", "AAN_AME"],
+    "ramesses vii/usermaatre-meriamun-setepenre": ["AAF_AAH_AAC_AAF", "AAN_AMF"],
+    "ramesses viii/usermaatre-akhenamun": ["AAF_AAH_AAC_AAG", "AAN_AMG"],
+    "ramesses x/khepermaatre-setepenre": ["AAF_AAH_AAC_AAI", "AAN_AMI"],
+    "ramesses xi/menmaatre-setepenptah": ["AAF_AAH_AAC_AAJ", "AAN_AMJ"],
     "ramp": "AAA_AAB_AAB_ABB",
     "ras shamra museum [52/003]": "AAD_ACD_AAC_AAA",
-    "rattle": [
-        "AAA_AAE_AAO_AAA_AAF",
-        "AAA_AAE_AAR_AAE"
-    ],
+    "rattle": ["AAA_AAE_AAO_AAA_AAF", "AAA_AAE_AAR_AAE"],
     "rautenstrauch-jost-museum (museum f\u00fcr v\u00f6lkerkunde) [04/034]": "AAD_AAV_AAH_AAA",
     "razor": "AAA_AAE_AAF_AAL",
     "re": "AAM_AAA_AEC",
     "re-atum": "AAM_AAA_AED",
     "re-harakhty": "AAM_AAA_AEE",
-    "reading": [
-        "AAB_AAA_AAT",
-        "AAD_ACK_ACN"
-    ],
+    "reading": ["AAB_AAA_AAT", "AAD_ACK_ACN"],
     "real academia [21/019]": "AAD_ABY_AAD_AAA",
     "real academia de bellas artes de s. fernando [21/016]": "AAD_ABY_AAI_AAF",
     "real academia de historia [21/017]": "AAD_ABY_AAI_AAG",
@@ -11700,10 +10041,7 @@ MET_SIMPLE_REVERSED = {
     "reaping": "AAB_AAJ_AAA_AAN",
     "receipt": "AAL_AAA_AAK",
     "receptacle, stand for": "AAA_AAK",
-    "receptacle/vessel": [
-        "AAA_AAG_AAU",
-        "AAA_AAJ"
-    ],
+    "receptacle/vessel": ["AAA_AAG_AAU", "AAA_AAJ"],
     "recipe": "AAK_AAS",
     "recitation of funerary formula": "AAB_AAJ_AAJ_AAO",
     "record": "AAK_AAT",
@@ -11723,23 +10061,13 @@ MET_SIMPLE_REVERSED = {
     "register 5": "AAB_AAI_ABN",
     "register 6": "AAB_AAI_ABO",
     "register 7": "AAB_AAI_ABP",
-    "rein": [
-        "AAA_AAE_AAB_AAA_AAE",
-        "AAA_AAE_AAB_AAC_AAE"
-    ],
-    "relief": [
-        "AAA_AAB_AAA_AAB",
-        "AAG_AAB_AAQ",
-        "AAG_AAI_AAD"
-    ],
+    "rein": ["AAA_AAE_AAB_AAA_AAE", "AAA_AAE_AAB_AAC_AAE"],
+    "relief": ["AAA_AAB_AAA_AAB", "AAG_AAB_AAQ", "AAG_AAI_AAD"],
     "religious or cult object": "AAA_AAL",
     "religious tomb scene caption": "AAL_AAE_AAM_AAD",
     "remains (miscellaneous) (see comment)": "AAA_AAI_AAJ",
     "renenutet/thermuthis": "AAM_AAB_ABP",
-    "reniseneb": [
-        "AAF_AAF_AAC_AAM",
-        "AAN_AMK"
-    ],
+    "reniseneb": ["AAF_AAF_AAC_AAM", "AAN_AMK"],
     "rennes": "AAD_AAT_ACM",
     "representation of a building": "AAB_AAJ_AAT_AAS",
     "representation of a house": "AAB_AAJ_AAT_AAS_AAA",
@@ -11794,10 +10122,7 @@ MET_SIMPLE_REVERSED = {
     "rio de janeiro": "AAD_AAG_AAA",
     "rites in front of the tomb": "AAB_AAJ_AAJ_AAK_AAD",
     "ritual course": "AAB_AAJ_AAF_AAN",
-    "ritual text": [
-        "AAL_AAS_AAA_AAD",
-        "AAL_AAS_AAB_AAC"
-    ],
+    "ritual text": ["AAL_AAS_AAA_AAD", "AAL_AAS_AAB_AAC"],
     "roanne": "AAD_AAT_ACN",
     "rochdale": "AAD_ACK_ACO",
     "rochdale museum [03/082]": "AAD_ACK_ACO_AAA",
@@ -11847,18 +10172,12 @@ MET_SIMPLE_REVERSED = {
     "royal ritual scene": "AAB_AAJ_AAO",
     "royal sphinx": "AAB_AAG_AAI_AAE_AAA",
     "royal text": "AAL_AAP",
-    "rudamun/usermaatre": [
-        "AAF_AAI_AAE_AAF",
-        "AAN_AML"
-    ],
+    "rudamun/usermaatre": ["AAF_AAI_AAE_AAF", "AAN_AML"],
     "rudder oar (model)": "AAA_AAG_AAC_AAC_AAM",
     "rudder support (model)": "AAA_AAG_AAC_AAC_AAN",
     "rugby": "AAD_ACK_ACR",
     "rugby school, art museum [03/085]": "AAD_ACK_ACR_AAA",
-    "running": [
-        "AAB_AAA_AAU",
-        "AAB_AAC_AAB_AAL"
-    ],
+    "running": ["AAB_AAA_AAU", "AAB_AAC_AAB_AAL"],
     "running with the oar": "AAB_AAJ_AAE_ABD",
     "rush": "AAC_AAD_AAD_AAH",
     "russell-cotes art gallery and museum [03/026]": "AAD_ACK_AAJ_AAB",
@@ -11872,17 +10191,11 @@ MET_SIMPLE_REVERSED = {
     "s. lazzaro degli armeni [05/084]": "AAD_ABF_ACG_AAC",
     "sa el-hagar/sais": "AAE_AAC_AAF_AAC",
     "sabagura": "AAE_AAB_AAA_AAA_AAZ",
-    "saddle": [
-        "AAA_AAE_AAB_AAA_AAF",
-        "AAA_AAE_AAB_AAC_AAF"
-    ],
+    "saddle": ["AAA_AAE_AAB_AAA_AAF", "AAA_AAE_AAB_AAC_AAF"],
     "saffron walden": "AAD_ACK_ACS",
     "saffron walden museum [03/086]": "AAD_ACK_ACS_AAA",
     "saft el-hinna": "AAE_AAC_AAA_AAK",
-    "sahure": [
-        "AAF_AAD_AAC_AAB",
-        "AAN_AMM"
-    ],
+    "sahure": ["AAF_AAD_AAC_AAB", "AAN_AMM"],
     "sai island": "AAE_AAA_ABI",
     "sail (model)": "AAA_AAG_AAC_AAC_AAO",
     "sailing boat (model)": "AAA_AAG_AAC_AAE",
@@ -11891,10 +10204,7 @@ MET_SIMPLE_REVERSED = {
     "saint-imier": "AAD_ACC_ABA",
     "saint-omer": "AAD_AAT_ACR",
     "saint-rambert-sur-loire": "AAD_AAT_ACS",
-    "saket": [
-        "AAF_AAG_AAC_AAE",
-        "AAN_AMN"
-    ],
+    "saket": ["AAF_AAG_AAC_AAE", "AAN_AMN"],
     "sakha": "AAE_AAC_AAG_AAI",
     "sakhmet": "AAM_AAB_ABR",
     "salem (ma)": "AAD_ACI_ACC",
@@ -11902,10 +10212,7 @@ MET_SIMPLE_REVERSED = {
     "salford museum and art gallery [03/087]": "AAD_ACK_ACT_AAA",
     "salisbury": "AAD_ACK_ACU",
     "salisbury and south wiltshire museum [03/088]": "AAD_ACK_ACU_AAA",
-    "salites/sharek": [
-        "AAF_AAG_AAB_AAA",
-        "AAN_AMO"
-    ],
+    "salites/sharek": ["AAF_AAG_AAB_AAA", "AAN_AMO"],
     "salt": "AAC_AAC_AAC_ABG",
     "samannud": "AAE_AAC_AAG_AAJ",
     "sammlung des arch\u00e4ologischen instituts der universit\u00e4t [04/022]": "AAD_AAV_AAR_AAA",
@@ -11917,10 +10224,7 @@ MET_SIMPLE_REVERSED = {
     "san antonio museum association [57/080]": "AAD_ACI_ACD_AAA",
     "san diego (ca)": "AAD_ACI_ACE",
     "san diego museum of art [57/082]": "AAD_ACI_ACE_AAB",
-    "san el-hagar": [
-        "AAD_AAO_AAO",
-        "AAE_AAC_AAA_AAL"
-    ],
+    "san el-hagar": ["AAD_AAO_AAO", "AAE_AAC_AAA_AAL"],
     "san el-hagar museum [01/038]": "AAD_AAO_AAO_AAA",
     "san francisco (ca)": "AAD_ACI_ACF",
     "san jose (ca)": "AAD_ACI_ACG",
@@ -11966,37 +10270,22 @@ MET_SIMPLE_REVERSED = {
     "science museum [03/011]": "AAD_ACK_ABY_AAK",
     "scientific text": "AAL_AAQ",
     "scorpion with head of woman": "AAB_AAG_AAH",
-    "scorpion/sereq": [
-        "AAF_AAB_AAA_AAC",
-        "AAN_AMP"
-    ],
+    "scorpion/sereq": ["AAF_AAB_AAA_AAC", "AAN_AMP"],
     "scraper": "AAA_AAE_AAD_AAM",
     "scratched": "AAG_AAB_AAR",
     "scribe": "AAB_AAF_AAA_AAI",
-    "sculptor's model": [
-        "AAA_AAB_AAA_AAB_AAA",
-        "AAA_AAN_AAD"
-    ],
+    "sculptor's model": ["AAA_AAB_AAA_AAB_AAA", "AAA_AAN_AAD"],
     "sculpture": "AAB_AAJ_AAL_AAI",
     "sculpture in the round": "AAA_AAN",
-    "sculptured": [
-        "AAG_AAB_AAS",
-        "AAG_AAH_AAB"
-    ],
-    "se...kare": [
-        "AAF_AAF_AAC_ABJ",
-        "AAN_AMQ"
-    ],
+    "sculptured": ["AAG_AAB_AAS", "AAG_AAH_AAB"],
+    "se...kare": ["AAF_AAF_AAC_ABJ", "AAN_AMQ"],
     "sea of knives": "AAB_AAJ_AAS_AAO",
     "sea people": "AAB_AAF_AAB_AAK_AAJ",
     "sea peoples": "AAB_AAF_AAA_AAL_AAJ",
     "sea-urchin": "AAA_AAI_AAI_AAC",
     "seal": "AAA_AAM_AAD",
     "seal impression": "AAA_AAP_AAG",
-    "seankhibre": [
-        "AAF_AAG_AAA_AAP",
-        "AAN_AMR"
-    ],
+    "seankhibre": ["AAF_AAG_AAA_AAP", "AAN_AMR"],
     "season scene": "AAB_AAJ_AAT_AAT",
     "seat": "AAA_AAD_AAH",
     "sebastopol": "AAD_ACJ_AAI",
@@ -12005,132 +10294,48 @@ MET_SIMPLE_REVERSED = {
     "secondary text or inscription": "AAK_AAU",
     "sed festival": "AAB_AAJ_AAF_AAO",
     "sedeinga": "AAE_AAA_ABK",
-    "seed": [
-        "AAA_AAI_AAH_AAI",
-        "AAB_AAL_AAE"
-    ],
+    "seed": ["AAA_AAI_AAH_AAI", "AAB_AAL_AAE"],
     "seen from the front": "AAB_AAI_ABS",
-    "segerseni/menekhkare": [
-        "AAF_AAF_AAA_AAJ",
-        "AAN_AMS"
-    ],
-    "sehebre": [
-        "AAF_AAG_AAA_AAD",
-        "AAN_AMT"
-    ],
-    "sehetepibre ii": [
-        "AAF_AAF_AAC_AAE",
-        "AAN_AMU"
-    ],
-    "sehetepibre iii": [
-        "AAF_AAF_AAC_AAI",
-        "AAN_AMV"
-    ],
-    "sekhaenre i": [
-        "AAF_AAF_AAC_ABL",
-        "AAN_AMW"
-    ],
-    "sekhaenre ii": [
-        "AAF_AAG_AAB_AAE",
-        "AAN_AMX"
-    ],
+    "segerseni/menekhkare": ["AAF_AAF_AAA_AAJ", "AAN_AMS"],
+    "sehebre": ["AAF_AAG_AAA_AAD", "AAN_AMT"],
+    "sehetepibre ii": ["AAF_AAF_AAC_AAE", "AAN_AMU"],
+    "sehetepibre iii": ["AAF_AAF_AAC_AAI", "AAN_AMV"],
+    "sekhaenre i": ["AAF_AAF_AAC_ABL", "AAN_AMW"],
+    "sekhaenre ii": ["AAF_AAG_AAB_AAE", "AAN_AMX"],
     "sekhat-hor": "AAM_AAB_ABT",
-    "sekhem...re": [
-        "AAF_AAG_AAA_AAR",
-        "AAN_AMY"
-    ],
-    "sekhemib": [
-        "AAF_AAC_AAB_AAE",
-        "AAN_AMZ"
-    ],
-    "sekhemkare": [
-        "AAF_AAE_AAA_AAS",
-        "AAN_ANA"
-    ],
-    "sekhemre khutawy": [
-        "AAF_AAF_AAC_AAC",
-        "AAN_ANB"
-    ],
-    "sekheperenre": [
-        "AAF_AAG_AAA_AAN",
-        "AAN_ANC"
-    ],
+    "sekhem...re": ["AAF_AAG_AAA_AAR", "AAN_AMY"],
+    "sekhemib": ["AAF_AAC_AAB_AAE", "AAN_AMZ"],
+    "sekhemkare": ["AAF_AAE_AAA_AAS", "AAN_ANA"],
+    "sekhemre khutawy": ["AAF_AAF_AAC_AAC", "AAN_ANB"],
+    "sekheperenre": ["AAF_AAG_AAA_AAN", "AAN_ANC"],
     "sekhet": "AAM_AAB_ABU",
     "selkis": "AAM_AAB_ABV",
     "sel\u00e7uk": "AAD_ACG_AAC",
-    "semen...re": [
-        "AAF_AAG_AAA_AAW",
-        "AAN_AND"
-    ],
-    "semenenre": [
-        "AAF_AAG_AAD_AAH",
-        "AAN_ANE"
-    ],
-    "semenkare": [
-        "AAF_AAF_AAC_AAH",
-        "AAN_ANF"
-    ],
-    "semenkhkare/ankhkheperure": [
-        "AAF_AAH_AAA_AAK",
-        "AAN_ANG"
-    ],
-    "semerkhet": [
-        "AAF_AAC_AAA_AAG",
-        "AAN_ANH"
-    ],
+    "semen...re": ["AAF_AAG_AAA_AAW", "AAN_AND"],
+    "semenenre": ["AAF_AAG_AAD_AAH", "AAN_ANE"],
+    "semenkare": ["AAF_AAF_AAC_AAH", "AAN_ANF"],
+    "semenkhkare/ankhkheperure": ["AAF_AAH_AAA_AAK", "AAN_ANG"],
+    "semerkhet": ["AAF_AAC_AAA_AAG", "AAN_ANH"],
     "seminar f\u00fcr \u00e4gyptologie der universit\u00e4t zu k\u00f6ln [04/035]": "AAD_AAV_AAH_AAB",
     "semitic museum [57/019]": "AAD_ACI_AAN_AAC",
     "semna": "AAE_AAA_ABL",
     "semna south": "AAE_AAA_ABM",
-    "semqen": [
-        "AAF_AAG_AAC_AAC",
-        "AAN_ANI"
-    ],
-    "senaaib/menkhaure": [
-        "AAF_AAF_AAC_ACD",
-        "AAN_ANJ"
-    ],
+    "semqen": ["AAF_AAG_AAC_AAC", "AAN_ANI"],
+    "senaaib/menkhaure": ["AAF_AAF_AAC_ACD", "AAN_ANJ"],
     "senckenberg museum [04/059]": "AAD_AAV_AAO_AAB",
     "sending out to the four cardinal points": "AAB_AAJ_AAE_ABE",
-    "senebmiu/swahenre": [
-        "AAF_AAF_AAC_ABK",
-        "AAN_ANK"
-    ],
-    "sened": [
-        "AAF_AAC_AAB_AAG",
-        "AAN_ANL"
-    ],
-    "seneferka": [
-        "AAF_AAC_AAB_AAL",
-        "AAN_ANM"
-    ],
-    "seneferu": [
-        "AAF_AAD_AAB_AAA",
-        "AAN_ANN"
-    ],
+    "senebmiu/swahenre": ["AAF_AAF_AAC_ABK", "AAN_ANK"],
+    "sened": ["AAF_AAC_AAB_AAG", "AAN_ANL"],
+    "seneferka": ["AAF_AAC_AAB_AAL", "AAN_ANM"],
+    "seneferu": ["AAF_AAD_AAB_AAA", "AAN_ANN"],
     "senet-game/thirty square board": "AAA_AAE_AAH_AAC_AAC",
     "sens": "AAD_AAT_ACT",
-    "senwosret i/sesostris i/kheperkare": [
-        "AAF_AAF_AAB_AAB",
-        "AAN_ANO"
-    ],
-    "senwosret ii/sesostris ii/khakheperre": [
-        "AAF_AAF_AAB_AAD",
-        "AAN_ANP"
-    ],
-    "senwosret iii/sesostris iii/khakaure": [
-        "AAF_AAF_AAB_AAE",
-        "AAN_ANQ"
-    ],
-    "senwosret iv/sesostris iv/seneferibre": [
-        "AAF_AAF_AAC_ABT",
-        "AAN_ANR"
-    ],
+    "senwosret i/sesostris i/kheperkare": ["AAF_AAF_AAB_AAB", "AAN_ANO"],
+    "senwosret ii/sesostris ii/khakheperre": ["AAF_AAF_AAB_AAD", "AAN_ANP"],
+    "senwosret iii/sesostris iii/khakaure": ["AAF_AAF_AAB_AAE", "AAN_ANQ"],
+    "senwosret iv/sesostris iv/seneferibre": ["AAF_AAF_AAC_ABT", "AAN_ANR"],
     "sepa": "AAM_AAA_AEG",
-    "septimius severus": [
-        "AAF_AAK_AAC_AAU",
-        "AAN_ANS"
-    ],
+    "septimius severus": ["AAF_AAK_AAC_AAU", "AAN_ANS"],
     "serdab": "AAA_AAB_AAC_AAB_AAD",
     "serpent mummy": "AAA_AAI_AAG_AAA_AAC",
     "serpent with bust of woman": "AAB_AAG_AAG_AAE_AAA",
@@ -12148,50 +10353,17 @@ MET_SIMPLE_REVERSED = {
     "service arch\u00e9ologique cantonal [08/045]": "AAD_ACC_AAM_AAB",
     "sesebi": "AAE_AAA_ABU",
     "seshat": "AAM_AAB_ABW",
-    "seth": [
-        "AAF_AAF_AAC_AAT",
-        "AAM_AAA_AEH",
-        "AAN_ANT"
-    ],
-    "sethnakht/userkhaure": [
-        "AAF_AAH_AAC_AAA",
-        "AAN_ANU"
-    ],
-    "sethos i/menmaatre": [
-        "AAF_AAH_AAB_AAB",
-        "AAN_ANV"
-    ],
-    "sethos ii/userkheperure": [
-        "AAF_AAH_AAB_AAE",
-        "AAN_ANW"
-    ],
-    "setut": [
-        "AAF_AAE_AAB_AAE",
-        "AAN_ANX"
-    ],
-    "seuserenre": [
-        "AAF_AAG_AAD_AAI",
-        "AAN_ANY"
-    ],
-    "severus alexander": [
-        "AAF_AAK_AAC_ABA",
-        "AAN_ANZ"
-    ],
-    "sewadjkare": [
-        "AAF_AAF_AAC_AAJ",
-        "AAF_AAG_AAA_AAF",
-        "AAN_AOA",
-        "AAN_AOB"
-    ],
-    "sewadjtu/seankhenre": [
-        "AAF_AAF_AAC_ABC",
-        "AAN_AOC"
-    ],
+    "seth": ["AAF_AAF_AAC_AAT", "AAM_AAA_AEH", "AAN_ANT"],
+    "sethnakht/userkhaure": ["AAF_AAH_AAC_AAA", "AAN_ANU"],
+    "sethos i/menmaatre": ["AAF_AAH_AAB_AAB", "AAN_ANV"],
+    "sethos ii/userkheperure": ["AAF_AAH_AAB_AAE", "AAN_ANW"],
+    "setut": ["AAF_AAE_AAB_AAE", "AAN_ANX"],
+    "seuserenre": ["AAF_AAG_AAD_AAI", "AAN_ANY"],
+    "severus alexander": ["AAF_AAK_AAC_ABA", "AAN_ANZ"],
+    "sewadjkare": ["AAF_AAF_AAC_AAJ", "AAF_AAG_AAA_AAF", "AAN_AOA", "AAN_AOB"],
+    "sewadjtu/seankhenre": ["AAF_AAF_AAC_ABC", "AAN_AOC"],
     "sewing equipment": "AAA_AAE_AAP",
-    "shabaka/neferkare": [
-        "AAF_AAI_AAG_AAD",
-        "AAN_AOD"
-    ],
+    "shabaka/neferkare": ["AAF_AAI_AAG_AAD", "AAN_AOD"],
     "shablanga": "AAE_AAC_AAD_AAF",
     "shabti": "AAA_AAO_AAM",
     "shabti basket": "AAA_AAO_AAM_AAA",
@@ -12207,10 +10379,7 @@ MET_SIMPLE_REVERSED = {
     "shabti shroud": "AAA_AAO_AAM_AAD",
     "shabti text": "AAL_AAE_AAJ_AAC",
     "shabti yoke": "AAA_AAO_AAM_AAE",
-    "shaft": [
-        "AAA_AAB_AAB_AAC_AAF",
-        "AAA_AAB_AAC_AAB_AAE"
-    ],
+    "shaft": ["AAA_AAB_AAB_AAC_AAF", "AAA_AAB_AAC_AAB_AAE"],
     "shai": "AAM_AAA_AEI",
     "shalfak": "AAE_AAA_ABO",
     "shanhur": "AAE_AAB_AAB_ACA",
@@ -12220,10 +10389,7 @@ MET_SIMPLE_REVERSED = {
     "shawl": "AAA_AAC_AAM",
     "sheath": "AAA_AAE_AAT_AAM",
     "shebet": "AAA_AAL_AAM",
-    "shebitku/shabataka/djedkaure": [
-        "AAF_AAI_AAG_AAE",
-        "AAN_AOE"
-    ],
+    "shebitku/shabataka/djedkaure": ["AAF_AAI_AAG_AAE", "AAN_AOE"],
     "shed": "AAM_AAA_AEJ",
     "sheffield": "AAD_ACK_ACW",
     "sheffield city museum [03/090]": "AAD_ACK_ACW_AAA",
@@ -12233,25 +10399,13 @@ MET_SIMPLE_REVERSED = {
     "shell (nile)": "AAC_AAD_AAA_AAO",
     "shell (ostrich egg)": "AAC_AAD_AAA_AAP",
     "shell (tortoise)": "AAC_AAD_AAA_AAQ",
-    "shemai/djedkare ii": [
-        "AAF_AAE_AAA_AAE",
-        "AAN_AOF"
-    ],
+    "shemai/djedkare ii": ["AAF_AAE_AAA_AAE", "AAN_AOF"],
     "shentayet": "AAM_AAB_ABX",
     "shephela museum [34/012]": "AAD_ABE_AAF_AAA",
-    "shepseskaf": [
-        "AAF_AAD_AAB_AAG",
-        "AAN_AOG"
-    ],
-    "shepseskare": [
-        "AAF_AAD_AAC_AAD",
-        "AAN_AOH"
-    ],
+    "shepseskaf": ["AAF_AAD_AAB_AAG", "AAN_AOG"],
+    "shepseskare": ["AAF_AAD_AAC_AAD", "AAN_AOH"],
     "shepset": "AAM_AAB_ABY",
-    "sheshi/maaibre": [
-        "AAF_AAG_AAB_AAF",
-        "AAN_AOI"
-    ],
+    "sheshi/maaibre": ["AAF_AAG_AAB_AAF", "AAN_AOI"],
     "shesmetet": "AAM_AAB_ABZ",
     "shesmu": "AAM_AAA_AEK",
     "shield": "AAA_AAE_AAT_AAN",
@@ -12261,58 +10415,27 @@ MET_SIMPLE_REVERSED = {
     "shoe": "AAA_AAC_AAO",
     "shonet el-zibib": "AAE_AAB_AAD_ACI",
     "shooting to the four cardinal points": "AAB_AAJ_AAE_ABF",
-    "shoshenq": [
-        "AAF_AAI_AAD_AAB",
-        "AAN_AOJ"
-    ],
-    "shoshenq i/hedjkheperre": [
-        "AAF_AAI_AAC_AAA",
-        "AAN_AOK"
-    ],
-    "shoshenq ii/heqakheperre-setepenre": [
-        "AAF_AAI_AAC_AAC",
-        "AAN_AOL"
-    ],
-    "shoshenq iii/usermaatre-setepenre": [
-        "AAF_AAI_AAC_AAH",
-        "AAN_AOM"
-    ],
-    "shoshenq iv/usermaatre-meriamun": [
-        "AAF_AAI_AAE_AAC",
-        "AAN_AON"
-    ],
-    "shoshenq v/aakheperre": [
-        "AAF_AAI_AAC_AAJ",
-        "AAN_AOO"
-    ],
-    "shoshenq vi": [
-        "AAF_AAI_AAE_AAH",
-        "AAN_AOP"
-    ],
+    "shoshenq": ["AAF_AAI_AAD_AAB", "AAN_AOJ"],
+    "shoshenq i/hedjkheperre": ["AAF_AAI_AAC_AAA", "AAN_AOK"],
+    "shoshenq ii/heqakheperre-setepenre": ["AAF_AAI_AAC_AAC", "AAN_AOL"],
+    "shoshenq iii/usermaatre-setepenre": ["AAF_AAI_AAC_AAH", "AAN_AOM"],
+    "shoshenq iv/usermaatre-meriamun": ["AAF_AAI_AAE_AAC", "AAN_AON"],
+    "shoshenq v/aakheperre": ["AAF_AAI_AAC_AAJ", "AAN_AOO"],
+    "shoshenq vi": ["AAF_AAI_AAE_AAH", "AAN_AOP"],
     "shovel": "AAA_AAE_AAA_AAE",
-    "shrine": [
-        "AAA_AAB_AAC_AAA_AAC",
-        "AAA_AAL_AAN",
-        "AAA_AAO_AAP"
-    ],
+    "shrine": ["AAA_AAB_AAC_AAA_AAC", "AAA_AAL_AAN", "AAA_AAO_AAP"],
     "shrine (model)": "AAA_AAG_AAA_AAG",
     "shrub": "AAB_AAL_AAF",
     "shu": "AAM_AAA_AEL",
     "shusha": "AAE_AAB_AAF_ABG",
     "shuttle": "AAA_AAE_AAQ_AAC_AAA",
     "sia": "AAM_AAA_AEM",
-    "siamun/netjerykheperre-setepenamun": [
-        "AAF_AAI_AAA_AAF",
-        "AAN_AOQ"
-    ],
+    "siamun/netjerykheperre-setepenamun": ["AAF_AAI_AAA_AAF", "AAN_AOQ"],
     "sickle": "AAA_AAE_AAA_AAF",
     "sidi moussa": "AAE_AAB_AAD_ACJ",
     "sidmant el-gabal": "AAE_AAB_AAG_AAV",
     "sieving grain": "AAB_AAJ_AAA_AAU",
-    "sihathor": [
-        "AAF_AAF_AAC_AAW",
-        "AAN_AOR"
-    ],
+    "sihathor": ["AAF_AAF_AAC_AAW", "AAN_AOR"],
     "sikeiat": "AAE_AAD_AAC_ABK",
     "silenus": "AAM_AAC_AAK",
     "silicified wood": "AAC_AAC_AAE_AAW",
@@ -12325,16 +10448,10 @@ MET_SIMPLE_REVERSED = {
     "singer": "AAB_AAJ_AAN_AAN",
     "sinker of net": "AAA_AAE_AAT_AAK_AAB",
     "sion": "AAD_ACC_ABD",
-    "siptah/akhenre": [
-        "AAF_AAH_AAB_AAG",
-        "AAN_AOS"
-    ],
+    "siptah/akhenre": ["AAF_AAH_AAB_AAG", "AAN_AOS"],
     "siqam": "AAE_AAE_AAA_AAA_ABR",
     "sir john soane's museum [03/010]": "AAD_ACK_ABY_AAL",
-    "sistrum": [
-        "AAA_AAE_AAO_AAA_AAG",
-        "AAA_AAL_AAO"
-    ],
+    "sistrum": ["AAA_AAE_AAO_AAA_AAG", "AAA_AAL_AAO"],
     "sitra": "AAE_AAE_AAC_AAE",
     "sitting": "AAB_AAC_AAB_AAM",
     "sitting in the hall": "AAB_AAJ_AAT_AAU",
@@ -12342,18 +10459,12 @@ MET_SIMPLE_REVERSED = {
     "situla": "AAA_AAJ_AAW",
     "siwa oases": "AAE_AAE_AAB",
     "skyphos cup": "AAA_AAJ_AAX",
-    "slab": [
-        "AAA_AAB_AAB_AAB_AAC",
-        "AAA_AAB_AAB_AAG_AAA"
-    ],
+    "slab": ["AAA_AAB_AAB_AAB_AAC", "AAA_AAB_AAB_AAG_AAA"],
     "slate": "AAC_AAC_AAE_AAY",
     "slaughtering ritual": "AAB_AAJ_AAE_ABH",
     "slaughtering/butchery": "AAB_AAJ_AAH_AAH",
     "slaying of apophis": "AAB_AAJ_AAE_ABG",
-    "sledge": [
-        "AAA_AAE_AAS_AAC",
-        "AAA_AAO_AAQ"
-    ],
+    "sledge": ["AAA_AAE_AAS_AAC", "AAA_AAO_AAQ"],
     "sleeve": "AAA_AAC_AAP",
     "sling": "AAA_AAE_AAT_AAO",
     "slovakia [65]": "AAD_ABV",
@@ -12361,18 +10472,9 @@ MET_SIMPLE_REVERSED = {
     "slovenski etnografski muzej [49/002]": "AAD_ABW_AAA_AAB",
     "small oases": "AAE_AAE_AAC",
     "smelling": "AAB_AAA_AAV",
-    "smendes": [
-        "AAF_AAI_AAD_AAC",
-        "AAN_AOT"
-    ],
-    "smendes i/hedjkheperre": [
-        "AAF_AAI_AAA_AAA",
-        "AAN_AOU"
-    ],
-    "smendes ii": [
-        "AAF_AAI_AAB_AAF",
-        "AAN_AOV"
-    ],
+    "smendes": ["AAF_AAI_AAD_AAC", "AAN_AOT"],
+    "smendes i/hedjkheperre": ["AAF_AAI_AAA_AAA", "AAN_AOU"],
+    "smendes ii": ["AAF_AAI_AAB_AAF", "AAN_AOV"],
     "smith college museum of art [57/066]": "AAD_ACI_ABT_AAA",
     "smiting the enemy": "AAB_AAJ_AAM_AAF",
     "smolensk": "AAD_ABU_AAO",
@@ -12382,49 +10484,19 @@ MET_SIMPLE_REVERSED = {
     "sobek-re": "AAM_AAA_AEO",
     "sobek/suchos": "AAM_AAA_AEN",
     "sobekemsaf i/sekhemrewadjkhaw": "AAN_AOW",
-    "sobekemsaf ii/sekhemreshedjtawy": [
-        "AAF_AAG_AAD_AAJ",
-        "AAN_AOX"
-    ],
-    "sobekhotep i/khaankhre": [
-        "AAF_AAF_AAC_AAL",
-        "AAN_AOY"
-    ],
-    "sobekhotep ii/sekhemrekhutawy": [
-        "AAF_AAF_AAC_AAP",
-        "AAN_AOZ"
-    ],
-    "sobekhotep iii/sekhemreswadjtawy": [
-        "AAF_AAF_AAC_AAU",
-        "AAN_APA"
-    ],
-    "sobekhotep iv/khaneferre": [
-        "AAF_AAF_AAC_AAX",
-        "AAN_APB"
-    ],
-    "sobekhotep v/khahotepre": [
-        "AAF_AAF_AAC_AAY",
-        "AAN_APC"
-    ],
-    "sobekhotep vi/meryrehotep": [
-        "AAF_AAF_AAC_ABF",
-        "AAN_APD"
-    ],
-    "sobekhotep vii/sekhemresewesertawy": [
-        "AAF_AAF_AAC_ACA",
-        "AAN_APE"
-    ],
-    "sobekhotep viii/maare": [
-        "AAF_AAF_AAC_ACE",
-        "AAN_APF"
-    ],
+    "sobekemsaf ii/sekhemreshedjtawy": ["AAF_AAG_AAD_AAJ", "AAN_AOX"],
+    "sobekhotep i/khaankhre": ["AAF_AAF_AAC_AAL", "AAN_AOY"],
+    "sobekhotep ii/sekhemrekhutawy": ["AAF_AAF_AAC_AAP", "AAN_AOZ"],
+    "sobekhotep iii/sekhemreswadjtawy": ["AAF_AAF_AAC_AAU", "AAN_APA"],
+    "sobekhotep iv/khaneferre": ["AAF_AAF_AAC_AAX", "AAN_APB"],
+    "sobekhotep v/khahotepre": ["AAF_AAF_AAC_AAY", "AAN_APC"],
+    "sobekhotep vi/meryrehotep": ["AAF_AAF_AAC_ABF", "AAN_APD"],
+    "sobekhotep vii/sekhemresewesertawy": ["AAF_AAF_AAC_ACA", "AAN_APE"],
+    "sobekhotep viii/maare": ["AAF_AAF_AAC_ACE", "AAN_APF"],
     "socket": "AAA_AAB_AAB_AAE_AAJ",
     "socks": "AAA_AAC_AAQ",
     "socni": "AAD_AAU_AAA",
-    "sohag": [
-        "AAD_AAO_AAP",
-        "AAE_AAB_AAD_ACK"
-    ],
+    "sohag": ["AAD_AAO_AAP", "AAE_AAB_AAD_ACK"],
     "sohag museum [01/039]": "AAD_AAO_AAP_AAA",
     "soissons": "AAD_AAT_ACV",
     "sokar": "AAM_AAA_AEP",
@@ -12439,10 +10511,7 @@ MET_SIMPLE_REVERSED = {
     "solothurn": "AAD_ACC_ABE",
     "somtus": "AAM_AAA_AER",
     "son of tomb owner": "AAB_AAF_AAA_AAT",
-    "song": [
-        "AAK_AAV",
-        "AAL_AAR"
-    ],
+    "song": ["AAK_AAV", "AAL_AAR"],
     "sorrento": "AAD_ABF_ABY",
     "sothis/sopdet": "AAM_AAB_ACA",
     "souls of buto": "AAM_AAA_AES",
@@ -12480,16 +10549,10 @@ MET_SIMPLE_REVERSED = {
     "spinning": "AAB_AAJ_AAL_AAK",
     "spinning and weaving": "AAA_AAE_AAQ",
     "split": "AAD_AAJ_AAC",
-    "spoon": [
-        "AAA_AAE_AAF_AAN",
-        "AAA_AAE_AAG_AAI"
-    ],
+    "spoon": ["AAA_AAE_AAF_AAN", "AAA_AAE_AAG_AAI"],
     "sport and game scene": "AAB_AAJ_AAQ",
     "sprinkling of offerings": "AAB_AAJ_AAE_AAW_ABN",
-    "square": [
-        "AAA_AAE_AAD_AAN",
-        "AAB_AAK_ABA"
-    ],
+    "square": ["AAA_AAE_AAD_AAN", "AAB_AAK_ABA"],
     "square (model)": "AAA_AAG_AAR_AAG",
     "squatting": "AAB_AAC_AAB_AAN",
     "sri lanka [50]": "AAD_ABZ",
@@ -12560,10 +10623,7 @@ MET_SIMPLE_REVERSED = {
     "storage bin": "AAA_AAB_AAB_AAZ",
     "story": "AAK_AAX",
     "strainer": "AAA_AAE_AAG_AAJ",
-    "strap": [
-        "AAA_AAC_AAR",
-        "AAA_AAE_AAD_AAI_AAC"
-    ],
+    "strap": ["AAA_AAC_AAR", "AAA_AAE_AAD_AAI_AAC"],
     "strasbourg": "AAD_AAT_ACW",
     "straw": "AAC_AAD_AAE_AAF",
     "street": "AAA_AAB_AAC_AAB_AAH",
@@ -12607,12 +10667,7 @@ MET_SIMPLE_REVERSED = {
     "syenite": "AAC_AAC_AAE_ABA",
     "syracuse": "AAD_ABF_ACA",
     "syria [52]": "AAD_ACD",
-    "syrian": [
-        "AAB_AAF_AAA_AAL_AAK",
-        "AAB_AAF_AAB_AAK_AAK",
-        "AAI_AAT",
-        "AAJ_AAZ"
-    ],
+    "syrian": ["AAB_AAF_AAA_AAL_AAK", "AAB_AAF_AAB_AAK_AAK", "AAI_AAT", "AAJ_AAZ"],
     "sz\u00e9kesfeh\u00e9rv\u00e1r": "AAD_AAZ_AAD",
     "sz\u00e9pm\u00fcv\u00e9szeti m\u00fazeum [28/002]": "AAD_AAZ_AAA_AAB",
     "s\u00e3o paulo": "AAD_AAG_AAB",
@@ -12621,31 +10676,16 @@ MET_SIMPLE_REVERSED = {
     "tabansin/tabennisi": "AAE_AAB_AAB_ACC",
     "table": "AAA_AAD_AAI",
     "tachos": "AAM_AAA_AFA",
-    "tacit": [
-        "AAF_AAK_AAC_ABR",
-        "AAN_APG"
-    ],
+    "tacit": ["AAF_AAK_AAC_ABR", "AAN_APG"],
     "tadjikistan [66]": "AAD_ACE",
     "tafa": "AAE_AAB_AAA_AAA_ABC",
     "taganrog": "AAD_ABU_AAP",
     "taganrog regional museum [10/031]": "AAD_ABU_AAP_AAA",
-    "taharqa/khunefertemre": [
-        "AAF_AAI_AAG_AAF",
-        "AAN_APH"
-    ],
+    "taharqa/khunefertemre": ["AAF_AAI_AAG_AAF", "AAN_APH"],
     "tait/tayet": "AAM_AAB_ACB",
-    "takelot i": [
-        "AAF_AAI_AAC_AAD",
-        "AAN_API"
-    ],
-    "takelot ii/hedjkheperre-setepenre": [
-        "AAF_AAI_AAC_AAG",
-        "AAN_APJ"
-    ],
-    "takelot iii/usermaatre": [
-        "AAF_AAI_AAE_AAE",
-        "AAN_APK"
-    ],
+    "takelot i": ["AAF_AAI_AAC_AAD", "AAN_API"],
+    "takelot ii/hedjkheperre-setepenre": ["AAF_AAI_AAC_AAG", "AAN_APJ"],
+    "takelot iii/usermaatre": ["AAF_AAI_AAE_AAE", "AAN_APK"],
     "taking off the garment": "AAB_AAJ_AAE_ABJ",
     "talatat": "AAA_AAB_AAB_AAV_AAF",
     "tale": "AAL_AAI_AAE",
@@ -12662,18 +10702,9 @@ MET_SIMPLE_REVERSED = {
     "tanta": "AAD_AAO_AAR",
     "tanta museum [01/020]": "AAD_AAO_AAR_AAA",
     "tantyra/dendera": "AAE_AAB_AAB_AAN",
-    "tanutamun/bakare": [
-        "AAF_AAI_AAG_AAG",
-        "AAN_APL"
-    ],
-    "tao i/senakhtenre": [
-        "AAF_AAG_AAD_AAM",
-        "AAN_APM"
-    ],
-    "tao ii/seqenenre": [
-        "AAF_AAG_AAD_AAN",
-        "AAN_APN"
-    ],
+    "tanutamun/bakare": ["AAF_AAI_AAG_AAG", "AAN_APL"],
+    "tao i/senakhtenre": ["AAF_AAG_AAD_AAM", "AAN_APM"],
+    "tao ii/seqenenre": ["AAF_AAG_AAD_AAN", "AAN_APN"],
     "taranto": "AAD_ABF_ACB",
     "tarf `asfur": "AAE_AAB_AAG_AAW",
     "tarkhan": "AAE_AAB_AAI_ABH",
@@ -12687,10 +10718,7 @@ MET_SIMPLE_REVERSED = {
     "technique of ceramics": "AAG_AAF",
     "teephibis": "AAM_AAA_AFC",
     "tefenet/tefnut": "AAM_AAB_ACD",
-    "tefnakht/shepsesre": [
-        "AAF_AAI_AAF_AAD",
-        "AAN_APO"
-    ],
+    "tefnakht/shepsesre": ["AAF_AAI_AAF_AAD", "AAN_APO"],
     "teheran": "AAD_ABC_AAA",
     "tekovske muzeum [65/006]": "AAD_ABV_AAE_AAA",
     "tel aviv": "AAD_ABE_AAG",
@@ -12773,33 +10801,18 @@ MET_SIMPLE_REVERSED = {
     "teneda": "AAE_AAE_AAA_AAB_AAP",
     "tenri": "AAD_ABG_AAC",
     "tenri sankokan museum [35/003]": "AAD_ABG_AAC_AAA",
-    "teos/irimaatenre": [
-        "AAF_AAJ_AAE_AAB",
-        "AAN_APP"
-    ],
-    "tereru/neferkare v": [
-        "AAF_AAE_AAA_AAJ",
-        "AAN_APQ"
-    ],
+    "teos/irimaatenre": ["AAF_AAJ_AAE_AAB", "AAN_APP"],
+    "tereru/neferkare v": ["AAF_AAE_AAA_AAJ", "AAN_APQ"],
     "terra sigillata": "AAG_AAF_AAK",
     "tesoro di san marco [05/074]": "AAD_ABF_ACG_AAB",
-    "teti": [
-        "AAF_AAD_AAD_AAA",
-        "AAN_APR"
-    ],
-    "tewosret/tausret/satre-meritamun": [
-        "AAF_AAH_AAB_AAH",
-        "AAN_APS"
-    ],
+    "teti": ["AAF_AAD_AAD_AAA", "AAN_APR"],
+    "tewosret/tausret/satre-meritamun": ["AAF_AAH_AAB_AAH", "AAN_APS"],
     "text relating to cult": "AAL_AAS",
     "text relating to personal piety": "AAL_AAU_AAI",
     "text relating to professional duties": "AAL_AAT",
     "text relating to temples": "AAL_AAS_AAC",
     "textile technique": "AAG_AAG",
-    "thamphthis": [
-        "AAF_AAD_AAB_AAH",
-        "AAN_APT"
-    ],
+    "thamphthis": ["AAF_AAD_AAB_AAH", "AAN_APT"],
     "the 'devourer'(am-mwt)": "AAB_AAG_AAJ",
     "the bible lands museum [34/011]": "AAD_ABE_AAE_AAG",
     "the brooklyn museum [57/011]": "AAD_ACI_AAJ_AAA",
@@ -12826,14 +10839,8 @@ MET_SIMPLE_REVERSED = {
     "theatre token": "AAA_AAM_AAE",
     "thebes: east bank": "AAE_AAB_AAC_AAA",
     "thebes: west bank": "AAE_AAB_AAC_AAB",
-    "theodosius i": [
-        "AAF_AAK_AAC_ACB",
-        "AAN_APU"
-    ],
-    "theodosius ii": [
-        "AAF_AAK_AAD_AAB",
-        "AAN_APV"
-    ],
+    "theodosius i": ["AAF_AAK_AAC_ACB", "AAN_APU"],
+    "theodosius ii": ["AAF_AAK_AAD_AAB", "AAN_APV"],
     "theriomorphic": "AAB_AAK_ABC",
     "theriomorphic god": "AAB_AAE_AAG",
     "theriomorphic goddess": "AAB_AAE_AAH",
@@ -12847,14 +10854,8 @@ MET_SIMPLE_REVERSED = {
     "throne": "AAA_AAD_AAH_AAG",
     "throw-stick/boomerang": "AAA_AAE_AAT_AAR",
     "throwing 4 balls": "AAB_AAJ_AAE_ABK",
-    "tiberius": [
-        "AAF_AAK_AAC_AAB",
-        "AAN_APW"
-    ],
-    "tiberius ii constantin": [
-        "AAF_AAK_AAD_AAL",
-        "AAN_APX"
-    ],
+    "tiberius": ["AAF_AAK_AAC_AAB", "AAN_APW"],
+    "tiberius ii constantin": ["AAF_AAK_AAD_AAL", "AAN_APX"],
     "tihna el-gabal": "AAE_AAB_AAF_ABJ",
     "tile": "AAA_AAB_AAA_AAC",
     "tiller (model)": "AAA_AAG_AAC_AAC_AAU",
@@ -12862,24 +10863,15 @@ MET_SIMPLE_REVERSED = {
     "tin": "AAC_AAC_AAB_AAH",
     "tiroler landesmuseum ferdinandeum [09/006]": "AAD_AAD_AAD_AAA",
     "titheos/tutu": "AAM_AAA_AFE",
-    "titus": [
-        "AAF_AAK_AAC_AAJ",
-        "AAN_APY"
-    ],
+    "titus": ["AAF_AAK_AAC_AAJ", "AAN_APY"],
     "tjenenet": "AAM_AAB_ACE",
     "to the left": "AAB_AAC_AAD_AAD",
     "to the right": "AAB_AAC_AAD_AAE",
     "toe stall": "AAA_AAO_AAJ_AAP",
     "toilet scene": "AAB_AAJ_AAT_AAW",
     "tokyo": "AAD_ABG_AAD",
-    "tomb equipment": [
-        "AAA_AAO",
-        "AAB_AAJ_AAJ_AAP"
-    ],
-    "tomb owner": [
-        "AAB_AAF_AAA_AAP",
-        "AAB_AAF_AAB_AAN"
-    ],
+    "tomb equipment": ["AAA_AAO", "AAB_AAJ_AAJ_AAP"],
+    "tomb owner": ["AAB_AAF_AAA_AAP", "AAB_AAF_AAB_AAN"],
     "tomb owner carried in palanquin": "AAB_AAJ_AAF_AAP",
     "tomb/mastaba/pyramide, etc.": "AAA_AAB_AAC_AAB",
     "tombs of the artisans": "AAE_AAB_AAC_AAB_AAG_AAA",
@@ -12900,10 +10892,7 @@ MET_SIMPLE_REVERSED = {
     "toy": "AAA_AAE_AAR",
     "trailing by pointil": "AAG_AAC_AAD",
     "training of soldiers": "AAB_AAJ_AAM_AAG",
-    "trajan": [
-        "AAF_AAK_AAC_AAM",
-        "AAN_APZ"
-    ],
+    "trajan": ["AAF_AAK_AAC_AAM", "AAN_APZ"],
     "transfer": "AAO_AAN",
     "transformation of the deceased": "AAB_AAJ_AAS_AAP",
     "transport": "AAA_AAE_AAS",
@@ -12931,10 +10920,7 @@ MET_SIMPLE_REVERSED = {
     "trussed fowl": "AAA_AAO_AAH_AAB",
     "trussed fowl (model)": "AAA_AAG_AAI_AAD",
     "tuber": "AAA_AAI_AAH_AAJ",
-    "tukh": [
-        "AAE_AAB_AAB_ACG",
-        "AAE_AAB_AAE_ABM"
-    ],
+    "tukh": ["AAE_AAB_AAB_ACG", "AAE_AAB_AAE_ABM"],
     "tukh el-malaq": "AAE_AAC_AAD_AAH",
     "tumbos": "AAE_AAA_ABQ",
     "tuna el-gabal": "AAE_AAB_AAF_ABK",
@@ -12949,26 +10935,11 @@ MET_SIMPLE_REVERSED = {
     "turkmenia [67]": "AAD_ACH",
     "turned": "AAG_AAH_AAC",
     "turquoise": "AAC_AAC_AAC_ABK",
-    "tutankhamun/nebkheperure": [
-        "AAF_AAH_AAA_AAL",
-        "AAN_AQA"
-    ],
-    "tuthmosis i/aakheperkare": [
-        "AAF_AAH_AAA_AAC",
-        "AAN_AQB"
-    ],
-    "tuthmosis ii/aakheperenre": [
-        "AAF_AAH_AAA_AAD",
-        "AAN_AQC"
-    ],
-    "tuthmosis iii/menkheperre": [
-        "AAF_AAH_AAA_AAF",
-        "AAN_AQD"
-    ],
-    "tuthmosis iv/menkheperure": [
-        "AAF_AAH_AAA_AAH",
-        "AAN_AQE"
-    ],
+    "tutankhamun/nebkheperure": ["AAF_AAH_AAA_AAL", "AAN_AQA"],
+    "tuthmosis i/aakheperkare": ["AAF_AAH_AAA_AAC", "AAN_AQB"],
+    "tuthmosis ii/aakheperenre": ["AAF_AAH_AAA_AAD", "AAN_AQC"],
+    "tuthmosis iii/menkheperre": ["AAF_AAH_AAA_AAF", "AAN_AQD"],
+    "tuthmosis iv/menkheperure": ["AAF_AAH_AAA_AAH", "AAN_AQE"],
     "tweezers": "AAA_AAE_AAF_AAO",
     "twenty square board": "AAA_AAE_AAH_AAC_AAD",
     "twined": "AAG_AAB_AAU",
@@ -12977,15 +10948,9 @@ MET_SIMPLE_REVERSED = {
     "typhon": "AAM_AAC_AAL",
     "t\u00fcbingen": "AAD_AAV_ABP",
     "u.s.a. [57]": "AAD_ACI",
-    "ubenre": [
-        "AAF_AAG_AAA_AAH",
-        "AAN_AQF"
-    ],
+    "ubenre": ["AAF_AAG_AAA_AAH", "AAN_AQF"],
     "udjat-amulet": "AAA_AAF_AAA_AAB",
-    "ugaf/khutawyre": [
-        "AAF_AAF_AAC_AAA",
-        "AAN_AQG"
-    ],
+    "ugaf/khutawyre": ["AAF_AAF_AAC_AAA", "AAN_AQG"],
     "ukraine [55]": "AAD_ACJ",
     "ulm": "AAD_AAV_ABQ",
     "ulster museum [03/113]": "AAD_ACK_AAE_AAA",
@@ -12996,10 +10961,7 @@ MET_SIMPLE_REVERSED = {
     "umm el-ga`ab/umm el-qa`ab": "AAE_AAB_AAD_ACO",
     "umm el-huetat": "AAE_AAD_AAC_ABN",
     "umm rus": "AAE_AAD_AAC_ABO",
-    "unas/wenis": [
-        "AAF_AAD_AAC_AAI",
-        "AAN_AQH"
-    ],
+    "unas/wenis": ["AAF_AAD_AAC_AAI", "AAN_AQH"],
     "uncial greek": "AAJ_ABA",
     "undefinable": "AAA_AAR",
     "undefinable religious text": "AAL_AAU_AAJ",
@@ -13008,10 +10970,7 @@ MET_SIMPLE_REVERSED = {
     "under the feet": "AAB_AAI_ABU",
     "under the head": "AAB_AAI_ABV",
     "underworld scene": "AAB_AAJ_AAS",
-    "unidentified": [
-        "AAM_AAL",
-        "AAN_ARA"
-    ],
+    "unidentified": ["AAM_AAL", "AAN_ARA"],
     "unidentified fragment": "AAA_AAB_AAB_ABF",
     "unification of the two lands": "AAB_AAJ_AAO_AAF",
     "united kingdom [03]": "AAD_ACK",
@@ -13030,13 +10989,7 @@ MET_SIMPLE_REVERSED = {
     "university oriental museum [03/040]": "AAD_ACK_AAZ_AAA",
     "universit\u00e0, museo del vicino oriente antico [05/057]": "AAD_ABF_ABV_AAI",
     "universit\u00e4tsbibliothek [04/020]": "AAD_AAV_AAQ_AAA",
-    "unknown": [
-        "AAC_AAF",
-        "AAE_AAH",
-        "AAF_AAO",
-        "AAG_AAK",
-        "AAO_AAP"
-    ],
+    "unknown": ["AAC_AAF", "AAE_AAH", "AAF_AAO", "AAG_AAK", "AAO_AAP"],
     "unknown [99]": "AAD_ACR",
     "unspecified": [
         "AAA_AAQ",
@@ -13046,7 +10999,7 @@ MET_SIMPLE_REVERSED = {
         "AAG_AAJ",
         "AAM_AAK",
         "AAN_AQZ",
-        "AAO_AAO"
+        "AAO_AAO",
     ],
     "unspecified accessory": "AAA_AAA_AAJ",
     "unspecified action": "AAB_AAA_ABD",
@@ -13127,10 +11080,7 @@ MET_SIMPLE_REVERSED = {
     "unspecified tool (model)": "AAA_AAG_AAR_AAH",
     "unspecified toy": "AAA_AAE_AAR_AAH",
     "unspecified transport equipment": "AAA_AAE_AAS_AAE",
-    "unspecified trappings": [
-        "AAA_AAE_AAB_AAA_AAG",
-        "AAA_AAE_AAB_AAC_AAG"
-    ],
+    "unspecified trappings": ["AAA_AAE_AAB_AAA_AAG", "AAA_AAE_AAB_AAC_AAG"],
     "unspecified vegetal remains": "AAA_AAI_AAH_AAK",
     "unspecified vegetation": "AAB_AAL_AAI",
     "unspecified warfare,hunting,fishing equipment": "AAA_AAE_AAT_AAS",
@@ -13144,38 +11094,17 @@ MET_SIMPLE_REVERSED = {
     "upper yard (model)": "AAA_AAG_AAC_AAC_AAV",
     "uppsala": "AAD_ACB_AAF",
     "upright": "AAB_AAC_AAB_AAQ",
-    "upwautemsaf/sekhemreneferkhau": [
-        "AAF_AAF_AAC_ACF",
-        "AAN_AQI"
-    ],
+    "upwautemsaf/sekhemreneferkhau": ["AAF_AAF_AAC_ACF", "AAN_AQI"],
     "urbana champaign (il)": "AAD_ACI_ACJ",
     "urn": "AAA_AAJ_AAY",
     "uronarti island": "AAE_AAA_ABR",
     "uruguay [56]": "AAD_ACL",
-    "useranat": [
-        "AAF_AAG_AAC_AAB",
-        "AAN_AQJ"
-    ],
-    "userkaf": [
-        "AAF_AAD_AAC_AAA",
-        "AAN_AQK"
-    ],
-    "userkare": [
-        "AAF_AAD_AAD_AAB",
-        "AAN_AQL"
-    ],
-    "usermont": [
-        "AAF_AAF_AAC_ABZ",
-        "AAN_AQM"
-    ],
-    "valens": [
-        "AAF_AAK_AAC_ACA",
-        "AAN_AQN"
-    ],
-    "valerian and gallian": [
-        "AAF_AAK_AAC_ABL",
-        "AAN_AQO"
-    ],
+    "useranat": ["AAF_AAG_AAC_AAB", "AAN_AQJ"],
+    "userkaf": ["AAF_AAD_AAC_AAA", "AAN_AQK"],
+    "userkare": ["AAF_AAD_AAD_AAB", "AAN_AQL"],
+    "usermont": ["AAF_AAF_AAC_ABZ", "AAN_AQM"],
+    "valens": ["AAF_AAK_AAC_ACA", "AAN_AQN"],
+    "valerian and gallian": ["AAF_AAK_AAC_ABL", "AAN_AQO"],
     "valladolid": "AAD_ABY_AAO",
     "valley of the kings": "AAE_AAB_AAC_AAB_ABR",
     "valley of the queens": "AAE_AAB_AAC_AAB_ABS",
@@ -13186,10 +11115,7 @@ MET_SIMPLE_REVERSED = {
     "various offerings": "AAB_AAJ_AAJ_AAS",
     "varnished": "AAG_AAB_AAW",
     "varzy": "AAD_AAT_ADB",
-    "vase": [
-        "AAA_AAG_AAU_AAC",
-        "AAA_AAJ_AAZ"
-    ],
+    "vase": ["AAA_AAG_AAU_AAC", "AAA_AAJ_AAZ"],
     "vatican [73]": "AAD_ACM",
     "vatican city": "AAD_ACM_AAA",
     "vegetable": "AAB_AAL_AAH",
@@ -13203,10 +11129,7 @@ MET_SIMPLE_REVERSED = {
     "verona": "AAD_ABF_ACI",
     "verso": "AAB_AAI_ABX",
     "vesoul": "AAD_AAT_ADD",
-    "vespasian": [
-        "AAF_AAK_AAC_AAI",
-        "AAN_AQP"
-    ],
+    "vespasian": ["AAF_AAK_AAC_AAI", "AAN_AQP"],
     "veterinary text": "AAL_AAQ_AAC_AAB",
     "vevey": "AAD_ACC_ABG",
     "viadana": "AAD_ABF_ACJ",
@@ -13219,10 +11142,7 @@ MET_SIMPLE_REVERSED = {
     "vilnius": "AAD_ABL_AAB",
     "vindonissa-museum [08/002]": "AAD_ACC_AAI_AAA",
     "virginia museum of fine arts [57/076]": "AAD_ACI_ACA_AAA",
-    "vitellius": [
-        "AAF_AAK_AAC_AAH",
-        "AAN_AQQ"
-    ],
+    "vitellius": ["AAF_AAK_AAC_AAH", "AAN_AQQ"],
     "viticulture": "AAB_AAJ_AAA_AAS",
     "volcanic ash/tuff": "AAC_AAC_AAE_ABB",
     "von der heydt-museum [04/056]": "AAD_AAV_ABU_AAA",
@@ -13242,28 +11162,16 @@ MET_SIMPLE_REVERSED = {
     "wadi el-raiyan": "AAE_AAB_AAH_ABN",
     "wadi el-shagab": "AAE_AAD_AAC_ABJ",
     "wadi el-tarif": "AAE_AAB_AAB_ACF",
-    "wadi halfa": [
-        "AAD_ACA_AAC",
-        "AAE_AAB_AAA_AAA_AAN"
-    ],
+    "wadi halfa": ["AAD_ACA_AAC", "AAE_AAB_AAA_AAA_AAN"],
     "wadi hammamat": "AAE_AAD_AAC_AAT",
     "wadi kharit": "AAE_AAD_AAB_AAB",
     "wadi maghara": "AAE_AAD_AAB_AAC",
     "wadi maya": "AAE_AAD_AAC_AAZ",
     "wadj-sceptre": "AAA_AAA_AAF_AAE",
     "wadjet/uto": "AAM_AAB_ACF",
-    "wadji": [
-        "AAF_AAC_AAA_AAD",
-        "AAN_AQR"
-    ],
-    "wadjkare": [
-        "AAF_AAE_AAA_AAR",
-        "AAN_AQS"
-    ],
-    "wadjnes": [
-        "AAF_AAC_AAB_AAD",
-        "AAN_AQT"
-    ],
+    "wadji": ["AAF_AAC_AAA_AAD", "AAN_AQR"],
+    "wadjkare": ["AAF_AAE_AAA_AAR", "AAN_AQS"],
+    "wadjnes": ["AAF_AAC_AAB_AAD", "AAN_AQT"],
     "wadsworth atheneum [57/036]": "AAD_ACI_ABA_AAA",
     "wakefield": "AAD_ACK_ADH",
     "walker art center [57/051]": "AAD_ACI_ABM_AAB",
@@ -13282,10 +11190,7 @@ MET_SIMPLE_REVERSED = {
     "warwick district council art gallery and museum [03/056]": "AAD_ACK_ABS_AAA",
     "warwickshire museum [03/103]": "AAD_ACK_ADK_AAA",
     "was-sceptre": "AAA_AAA_AAF_AAD",
-    "wasa": [
-        "AAF_AAG_AAC_AAD",
-        "AAN_AQU"
-    ],
+    "wasa": ["AAF_AAG_AAC_AAD", "AAN_AQU"],
     "waset": "AAM_AAB_ACG",
     "washing": "AAB_AAJ_AAT_AAX",
     "washington (dc)": "AAD_ACI_ACK",
@@ -13298,10 +11203,7 @@ MET_SIMPLE_REVERSED = {
     "weeping": "AAB_AAA_ABB",
     "weighing and measuring": "AAB_AAJ_AAR_AAE",
     "weighing of the heart": "AAB_AAJ_AAS_AAQ",
-    "weight": [
-        "AAA_AAE_AAD_AAF_AAC",
-        "AAA_AAE_AAM_AAA_AAF"
-    ],
+    "weight": ["AAA_AAE_AAD_AAF_AAC", "AAA_AAE_AAM_AAA_AAF"],
     "weights of a loom": "AAA_AAE_AAQ_AAC_AAC",
     "welcome of the deceased": "AAB_AAJ_AAS_AAR",
     "welded": "AAG_AAD_AAI",
@@ -13376,25 +11278,16 @@ MET_SIMPLE_REVERSED = {
     "w\u00fcrttembergisches landesmuseum [04/050]": "AAD_AAV_ABN_AAA",
     "w\u00fcrzburg": "AAD_AAV_ABT",
     "x-group": "AAF_AAP_AAH_AAA",
-    "xerxes": [
-        "AAF_AAJ_AAB_AAC",
-        "AAN_AQV"
-    ],
+    "xerxes": ["AAF_AAJ_AAB_AAC", "AAN_AQV"],
     "yale university art gallery [57/054]": "AAD_ACI_ABP_AAA",
-    "yaqeb-baal": [
-        "AAF_AAG_AAC_AAQ",
-        "AAN_AQW"
-    ],
+    "yaqeb-baal": ["AAF_AAG_AAC_AAQ", "AAN_AQW"],
     "yaqeb-hor/meriweserre": "AAN_AQX",
     "yaqeb-hor/mriweserre": "AAF_AAG_AAB_AAG",
     "yard (model)": "AAA_AAG_AAC_AAC_AAW",
     "yemen, people's democratic republik [59]": "AAD_ACO",
     "yerevan": "AAD_AAB_AAA",
     "yew": "AAC_AAD_AAF_AAZ",
-    "yoke": [
-        "AAA_AAE_AAA_AAH",
-        "AAA_AAE_AAS_AAD"
-    ],
+    "yoke": ["AAA_AAE_AAA_AAH", "AAA_AAE_AAS_AAD"],
     "york": "AAD_ACK_ADS",
     "yorkshire museum [03/111]": "AAD_ACK_ADS_AAA",
     "young boy": "AAB_AAF_AAA_AAM",
@@ -13413,10 +11306,7 @@ MET_SIMPLE_REVERSED = {
     "zawyet sultan": "AAE_AAB_AAF_ABM",
     "zawyet umm el-rakham": "AAE_AAC_AAJ_AAK",
     "zeitun": "AAE_AAE_AAB_AAX",
-    "zeno": [
-        "AAF_AAK_AAD_AAF",
-        "AAN_AQY"
-    ],
+    "zeno": ["AAF_AAK_AAD_AAF", "AAN_AQY"],
     "zeus": "AAM_AAC_AAM",
     "zirc": "AAD_AAZ_AAE",
     "zoological garden [57/048]": "AAD_ACI_ABK_AAB",
@@ -13431,5 +11321,5 @@ MET_SIMPLE_REVERSED = {
     "\u00e5leby": "AAD_AAM_AAE",
     "\u00e9cole pratique des hautes etudes, 5\u00e8me section, sciences religieuses [02/072]": "AAD_AAT_ACJ_AAB",
     "\u00f6sterg\u00f6tlands l\u00e4nsmuseum [61/002]": "AAD_ACB_AAB_AAA",
-    "\u00fcbersee-museum [04/009]": "AAD_AAV_AAF_AAA"
+    "\u00fcbersee-museum [04/009]": "AAD_AAV_AAF_AAA",
 }

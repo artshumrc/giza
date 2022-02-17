@@ -1,0 +1,18 @@
+<div>
+    <span class="title">Add to a MyGiza Collection</span>
+    <br>
+    <h3>Add to an existing one...</h3>
+    <form>
+        <ul class="add-lists">
+            {% for collection in user_collections %}
+            <li>
+                <a class="my-giza-lnk modal post" data-url="{% url 'add-to-my-giza-collection' id=id type=type tab='collection' %}">
+                    <span class="icon-plus-circle icon-fw"></span> {{ collection.title }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </form>
+    <h3>Or create a new collection</h3>
+    <a class="button primary my-giza-lnk modal">New Collection</a>
+</div>

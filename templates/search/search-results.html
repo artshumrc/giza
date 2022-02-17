@@ -51,7 +51,7 @@
     </div>
 
     <!-- SEARCH RESULTS -->
-    <div class="media-object-holder" id="search_result">
+    <div id="search_result">
         {% include 'search-result.html' %}
     </div>
 
@@ -125,6 +125,7 @@ $(document).ready(() => {
     delete st['fields']['entrydates_ms']
     
     // SET NEW CATEGORY STATE
+    console.log(category)
     st['category'] = category.split('_')[1]
     
     // SEND AJAX POST REQUEST
@@ -201,25 +202,23 @@ $(document).ready(() => {
   }
 
   /*
-  * This method posts a new AJAX request to the server and processes the response. 
+  * This method posts a request to the server and processes the response. 
   * The response contains an updated items object as well as partials rendered in HTML that are loaded in
   * individual tags in the search-results.html template.
   */
   update_search = () => {
-    $.post('/mygiza/search/update', { 'search' : JSON.stringify(st) } )
-    .done(response => {
-      refresh_results(response)
+    settings = {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-CSRFToken': $.cookie('csrftoken')
+        }),
+        body: JSON.stringify(st)
+      }
 
-      // LOAD CONTENT IN MODAL
-      // $.ajax('/url')
-      //   .done(function(resp){
-      //     $modal.html(resp).foundation('open');
-      // })       
-    })
-    .fail(response => {
-      console.log(response)
-
-    })
+    fetch("{% url 'search_results_update' %}", settings)
+    .then(response => response.json())
+    .then(response => refresh_results(response))
   }
 
   /* BIND METHODS TO THE DOM */
@@ -258,32 +257,6 @@ $(document).ready(() => {
         // SOMEHOW MARK OBJECTS THAT ARE ALREADY IN A COLLECTION?
       }
     })
-  })
-
-  $(document).on('click', '#saveSearch', () => {
-    console.log('save')
-    input = prompt("Please give a name to this search", "Simple")
-    if (input != null || input != '') {
-      $.post({
-        url: '/mygiza/search/save',
-        data: {
-          'name' : input,
-          'search' : JSON.stringify(st)
-          // 'term' : json.stringify(st['term']),
-          // 'category' : json.stringify(st['category']),
-          // 'fields' : JSON.stringify(st['fields']),
-          // 'MET' : st['MET']
-        },
-        // contentType: "application/json",
-        // dataType: 'json',
-        success: data => {
-          alert('search saved')
-        },
-        error: res => {
-          console.log(res.responseText)
-        }
-      })
-    }
   })
 
   $(document).on('keyup', '#search_token', e => {
@@ -405,6 +378,7 @@ $(document).ready(() => {
         makeSlider = (max_range, value_range) => {
           $('#date_slider_from').text(new Date(value_range[0] * 1000).toDateString())
           $('#date_slider_to').text(new Date(value_range[1] * 1000).toDateString())
+          console.log($('#slider-range'))
           $("#slider-range").slider({
             range : true,
             min : max_range[0],
@@ -458,7 +432,6 @@ $(document).ready(() => {
         }
 
         if (typeof max_range !== 'undefined') {
-          console.log(max_range)
           if (max_range.length && minimum_set_value && maximum_set_value) {
             makeSlider(max_range, [minimum_set_value, maximum_set_value])
           }
