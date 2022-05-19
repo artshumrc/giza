@@ -26,14 +26,29 @@
   <div class="auth-form sign_form" id="sign_modal_form"></div>
 </div>
 
-<!-- SEARCH RESULT VIEWING MODAL -->
-<div class="record-details modal search_result_modal-reveal" data-multiple-opened="true" id="search_result_modal" data-reveal>
+<!-- MODAL: MET SEARCH -->
+<div class="reveal modal MET_search_modal-reveal" id="MET_search_modal" data-reveal>
+  <div class="MET_search_form" id="MET_search_modal_form"></div>
+</div>
+
+<!-- MODAL: EDIT COLLECTION -->
+<div class="reveal modal add-reveal" id="edit_collection" data-reveal>
+  <div id="edit_collection_form"></div>
+</div>
+
+<!-- MODAL: VIEW COLLECTION -> VIEW ITEM -->
+<div class="reveal modal collection_edit-reveal" data-multiple-opened="true" id="collection_modal" data-reveal>
+  <div class="collection_form" id="collection_modal_form"></div>
+</div>
+
+<!-- MODAL: VIEW SEARCH RESULT -->
+<div class="record-details modal search_result_modal-reveal" data-multiple-opened="true" id="search_result_modal"
+  data-reveal>
   <div class="search_result_form" id="search_result_modal_form"></div>
 </div>
 
-<!-- COLLECTION ADD/EDIT MODAL -->
-<div class="reveal modal collection_edit-reveal" data-multiple-opened="true" id="collection_modal" data-reveal>
-  <div class="collection_form" id="collection_modal_form"></div>
+<div class="reveal modal add-reveal" data-multiple-opened="true" id="add_to_collection" data-reveal>
+  <div id="add_to_collection_form"></div>
 </div>
 
 <!-- SAVED SEARCH MODAL -->
@@ -45,7 +60,6 @@
 <div class="reveal modal lesson_modal-reveal" data-multiple-opened="true" id="lesson_modal" data-reveal>
   <div class="lesson_form" id="lesson_modal_form"></div>
 </div>
-
 <!-- MODAL: ADD TO COLLECTION -->
 <!-- <div class="reveal modal add-reveal" id="add_collection" data-reveal>
 
@@ -102,12 +116,3 @@
 </div> -->
 
 <!-- /Modal: Email Collection -->
-
-
-
-
-
-<!-- MODAL: EDIT COLLECTION -->
-<div class="reveal modal add-reveal" id="edit_collection" data-reveal>
-  <div id="edit_collection_form"></div>
-</div>

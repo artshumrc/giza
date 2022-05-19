@@ -2,10 +2,10 @@
 <div class="medium-6 columns">
   <h3 class="heading-alt m-t-half m-b-1">
     {% if search.result.overall > 10000 %}
-    Your query returned {{ search.result.overall }} results. We fetched 10,000 for you to browse. Please refine your search parameters.
+    Your query returned {{ search.result.overall }} results so for performance reasons we fetched 10,000 for you to browse. Please refine your search parameters.
       {% else %}
       {% if 'category' in search and search.category %} 
-        {{ search.category }} 
+        {{ search.category }}
           {% if 'query' in search and search.query %}
             for "{{ search.query }}"
               {% endif %}

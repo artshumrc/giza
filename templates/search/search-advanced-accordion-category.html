@@ -1,3 +1,51 @@
-<ul id="advanced_search_categories" class="vertical menu accordion-menu" data-accordion-menu data-multi-open="false" role="menu">
-    {% include 'search-categories-accordion.html' with search=search %}
+{% if search.categories|length %}
+<ul id="advanced_search_categories" class="accordion" data-accordion data-allow-all-closed="true"
+    data-multi-expand="false">
+    {% for category in search.categories %}
+    <li class="accordion-item" data-accordion-item>
+        <a class="accordion-title" data-category="{{ category.key }}">{{ category.displaytext }}{% if 'doc_count' in category %}({{ category.doc_count }}){% endif %}</a>
+        <div class="accordion-content" data-tab-content>
+
+            {% for key, val in category.fields.items %}
+            <input type="text" id="{{ category.key }}_{{ key }}" placeholder="{{ val }}"
+                name="{{ category.key }}_{{ key }}">
+            {% endfor %}
+
+        </div>
+    </li>
+    {% endfor %}
 </ul>
+{% endif %}
+<script>
+    $(document).ready(() => {
+
+        $('#advanced_search_categories').foundation()
+        elem = new Foundation.Accordion($('#advanced_search_categories'))
+
+        // 
+        // let toggle = li => {
+        //     panels = $(li).find('div')
+        //     panels.each(panel => {
+        //         $('#advanced_search_categories').foundation('up', $(panel))
+        //     })
+        // }
+
+        // $('.accordion-item').on('click', e => {
+        //     activeTargetAID = $(e.currentTarget).find('a').attr('id') // LI ELEMENT THAT'S BEEN SELECTED
+
+        //     $('#advanced_search_categories').foundation('up', $(`#advanced_search_categories #${activeTargetAID} .accordion-content`))
+        //     // $('#advanced_search_categories').foundation('down', $(`#advanced_search_categories #${activeTargetAID} .accordion-content`))
+
+
+        //     // DROP DOWN
+        //     // IF ITEM NOT YET OPEN
+        //     // if ($(e.currentTarget).find('[aria-expanded=false]')) {
+        //         // $('#advanced_search_categories').foundation('up', $(`#advanced_search_categories #${activeTargetAID} .accordion-content`))
+        //     // } else {
+        //         // $('#advanced_search_categories').foundation('down', $(`#advanced_search_categories #${activeTargetAID} .accordion-content`)).foundation('up', $(`#advanced_search_categories #${activeTargetAID} .accordion-content`))
+        //     // }
+
+        //     // activePanels = $('#advanced_search_categories').find('[aria-expanded=true]').filter((idx, elem) => $(elem).attr('id') != activeTargetAID).parent()
+        //     // activePanels.each(panel => toggle(panel))
+    })
+</script>

@@ -58,7 +58,8 @@ $('[data-accordion-menu]')
 // Top bar Search dropdown behavior
 $('#search-dropdown')
   .on('show.zf.dropdown', () => {
-    $('[data-toggle="search-dropdown"]').addClass('is-active')
+    trigger = $('[data-toggle="search-dropdown"]')
+    trigger.addClass('is-active')
     setTimeout(() => { $('#inputSimpleSearch').focus() }, 250)
   })
   .on('hide.zf.dropdown', () => {

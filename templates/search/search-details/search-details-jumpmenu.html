@@ -1,10 +1,12 @@
 <div class="feature-block secondary" id="jumpmenu">
     <div class="feature-block__body">
         <ul class="vertical menu">
+            {{ type }}
+            {{ id }}
             {% if user %}
-            <h5 class="heading-em">Hi {{ user.first_name }}</h5>
+            <h5 class="heading-em">Hi {% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}</h5>
             <li>
-                <a class="my-giza-lnk modal" data-url="">
+                <a class="my-giza-lnk modal" data-url="{% url 'get-form' form='collection_form' type=type id=id %}">
                     <span class="icon-plus-circle icon-fw"></span> Add this to a collection
                 </a>
             </li>

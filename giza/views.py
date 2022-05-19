@@ -1,4 +1,5 @@
-import json, uuid
+import json
+import uuid
 
 from django import forms
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -17,6 +18,9 @@ from django.utils.html import strip_tags
 from django.db.models import Q
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.csrf import ensure_csrf_cookie
+
+from os.path import exists, join
+import codecs
 
 # from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
@@ -45,7 +49,7 @@ from django.shortcuts import get_object_or_404
 from elasticsearch.exceptions import HTTP_EXCEPTIONS
 
 from utils.elastic_backend import es, ES_INDEX
-from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGORY
+from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGORY, MET
 
 from search.views import search_results, search_results_update, search_execute
 
@@ -540,7 +544,8 @@ def sign_up(request):
                         },
                     )
                 else:
-                    messages.add_message(request, messages.WARNING, user.errors)
+                    messages.add_message(
+                        request, messages.WARNING, user.errors)
 
             else:
                 messages.add_message(request, messages.WARNING, user.errors)
@@ -588,6 +593,7 @@ def activate_account(request, uidb64, token):
         # REDIRECT TO HOME-PAGE WITH ERROR MESSAGE
         return JsonResponse({"header": render_to_string("header.html", {"user": user})})
 
+
 @ensure_csrf_cookie
 def index(request):
     return render(request, "index.html")
@@ -616,7 +622,8 @@ def forgot_password(request):
 
                 # CHECK IF THE GIVEN EMAILADDRESS IS REGISTERED
                 if list(password_reset_form.get_users(data["email"])):
-                    user = list(password_reset_form.get_users(data["email"]))[0]
+                    user = list(
+                        password_reset_form.get_users(data["email"]))[0]
                     token_generator = PasswordResetTokenGenerator()
                     token = token_generator.make_token(user=user)
                     try:
@@ -840,7 +847,7 @@ def get_form(request, form, type=None, id=None):
                 },
             }
         )
-
+        
 
 def my_giza_add(request, tab, type=None, id=None, name=None):
     """This route adds new saved search queries, collections or lesson plans for the current user"""
@@ -918,11 +925,9 @@ def my_giza_add(request, tab, type=None, id=None, name=None):
     # NEW SAVED SEARCH, COLLECTION OR LESSON PLAN IS POSTED
     else:
         try:
-            if "collection" in tab:
-                collections = __getPublicCollections(uid=request.user.id)
-                collection = collections[0]
-                collection.contents.all()
-                # collections_add()
+            # THIS IS A NEW COLLECTION
+            if "collection" in tab and name is None:
+                make_new_collection(request)
                 return JsonResponse(
                     {
                         "success": True,
@@ -936,56 +941,92 @@ def my_giza_add(request, tab, type=None, id=None, name=None):
                                         "user_collections": __getPublicCollections(
                                             uid=request.user.id
                                         ),
+                                        "type": type,
+                                        "id": id
                                     },
                                 ),
                             },
+                            "#collection_modal": {"action": "open"},
                         }
-                        # "modal":
-                        # "target": "collection_modal",
+                    }
+                )
+            elif 'collection' in tab and name is not None:
+                add_to_collection(type, id, name)
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "html": {
+                            "#collection_modal_form": {
+                                "html": render_to_string(
+                                    "search-details-added-to-my-giza-collection.html",
+                                    {
+                                        "user": request.user,
+                                        "collection": name,
+                                        "type": type,
+                                        "id": id
+                                    },
+                                ),
+                            },
+                            "#collection_modal": {"action": "open"},
+                        }
                     }
                 )
             if "collections" in tab:
-                collection_form = CollectionForm(
-                    data=json.loads(request.body.decode("utf-8"))
-                )
-                if collection_form.is_valid():
-                    collection = collection_form.save()
-                    collection.owners.add(request.user)
-                    collection.save()
-                    collections = __getPublicCollections()
-                    return JsonResponse(
-                        {
-                            "success": True,
-                            "html": {
-                                "#MyGizaDiv": {
-                                    "html": render_to_string(
-                                        "my-giza.html",
-                                        {
-                                            "collections": len(collections),
-                                            "MyGIZA-tab": render_to_string(
-                                                "mygiza-collections.html",
-                                                {
-                                                    "collections": collections,
-                                                    "user": request.user,
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                },
+                collections = __getPublicCollections()
+
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "html": {
+                            "#collection_modal_form": {
+                                "html": render_to_string(
+                                    "search-details-added-to-my-giza-collection.html",
+                                    {
+                                        "user": request.user,
+                                        "collection": "collection",
+                                        "type": type,
+                                        "id": id
+                                    },
+                                ),
                             },
-                        },
-                    )
-                    # return build_JsonResponse(
-                    #     True,
-                    #     "MyGIZADiv",
-                    #     {
-                    #         "collections": len(collections),
-                    #         "MyGIZA-tab": render_to_string(
-                    #             "mygiza-collections.html",
-                    #             {"collections": collections, "user": request.user},
-                    #         ),
-                    #     },
-                    # )
+                            "#collection_modal": {"action": "open"},
+                        }
+                    }
+                )
+
+                # return JsonResponse(
+                #     {
+                #         "success": True,
+                #         "html": {
+                #             "#MyGizaDiv": {
+                #                 "html": render_to_string(
+                #                     "my-giza.html",
+                #                     {
+                #                         "collections": len(collections),
+                #                         "MyGIZA-tab": render_to_string(
+                #                             "mygiza-collections.html",
+                #                             {
+                #                                 "collections": __getPublicCollections(uid=request.user),
+                #                                 "user": request.user,
+                #                             },
+                #                         ),
+                #                     },
+                #                 ),
+                #             },
+                #         },
+                #     },
+                # )
+                # return build_JsonResponse(
+                #     True,
+                #     "MyGIZADiv",
+                #     {
+                #         "collections": len(collections),
+                #         "MyGIZA-tab": render_to_string(
+                #             "mygiza-collections.html",
+                #             {"collections": collections, "user": request.user},
+                #         ),
+                #     },
+                # )
 
                 # return redirect('/collections/{}'.format(collection.slug)) # RETURN UUID?
         except Exception as e:
@@ -996,6 +1037,34 @@ def my_giza_add(request, tab, type=None, id=None, name=None):
 
             # pass
             return refresh_my_giza(request.user, tab)
+
+
+def make_new_collection(request):
+    """" This method makes a new collection """
+    try:
+        collection_form = CollectionForm(
+            data=json.loads(request.body.decode("utf-8")))
+        if collection_form.is_valid():
+            collection = collection_form.save()
+            collection.owners.add(request.user)
+            collection.save()
+    except Exception as e:
+        print(e)
+
+
+def add_to_collection(type, id, name):
+    """ This method adds a new object to a collection """
+    try:
+        collection = get_object_or_404(Collection, title=name)
+        if collection:
+            item = ElasticSearchItem(
+                type=type, es_id=id, collection=collection)
+            if item:
+                item = item.save()
+                collection.contents.add(item)
+                collection.save()
+    except Exception as e:
+        print(e)
 
 
 def refresh_my_giza(user, tab):
@@ -1117,8 +1186,10 @@ def search_save(request):
         )
     else:
         try:
-            name = json.loads(request.body.decode("utf-8"))["saved_search_name"]
-            search = json.loads(json.loads(request.body.decode("utf-8"))["search"])
+            name = json.loads(request.body.decode(
+                "utf-8"))["saved_search_name"]
+            search = json.loads(json.loads(
+                request.body.decode("utf-8"))["search"])
             search["result"]["hits"] = []
 
             Search(owner=request.user.id, search=search, name=name).save()
@@ -1201,6 +1272,26 @@ def __updateSavedSearch(request):
         return {"key": request.POST.get("id"), "search": result.search}
     except Http404:
         raise f'Search model {request.POST.get("id")} unknown'
+
+
+def search_MET(request):
+    if exists('search-MET.html'):
+        html = codecs.open("search-MET.html", "r").read()
+    else:
+        html = render_to_string(
+            "search-MET-a.html", {
+                "MET_tree": MET
+            })
+        f = open("search-MET.html", "a")
+        f.write(html)
+        f.close()
+
+    return JsonResponse(
+        {
+            "success": True,
+            "html": html
+        }
+    )
 
 
 def search_token(request):
@@ -1311,7 +1402,7 @@ def __findSavedSearches(uid=None, ssid=None):
 ################################
 ###         COLLECTIONS      ###
 ################################
-""" COLLECTION FUNCTIONS 
+""" COLLECTION FUNCTIONS
 Collections are user stored groupings of random records. Collections
 should probably store individual ElasticSearch record ids for quick retrieval.
 """
@@ -1323,7 +1414,8 @@ def collections_all(request):
         {
             "success": True,
             "html": render_to_string(
-                "mygiza-collections.html", {"collections": __getPublicCollections()}
+                "mygiza-collections.html", {
+                    "collections": __getPublicCollections()}
             ),
         }
     )
@@ -1376,7 +1468,7 @@ def collections_public(request):
     return JsonResponse({"success": True, "html": __getCollectionsView()})
 
 
-@login_required
+@ login_required
 def collections_private(request):
     return JsonResponse(
         {"success": True, "html": __getCollectionsView(request.user.id)}
@@ -1398,33 +1490,85 @@ def __getCollectionsView(uid=None):
     )
 
 
-def edit_collection(request, token):
-    collection = Collection.objects.get(id=token)
+def collections_remove_item(request, cid, iid):
+    collection = Collection.objects.get(id=cid)
     items = collection.contents.all()
+    # REMOVE ID FROM COLLECTION.contents
 
     for item in items:
-        es.search("giza", item.type, query={"query": {"match": {"_id": item.es_id}}})
+        if item.pk == iid:
+            item.delete()
+
+    collection = Collection.objects.get(id=cid)
+    items = collection.contents.all()
+
+    results = {'hits': []}
+
+    for item in items:
+        hit = {}
+        hit.update({'type': item.type})
+        hit.update({'id': item.es_id})
+        hit.update({'es_id': item.pk})
+        hit.update({'source': es.search("giza", item.type, body={
+            "query": {"match": {"_id": item.es_id}}})['hits']['hits'][0]['_source']})
+        # hit.update({ ''})
+        results['hits'].append(hit)
 
     return JsonResponse(
         {
             "success": True,
-            "modal": render_to_string(
-                "mygiza-collection-edit.html",
-                {
-                    "collection": collection
-                    # "title": collection.title,
-                    # "collection": collection.contents.all()
+            "html": {
+                "#collection_modal_form": {
+                    "html": render_to_string("my-giza-collection-edit.html", {
+                        "collection": collection,
+                        "search_result": results,
+                        "user": request.user
+                    }),
                 },
-            ),
-            "target": "collection_modal",
+                "#collection_modal": {"action": "open"},
+            }
         }
     )
 
 
-@login_required
+def edit_collection(request, token):
+    """ This route opens the collection edit modal when a user selects a particular collection """
+    collection = Collection.objects.get(id=token)
+    items = collection.contents.all()
+
+    results = {'hits': []}
+
+    for item in items:
+        hit = {}
+        hit.update({'type': item.type})
+        hit.update({'id': item.es_id})
+        hit.update({'es_id': item.pk})
+        hit.update({'source': es.search("giza", item.type, body={
+            "query": {"match": {"_id": item.es_id}}})['hits']['hits'][0]['_source']})
+        # hit.update({ ''})
+        results['hits'].append(hit)
+
+    return JsonResponse(
+        {
+            "success": True,
+            "html": {
+                "#collection_modal_form": {
+                    "html": render_to_string("my-giza-collection-edit.html", {
+                        "collection": collection,
+                        "search_result": results,
+                        "user": request.user
+                    }),
+                },
+                "#collection_modal": {"action": "open"},
+            }
+        }
+    )
+
+
+@ login_required
 def collection(request, slug):
     """This user route returns all items stored in a collection for the logged in user
-    ### PARAMETERS
+    # PARAMETERS
     request : Django Request Object
     slug : str
         - Identifier of collection: is this not better a uuid?
@@ -1525,8 +1669,10 @@ def collection(request, slug):
                 "aggregation": {
                     "terms": {
                         "field": "_type",
-                        "exclude": "library",  # ignore special type, library, which is used for the Digital Giza Library page
-                        "size": 50,  # make sure to get all categories (rather than just 10)
+                        # ignore special type, library, which is used for the Digital Giza Library page
+                        "exclude": "library",
+                        # make sure to get all categories (rather than just 10)
+                        "size": 50,
                     }
                 }
             },
@@ -1667,7 +1813,8 @@ def collections_add(collection, type, id):
     This route adds a record to a collection using the little '+' ico class
     """
     try:
-        collection = Collection.objects.filter(id=uuid.UUID(collection)).first()
+        collection = Collection.objects.filter(
+            id=uuid.UUID(collection)).first()
         elasticsearch_item = ElasticSearchItem(
             es_id=int(id),
             type=type,
@@ -1687,7 +1834,8 @@ def collections_add(collection, type, id):
 def collections_delete(request, token):
     try:
         print(token)
-        collection = Collection.objects.filter(Q(owners=request.user.id) & Q(id=token))
+        collection = Collection.objects.filter(
+            Q(owners=request.user.id) & Q(id=token))
         collection.delete()
         # query = __getPublicCollections(uid=request.used.id)
         return refresh_my_giza(request.user, "collections")
@@ -1702,7 +1850,7 @@ def collections_delete(request, token):
         print(e)
 
 
-@login_required
+@ login_required
 def collections_edit(request, id):
     print(id)
 
@@ -1759,7 +1907,7 @@ def collections_edit(request, id):
     )
 
 
-@login_required
+@ login_required
 def collection_view(request, id):
     collection = get_object_or_404(Collection, id=id)
     collection_form = CollectionForm(collection)
@@ -1810,8 +1958,8 @@ def lesson(request, pk):
                         },
                     )
                 },
-                "#lesson_modal" : {
-                    "action" : "open"
+                "#lesson_modal": {
+                    "action": "open"
                 }
             },
         }

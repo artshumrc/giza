@@ -96,7 +96,6 @@ $drilldown-arrow-size: 6px !default;
       position: absolute;
       top: 0;
       #{$global-left}: 100%;
-      z-index: -1;
 
       width: 100%;
       background: $drilldown-submenu-background;

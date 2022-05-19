@@ -53,13 +53,16 @@ urlpatterns = [
     # SEARCH ROUTES
     # path('search/', search_views.search, name='search'),
     path('search/categories/', search_views.get_categories, name="search_categories"),
+    path('search/MET/', views.search_MET, name='search_MET'),
     path('search/all/update', views.search_update, name='search_update'),
     path('search/del/<uuid:pk>', views.search_del, name='my-giza-del-search'),
     path('search/lookup', views.search_token, name='search_token'),
+
     path('search/results/', search_views.search_results, name='search_results'),
     # path('search/result/<str:form>', views.get_form, name='get-form'),
     path('search/result/get_form/<str:form>/<str:type>/<int:id>/', views.get_form, name='get-form'),
-    re_path(r'^/<str:tab>/<str:type>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection'),
+    # re_path(r'^/<str:tab>/<str:type>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection'),
+    path('search/result/<str:tab>/<str:type>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection-new'),
     path('search/result/<str:tab>/<str:type>/<int:id>/<str:name>/', views.my_giza_add, name='add-to-my-giza-collection'),
     # path('search/result/<str:type>/<int:id>/<uuid:collection>', views.collections_add, name="mygiza_collections_add"),
     # path('search/results/add-to-collection', views.collections_add, name='my-giza-add-to-collection'),
@@ -78,11 +81,12 @@ urlpatterns = [
     path('mygiza/collections/<uuid:token>/delete', views.collections_delete, name="my-giza-collections-delete"),
     path('mygiza/collections/<uuid:token>/edit', views.edit_collection, name="my-giza-collections-edit"),
     path('mygiza/collections/<uuid:id>/view', views.collections_edit, name="mygiza_collections_view"),
+    path('mygiza/collections/add/<str:tab>', views.my_giza_add, name="my-giza-add"),
+    path('mygiza/collections/<uuid:cid>/<uuid:iid>', views.collections_remove_item, name="my-giza-collections-delete-item"),
     path('mygiza/get_collections', views.collections, name="mygiza-get-collections"),
     
     # re_path(r'^mygiza/tab/(?P<tab>saved-search-queries|collections|lessons)/$', views.my_giza_tab, name="my-giza-tab"),
     re_path(r'^mygiza/(?P<tab>saved-search-queries|collections|lessons)/$', views.my_giza, name="my-giza"),
-    path('mygiza/collections/add/<str:tab>', views.my_giza_add, name="my-giza-add"),
     re_path(r'^mygiza/searches/all', views.searches_all, name="mygiza_saved_search_queries_all"),
     re_path(r'^collections/all/$', views.collections_all, name="collections"),   
 

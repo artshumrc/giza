@@ -12,50 +12,54 @@
   </p> -->
 
   <!-- <form id="advanced-search-form" method="post" action="{% url 'search_results' %}"> -->
-  <form>
-    <div>
+    <!-- LOADS CATEGORIES COLLECTED FROM DATABASE; SEE DEFAULT.HTML -->
+    <div id='search_categories' class="text-smaller"></div>
 
-      <!-- LOADS CATEGORIES COLLECTED FROM DATABASE; SEE HEADER.HTML -->
-      <div id='html' class="text-smaller"></div>
+    <div class="row">
 
-      <div class="row">
-
-        <div class="large-12 columns">
-          <button id="advanced_search_btn" class="button primary my-giza-lnk post" data-url="{% url 'search_results' %}"
-            id="advanced-search-form-btn" type="submit">Search</button>
-          <button class="button primary my-giza-lnk post" data-url="{% url 'search_results' %}"
-            id="advanced-search-form-btn" type="submit">MET</button>
-        </div>
-
+      <div class="large-12 columns">
+        <a id="advanced_search_btn" class="button primary my-giza-lnk post" data-url="{% url 'search_results' %}"
+          id="advanced-search-form-btn" type="submit">Search</a>
+        <a id="advanced-MET-search-form-btn" class="button primary">MET</a>
       </div>
-    </div>
-    <input type=hidden name=category>
-  </form>
 
+    </div>
+  <input type=hidden name=category>
 </section>
 <script>
-  // $(document).foundation()
-
+  $(document).foundation()
   $(document).ready(() => {
+    
+    $('#advanced-MET-search-form-btn').on('click', () => {
+      $('#MET_search_modal').foundation('open')
 
-    $('#sideMenuContainer').on('keydown', e => {
-    //   console.log(e)
-    // })
-
-    // $('#advanced_search_categories').on('change', e => {
-      console.log(e)
-      $('input[name="category"]').val($('#advanced_search_categories').find('[aria-expanded=true]').data('category'))
+      // DELAY IS NECESSARY BECAUSE FOUNDATION HAS PROBLEM WITH AUTOCALCULATING HEIGHT; SETTING Z-INDEX AFTER INITIALIZATION CIRCUMVENTS PROBLEM
+      setTimeout(() => {
+        $('#METAccordion').css('z-index', 'auto')
+      }, 10)
     })
 
-    // window.addEventListener('keydown', e => {
-    //   if (e.keyCode == 32 && e.target instanceof HTMLInputElement) {
-    //     $(e.target).parent().attr('aria-expanded', true)
-    //     // e.preventDefault()
-    //     // $(e.target).focus()
-    //   }
-    //   console.log(e)
-    //   // (e.keyCode == 32 && e.target instanceof HTMLInputElement) ? e.preventDefault() : null
-    // })
+
+    $('#advanced_search_categories').on('down.zf.accordion', e => {
+      console.log('click')
+    })
+
+    function closeAll() {
+      $('#advanced_search_categories').each(e => {
+        var $acc = $(this)
+        var $openSections = $acc.find('.accordion-item.is-active .accordion-content');
+        $openSections.each(function (i, section) {
+          $acc.foundation('up', $(section));
+        })
+      })
+    }
+
+    $('#advanced_search_categories').on('down.zf.accordion', e => {
+      // console.log(e)
+      console.log($('#advanced_search_categories').find('[aria-expanded=true]').data('category'))
+      $('input[name="category"]').val($('#advanced_search_categories').find('[aria-expanded=true]').data(
+        'category'))
+    })
 
     // ADVANCED SEARCH: SHOW/HIDE SECTIONS FOR SEARCHING IN CATEGORIES
     // $('fieldset#category-radio-selector input').click(e => showHideMenu(e))

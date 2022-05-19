@@ -200,6 +200,12 @@ $(document).ready(() => {
       update_search()
     }
   }
+  
+  /* MET DRAG METHOD */
+  drag = (e, code, term) => e.dataTransfer.setData("MET_term", JSON.stringify({ 'code': code, 'term' : term }))
+
+  /* MET ALLOWDROP METHOD */
+  allowDrop = e => e.preventDefault()
 
   /*
   * This method posts a request to the server and processes the response. 
@@ -311,9 +317,6 @@ $(document).ready(() => {
     console.log('click')
   })
 
-  /* Drag and drop for MET */
-  drag = (e, code, term) => e.dataTransfer.setData("MET_term", JSON.stringify({ 'code': code, 'term' : term }))
-  allowDrop = e => e.preventDefault()
 
   // $('#sortResults').on('change', e => {
   //   st['result']['sort'] = $(e.currentTarget).val()

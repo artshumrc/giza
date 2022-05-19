@@ -263,7 +263,7 @@ fieldset {
 .pagination {}
 
 .media-object-holder {
-	position: relative;
+	// position: relative;
 	border-top: 1px solid #ccc;
 	padding-top: rem-calc(20px);
 
@@ -373,6 +373,32 @@ fieldset {
 				top: rem-calc(5px);
 				left: rem-calc(9px);
 				z-index: 10;
+			}
+
+
+			.remove {
+				position: absolute;
+				top: -3px;
+				left: 0;
+				position: absolute;
+				display: block;
+				background: #1164ad;
+				width: rem-calc(21px);
+				height: rem-calc(21px);
+				border-radius: 50%;
+				z-index: 10;
+
+				&:before,
+				&:after {
+					content: '';
+					background: #fff;
+					width: rem-calc(11px);
+					height: rem-calc(3px);
+					position: absolute;
+					top: rem-calc(9px);
+					left: rem-calc(5px);
+					z-index: 10;
+				}
 			}
 		}
 

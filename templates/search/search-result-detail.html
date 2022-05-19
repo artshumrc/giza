@@ -96,7 +96,7 @@
     <div class="title-bar" data-responsive-toggle="jumpmenu" data-hide-for="medium">
       <button class="icon-bars icon-padded title-bar-title" type="button" data-toggle>Jump to...</button>
     </div>
-    {% include 'search-details-jumpmenu.html' with items=object.relateditems user=user type=object.type id=object.id %}
+    {% include 'search-details-jumpmenu.html' with items=object.relateditems user=user type=type id=object.id %}
 
     <!-- RELATED ITEMS ON THE RIGHT-HAND SIDE -->
     <ul class="accordion" data-accordion data-multi-expand="true" data-allow-all-closed="true">

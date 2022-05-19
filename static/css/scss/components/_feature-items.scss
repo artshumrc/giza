@@ -235,12 +235,12 @@
 .thumbsize-md {
   
   .thumbnail {
-    width: 62px;
+    width: 100%;
     height: auto;
   }
   
   &.thumbs-square .thumbnail {
-    height: 62px;
+    height: 100%;
   }
   
   img {

@@ -161,8 +161,15 @@ class Collection(Model):
     def get(self):
         return self.contents
 
-    def add(self, object):
-        print(object, self.contents)
+    # def add(self, object):
+    #     self.contents
+    #     for record in Collection.objects.filter(id=self.id):
+    #         print(record, object)
+    #         # self.contents
+            # id
+            # collection_id
+            # elasticsearchitem_id
+            # print(object, self.contents)
 
     def save(self, *args, **kwargs):
 
@@ -181,3 +188,7 @@ class ElasticSearchItem(Model):
 
     def __str__(self):
         return "{}-{}".format(self.es_id, self.type)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        return self

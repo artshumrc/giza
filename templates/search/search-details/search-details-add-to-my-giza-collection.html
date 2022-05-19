@@ -1,36 +1,47 @@
-<div>
-    <span class="title">Add to a MyGiza Collection</span>
-    <br>
-    <h3>Add to a new collection...</h3>
-    <div class="jcf-scrollable">
-        <form method="post">
-            {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-            <br>
-            {% endif %}
-            {{ collection_form.as_p }}
-            <input type="hidden" name="type" value="{{type}}">
-            <input type="hidden" name="id" value="{{id}}">
-            <div class="btn-row">
-                <a class="button primary my-giza-lnk modal post" data-url="{% url 'add-to-my-giza-collection' tab='collection' type=type id=id %}">New Collection</a>
-            </div>
-        </form>
-    </div>
-    <h3>or an existing one</h3>
-    <form>
-        <ul class="add-lists">
-            {% for collection in user_collections %}
-            <li>
-                <a class="my-giza-lnk modal post"
+<div class="grid-container">
+    <div class="grid-x">
+        <h3>Add to MyGiza</h3>
+        <div class="cell medium-3">
+            {% if user_collections|length %}
+            <form>
+                {% for collection in user_collections %}
+                <a class="button primary my-giza-lnk modal post"
                     data-url="{% url 'add-to-my-giza-collection' tab='collection' type=type id=id name=collection.title %}">
-                    <span class="icon-plus-circle icon-fw"></span> {{ collection.title }}
+                    <!-- UNDERNEATH WHEN USED TO VIEW COLLECTION -->
+                    <!-- ABOVE WHEN USED TO VIEW OBJECT FROM SEARCH RESULTS -->
+                    {{ collection.title }}
                 </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </form>
+                {% endfor %}
+            </form>
+            {% endif %}
+        </div>
+        <span class="title">New Collection</span>
+        <div class="jcf-scrollable">
+            <form method="post" class="disable_submit">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                <br>
+                {% endif %}
+                {{ collection_form.as_p }}
+                <input type="hidden" name="type" value="{{type}}">
+                <input type="hidden" name="id" value="{{id}}">
+                <div class="btn-row">
+                    <a class="button primary my-giza-lnk modal post"
+                        data-url="{% url 'add-to-my-giza-collection-new' tab='collection' type=type id=id %}">New
+                        Collection</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+<script>
+    $(document).ready(() => {
+        $('.disable_submit').on('submit', e => {
+            e.preventDefault()
+        })
+    })
+</script>

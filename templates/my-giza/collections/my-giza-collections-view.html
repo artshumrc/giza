@@ -10,18 +10,17 @@
         <picture>
           <img src="{% static 'images/thumb-default.png' %}" alt="image description" width="250" height="250">
         </picture>
-        <div class="caption">
-          <strong>{{ collection.title }}</strong>
-          <span>{{ collection.items.all|length }} items</span>
+        <div class="my-giza-collections-caption">
+          <p class="left"><strong>{{ collection.fields.title }}</strong></p><p class="right">({{ collection.fields.contents|length }} items)</p>
         </div>
         <i class="fas fa-chevron-right show-for-small-only"></i>
       </a>
-      <li>
+      <div class="my-giza-collections-delete">
         <a class="share-facebook my-giza-lnk modal post"
           data-url='{% url "my-giza-collections-delete" token=collection.pk|stringformat:"s" %}'>
           <i class="icon-trash-o"></i>
         </a>
-      </li>
+      </div>
     </ul>
   </div>
   <div class="list-row">

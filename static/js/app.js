@@ -1875,7 +1875,6 @@ class Accordion {
    */
   toggle($target) {
     if($target.parent().hasClass('is-active')) {
-
       this.up($target);
     } else {
       this.down($target);
@@ -2085,6 +2084,7 @@ class AccordionMenu {
       if ($submenu.length) {
         $(this).children('a').off('click.zf.accordionMenu').on('click.zf.accordionMenu', function(e) {
           e.preventDefault();
+          console.log(1)
 
           _this.toggle($submenu);
         });
@@ -2174,9 +2174,11 @@ class AccordionMenu {
   toggle($target){
     if(!$target.is(':animated')) {
       if (!$target.is(':hidden')) {
+        console.log(2)
         this.up($target);
       }
       else {
+        console.log(3)
         this.down($target);
       }
     }
@@ -2191,6 +2193,7 @@ class AccordionMenu {
     var _this = this;
 
     if(!this.options.multiOpen) {
+      console.log(4)
       this.up(this.$element.find('.is-active').not($target.parentsUntil(this.$element).add($target)));
     }
 
@@ -2214,6 +2217,7 @@ class AccordionMenu {
    * @fires AccordionMenu#up
    */
   up($target) {
+    console.log(5)
     var _this = this;
     //Foundation.Move(this.options.slideSpeed, $target, function(){
       $target.slideUp(_this.options.slideSpeed, function () {

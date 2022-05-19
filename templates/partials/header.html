@@ -91,41 +91,19 @@
               </li>
               <li {% if section_search %} class="active" {% endif %}>
                 <form id="search-form">
+                  <!-- <div id="search-form"> -->
                   <input type="text" id="simple_search_input" name="query" placeholder="Type to search">
                   <button class="icon-search button my-giza-lnk post" style="border-radius:0px"
                     data-url="{% url 'search_results' %}"></button>
-                  <button class="icon-caret-down button" id="openAdvancedSearchPane" type="button"
+                  <button class="icon-caret-down button" id="openAdvancedSearchPane"
                     data-toggle="sideMenuContainer"></button>
+                  <!-- </div> -->
                 </form>
 
                 <div id="sideMenuContainer" class="dropdown-pane" data-position="bottom" data-alignment="left"
-                  data-dropdown data-hover="true" data-hover-pane="true" data-responsive-toggle="true">
+                data-dropdown data-hover="true" data-hover-pane="true">
                   {% include 'search-advanced-accordion.html' %}
                 </div>
-
-                <!-- <div id="sideBarTab"> -->
-                <!-- <button class="openbtn button primary">Advanced search</button> -->
-                <!-- </div> -->
-
-                <!-- <div class="dropdown-pane" id="example-dropdown" data-dropdown data-auto-focus="true">
-                  Example form in a dropdown.
-                  <form>
-                    <div class="grid-container">
-                      <div class="grid-x grid-margin-x">
-                        <div class="cell medium-6">
-                          <label>Name
-                            <input type="text" placeholder="Kirk, James T.">
-                          </label>
-                        </div>
-                        <div class="cell medium-6">
-                          <label>Rank
-                            <input type="text" placeholder="Captain">
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div> -->
               </li>
             </ul>
           </div>
@@ -134,34 +112,8 @@
     </div>
   </div>
 </div>
-
-<!-- END TOPBAR -->
 <script>
-  $(document).ready(() => {
-
-    $(document).foundation()
-
-    // LOAD CATEGORIES FOR ADVANCED SEARCH
-    fetch('/search/categories/')
-      .then(response => response.json())
-      .then(response => $('#html').html(response.html).foundation())
-
-    // $('#simple_search_input').on('keyup', e => {
-    //   if (e.keyCode == 13) {
-
-    //     fetch($(e.currentTarget).data('url'), {
-    //         method: 'POST',
-    //         query: $(e.currentTarget).val(),
-    //         headers: new Headers({
-    //           'X-CSRFToken': $.cookie('csrftoken')
-    //         })
-    //       })
-    //       .then(response => response.json())
-    //       .then(response => {
-    //         if (response.success) {
-    //           $('#main_content').empty().html(response.html)
-    //         }
-    //       })
-    //   }
+  $('#openAdvancedSearchPane').on('click tap', e => {
+    e.preventDefault()
   })
 </script>

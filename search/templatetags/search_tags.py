@@ -15,6 +15,11 @@ def array_value(array, key):
             return a
 
 @register.filter
+def lookup(array):
+    l = { k : v for k, v in array.items() if type(v) is dict }
+    return l
+    
+@register.filter
 def sanitize(l):
     return [x for x in list(l) if '_ms' not in x[0]]
 

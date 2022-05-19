@@ -1,14 +1,23 @@
 {% load static %}
 <div class="media-object-holder search-result-thumbnail-view">
-{% for result in search_result.hits %}
+  {% for result in search_result.hits %}
   <div class="media-object list-item search-result thumbsize-md thumbs-square">
     <div class="media-object-section">
-      <div class="add-wrap user-function" {% if not user %} style="display:none;" {% endif %}>
+      {% if collection is None and user is None or collection is None and user is not user.username|length %}
+      <div class="add-wrap user-function">
         <a class="my-giza-lnk modal"
           data-url="{% url 'get-form' form='collection_form' type=result.type id=result.id %}">
           <span class="ico"></span>
         </a>
       </div>
+      {% elif collection is not None and user is not None %}
+      <div class="add-wrap user-function">
+        <a class="my-giza-lnk modal post"
+          data-url="{% url 'my-giza-collections-delete-item' cid=collection iid=result.es_id %}">
+          <span class="ico-remove"></span>
+        </a>
+      </div>
+      {% endif %}
       <!-- <a data-open="add_collection" aria-controls="add_collection" aria-haspopup="true" tabindex="0">
           <span class="icon-plus-circle icon-fw"></span> Add this to a collection
         </a> -->

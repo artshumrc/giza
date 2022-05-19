@@ -1,4 +1,9 @@
-import copy, re, operator, json, os
+import copy
+import re
+import operator
+import json
+import os
+import numpy as np
 from logging import exception
 from json.decoder import JSONDecodeError
 
@@ -25,9 +30,10 @@ from utils.views_utils import (
     SEARCH_FIELDS_PER_CATEGORY,
     SORT_FIELDS_PER_CATEGORY,
     FACETS_PER_CATEGORY,
+    MET,
     MET_SIMPLE,
     MET_SIMPLE_REVERSED,
-    MONTHS,
+    MONTHS
 )
 
 ####################################
@@ -39,6 +45,7 @@ from utils.views_utils import (
 
 def search_show(request):
     return render(request, "pages/searchresults.html")
+
 
 def search_results(request, items=None):
     """This route passes the Django Request object on to the base parameters method and will receive the items dictionary.
@@ -342,7 +349,7 @@ def get_type_html(request, type, id, view):
             "html": {
                 "#search_result_modal_form": {
                     "html": render_to_string(
-                        f"search-result-detail.html",
+                        "search-result-detail.html",
                         {
                             "object": type_object,
                             "type": type,
@@ -385,9 +392,9 @@ def get_categories(request):
             "html": render_to_string(
                 "search-advanced-accordion-category.html",
                 {
-                    "search": categories,
+                    "search": categories
                 },
-            ),
+            )
         }
     )
 
@@ -438,14 +445,56 @@ def MET_path(term=None, code=None):
         return MET_path(code=MET_lookup(term=term))
 
 
-def build_MET(buckets):
+def build_MET(buckets=None, full_tree=False):
     """
-    This method aggregates all MET values into a dictionary to be sent back to the client. The MET values are currently
-    dependent on selected category only. NOTE: ES limits document retrieval to 10000. This is untested for search queries that result
-    in more than 10,000 MET terms. In that case ES would limit the output to 10,000 on MET_paths. One possible workaround is to use
-    the ES scrolling API, but this may provide additional waiting time for the user in case of processing large search batches.
+    This method provides two functionalities. It either aggregates all MET values into a dictionary to be sent back to the client or returns 
+    the entire MET dictionary as a JSON document. In case of aggregation, the MET values are currently dependent on selected category only. 
+    NOTE: ES limits document retrieval to 10000. This is untested for search queries that result in more than 10,000 MET terms. 
+    In that case ES would limit the output to 10,000 on MET_paths. One possible workaround is to use the ES scrolling API, but this may 
+    provide additional waiting time for the user in case of processing large search batches.
+    ### Returns
+    ##### with buckets and full_tree set to False (default)
+    - dict
+        - MET logical tree
+    - dict
+        - MET value tree
+    ##### or without buckets and full_tree set to True
+    - dict
+        - combined MET tree
     """
-    if "aggregations" in buckets:
+
+    # This private method collects the full path (code) to each term.
+    # For example:
+    # 	-	AAA_AAA_AAB requires [AAA, AAA_AAA]
+    # 	-	AAA_AAB_AAF_AAB requires [AAA, AAA_AAB, AAA_AAB_AAF]
+    def checkCode():
+        for k, v in codes.items():
+            fullCodes = getCodes(k.split("_")[:-1])
+            for code in fullCodes:
+                if code is not "" and code not in allCodes:
+                    allCodes[code] = 0
+                    # checkCode()
+            if k not in allCodes:
+                allCodes[k] = v
+
+    def get_by_path(root, items):
+        return reduce(operator.getitem, items, root)
+
+    def set_by_path(root, items, value):
+        get_by_path(root, items[:-1])[items[-1]] = {
+            "key": value[0],
+            "count": value[1],
+            "path": "_".join(items),
+        }
+
+    def set_path(root, items, value):
+        get_by_path(root, items[:-1])[items[-1]] = {
+            "key": value,
+            "path": "_".join(items),
+        }
+
+    # FIRST OPTION: RETURN MET TERMS FOR AGGREGATIONS
+    if buckets is not None and "aggregations" in buckets:
         MET_aggregations = {
             k: v for k, v in buckets["aggregations"].items() if "MET" in k
         }
@@ -461,20 +510,6 @@ def build_MET(buckets):
             if len(codes) and len(doc_counts):
                 allCodes = {}
 
-                # This private method collects the full path (code) to each term.
-                # For example:
-                # 	-	AAA_AAA_AAB requires [AAA, AAA_AAA]
-                # 	-	AAA_AAB_AAF_AAB requires [AAA, AAA_AAB, AAA_AAB_AAF]
-                def checkCode():
-                    for k, v in codes.items():
-                        fullCodes = getCodes(k.split("_")[:-1])
-                        for code in fullCodes:
-                            if code is not "" and code not in allCodes:
-                                allCodes[code] = 0
-                                # checkCode()
-                        if k not in allCodes:
-                            allCodes[k] = v
-
                 checkCode()
 
                 combined = [
@@ -489,21 +524,12 @@ def build_MET(buckets):
                     for k in allCodes.keys()
                 ]
 
-                def get_by_path(root, items):
-                    return reduce(operator.getitem, items, root)
-
-                def set_by_path(root, items, value):
-                    get_by_path(root, items[:-1])[items[-1]] = {
-                        "key": value[0],
-                        "count": value[1],
-                        "path": "_".join(items),
-                    }
-
                 di = {}
 
                 # BUILD RECURSIVE TREE FOR TEMPLATE
                 [
-                    set_by_path(di, x["Code"].split("_"), (x["Term"], x["Doc_count"]))
+                    set_by_path(di, x["Code"].split("_"),
+                                (x["Term"], x["Doc_count"]))
                     for x in combined
                 ]
 
@@ -511,12 +537,38 @@ def build_MET(buckets):
                 return combined, sorted(
                     di.items(), key=lambda k: operator.getitem(k[1], "key")
                 )
+
+    # SECOND OPTION: RETURN ENTIRE MET TREE
+    if buckets is None and full_tree:
+        combined = [
+            {
+                "Code": k,
+                "Term": MET_lookup(code=k),
+                "Level": len(k.split("_"))
+            }
+            for k in MET_SIMPLE.keys()
+        ]
+
+        di = {}
+
+        # BUILD RECURSIVE TREE FOR TEMPLATE
+        [
+            set_path(di, x["Code"].split("_"), (x["Term"]))
+            for x in combined
+        ]
+
+        # SORT THE TREE FOR ALPHABETIC RENDERING ON TEMPLATE
+        return sorted(
+            di.items(), key=lambda k: operator.getitem(k[1], "key")
+        )
+
     return {}, {}
 
 
 def getCodes(code):
     return [
-        "_".join(code[: idx + 1]) if len(code) > 1 else "".join(code[: idx + 1])
+        "_".join(code[: idx + 1]
+                 ) if len(code) > 1 else "".join(code[: idx + 1])
         for idx, c in enumerate(code)
     ]
 
@@ -571,15 +623,17 @@ def search_execute(request=None, dictionary=None):
                 # SIMPLE SEARCH
                 if "query" in body:
                     items["search"]["query"] = body["query"]
-                    
-                # ADVANCED SEARCH
-                else:
 
-                    # ASSIGN CATEGORY
+                # ASSIGN CATEGORY
+                if "category" in body:
                     items["search"]["category"] = body['category']
 
+                # ADVANCED SEARCH
+                if "category" in body:
+
                     # ASSIGN SEARCH FIELDS
-                    items["search"]["fields"] = { SEARCH_FIELDS_PER_CATEGORY[items["search"]["category"]][k.split('_')[1]] : v for k, v in body.items() if len(v) > 0 and '_' in k and items["search"]["category"] in k}
+                    items["search"]["fields"] = {SEARCH_FIELDS_PER_CATEGORY[items["search"]["category"]][k.split(
+                        '_')[1]]: v for k, v in body.items() if len(v) > 0 and '_' in k and items["search"]["category"] in k}
 
                     # REFORMAT SEARCH PARAMETERS FROM ADVANCED SEARCH FORM
                     # { items['search']['fields'][x].update({ 'key' : SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]], 'val' : y[1], 'text' : FIELDS_PER_CATEGORY[items['search']['category']][SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]]] }) for x in items['search']['fields'] for y in list(request.POST.items()) if x == y[0].split('_')[0] and type(items['search']['fields'][x]) is dict and items['search']['category'] in x }
@@ -779,7 +833,8 @@ def search_execute(request=None, dictionary=None):
         else 10000
     )
     items["search"]["result"]["hits"] = [
-        {"id": hit.get("_id"), "type": hit.get("_type"), "source": hit.get("_source")}
+        {"id": hit.get("_id"), "type": hit.get(
+            "_type"), "source": hit.get("_source")}
         for hit in search_results["hits"]["hits"]
     ]
 
@@ -804,7 +859,8 @@ def __execute(items):
     """
     items = __base_query(items)  # BUILD NORMAL BASE JSON QUERY
     items = __post_filter(items)  # BUILD POST FILTER
-    items = __build_aggregations(items)  # AGGREGATE RELATED CATEGORIES AND FACETS
+    # AGGREGATE RELATED CATEGORIES AND FACETS
+    items = __build_aggregations(items)
 
     # addToClipBoard(json.dumps(__build_query(items)))		# DEBUGGING ELASTICSEARCH QUERY
 
@@ -910,7 +966,8 @@ def __base_query(items):
 
     # CONSTRUCT A MUST-QUERY IF QUERY TERM IS PROVIDED (SIMPLE SEARCH)
     if len(items["query"]):
-        must.append(__bool_must_match("_all", re.split("\W+", items["query"]), {}))
+        must.append(__bool_must_match(
+            "_all", re.split("\W+", items["query"]), {}))
         items["base"]["bool"] = {"must": must}
 
     # CONSTRUCT A MUST-QUERY IF A CATEGORY IS SPECIFIED (ADVANCED SEARCH)
@@ -920,7 +977,8 @@ def __base_query(items):
         if "_ms" in items["fields"].keys():
             field = "entrydate_ms"
 
-        fields = {k: v for k, v in items["fields"].items() if k != field.split("_")[0]}
+        fields = {k: v for k, v in items["fields"].items() if k != field.split("_")[
+            0]}
 
         for k, v in fields.items():
 
@@ -1069,7 +1127,8 @@ def __post_filter(items):
                     field = list(
                         find_key(
                             "field",
-                            FACETS_PER_CATEGORY[items["category"]][facet_category],
+                            FACETS_PER_CATEGORY[items["category"]
+                                                ][facet_category],
                         )
                     )[0]
                     if (
@@ -1307,7 +1366,7 @@ def chkDatePattern(values):
                         return recurseArray(dateRange, pos)
 
                 # CHECK IF ADJACENT VALUES FORM A COHERENT DATE
-                dateRange = values[idx - 3 : idx + 3]
+                dateRange = values[idx - 3: idx + 3]
                 pos = dateRange.index(value)  # POSITION OF VALUE TO BE CHECKED
                 dateRange = [
                     re.sub("[^-/0-9]", "", x) for x in dateRange
@@ -1363,7 +1422,8 @@ def chkDatePattern(values):
                 if string not in dates and ms < -870091200:
                     dates[string] = ms
 
-            value = re.sub("[^-/0-9]", "", value)  # STRIP THE STRING OF ORDINALS
+            # STRIP THE STRING OF ORDINALS
+            value = re.sub("[^-/0-9]", "", value)
 
             if any(char.isdigit() for char in value):
                 if len(value) <= 10:
@@ -1379,7 +1439,8 @@ def chkDatePattern(values):
                             and len(splitVal[2]) is 4
                             and int(splitVal[2]) > 1900 < 2000
                             and (
-                                (int(splitVal[0]) <= 12 and int(splitVal[1]) <= 31)
+                                (int(splitVal[0]) <= 12 and int(
+                                    splitVal[1]) <= 31)
                                 or (int(splitVal[0]) <= 31 and int(splitVal[1]) <= 12)
                                 or (int(splitVal[1]) <= 12 and int(splitVal[2]) <= 31)
                                 or (int(splitVal[1]) <= 31 and int(splitVal[2]) <= 12)

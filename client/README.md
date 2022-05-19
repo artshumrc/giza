@@ -9,7 +9,7 @@ Note: Currently uses Foundation for Sites version 6.2.4 (not the latest). [Docs 
 Please see the prerequisites you need, in the Foundation README below under "Installation."
 
 1. Clone the repo locally.
-2. In a terminal window, `cd` to the local folder and run `npm install`.
+2. In a terminal window, `cd` to the local folder awnd run `npm install`.
 3. You may also need to run `bower install` to grab the front-end dependencies.
 4. To preview on localhost with Gulp, run `npm start`. The site will open at `http://localhost:8000`.
 

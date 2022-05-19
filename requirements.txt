@@ -1,6 +1,6 @@
 Django~=3.2.10
 django-tinymce==3.4.0
-elasticsearch==5.5.3
+elasticsearch==8.1.2
 Pillow==8.2.0
 pyodbc==4.0.30
 pytz==2019.1

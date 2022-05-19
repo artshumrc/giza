@@ -53,6 +53,7 @@ $mediaobject-image-width-stacked: 100% !default;
 
   &:first-child {
     padding-#{$global-right}: $padding;
+    float: left;
   }
 
   &:last-child:not(:nth-child(2)) {
