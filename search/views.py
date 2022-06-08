@@ -3,8 +3,6 @@ import re
 import operator
 import json
 import os
-import numpy as np
-from logging import exception
 from json.decoder import JSONDecodeError
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -23,7 +21,7 @@ from functools import reduce
 from dateutil.parser import parser
 from datetime import *
 
-from utils.elastic_backend import es, ES_INDEX
+from utils.elastic_backend import es
 from utils.views_utils import (
     CATEGORIES,
     FIELDS_PER_CATEGORY,
@@ -48,12 +46,16 @@ def search_show(request):
 
 
 def search_results(request, items=None):
-    """This route passes the Django Request object on to the base parameters method and will receive the items dictionary.
+    """
+    This route passes the Django Request object on to the base parameters method and will receive the items dictionary.
     It then renders the initial search_results page with items and returns the HTML to the user.
-    ###Parameters
-    - request : Django request object
-            - The request sent from the client to the server
-    ###Returns
+    
+    Parameters
+    ----------
+    - request (Django request object) : the request sent from the client to the server
+    
+    Returns
+    -------
     - Render function with template
     """
     try:
@@ -188,8 +190,7 @@ def library(request):
     sort = request.GET.get("sort", "name")
     if sort == "name":
         results = es.search(
-            index=ES_INDEX,
-            doc_type="library",
+            index="library",
             body={
                 "size": 500,
                 "sort": "sort" + sort,
@@ -216,8 +217,7 @@ def library(request):
     else:
         # year, format - TODO: title
         results = es.search(
-            index=ES_INDEX,
-            doc_type="pubdocs",
+            index='publisheddocuments',
             body={
                 "size": 0,
                 "query": {
@@ -286,8 +286,7 @@ def library(request):
 # get virtual Giza tour videos
 def videos(request):
     results = es.search(
-        index=ES_INDEX,
-        doc_type="videos",
+        index='videos',
         body={
             "size": 500,
             "query": {
@@ -829,7 +828,7 @@ def search_execute(request=None, dictionary=None):
     # APPEND TWENTY SEARCH RESULTS FOR DISPLAY
     items["search"]["result"]["total"] = (
         search_results["hits"]["total"]
-        if search_results["hits"]["total"] <= 10000
+        if search_results["hits"]["total"]['value'] <= 10000
         else 10000
     )
     items["search"]["result"]["hits"] = [
@@ -857,21 +856,30 @@ def __execute(items):
     Once the query has been constructed from __base_query, __post_filter, and __build_aggregations
     the method returns the ElasticSearch query results.
     """
+    # query = {
+    #     __base_query(items),
+    #     __aggs(items),
+    #     __post(items)
+    # }
+    
     items = __base_query(items)  # BUILD NORMAL BASE JSON QUERY
     items = __post_filter(items)  # BUILD POST FILTER
     # AGGREGATE RELATED CATEGORIES AND FACETS
     items = __build_aggregations(items)
 
-    # addToClipBoard(json.dumps(__build_query(items)))		# DEBUGGING ELASTICSEARCH QUERY
+    addToClipBoard(json.dumps(__build_query(items)))		# DEBUGGING ELASTICSEARCH QUERY
 
-    return items, __search_get_results(__build_query(items))
+    return items, __search_get_results(__build_query(items)).body
+
+def __get_indices():
+    return list(es.indices.get_alias(expand_wildcards=['open']).body.keys())
 
 
 def __search_get_results(query):
     """This private function executes the query to collect all search results from ES.
     These results include all aggregated results, MET, facets and otherwise.
     """
-    return es.search(index=ES_INDEX, body=query)
+    return es.search(index=query['indices'], body=query['query'])
 
 
 def __build_query(items):
@@ -887,12 +895,15 @@ def __build_query(items):
     - Dictionary with constructed search query
     """
     q = {
-        "from": (items["result"]["pages"]["page"] - 1) * items["result"]["size"],
-        "size": items["result"]["size"],
-        "query": items["base"],
-        "aggregations": items["aggs"],
-        "post_filter": items["post"],
-        "sort": __sort_results(items),
+        "indices" : items['category'] if items['category'] else __get_indices(),
+        "query" : {
+            "from": (items["result"]["pages"]["page"] - 1) * items["result"]["size"],
+            "size": items["result"]["size"],
+            "query": items["base"],
+            "aggregations": items["aggs"],
+            "post_filter": items["post"],
+            "sort": __sort_results(items),
+        }
     }
     return q
 
@@ -951,6 +962,7 @@ def __base_query(items):
     ###Output
     - An updated dictionary with a 'base' property
     """
+
     items["base"] = {}
     must = []
 
@@ -960,66 +972,81 @@ def __base_query(items):
             items["base"]["bool"] = {
                 "must": [],
                 "must_not": [
-                    {"query_string": {"default_field": "_type", "query": "library "}}
+                    {
+                        "query_string" : {
+                            "default_field": "_index", 
+                            "query": "library "
+                        }
+                    },
+                    {   "query_string" : {
+                            "default_field" : "_index",
+                            "query" : "iiif"
+                    }}
                 ],
             }
 
     # CONSTRUCT A MUST-QUERY IF QUERY TERM IS PROVIDED (SIMPLE SEARCH)
     if len(items["query"]):
-        must.append(__bool_must_match(
-            "_all", re.split("\W+", items["query"]), {}))
+        if len(items['query']) == 1 and '*' in items["query"]:
+            must.append({ "match_all" : {} })
+        else:
+            must.append(__bool_must_match("match_all", re.split("\W+", items["query"]), {}))
         items["base"]["bool"] = {"must": must}
 
     # CONSTRUCT A MUST-QUERY IF A CATEGORY IS SPECIFIED (ADVANCED SEARCH)
     if items["category"]:
 
-        field = "_"
-        if "_ms" in items["fields"].keys():
-            field = "entrydate_ms"
+        if not items['fields']:
+            must.append({"match_all" : {}})
+            print('match all in index')
+        else:
 
-        fields = {k: v for k, v in items["fields"].items() if k != field.split("_")[
-            0]}
+            field = "_"
+            if "_ms" in items["fields"].keys():
+                field = "entrydate_ms"
 
-        for k, v in fields.items():
+            fields = { k: v for k, v in items["fields"].items() if k != field.split("_")[0] }
 
-            # RANGE MATCH IF THE SEARCH IS FOR A DATE (IN SECONDS)
-            if "entrydate" in k:
-                if "entrydate_ms" in k and len(v):
-                    must.append({"match": {k: v[0]}}) if len(v) == 1 else must.append(
-                        {
-                            "range": {
-                                k: {
-                                    "gte": v[0],
-                                    "lte": v[1],
+            for k, v in fields.items():
+
+                # RANGE MATCH IF THE SEARCH IS FOR A DATE (IN SECONDS)
+                if "entrydate" in k:
+                    if "entrydate_ms" in k and len(v):
+                        must.append({"match": {k: v[0]}}) if len(v) == 1 else must.append(
+                            {
+                                "range": {
+                                    k: {
+                                        "gte": v[0],
+                                        "lte": v[1],
+                                    },
                                 },
-                            },
-                        }
-                    )
+                            }
+                        )
 
-            # NESTED QUERY
-            elif k.count(".") >= 2:
-                v = (
-                    re.split(" |-\.", v)
-                    if "provenance" in k or "description" in k or "transcription" in k
-                    else [v]
-                )
-                q = {
-                    "nested": {
-                        "path": k.split(".")[0],
-                        "query": {"bool": {"must": [__bool_must_match(k, v, {})]}},
+                # NESTED QUERY
+                elif k.count(".") >= 2:
+                    v = (
+                        re.split(" |-\.", v)
+                        if "provenance" in k or "description" in k or "transcription" in k
+                        else [v]
+                    )
+                    q = {
+                        "nested": {
+                            "path": k.split(".")[0],
+                            "query": {"bool": {"must": [__bool_must_match(k, v, {})]}},
+                        }
                     }
-                }
-                must.append(q)
-            else:
-                v = (
-                    re.split(" |-|\.", v)
-                    if "provenance" in k
-                    or "description" in k
-                    or "transcription" in k
-                    or "title" in k
-                    else [v]
-                )
-                must.append(__bool_must_match(k, v, {}))
+                    must.append(q)
+                else:
+                    v = (
+                        re.split(" |-|\.", v)
+                        if "provenance" in k
+                        or "description" in k
+                        or "transcription" in k
+                        or "title" in k
+                        else [v]
+                    )
+                    must.append(__bool_must_match(k, v, {}))
 
         items["base"]["bool"] = {"must": must}
 
@@ -1077,7 +1104,7 @@ def __build_aggregations(items):
 
     # AGGREGATE ALL DATA TYPES IN THE DATA SET
     items["aggs"]["doc_types"] = {
-        "terms": {"field": "_type", "exclude": "library", "size": 50}
+        "terms": {"field": "_index", "exclude": "library", "size": 50}
     }
 
     return items
@@ -1264,8 +1291,8 @@ def page_results(items):
             - The page currently displayed on the browser
     """
     pages = {
-        "num_pages": (items["result"]["total"] // items["result"]["size"])
-        + (items["result"]["total"] % items["result"]["size"] > 0)
+        "num_pages": (items["result"]["total"]["value"] // items["result"]["size"])
+        + (items["result"]["total"]["value"] % items["result"]["size"] > 0)
     }  # CALCULATE NUMBER OF PAGES REQUIRED
     if pages["num_pages"] > 0:
         pages["range"] = __create_page_ranges(

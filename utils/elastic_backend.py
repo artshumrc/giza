@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 
 from elasticsearch import Elasticsearch
-from elasticsearch.helpers import scan
+# from elasticsearch.helpers import scan
 
 ES_BACKEND = getattr(settings, 'SEARCH_BACKENDS').get('default')
 
@@ -38,6 +38,10 @@ if ES_HOSTS is None:
 ES_INDEX = ES_BACKEND.pop('INDEX', 'giza')
 ES_TIMEOUT = ES_BACKEND.pop('TIMEOUT', 5)
 
-es = Elasticsearch(
-        hosts=ES_HOSTS,
-        timeout=ES_TIMEOUT)
+# TODO: THESE VARIABLES SHOULD COME FROM A SAFE PLACE
+ES_HOSTS = f'https://localhost:9200'
+es_user = 'elastic'
+es_password = '0xlEM4BduYCAHCE3XaKH'
+es_cert = 'D:\elasticsearch-8.1.2\config\certs\http_ca.crt'
+
+es = Elasticsearch(hosts=ES_HOSTS, ca_certs=es_cert, basic_auth=(es_user, es_password))

@@ -1,15 +1,16 @@
 from datetime import date
 
 CATEGORIES = {
+    "iiif": {"key": "IIIF Manifest", "icon": ""},
     "sites": {"key": "Monuments", "icon": "map-marker"},
     "objects": {"key": "Objects", "icon": "vase"},
     "diarypages": {"key": "Diary Pages", "icon": "sticky-note-o"},
     "plansanddrawings": {"key": "Plans and Drawings", "icon": "pencil-square-o"},  # being phased out
     "mapsandplans": {"key": "Maps and Plans", "icon": "map-o"},
     "drawings": {"key": "Drawings", "icon": "pencil-square-o"},
-    "unpubdocs": {"key": "Unpublished Documents", "icon": "file-text-o"},
+    "unpublisheddocuments": {"key": "Unpublished Documents", "icon": "file-text-o"},
     "bibreferences" : {"key" : "Full Bibliography", "icon" : "info-circle" },
-    "pubdocs": {"key": "Published Documents", "icon": "book"},
+    "publisheddocuments": {"key": "Published Documents", "icon": "book"},
     "photos": {"key": "Photos", "icon": "camera"},
     "ancientpeople": {"key": "Ancient People", "icon": "user"},
     "modernpeople": {"key": "Modern People", "icon": "user"},
@@ -24,7 +25,6 @@ CATEGORIES = {
         "key": "Document",
         "icon": "",
     },  # Default Media type?? authority table: not used because subdivisions?: file-type;
-    "iiifmanifest": {"key": "IIIF Manifest", "icon": ""},
 }
 
 FIELDS_PER_CATEGORY = {
@@ -68,13 +68,13 @@ FIELDS_PER_CATEGORY = {
     # 	'name' : 'Name of a person',
     # 	'dates' : 'Date range of person'
     # },
-    "unpubdocs": {
+    "unpublisheddocuments": {
         "description": "Author of the document",
         "site": "Site mentioned in the document",
         "title": "Objects mentioned in the document",
         # 'dates' : 'Date range of the document'
     },
-    "pubdocs": {
+    "publisheddocuments": {
         "author": "Author of the document",
         "title": "Title of the document",
         # 'year' : 'Year the document was published',
@@ -162,13 +162,13 @@ SEARCH_FIELDS_PER_CATEGORY = {
         "monuments": "diarytranscription",
     },
     "photos": {"keywords": "description", "number": "allnumbers", "date": "entrydate"},
-    "unpubdocs": {
+    "unpublisheddocuments": {
         "author": "relateditems.modernpeople.displayname",
         "site": "relateditems.sites.sitename",
         # 'number' : 'title',
         "date": "entrydate",
     },
-    "pubdocs": {
+    "publisheddocuments": {
         "author": "authors",
         "title": "title",
         "year": "entrydate",
@@ -228,8 +228,8 @@ SORT_FIELDS_PER_CATEGORY = {
     },
     "modernpeople": {"Name": "displayname"},
     "videos": {},
-    "pubdocs": {},
-    "unpubdocs": {},
+    "publisheddocuments": {},
+    "unpublisheddocuments": {},
     "institutions": {},
     "3dmodels": {},
     "groups": {},
@@ -446,7 +446,7 @@ FACETS_PER_CATEGORY = {
         "MET_code": {"nested": {"path": "MET.Path"}},
     },
     # 'unpubdocs' document type
-    "unpubdocs": {
+    "unpublisheddocuments": {
         "Owning Institution": {
             "filter": {"type": {"value": "unpubdocs"}},
             "aggregations": {
@@ -463,7 +463,7 @@ FACETS_PER_CATEGORY = {
         "MET_code": {"nested": {"path": "MET.Path"}},
     },
     # 'pubdocs' document type
-    "pubdocs": {
+    "publisheddocuments": {
         "Format": {"terms": {"field": "format.keyword"}},
         "Language": {"terms": {"field": "language.keyword"}},
         "Year of Publication_daterange": {

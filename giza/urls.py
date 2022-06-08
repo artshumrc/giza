@@ -58,18 +58,19 @@ urlpatterns = [
     path('search/del/<uuid:pk>', views.search_del, name='my-giza-del-search'),
     path('search/lookup', views.search_token, name='search_token'),
 
-    path('search/results/', search_views.search_results, name='search_results'),
-    # path('search/result/<str:form>', views.get_form, name='get-form'),
-    path('search/result/get_form/<str:form>/<str:type>/<int:id>/', views.get_form, name='get-form'),
+    path('search/results', search_views.search_results, name='search_results'),
+    path('search/results/<str:form>/<str:type>/<str:id>', views.get_form, name='get-form'),
+    path('search/results/<str:type>/<str:id>/<str:view>', search_views.get_type_html, name='get_type_html'),
+
     # re_path(r'^/<str:tab>/<str:type>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection'),
-    path('search/result/<str:tab>/<str:type>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection-new'),
-    path('search/result/<str:tab>/<str:type>/<int:id>/<str:name>/', views.my_giza_add, name='add-to-my-giza-collection'),
+    path('search/results/<str:tab>/<str:type>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection-new'),
+    path('search/results/<str:tab>/<str:type>/<int:id>/<str:name>/', views.my_giza_add, name='add-to-my-giza-collection'),
     # path('search/result/<str:type>/<int:id>/<uuid:collection>', views.collections_add, name="mygiza_collections_add"),
     # path('search/results/add-to-collection', views.collections_add, name='my-giza-add-to-collection'),
     path('search/show', search_views.search_show, name='search_show'),
     path('search/update', search_views.search_results_update, name='search_results_update'),
 
-    re_path(r'^search/result/(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', search_views.get_type_html, name='get_type_html'),
+    # re_path(r'^search/result/(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', search_views.get_type_html, name='get_type_html'),
 
     # MY GIZA PATHS
     path('mygiza/tab/public', views.collections_public, name="my-giza-tab-public"),

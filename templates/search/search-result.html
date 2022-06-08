@@ -6,7 +6,7 @@
       {% if collection is None and user is None or collection is None and user is not user.username|length %}
       <div class="add-wrap user-function">
         <a class="my-giza-lnk modal"
-          data-url="{% url 'get-form' form='collection_form' type=result.type id=result.id %}">
+          data-url="{% url 'get-form' form='collection' type=result.type id=result.id %}">
           <span class="ico"></span>
         </a>
       </div>

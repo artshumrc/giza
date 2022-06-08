@@ -1,0 +1,26 @@
+{
+    "published_worker_constituents":{
+        "err":{
+            "err":[],
+            "summary":0
+        }
+    },
+    "published_worker_media":{
+        "err":{
+            "err":[],
+            "summary":0
+        }
+    },
+    "published_worker_objects":{
+        "err":{
+            "err":[],
+            "summary":0
+        }
+    },
+    "published_worker_sites":{
+        "err":{
+            "err":[],
+            "summary":0
+        }
+    }
+}
