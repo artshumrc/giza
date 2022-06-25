@@ -6,7 +6,7 @@
             <form>
                 {% for collection in user_collections %}
                 <a class="button primary my-giza-lnk modal post"
-                    data-url="{% url 'add-to-my-giza-collection' tab='collection' type=type id=id name=collection.title %}">
+                    data-url="{% url 'add-to-my-giza-collection' tab='collection' index=index id=id name=collection.title %}">
                     <!-- UNDERNEATH WHEN USED TO VIEW COLLECTION -->
                     <!-- ABOVE WHEN USED TO VIEW OBJECT FROM SEARCH RESULTS -->
                     {{ collection.title }}
@@ -27,11 +27,11 @@
                 <br>
                 {% endif %}
                 {{ collection_form.as_p }}
-                <input type="hidden" name="type" value="{{type}}">
+                <input type="hidden" name="index" value="{{ index }}">
                 <input type="hidden" name="id" value="{{id}}">
                 <div class="btn-row">
                     <a class="button primary my-giza-lnk modal post"
-                        data-url="{% url 'add-to-my-giza-collection-new' tab='collection' type=type id=id %}">New
+                        data-url="{% url 'add-to-my-giza-collection-new' tab='collection' index=index id=id %}">New
                         Collection</a>
                 </div>
             </form>

@@ -1,49 +1,47 @@
 {% load search_tags %}
 <div class="medium-6 columns">
   <h3 class="heading-alt m-t-half m-b-1">
-    {% if search.result.overall > 10000 %}
-    Your query returned {{ search.result.overall }} results so for performance reasons we fetched 10,000 for you to browse. Please refine your search parameters.
-      {% else %}
+    {% if search.result.total.value == 10000 and 'gte' in search.result.total.relation %}
+    Your query returned over {{ search.result.total.value }} results so for performance reasons we fetched 10,000 for you to browse. Please refine your search parameters.
+    {% else %}
+      Your query 
+      {% if 'query' in search and search.query %}
+        ("{{ search.query }}")
+      {% endif %}
+      returned {{ search.result.total.value }}
       {% if 'category' in search and search.category %} 
-        {{ search.category }}
-          {% if 'query' in search and search.query %}
-            for "{{ search.query }}"
-              {% endif %}
-              {% elif 'query' in search and search.query %}
-              matching records for "{{ search.query }}"
-              {% endif %}
-              {% if search.fields.items|length %}
-              for
-              {% if search.query %}
-              {{ search.query }}
-              {% else %}
-              {% for key, value in search.fields.items %}
-              {% if not '_ms' in key %}
+        {{ search.result.category.key.lower }}
+      {% else %}
+        records
+      {% endif %}      
+      {% if search.fields.items|length %}
+          {% for key, value in search.fields.items %}
+            {% if not '_ms' in key %}
               {% if search.fields|length == 1 %}
-              "{{ value }}"
-              {# {% if search.MET.MET_paths|length %} #}
-              {# (with MET term  #}
-              {# {% for term in search.MET.MET_paths %} #}
-              {# {{ term.term }} #}
-              {# {% endfor%} #}
-              {# }. #}
-              {# {% else %} #}
-              {# }. #}
-              {#            {% endif %} #}
-              .
-            {% else %}
-              {% if forloop.first %}
-              "{{ value }}"
-              {% elif forloop.last %}
-              and "{{ value }}".
+                "{{ value }}"
+
+            {# {% if search.MET.MET_paths|length %} #}
+            {# (with MET term  #}
+            {# {% for term in search.MET.MET_paths %} #}
+            {# {{ term.term }} #}
+            {# {% endfor%} #}
+            {# }. #}
+            {# {% else %} #}
+            {# }. #}
+            {#            {% endif %} #}
+            .
               {% else %}
-              "{{ value }}",
+                {% if forloop.first %}
+                "{{ value }}"
+                {% elif forloop.last %}
+                  and "{{ value }}".
+                {% else %}
+                  "{{ value }}",
+                {% endif %}
               {% endif %}
             {% endif %}
-          {% endif %}
         {% endfor %}
       {% endif %}
-    {% endif %}
     {% endif %}
   </h3>
 </div>

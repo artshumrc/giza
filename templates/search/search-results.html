@@ -105,8 +105,8 @@ $(document).ready(() => {
 
     // CHECK IF FACET IS BEING ADDED OR REMOVED
     facet = facet.split('_')
-    idx = st['facets'][facet[0]].map(e => e.display_text).indexOf(String(facet[1]))
-    st['facets'][facet[0]][idx]['selected'] = !st['facets'][facet[0]][idx]['selected']
+    idx = st['facets']['all_facets'][facet[0]].map(e => e.display_text).indexOf(String(facet[1]))
+    st['facets']['all_facets'][facet[0]][idx]['selected'] = !st['facets']['all_facets'][facet[0]][idx]['selected']
 
     // SEND AJAX POST REQUEST
     update_search()
@@ -122,7 +122,7 @@ $(document).ready(() => {
     st['result']['pages']['page'] = 1
 
     // RESET THE DATE SLIDER
-    delete st['fields']['entrydates_ms']
+    delete st['fields']['EntryDate_ms']
     
     // SET NEW CATEGORY STATE
     console.log(category)
@@ -395,7 +395,7 @@ $(document).ready(() => {
               $('#date_slider_to').text(new Date(ui.values[1] * 1000).toDateString())
             },
             change: () => {
-              st['fields']['entrydates_ms'] = [parseInt($('#date_start').val()), parseInt($('#date_end').val())]
+              st['fields']['EntryDate_ms'] = [parseInt($('#date_start').val()), parseInt($('#date_end').val())]
               update_search()
             }
           })
@@ -403,30 +403,30 @@ $(document).ready(() => {
         }
 
         // IF ADVANCED SEARCH INCLUDED DATE
-        if ('entrydate_ms' in st['fields'] && st['fields']['entrydate_ms'].length) {
+        if ('EntryDate_ms' in st['fields'] && st['fields']['EntryDate_ms'].length) {
           
-          if ('entrydates_ms' in st['fields']) {
-            minimum_set_value = st['fields']['entrydates_ms'][0]
-            maximum_set_value = st['fields']['entrydates_ms'][1]
-            max_range = st['fields']['entrydate_ms']
+          if ('EntryDate_ms' in st['fields']) {
+            minimum_set_value = st['fields']['EntryDate_ms'][0]
+            maximum_set_value = st['fields']['EntryDate_ms'][1]
+            max_range = st['fields']['EntryDate_ms']
           } else {
-            minimum_set_value = st['fields']['entrydate_ms'][0]
-            maximum_set_value = (typeof st['fields']['entrydate_ms'][1] !== 'undefined') ? st['fields']['entrydate_ms'][1] : 0
-            max_range = st['fields']['entrydate_ms']
+            minimum_set_value = st['fields']['EntryDate_ms'][0]
+            maximum_set_value = (typeof st['fields']['EntryDate_ms'][1] !== 'undefined') ? st['fields']['EntryDate_ms'][1] : 0
+            max_range = st['fields']['EntryDate_ms']
           }
           
         } else {
 
-          dateRange = Object.keys(st['facets']).filter(key => key.includes('_daterange'))
+          dateRange = Object.keys(st['facets']['all_facets']).filter(key => key.includes('_daterange'))
 
           if (dateRange.length) {
-            range = st['facets'][dateRange].map(i => parseInt(i['display_text'])).sort((a, b) => a - b)
+            range = st['facets']['all_facets'][dateRange].map(i => parseInt(i['display_text'])).sort((a, b) => a - b)
             max_range = [range[0], range[range.length - 1 ]]
 
             // SEARCH DID NOT INITIALLY INCLUDE A DATE; ENTRYDATES_MS PARAMETERS IN ST AT NEXT REQUEST
-            if ('entrydates_ms' in st['fields']) {
-              minimum_set_value = st['fields']['entrydates_ms'][0]
-              maximum_set_value = st['fields']['entrydates_ms'][1]
+            if ('EntryDate_ms' in st['fields']) {
+              minimum_set_value = st['fields']['EntryDate_ms'][0]
+              maximum_set_value = st['fields']['EntryDate_ms'][1]
             } else {
               minimum_set_value = max_range[0]
               maximum_set_value = max_range[1]

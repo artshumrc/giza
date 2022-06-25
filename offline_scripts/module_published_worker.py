@@ -1,9 +1,9 @@
 try:
     from os import cpu_count
     from concurrent.futures import ThreadPoolExecutor, wait
-    from base import Base
     from operator import itemgetter
-    from re import sub, compile, IGNORECASE, match
+    from re import sub, compile, match, IGNORECASE
+    from base import Base
 except ImportError as error:
     print(error)
 
@@ -100,7 +100,7 @@ class Published_Worker(Base):
                 res[method] = { 'res' : { 'summary' : len(result[method]['res']), 'res' : result[method]['res'] }}
                 err[method] = { 'err' : { 'summary' : len(result[method]['err']), 'err' : result[method]['err'] }}
 
-            return self.records, self.relations, { 'published_worker_res' : res, 'published_worker_err' : err }
+            return self.records, self.relations, self.thumbnail_urls, { 'published_worker_res' : res, 'published_worker_err' : err }
 
     def media(self, rows:list):
         """
@@ -152,9 +152,25 @@ class Published_Worker(Base):
                 if 'RelatedItems' not in self.records[row['RecID']]: self.records[row['RecID']]['RelatedItems'] = {}
                 if "PublishedDocuments" not in self.records[row['RecID']]['RelatedItems']: self.records[row['RecID']]['RelatedItems']['PublishedDocuments'] = []
 
-                drs_id = "" if row['ArchIDNum'].lower() == "null" else row['ArchIDNum']
-                thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
-                if not thumbnail_url and drs_id: thumbnail_url = self.thumbnail_url(drs_id)
+                if 'ConstituentTypeID' in row: thumbnail_id = f'{self.constituenttypes.get(int(row["ConstituentTypeID"]))}-{row["RecID"]}'
+                
+                drs_id = None if row['ArchIDNum'].lower() == "null" else row['ArchIDNum']
+
+                if drs_id:
+                    thumbnail_url = self.thumbnail_url(drs_id)
+
+                if drs_id.lower() == "null" or not drs_id:
+                    thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+
+                if len(thumbnail_url) and thumbnail_id not in self.thumbnail_urls:
+                    self.thumbnail_urls[thumbnail_id] = { 'Thumbnail_ID' : thumbnail_id, 'url' : thumbnail_url }
+
+                # thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+                
+                # if not thumbnail_url and drs_id: thumbnail_url = self.thumbnail_url(drs_id)
+
+                # if thumbnail_url:
+                    # self.thumbnail_urls.append({ 'drs_id' : drs_id, 'url' : thumbnail_url })
 
                 if row['Role'] not in self.records[row['RecID']]['Roles']: self.records[row['RecID']]['Roles'].append(row['Role'])
                 if row['Role'] == "Author": 
@@ -168,6 +184,7 @@ class Published_Worker(Base):
                     'DisplayText' : row['DisplayName'],
                     'Description' : row['Remarks'] if row['Remarks'] != "NULL" else "",
                     'Thumbnail' : thumbnail_url,
+                    'DRS_ID' : drs_id,
                     'HasManifest' : False if drs_id == "" else True
                 }
 

@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.decorators import login_required
+from elastic_transport import ObjectApiResponse
 
 from giza.forms import CollectionForm
 from tms import models
@@ -143,7 +144,7 @@ def compile_update(items):
             },
         ),
         "search_facets": render_to_string(
-            "search-facets.html",
+            "search-facets-accordion.html",
             {
                 "search": items["search"],
             },
@@ -319,21 +320,23 @@ def videos(request):
     )
 
 
-def get_type_html(request, type, id, view):
+def get_type_html(request, index=None, id=None, view=None):
+    # print(index, id, view)
     # get site in elasticsearch and render or return 404
     # try:
-    if view == "intro":
-        view = "full"
-    type_object = models.get_item(id, type, ES_INDEX)
+    rec_id = f'{index}-{id}'
+    type_object = models.get_item(index, rec_id)
 
-    if "relateditems" in type_object:
-        for item in type_object["relateditems"]:
+    if view == "intro": view = "full"
+
+    if "RelatedItems" in type_object:
+        for item in type_object["RelatedItems"]:
             new_item = {
-                "category": CATEGORIES[item]["key"],
-                "icon": CATEGORIES[item]["icon"],
-                "items": type_object["relateditems"][item],
+                "category": CATEGORIES[item.lower()]["key"],
+                "icon": CATEGORIES[item.lower()]["icon"],
+                "items": type_object["RelatedItems"][item],
             }
-            type_object["relateditems"][item] = new_item
+            type_object["RelatedItems"][item] = new_item
 
     # add form for creating a new collection in modal
     # collection_form = CollectionForm()
@@ -351,7 +354,7 @@ def get_type_html(request, type, id, view):
                         "search-result-detail.html",
                         {
                             "object": type_object,
-                            "type": type,
+                            "index": index,
                             # 'manifest' : tmsViews.get_manifest_data(request, type, id),
                             # 'collection_form': collection_form,
                             "user": request.user,
@@ -603,7 +606,9 @@ def search_execute(request=None, dictionary=None):
     #########################
     # 		BASE PARAMS		#
     #########################
-    items = {"search": {}}
+    items = {
+        "search": {}
+    }
     items["user"] = request.user
 
     # A SEARCH POST IS SUBMITTED
@@ -627,12 +632,17 @@ def search_execute(request=None, dictionary=None):
                 if "category" in body:
                     items["search"]["category"] = body['category']
 
+                if "fields" in body:
+                    items["search"]["fields"] = body['fields']
+
                 # ADVANCED SEARCH
-                if "category" in body:
+                # if "category" in body:
 
                     # ASSIGN SEARCH FIELDS
-                    items["search"]["fields"] = {SEARCH_FIELDS_PER_CATEGORY[items["search"]["category"]][k.split(
-                        '_')[1]]: v for k, v in body.items() if len(v) > 0 and '_' in k and items["search"]["category"] in k}
+                    # items["search"]["fields"] = {
+                    #     SEARCH_FIELDS_PER_CATEGORY[items["search"]["category"]][k.split(
+                    #     '_')[1]]: v for k, v in body.items() if len(v) > 0 and '_' in k and items["search"]["category"] in k
+                    # }
 
                     # REFORMAT SEARCH PARAMETERS FROM ADVANCED SEARCH FORM
                     # { items['search']['fields'][x].update({ 'key' : SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]], 'val' : y[1], 'text' : FIELDS_PER_CATEGORY[items['search']['category']][SEARCH_FIELDS_PER_CATEGORY[items['search']['category']][y[0].split('_')[1]]] }) for x in items['search']['fields'] for y in list(request.POST.items()) if x == y[0].split('_')[0] and type(items['search']['fields'][x]) is dict and items['search']['category'] in x }
@@ -677,8 +687,14 @@ def search_execute(request=None, dictionary=None):
                     else {"MET_tree": {}, "MET_paths": [], "MET_terms": []}
                 )
 
-                # FACETS
-                items["search"]["facets"] = {}
+                # GET SELECTED FACETS
+                selected = { facet : [ val['display_text'] for val in values if val['selected'] ] for facet, values in body['facets']["all_facets"].items() } if 'facets' in body and body['facets'] else {}
+                
+                # ASSIGN UN/SELECTED FACETS TO THE ITEMS OBJECT FOR PROCESSING
+                items["search"]["facets"] = { 
+                    "all_facets" : body['facets']["all_facets"] if 'facets' in body and body['facets']["all_facets"] else {}, 
+                    "selected" : { facet : values for facet, values in selected.items() if len(values) } if len(selected) else {} 
+                }
 
                 # EXTRACT FIELDS THAT WERE SEARCHED FOR
                 items["search"]["result"] = {
@@ -757,8 +773,8 @@ def search_execute(request=None, dictionary=None):
                                 int(x[1]) for x in res[1]
                             ]
         else:
-            # RETURN ALL EXCEPT LIBRARY DOC_TYPE
-            items["search"]["ignore"] = "library"
+            # RETURN ALL EXCEPT LIBRARY AND MANIFEST INDICES
+            items["search"]["ignore"] = ["library", "iiif"]
 
     #########################
     # 	PROCESS SEARCH Q	#
@@ -769,29 +785,40 @@ def search_execute(request=None, dictionary=None):
     # 		SEPARATE	 	#
     #########################
     if "aggregations" in search_results:
-        items["search"]["categories"] = [
-            {
-                "displaytext": CATEGORIES[x["key"]]["key"],
-                "key": x["key"],
-                "doc_count": x["doc_count"],
-            }
-            for x in search_results["aggregations"]["doc_types"]["buckets"]
-        ]
-        del search_results["aggregations"]["doc_types"]
+        p = search_results["aggregations"]
+        if not 'doc_types' in p:
+            for key, v in p.items():
+                if key in v and 'buckets' in v[key]:
+                    items["search"]["categories"] = [
+                        {
+                            "key": key,
+                            "displaytext": x["key"],
+                            "doc_count": x["doc_count"],
+                        }
+                        for x in v[key]['buckets']
+                    ]
+
+                # items["search"]["categories"][key][key]['buckets']
+
+        else:
+
+
+            items["search"]["categories"] = [
+                {
+                    "displaytext": CATEGORIES[x["key"]]["key"],
+                    "key": x["key"],
+                    "doc_count": x["doc_count"],
+                }
+                for x in search_results["aggregations"]["doc_types"]["buckets"]
+            ]
+            del search_results["aggregations"]["doc_types"]
 
     # IF SEARCH RESULTS
     if "hits" in search_results and "total" in search_results["hits"]:
 
         #  NO FACETS ARE YET SELECTED--THIS IS A VIRGIN SEARCH
-        if not any(
-            [
-                y
-                for v in items["search"]["facets"].values()
-                for y in v
-                if y["selected"] == True
-            ]
-        ):
-            items["search"]["result"]["overall"] = search_results["hits"]["total"]
+        # if 'selected' not in items['search']['facets']:
+        items["search"]["result"]["total"] = search_results["hits"]["total"]
 
     #########################
     # 		COMPILE MET 	#
@@ -800,37 +827,42 @@ def search_execute(request=None, dictionary=None):
         search_results
     )
 
+    if 'category' in items['search'] and len(items['search']['category']):
+        items["search"]["result"]['category'] = {}
+        items["search"]["result"]['category'] = CATEGORIES[items['search']['category']]
+        # category = items['search']['category']
+        # items['search']['category'] = CATEGORIES[category]
+
     # EXTRACT SELECTED FACETS FROM ITEMS
-    selected_facets = []
-    if items["search"]["facets"]:
-        selected_facets = list(find_val(items["search"]["facets"], True))
+    # selected_facets = items['search']['facets']['selected'] if 'selected' in items['search']['facets'] and items['search']['facets']['selected'] else {}
+    # if 'selected' in items["search"]["facets"]:
 
-        # CHECK IF THE USER REQUIRES A SLIDER TO NAVIGATE DATES
-        if "Dates" in items["search"]["facets"]:
+    # CHECK IF THE USER REQUIRES A SLIDER TO NAVIGATE DATES
+    if "_daterange" in items["search"]["facets"]["all_facets"]:
 
-            # GET MIN AND MAX VALS; NOTE: datetime OBJECT IS IN SECONDS
-            dates = sorted(
-                items["search"]["facets"]["Dates"], key=lambda x: x["display_text"]
+        # GET MIN AND MAX VALS; NOTE: datetime OBJECT IS IN SECONDS
+        dates = sorted(
+            items["search"]["facets"]["all_facets"]["Dates"], key=lambda x: x["display_text"]
+        )
+        for idx, x in enumerate(dates):
+            dates[idx]["datetime"] = datetime(1970, 1, 1) + timedelta(
+                seconds=(float(f'{x["display_text"]}0000'))
             )
-            for idx, x in enumerate(dates):
-                dates[idx]["datetime"] = datetime(1970, 1, 1) + timedelta(
-                    seconds=(float(f'{x["display_text"]}0000'))
-                )
 
-            items["search"]["result"]["date_slider"] = dates
+        items["search"]["result"]["date_slider"] = dates
 
-    items["search"]["facets"] = {
-        k: v
-        for x in __recurse_aggs("", search_results, [], selected_facets)
+    items["search"]["facets"]["all_facets"] = {
+        k : v
+        for x in __recurse_aggs("", search_results, [], items["search"]["facets"]["selected"])
         for k, v in x.items()
     }
 
     # APPEND TWENTY SEARCH RESULTS FOR DISPLAY
-    items["search"]["result"]["total"] = (
-        search_results["hits"]["total"]
-        if search_results["hits"]["total"]['value'] <= 10000
-        else 10000
-    )
+    # items["search"]["result"]["total"] = (
+    #     search_results["hits"]["total"]
+    #     if search_results["hits"]["total"]['value'] <= 10000
+    #     else 10000
+    # )
     items["search"]["result"]["hits"] = [
         {"id": hit.get("_id"), "type": hit.get(
             "_type"), "source": hit.get("_source")}
@@ -851,61 +883,268 @@ def search_execute(request=None, dictionary=None):
 ####################################
 ###			QUERY BUILDING		 ###
 ####################################
-def __execute(items):
-    """This function calls all methods to construct and execute the search query
-    Once the query has been constructed from __base_query, __post_filter, and __build_aggregations
-    the method returns the ElasticSearch query results.
+def __execute(items:dict):
     """
-    # query = {
-    #     __base_query(items),
-    #     __aggs(items),
-    #     __post(items)
-    # }
+    Calls methods to construct and execute the search query:
+    1) __base_query: builds base query
+    2) __build_aggregations: adds aggregations
+    3) __post_filter: applies filters
     
-    items = __base_query(items)  # BUILD NORMAL BASE JSON QUERY
-    items = __post_filter(items)  # BUILD POST FILTER
-    # AGGREGATE RELATED CATEGORIES AND FACETS
-    items = __build_aggregations(items)
+    Parameters
+    ----------
+    items (dict) : search parameters
 
-    addToClipBoard(json.dumps(__build_query(items)))		# DEBUGGING ELASTICSEARCH QUERY
+    Returns
+    -------
+    - items (dict) : search parameters
+    - ObjectApiResponse : ElasticSearch query results
+    """
+
+    items = __base_query(items)                         # BUILD NORMAL BASE JSON QUERY
+    items = __build_aggregations(items)                 # AGGREGATE RELATED CATEGORIES AND FACETS
+    items = __post_filter(items)                        # BUILD POST FILTER
+
+
+    addToClipBoard(json.dumps(__build_query(items)))	# DEBUGGING ELASTICSEARCH QUERY
 
     return items, __search_get_results(__build_query(items)).body
 
-def __get_indices():
-    return list(es.indices.get_alias(expand_wildcards=['open']).body.keys())
+def __base_query(items):
+    """
+    Private method to construct the ElasticSearch base query
+    
+    Add search term
+    Add category
+    Add fields
+    Add MET terms
+    Add facets
+    
+    Parameters
+    ----------
+    - items (dict) : search parameters
+    
+    Returns
+    -------
+    - items (dict) : updated search parameters
+    """
+
+    items["base"] = {}
+    must, must_not = [], []
+
+    # IF NO SEARCH TERM, FIELDS OR CATEGORIES ARE PROVIDED, RETURN EVERYTHING FROM ELASTICSEARCH
+    if not len(items["query"]) and not len(items['fields']) and not len(items["category"]):
+        if "ignore" in items:
+            must_not = __add_ignore(items['ignore'])
+
+    # ADD QUERY INFORMATION
+    if not len(items['query']):
+        must.append({ "match_all" : {} })
+    else:
+
+        category_names = [category['key'].lower() for category in CATEGORIES.values()]
+        category_codes = { category[0] : category[1]['key'] for category in CATEGORIES.items() }
+        query = [ word for word in re.findall(r'\b\S+\b', items['query']) if len(word) > 1 ]
+
+        category = [category_name for category_name in category_names for word in query if word.lower() in category_name.lower()]
+
+        if not len(items['query']) or '*' in items['query']:
+            must.append({ 
+                "query_string" : { 
+                    "query" : items["query"],
+                    "analyzer" : "pattern"
+                    }
+                })
+
+        # THE QUERY CONTAINS THE 
+        elif category:
+            must.append({
+                "query_string" : { 
+                    "query" : items["query"],
+                }
+            })
+            for cat in category:
+                must.append({
+                    "match" : { 
+                        "doc.ES_index" : category_codes[cat],
+                    }
+                })
+        else:        
+            must.append({ 
+                "multi_match" : { 
+                    "query" : items["query"],
+                    "analyzer": "synonym_pattern"
+                }
+            })
+
+                # COULD BE KEYWORD ANALYZER?
+        
+
+    # ADD CATEGORY INFORMATION
+    if items["category"]:
+        must.append({
+            "match": {
+                "doc.ES_index": items["category"]
+            }
+        })
+
+        # if 'query' in items and len(items['query']):
+        #     must.append({
+        #         "match": {
+        #             "doc.ES_index": items["category"]
+        #         }
+        #     })
+
+    if len(items['facets']['selected']):
+        # ADD FACETS FROM ACROSS MULTIPLE CATEGORIES?
+
+        for facet_name, facet_value in items['facets']['selected'].items():
+            for facet in facet_value:
+                must.append({ "match" : {
+                    FACETS_PER_CATEGORY[items['category']][facet_name]["terms"]["field"] : facet }
+                })
 
 
-def __search_get_results(query):
-    """This private function executes the query to collect all search results from ES.
+    # ADD SPECIFIC SEARCH FIELD INFORMATION
+    if items['fields']:
+        field = "_"
+        if "_ms" in items["fields"].keys():
+            field = "EntryDate_ms"
+
+        fields = { k: v for k, v in items["fields"].items() if k != field.split("_")[0] }
+
+        for k, v in fields.items():
+
+            # RANGE MATCH IF THE SEARCH IS FOR A DATE (IN SECONDS)
+            if "EntryDate" in k:
+                if "EntryDate_ms" in k and len(v):
+                    xrange = [float(x['display_text']) for x in items['facets']['all_facets']['Year_daterange']]
+                    xrange.sort()
+                    earliest, latest = xrange[0], xrange[-1]
+            # range = items['facets']['all_facets']['Year_daterange'].map(lambda i: int(i['display_text']))
+            # max_range = [range[0], range[range.length - 1 ]]
+                    must.append({
+                        "match": {
+                            k : v[0]
+                        }
+                    }) if len(v) == 1 else must.append({
+
+                    # must.append({
+                        "range": {
+                            "doc.EntryDate_ms": {
+                                "gte": earliest,
+                                "lte": latest,
+                            }
+                        }
+                    })
+                    #     "range": {
+                    #         f'doc.{k}': {
+                    #             "gte": v[0],
+                    #             "lte": v[1],
+                    #         },
+                    #     },
+                    # })
+
+            # NESTED QUERY
+            elif k.count(".") >= 2:
+                v = (
+                    re.split(" |-\.", v)
+                    if "Provenance" in k or "Description" in k or "Transcription" in k
+                    else [v]
+                )
+                q = {
+                    "nested": {
+                        "path": k.split(".")[0],
+                        "query": {"bool": {"must": [__bool_must_match(k, v, {})]}},
+                    }
+                }
+                must.append(q)
+            else:
+                v = (
+                    re.split(" |-|\.", v)
+                    if "Provenance" in k
+                    or "Description" in k
+                    or "Transcription" in k
+                    or "Title" in k
+                    else [v]
+                )
+                must.append(__bool_must_match(k, v, {}))
+
+    # ADD MET INFORMATION
+    if len(items["MET"]["MET_paths"]):
+        for v in items["MET"]["MET_paths"]:
+            must.append({
+                "nested": {
+                    "path": "MET",
+                    "query": {
+                        "bool": {"must": [{"match": {"MET.Codes.keyword": v["code"]}}]}
+                    },
+                }
+            })
+
+    items["base"]["bool"] = { "must": must, "must_not" : must_not }
+
+    return items
+
+def __add_ignore(indices:list) -> list:
+    """
+    Private method to add an ignored index to the base query
+
+    Parameters
+    ----------
+    - indices (list) : list of strings with names of indices to ignore
+
+    Returns
+    -------
+    - ignored (list) : list of dictionaries of ignored indices for search query
+    """
+    ignored = [
+        {
+            "query_string" : {
+                "default_field" : "_index",
+                "query" : index
+            }
+        }
+        for index in indices ]
+
+    return ignored
+
+def __search_get_results(query:dict) -> ObjectApiResponse:
+    """
+    This private function executes the query to collect all search results from ES.
     These results include all aggregated results, MET, facets and otherwise.
     """
     return es.search(index=query['indices'], body=query['query'])
 
 
-def __build_query(items):
+def __build_query(items:dict) -> dict:
     """
-    This method builds the body of the query that is sent to ElasticSearch. We are looking to return results
-    starting at 0. Size is defined by the overall size. Overall size is determined before the user is able to manipulate
+    Builds the body of a query sent to ElasticSearch. By default searches all indices, excluding manifests. 
+    Returns results starting at 0 by default. Number of results limited by size parameters on the items object.
+    
+    Size is defined by the overall size. Overall size is determined before the user is able to manipulate
     results by toggling facets or MET terms. The base query is defined by the search terms, given through the forms.
     Aggregations are based on search terms, facets and MET terms; the post_filter is based on facets and MET terms.
-    ###Parameters
-    - items : dict
-            - Dictionary with all search parameters
-    ###Returns
-    - Dictionary with constructed search query
+    
+    Parameters
+    ----------
+    - items (dict) : dictionary with search parameters
+
+    Returns
+    -------
+    - query (dict) : dictionary with constructed search query
     """
-    q = {
-        "indices" : items['category'] if items['category'] else __get_indices(),
+    query = {
+        "indices" : items['category'] if items['category'] else __get_indices(['iiif']),
         "query" : {
             "from": (items["result"]["pages"]["page"] - 1) * items["result"]["size"],
             "size": items["result"]["size"],
             "query": items["base"],
             "aggregations": items["aggs"],
             "post_filter": items["post"],
-            "sort": __sort_results(items),
+            "sort": __sort_results(items)
         }
     }
-    return q
+    return query
 
 
 def __sort_results(items):
@@ -916,155 +1155,47 @@ def __sort_results(items):
         return [
             {
                 f'{items["result"]["sort_options"][items["result"]["sort"]]}': {
-                    "order": "asc"
+                    "order": "desc"
                 }
             },
-            {"_score": {"order": "asc"}},
+            {"_score": {"order": "desc"}},
         ]
     else:
-        return [{"_score": {"order": "asc"}}]
+        return [{"_score": {"order": "desc"}}]
 
 
-def __bool_must_match(key, value, q):
+def __bool_must_match(key:str, value:list, query:dict):
     """
     This method appends 'match' queries to the 'must' list in the base_query
+
+    Parameters
+    ----------
+
+    Returns
+
     """
     if len(value):
-        b = {
+        bool = {
             "bool": {
                 "must": [
                     {
                         "match": {
-                            key: {
-                                "query": value.pop(0),
-                            },
+                            key : value.pop(0)
                         },
                     },
                 ],
             },
         }
-        q.update(b) if type(q) is dict else q.append(b)
+        query.update(bool) if type(query) is dict else query.append(bool)
         return (
-            __bool_must_match(key, value, q["bool"]["must"])
-            if type(q) is dict
-            else __bool_must_match(key, value, q)
+            __bool_must_match(key, value, query["bool"]["must"])
+            if type(query) is dict
+            else __bool_must_match(key, value, query)
         )
-    return q
+    return query
 
 
-def __base_query(items):
-    """This private method builds the ElasticSearch base query.
-    ###Parameters
-    - items : dict
-            - A dictionary with all search_terms
-    - facets : list of dicts
-            - A list with dictionaries of facets
-    ###Output
-    - An updated dictionary with a 'base' property
-    """
 
-    items["base"] = {}
-    must = []
-
-    # IF NO SEARCH TERM OR FIELDS ARE PROVIDED RETURN EVERYTHING IN DATABASE
-    if not len(items["query"]) and not len(items["category"]):
-        if "ignore" in items:
-            items["base"]["bool"] = {
-                "must": [],
-                "must_not": [
-                    {
-                        "query_string" : {
-                            "default_field": "_index", 
-                            "query": "library "
-                        }
-                    },
-                    {   "query_string" : {
-                            "default_field" : "_index",
-                            "query" : "iiif"
-                    }}
-                ],
-            }
-
-    # CONSTRUCT A MUST-QUERY IF QUERY TERM IS PROVIDED (SIMPLE SEARCH)
-    if len(items["query"]):
-        if len(items['query']) == 1 and '*' in items["query"]:
-            must.append({ "match_all" : {} })
-        else:
-            must.append(__bool_must_match("match_all", re.split("\W+", items["query"]), {}))
-        items["base"]["bool"] = {"must": must}
-
-    # CONSTRUCT A MUST-QUERY IF A CATEGORY IS SPECIFIED (ADVANCED SEARCH)
-    if items["category"]:
-
-        if not items['fields']:
-            must.append({"match_all" : {}})
-            print('match all in index')
-        else:
-
-            field = "_"
-            if "_ms" in items["fields"].keys():
-                field = "entrydate_ms"
-
-            fields = { k: v for k, v in items["fields"].items() if k != field.split("_")[0] }
-
-            for k, v in fields.items():
-
-                # RANGE MATCH IF THE SEARCH IS FOR A DATE (IN SECONDS)
-                if "entrydate" in k:
-                    if "entrydate_ms" in k and len(v):
-                        must.append({"match": {k: v[0]}}) if len(v) == 1 else must.append(
-                            {
-                                "range": {
-                                    k: {
-                                        "gte": v[0],
-                                        "lte": v[1],
-                                    },
-                                },
-                            }
-                        )
-
-                # NESTED QUERY
-                elif k.count(".") >= 2:
-                    v = (
-                        re.split(" |-\.", v)
-                        if "provenance" in k or "description" in k or "transcription" in k
-                        else [v]
-                    )
-                    q = {
-                        "nested": {
-                            "path": k.split(".")[0],
-                            "query": {"bool": {"must": [__bool_must_match(k, v, {})]}},
-                        }
-                    }
-                    must.append(q)
-                else:
-                    v = (
-                        re.split(" |-|\.", v)
-                        if "provenance" in k
-                        or "description" in k
-                        or "transcription" in k
-                        or "title" in k
-                        else [v]
-                    )
-                    must.append(__bool_must_match(k, v, {}))
-
-        items["base"]["bool"] = {"must": must}
-
-        # INCLUDE MET TERMS
-    if len(items["MET"]["MET_paths"]):
-        for v in items["MET"]["MET_paths"]:
-            q = {
-                "nested": {
-                    "path": "MET",
-                    "query": {
-                        "bool": {"must": [{"match": {"MET.Codes.keyword": v["code"]}}]}
-                    },
-                }
-            }
-            must.append(q)
-        items["base"]["bool"] = {"must": must}
-
-    return items
 
 
 def __build_aggregations(items):
@@ -1072,17 +1203,30 @@ def __build_aggregations(items):
     This method builds the aggregation dictionaries to append to the query. There are two types of aggregations that are
     being processed. The first is to retrieve all document types related to the query, for example, photos, 3D models etc.
     The second type of aggregation is that of all facets related to the query.
-    ###Parameters
-    - params : dict
-            - Search parameters that are being passed back and forth between frontend and backend
-    ###Output
-            - The filter that is appended to the ES base query
+    
+    Parameters
+    ----------
+    - items (dict) : search parameters that are being passed back and forth between frontend and backend
+    
+    Returns
+    -------
+    - items (dict) : updated search parameters with the filter appended to the ES base query
     """
+
     items["aggs"] = {}
 
     # SIMPLE SEARCH USE-CASE
     # if not items['category']:
-    # return items
+    #     items["aggs"]["doc_types"] = {
+    #         "terms": {"field": "doc.ES_index.keyword"}
+    #     }
+        # print('ok')
+
+        # SHOW REVELEVANT CATEGORIES IN AGGREGATIONS
+        # categories = __get_indices(['library', 'iiif'])
+
+        # SHOW RELEVANT FACETS
+        # items["aggs"] = [ { name : term_agg for name, term_agg in list(FACETS_PER_CATEGORY[category].items()) } for category in categories]
 
     # AGGREGATE ALL FACETS REGISTERED FOR THE CURRENT DOCUMENT TYPE
     if items["category"]:
@@ -1103,83 +1247,99 @@ def __build_aggregations(items):
             items["aggs"]["MET"]["aggregations"].update(q)
 
     # AGGREGATE ALL DATA TYPES IN THE DATA SET
-    items["aggs"]["doc_types"] = {
-        "terms": {"field": "_index", "exclude": "library", "size": 50}
-    }
+    if 'ignore' in items and items['ignore']:
+        items["aggs"]["doc_types"] = {
+            "terms": {"field": "doc.ES_index.keyword"}
+        }
 
     return items
 
 
-def __post_filter(items):
-    """This private method builds an ElasticSearch boolean filter. The bool filter will be appended to
-    the ElasticSearch query as well as individual facets to narrow results on the client to relevant
-    facets by selected document type.
-    ###Parameters
-    - params : dict
-            - A dictionary with all search_terms
-    ###Output
-    - A dictionary with all bool filters
+def __post_filter(items:dict) -> dict:
     """
+    Private method to build a boolean filter. The filter is appended to the query and individual facets
+    to narrow facet results to relevant categories only.
+    
+    Parameters
+    ----------
+    - params (dict) : a dictionary with all search_terms
+    
+    Returns
+    -------
+    - items (dict) : a dictionary with all bool filters
+    """
+    
     items["post"] = {"bool": {}}
     must, should = [], []
 
+    if not items['category'] and items['query']:
+        indices = __get_indices(['iiif', 'library'])
+        
+        # for index in indices:
+        #     should.append({
+        #     "match": { 
+        #         "ES_Index": index
+        #     }
+        # })
+        # must.append({"match": { "ES_Index": index }} for index in indices)
+        # items["aggs"]["doc_types"] = {
+            # "terms": {"field": "doc.ES_index.keyword"}
+        # }
+
     # LIMIT RETURNED RESULTS TO DOCUMENT TYPE (CATEGORY)
     if items["category"]:
-        must.append({"type": {"value": items["category"]}})
 
         # ADD ENTRYDATES TO ENABLE FILTERING BY DATES
-        if "entrydates_ms" in items["fields"].keys():
-            must.append(
+        print('date')
+        if "EntryDate_ms" in items["fields"].keys():
+            should.append(
                 {
                     "range": {
-                        "entrydate_ms": {
-                            "gte": items["fields"]["entrydates_ms"][0],
-                            "lte": items["fields"]["entrydates_ms"][1],
+                        "doc.EntryDate_ms": {
+                            "gte": items["fields"]["EntryDate_ms"][0],
+                            "lte": items["fields"]["EntryDate_ms"][1],
                         }
                     }
                 }
             )
 
     # INCLUDE FACETS
-    if len(items["facets"]):
+    if len(items["facets"]["selected"]):
 
         # PROCESS SELECTED FACETS
-        for facet_category in items["facets"].keys():
-            selected_facets = [
-                x for x in items["facets"][facet_category] if x["selected"] == True
-            ]
+        # for facet_category in items["facets"].keys():
+            # selected_facets = [
+                # x for x in items["facets"][facet_category] if x["selected"] == True
+            # ]
 
-            for facet in selected_facets:
-                if facet_category in FACETS_PER_CATEGORY[items["category"]]:
-                    field = list(
-                        find_key(
-                            "field",
-                            FACETS_PER_CATEGORY[items["category"]
-                                                ][facet_category],
-                        )
-                    )[0]
-                    if (
-                        "nested"
-                        in FACETS_PER_CATEGORY[items["category"]][facet_category]
-                    ):
-                        path = FACETS_PER_CATEGORY[items["category"]][facet_category][
-                            "nested"
-                        ]["path"]
-                        should.append(
-                            {
+        for category, facets in items["facets"]["selected"].items():
+            if len(facets):
+                if category in FACETS_PER_CATEGORY[items["category"]]:
+                    field = list(find_key("field", FACETS_PER_CATEGORY[items["category"]][category]))[0]
+                    for facet in facets:
+                        if "nested" in FACETS_PER_CATEGORY[items["category"]][category]:
+                            path = FACETS_PER_CATEGORY[items["category"]][category]["nested"]["path"]
+                            should.append({
                                 "nested": {
                                     "path": path,
-                                    "query": {"term": {field: facet["display_text"]}},
+                                    "query": {
+                                        "term": {
+                                            field: facet
+                                        }
+                                    },
                                 }
-                            }
-                        )
-                    else:
-                        should.append({"term": {field: facet["display_text"]}})
+                            })
+                        else:
+                            should.append({
+                                "term": {
+                                    field: facet
+                                }
+                            })
 
-    must.append({"bool": {"should": should}})
+    # must.append({"bool": {"should": should}})
 
     # ASSIGNING THE FILTER ON THE ITEMS DICTIONARY TO BE PROCESSED IN THE QUERY
-    items["post"]["bool"] = {"must": must}
+    items["post"]["bool"] = {"must": must, "should" : should}
 
     return items
 
@@ -1190,21 +1350,23 @@ def __post_filter(items):
 ####################################
 ###		CONVENIENCE METHODS		 ###
 ####################################
-def __recurse_aggs(agg_name, search_results, facets, selected_facets):
+def __recurse_aggs(agg_name:str, search_results:dict, facets, selected_facets:dict):
     """
     This method iterates through the different levels of the search results to bring all aggregations to the same top-level and
     is called after the search has been returned from ElasticSearch. Some aggregated data comes from nested fields
     (see __build_subfacet_aggs) and are therefore deeper in the record (see the CATEGORIES variable).
-    ###Parameters
-    - agg_name : str
-            -
-    - search_results : dict
-            -
-    - facets :
-            -
-    - selected_facets : list of dict
-            -
+    
+    Parameters
+    ----------
+    - agg_name (str) : 
+    - search_results (dict) :
+    - facets () : 
+    - selected_facets (list) : list of dictionaries
+
+    Returns
+    -------
     """
+
     if type(search_results) != type(dict()):
         return facets
 
@@ -1214,18 +1376,18 @@ def __recurse_aggs(agg_name, search_results, facets, selected_facets):
             for bucket in search_results["buckets"]:
                 if bucket["key"] and bucket["doc_count"]:
                     agg = {
-                        "display_text": str(bucket["key"]),
-                        "doc_count": bucket["doc_count"],
-                        "selected": True
-                        if any(
-                            [
-                                x
-                                for x in selected_facets
-                                for y in x.values()
-                                if str(y) == str(bucket["key"])
-                            ]
-                        )
-                        else False,
+                        "display_text" : str(bucket["key"]),
+                        "doc_count" : bucket["doc_count"],
+                        "selected" : True if any([key for key, value in selected_facets.items() if key == agg_name and bucket["key"] in value ]) else False
+                        # if any(
+                            # [
+                                # x
+                                # for x in selected_facets
+                                # for y in x.values()
+                                # if str(y) == str(bucket["key"])
+                            # ]
+                        # )
+                        # else False,
                     }
                     facet_array.append(agg)
             if agg_name in selected_facets:
@@ -1548,3 +1710,25 @@ def convertToMS(value):
         )
     elif len(splitVal[0]) == 4:
         return value, (parser().parse(value) - datetime(1970, 1, 1)).total_seconds()
+
+# METHODS THAT HAVE BEEN CHECKED, VERIFIED AND ARE READY BELOW
+def __get_indices(exclude:list=None):
+    """
+    This method returns all indices in ElasticSearch. The optional
+    list parameter excludes indices from the total
+
+    Parameters
+    ----------
+    exclude (list) : optional list of indices to exclude
+
+    Returns
+    -------
+    indices (list) : list of indices in ElasticSearch
+    """
+    try:
+        indices = list(es.indices.get_alias(expand_wildcards=['open']).body.keys())
+        if exclude is not None and type(exclude) is list:
+            indices = [index for index in indices if index not in exclude]
+        return indices
+    except Exception as e:
+        raise e

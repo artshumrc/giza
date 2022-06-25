@@ -1,14 +1,17 @@
+from attr import Attribute
+
+
 try:
     import pyodbc, pymssql, time
     from os import cpu_count
     from math import ceil
     from requests import Session
     from requests.adapters import HTTPAdapter
-    from credentials import tms_databases, tms_dsn, tms_user, tms_password
     from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, Future, as_completed, wait
     from cursor_FSS import file_open, file_save
+    from helper_logger import Logger
     from sql import SQL
-    from logger import Logger
+    from credentials import tms_databases, tms_dsn, tms_user, tms_password
 except ImportError as error:
     print(error)
 
@@ -77,11 +80,6 @@ class TMS:
         Returns
         -------
         - tuple (list, list): rows, columns
-        - dict : contents of table if query fails
-
-        Raises
-        ------
-        - ConnectionError : if no results can be returned
         """
         try:
             self.logger.log(f'>>> DOWNLOADING SQL-QUERY "{query.upper()}"')
@@ -98,13 +96,14 @@ class TMS:
                     if table:
                         return table
                     else:
-                        raise ConnectionError("TMS did not return results and no local table could be accessed")
+                        raise
                 except:
                     raise
         except:
+            print("Could not successfully connect to TMS: please make sure you have your connections parameters set correctly.")
             raise
 
-    def tables(self, tables, module_type:str):
+    def tables(self, module:str, tables:bool=None):
         """
         Executes all queries related to a particular module.
 
@@ -117,30 +116,70 @@ class TMS:
         - first_record (list) : results of the first query
         - data (list): list of lists with results of subsequent queries
         """
-        first_record, data = {}, []
 
-        for key, stmt in SQL[module_type].items():
-            
-            try:
-                # CHECK IF TABLES ARE STORED ON HARD DISK AND USE THOSE INSTEAD TO SPEED THINGS UP
-                file = file_open('tables', key, module_type)
-                if not file: raise
+        first_record, data = local_tables(module)
 
-                rows, cols = file['rows'], file['cols']
-            except:
+        if not first_record or not data:
+            first_record, data = self.remote_tables(module, tables)
+
+        return first_record, data
+
+    def remote_tables(self, module, tables):
+        try:
+            first_record, data = {}, []
+
+            for key, stmt in SQL[module].items():
+                
                 rows, cols = self.fetch(stmt, key)
 
                 if tables:
-                    file_save('tables', key, { 'rows' : rows, 'cols' : cols }, module_type)
+                    file_save('tables', key, { 'rows' : rows, 'cols' : cols }, module)
 
-            if key == module_type:
-                first_record['key'] = key
-                first_record['rows'] = rows
-                first_record['cols'] = cols
-            else:
-                data.append({ 'key' : key, 'rows' : rows, 'cols' : cols })
+                if key == module:
+                    first_record['key'] = key
+                    first_record['rows'] = rows
+                    first_record['cols'] = cols
+                else:
+                    data.append({ 'key' : key, 'rows' : rows, 'cols' : cols })
+            
+            return first_record, data
+        except:
+            raise
+
+def local_tables(module:str):
+    """
+    Executes all queries related to a particular module.
+
+    Parameters
+    ----------
+    - module_type (str) : name of the calling module
+
+    Returns
+    -------
+    - first_record (list) : results of the first query
+    - data (list): list of lists with results of subsequent queries
+    """
+    # try:
+    first_record, data = {}, []
+
+    for key, stmt in SQL[module].items():
         
-        return first_record, data
+        # CHECK IF TABLES ARE STORED ON HARD DISK AND USE THOSE INSTEAD TO SPEED THINGS UP
+        file = file_open('tables', key, module, True)
+        
+        if not file:
+            return False, False
+
+        rows, cols = file['rows'], file['cols']
+
+        if key == module:
+            first_record['key'] = key
+            first_record['rows'] = rows
+            first_record['cols'] = cols
+        else:
+            data.append({ 'key' : key, 'rows' : rows, 'cols' : cols })
+    
+    return first_record, data
 
 def get_drs_metadata(urls:list):
     """

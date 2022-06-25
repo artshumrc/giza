@@ -15,9 +15,10 @@ class Cursor:
     - check_connections -> bool : checks connections to TMS and ES
     - local_tables -> bool|any : confirms what the user wants to do next
     """
-    def __init__(self):
+    def __init__(self, args):
         self.tms = TMS()
         self.es = ES()
+        self.args = args
 
     def check_connections(self):
         """
@@ -40,12 +41,12 @@ class Cursor:
                 if self.local_tables():
 
                     # HALT EVERYTHING IF TABLES NOT THERE OR CORRUPT
-                    return True if tables_exists([module for module in list([key for key in SQL.keys()]) if module in self.args and self.args[module]]) else False
+                    return True if tables_exists(modules=self.args.modules) else False
 
                 else:
 
                     # FULL STOP: WE EITHER NEED A CONNECTION TO TMS OR ACCESS TO LOCAL TABLES
-                    return False
+                    raise
             
             else:
                 return True
@@ -84,6 +85,7 @@ class Cursor:
                 else:
                     return self.local_tables()
         
-            return parse_response(input("Try with local tables instead (y/n) or retry (r)?"))
+            # return parse_response(input("Try with local tables instead (y/n) or retry (r)?"))
+            return True
         except:
             raise FileNotFoundError("Could not find necessary files")

@@ -85,9 +85,9 @@ CLASSIFICATIONS = {
 	144 : "3Dmodels",
 	145 : "3Dmodels",
 	146 : "3Dmodels",
-	147 : "Objects",
-	148 : "Objects",
-	149 : "Objects"
+	147 : "Objects",	# RECENT ADDITION (06/09/2022)
+	148 : "Objects",	# RECENT ADDITION (06/09/2022)
+	149 : "Objects"		# RECENT ADDITION (06/09/2022)
 }
 
 CONSTITUENTTYPES = {
@@ -99,11 +99,11 @@ CONSTITUENTTYPES = {
 }
 
 MEDIATYPES = {
-	1 : "Photos",
+	1 : "Image",
 	2 : "Audio",
-	3 : "Videos",
+	3 : "Video",
 	4 : "Document",
 	5 : "Microfilm",
-	6 : "3Dmodels",
-	7 : "HTML5"
+	6 : "3D Model",
+	7 : "HTML5"			# RECENT ADDITION (06/09/2022)
 }

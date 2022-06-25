@@ -823,7 +823,8 @@ def my_giza(request, tab):
     return refresh_my_giza(request.user, tab)
 
 
-def get_form(request, form, type=None, id=None):
+def get_form(request, index=None, id=None, form=None):
+    # print(index, id, form)
     if "collection_form" in form:
         return JsonResponse(
             {
@@ -838,7 +839,7 @@ def get_form(request, form, type=None, id=None):
                                 "user_collections": __getPublicCollections(
                                     uid=request.user.id
                                 ),
-                                "type": type,
+                                "index": index,
                                 "id": id,
                             },
                         ),

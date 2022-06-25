@@ -1,8 +1,6 @@
-from datetime import date
-
 CATEGORIES = {
     "iiif": {"key": "IIIF Manifest", "icon": ""},
-    "sites": {"key": "Monuments", "icon": "map-marker"},
+    "sites": {"key": "Sites", "icon": "map-marker"},
     "objects": {"key": "Objects", "icon": "vase"},
     "diarypages": {"key": "Diary Pages", "icon": "sticky-note-o"},
     "plansanddrawings": {"key": "Plans and Drawings", "icon": "pencil-square-o"},  # being phased out
@@ -194,39 +192,39 @@ Values map directly onto the ElasticSearch database field names.
 SORT_FIELDS_PER_CATEGORY = {
     "sites": {"Name": "sitesortnumber.keyword", "Tomb owner": "tombowner"},
     "objects": {
-        "Number": "number.keyword",
-        "With photo": "hasphoto",
-        "Date": "entrydate_ms",
-        "Title": "displaytext.keyword",
-        "Classification": "classificationtext.keyword",
-        "Material": "medium.keyword",
+        "Number": "Number.keyword",
+        "With photo": "HasPhoto",
+        "Date": "EntryDate_ms",
+        "Title": "DisplayText.keyword",
+        "Classification": "ClassificationText.keyword",
+        "Material": "Medium.keyword",
     },
     "photos": {
         # 'Number' : 'number.keyword',
-        "Date": "entrydate_ms",
-        "Department": "department.keyword",
+        "Date": "EntryDate_ms",
+        "Department": "Department.keyword",
     },
     "diarypages": {
-        "Date": "entrydate_ms",
+        "Date": "EntryDate_ms",
     },
     "drawings": {
-        "Medium": "medium.keyword",
-        "Department": "department.keyword",
-        "Photo": "hasphoto",
+        "Medium": "Medium.keyword",
+        "Department": "Department.keyword",
+        "Photo": "HasPhoto",
     },
     "mapsandplans": {
-        "Title": "title",
-        "Department": "department",
-        "Date": "entrydate_ms",
-        "Photo": "hasphoto",
+        "Title": "Title",
+        "Department": "Department",
+        "Date": "EntryDate_ms",
+        "Photo": "HasPhoto",
     },
     "ancientpeople": {
-        "Name": "displayname",
-        "Year": "begindate",
-        "Nationality": "nationality",
-        "Department": "institution",
+        "Name": "DisplayName",
+        "Year": "BeginDate",
+        "Nationality": "Nationality",
+        "Department": "Institution",
     },
-    "modernpeople": {"Name": "displayname"},
+    "modernpeople": {"Name": "DisplayName"},
     "videos": {},
     "publisheddocuments": {},
     "unpublisheddocuments": {},
@@ -245,15 +243,15 @@ shown on the front end). Changes to this constant should cascade to elasticsearc
 FACETS_PER_CATEGORY = {
     # 'sites' document type
     "sites": {
-        "Site Type": {"terms": {"field": "sitetype.sitetype.keyword"}},
-        "Site Name": {"terms": {"field": "sitename.keyword"}},
+        "Site Type": {"terms": {"field": "doc.SiteType.SiteType.keyword"}},
+        "Site Name": {"terms": {"field": "doc.SiteName.keyword"}},
         "Site Date": {
-            "nested": {"path": "sitedates"},
+            "nested": {"path": "SiteDates"},
             "aggregations": {
-                "Site Date": {"terms": {"field": "sitedates.date.keyword"}}
+                "Site Date": {"terms": {"field": "doc.SiteDates.date.keyword"}}
             },
         },
-        "Has Tomb Owner": {"terms": {"field": "tombowner"}},
+        "Has Tomb Owner": {"terms": {"field": "doc.TombOwner"}},
         # "Tomb Owner": {
         #     "nested": {
         #         "path": "relateditems"
@@ -297,69 +295,69 @@ FACETS_PER_CATEGORY = {
         #     }
         # },
         "Excavator": {
-            "nested": {"path": "relateditems"},
+            "nested": {"path": "doc.RelatedItems"},
             "aggregations": {
                 "excavator_aggs": {
                     "filter": {
-                        "term": {"relateditems.modernpeople.role.keyword": "Excavator"}
+                        "term": {"doc.RelatedItems.ModernPeople.Role.keyword": "Excavator"}
                     },
                     "aggregations": {
                         "Excavator": {
                             "terms": {
-                                "field": "relateditems.modernpeople.displayname.keyword"
+                                "field": "doc.RelatedItems.ModernPeople.DisplayName.keyword"
                             }
                         }
                     },
                 }
             },
         },
-        "MET_path": {"nested": {"path": "MET.Codes"}},
-        "MET_code": {"nested": {"path": "MET.Path"}},
+        "MET_path": {"nested": {"path": "doc.MET.Codes"}},
+        "MET_code": {"nested": {"path": "doc.MET.Path"}},
     },
     # 'objects' document type
     "objects": {
         "Year of Registration_daterange": {
-            "filter": {"type": {"value": "objects"}},
+            "filter": {"match": {"doc.ES_index": "objects"}},
             "aggregations": {
                 "Year of Registration_daterange": {
-                    "terms": {"field": "entrydate_ms", "size": 10000}
+                    "terms": {"field": "doc.EntryDate_ms", "size": 10000}
                 }
             },
         },
-        "Findspot": {"terms": {"field": "provenance.keyword"}},
-        "Has Related Photo": {"terms": {"field": "hasphoto"}},
+        "Findspot": {"terms": {"field": "doc.Provenance.keyword"}},
+        "Has Related Photo": {"terms": {"field": "doc.Hasphoto"}},
         "Classification": {
-            "filter": {"type": {"value": "objects"}},
+            "filter": {"match": {"doc.ES_index": "objects"}},
             "aggregations": {
-                "Classification": {"terms": {"field": "classificationtext.keyword"}}
+                "Classification": {"terms": {"field": "doc.ClassificationText.keyword"}}
             },
         },
         "Material": {
-            "filter": {"type": {"value": "objects"}},
-            "aggregations": {"Material": {"terms": {"field": "medium.keyword"}}},
+            "filter": {"match": {"doc.ES_index": "objects"}},
+            "aggregations": {"Material": {"terms": {"field": "doc.Medium.keyword"}}},
         },
         "Owning Institution": {
-            "filter": {"type": {"value": "objects"}},
+            "filter": {"match": {"doc.ES_index": "objects"}},
             "aggregations": {
-                "Owning Institution": {"terms": {"field": "department.keyword"}}
+                "Owning Institution": {"terms": {"field": "doc.Department.keyword"}}
             },
         },
-        "Period": {"terms": {"field": "period.keyword"}},
-        "MET_path": {"nested": {"path": "MET.Codes"}},
-        "MET_code": {"nested": {"path": "MET.Path"}},
+        "Period": {"terms": {"field": "doc.Period.keyword"}},
+        "MET_path": {"nested": {"path": "doc.MET.Codes.keyword"}},
+        "MET_code": {"nested": {"path": "doc.MET.Path.keyword"}},
     },
     # 'diarypages' document type
     "diarypages": {
         "Classification": {
-            "filter": {"type": {"value": "diarypages"}},
+            "filter": {"term": {"doc.ES_index": "diarypages"}},
             "aggregations": {
-                "Classification": {"terms": {"field": "classificationtext.keyword"}}
+                "Classification": {"terms": {"field": "doc.ClassificationText.keyword"}}
             },
         },
         "Owning Institution": {
-            "filter": {"type": {"value": "diarypages"}},
+            "filter": {"term": {"doc.ES_index": "diarypages"}},
             "aggregations": {
-                "Owning Institution": {"terms": {"field": "department.keyword"}}
+                "Owning Institution": {"terms": {"field": "doc.Department.keyword"}}
             },
         },
         # "Sites Mentioned": {
@@ -405,86 +403,86 @@ FACETS_PER_CATEGORY = {
         #     }
         # },
         "Year_daterange": {
-            "filter": {"type": {"value": "diarypages"}},
+            "filter": {"term": {"doc.ES_index": "diarypages"}},
             "aggregations": {
-                "Year_daterange": {"terms": {"field": "entrydate_ms", "size": 10000}}
+                "Year_daterange": {"terms": {"field": "doc.EntryDate_ms", "size": 10000}}
             },
         },
-        "MET_path": {"nested": {"path": "MET.Codes"}},
-        "MET_code": {"nested": {"path": "MET.Path"}},
+        "MET_path": {"nested": {"path": "doc.MET.Codes"}},
+        "MET_code": {"nested": {"path": "doc.MET.Path"}},
     },
     # 'plansanddrawings' document type; being phased out?
     "plansanddrawings": {},
     # 'mapsandplans' document type
     "mapsandplans": {
         "Owning Institution": {
-            "filter": {"type": {"value": "mapsandplans"}},
+            "filter": {"term": {"doc.ES_index": "mapsandplans"}},
             "aggregations": {
-                "Owning Institution": {"terms": {"field": "department.keyword"}}
+                "Owning Institution": {"terms": {"field": "Department.keyword"}}
             },
         },
         "Material": {
-            "filter": {"type": {"value": "mapsandplans"}},
-            "aggregations": {"Material": {"terms": {"field": "medium.keyword"}}},
+            "filter": {"term": {"doc.ES_index": "mapsandplans"}},
+            "aggregations": {"Material": {"terms": {"field": "Medium.keyword"}}},
         },
-        "MET_path": {"nested": {"path": "MET.Codes"}},
-        "MET_code": {"nested": {"path": "MET.Path"}},
+        "MET_path": {"nested": {"path": "doc.MET.Codes"}},
+        "MET_code": {"nested": {"path": "doc.MET.Path"}},
     },
     # 'drawings' document type
     "drawings": {
         "Owning Institution": {
-            "filter": {"type": {"value": "drawings"}},
+            "filter": {"term": {"doc.ES_index": "drawings"}},
             "aggregations": {
-                "Owning Institution": {"terms": {"field": "department.keyword"}}
+                "Owning Institution": {"terms": {"field": "Department.keyword"}}
             },
         },
         "Material": {
-            "filter": {"type": {"value": "drawings"}},
-            "aggregations": {"Material": {"terms": {"field": "medium.keyword"}}},
+            "filter": {"term": {"doc.ES_index": "drawings"}},
+            "aggregations": {"Material": {"terms": {"field": "Medium.keyword"}}},
         },
-        "MET_path": {"nested": {"path": "MET.Codes"}},
-        "MET_code": {"nested": {"path": "MET.Path"}},
+        "MET_path": {"nested": {"path": "doc.MET.Codes"}},
+        "MET_code": {"nested": {"path": "doc.MET.Path"}},
     },
     # 'unpubdocs' document type
     "unpublisheddocuments": {
         "Owning Institution": {
-            "filter": {"type": {"value": "unpubdocs"}},
+            "filter": {"term": {"doc.ES_index": "unpublisheddocuments"}},
             "aggregations": {
-                "Owning Institution": {"terms": {"field": "department.keyword"}}
+                "Owning Institution": {"terms": {"field": "Department.keyword"}}
             },
         },
         "Year_daterange": {
-            "filter": {"type": {"value": "unpubdocs"}},
+            "filter": {"term": {"doc.ES_index": "unpublisheddocuments"}},
             "aggregations": {
-                "Year_daterange": {"terms": {"field": "entrydate_ms", "size": 10000}}
+                "Year_daterange": {"terms": {"field": "doc.EntryDate_ms", "size": 10000}}
             },
         },
-        "MET_path": {"nested": {"path": "MET.Codes"}},
-        "MET_code": {"nested": {"path": "MET.Path"}},
+        "MET_path": {"nested": {"path": "doc.MET.Codes"}},
+        "MET_code": {"nested": {"path": "doc.MET.Path"}},
     },
     # 'pubdocs' document type
     "publisheddocuments": {
-        "Format": {"terms": {"field": "format.keyword"}},
-        "Language": {"terms": {"field": "language.keyword"}},
+        "Format": {"terms": {"field": "doc.Format.keyword"}},
+        "Language": {"terms": {"field": "doc.Language.keyword"}},
         "Year of Publication_daterange": {
-            "filter": {"type": {"value": "pubdocs"}},
+            "filter": {"term": {"doc.ES_index": "publisheddocuments"}},
             "aggregations": {
                 "Year of Publication_daterange": {
-                    "terms": {"field": "entrydate_ms", "size": 10000}
+                    "terms": {"field": "doc.EntryDate_ms", "size": 10000}
                 }
             },
         },
         "Author": {
-            "nested": {"path": "relateditems"},
+            "nested": {"path": "doc.RelatedItems"},
             "aggregations": {
                 "author_aggs": {
                     "filter": {
-                        "term": {"relateditems.modernpeople.role.keyword": "Author"}
+                        "term": {"doc.RelatedItems.ModernPeople.Role.keyword": "Author"}
                     },
                     "aggregations": {
                         "Author": {
                             "terms": {
-                                "field": "relateditems.modernpeople.displayname.keyword"
+                                "field": "doc.RelatedItems.ModernPeople.DisplayName.keyword"
                             }
                         }
                     },
@@ -492,16 +490,16 @@ FACETS_PER_CATEGORY = {
             },
         },
         "Publisher": {
-            "nested": {"path": "relateditems"},
+            "nested": {"path": "doc.RelatedItems"},
             "aggregations": {
                 "publisher_aggs": {
                     "filter": {
-                        "term": {"relateditems.institutions.role.keyword": "Publisher"}
+                        "term": {"doc.RelatedItems.Institutions.Role.keyword": "Publisher"}
                     },
                     "aggregations": {
                         "Publisher": {
                             "terms": {
-                                "field": "relateditems.institutions.displayname.keyword"
+                                "field": "doc.RelatedItems.Institutions.DisplayName.keyword"
                             }
                         }
                     },
@@ -513,41 +511,41 @@ FACETS_PER_CATEGORY = {
         # 		'field' : 'numofpages'
         # 	}
         # },
-        "Journal": {"terms": {"field": "journal.keyword"}},
-        "Series": {"terms": {"field": "series.keyword"}},
-        "MET_path": {"nested": {"path": "MET.Codes"}},
-        "MET_code": {"nested": {"path": "MET.Path"}},
+        "Journal": {"terms": {"field": "doc.Journal.keyword"}},
+        "Series": {"terms": {"field": "doc.Series.keyword"}},
+        "MET_path": {"nested": {"path": "doc.MET.Codes"}},
+        "MET_code": {"nested": {"path": "doc.MET.Path"}},
     },
     # 'photos' document type
     "photos": {
         "Owning Institution": {
-            "filter": {"type": {"value": "photos"}},
+            "filter": {"term": {"doc.ES_index": "photos"}},
             "aggregations": {
-                "Owning Institution": {"terms": {"field": "department.keyword"}}
+                "Owning Institution": {"terms": {"field": "doc.Department.keyword"}}
             },
         },
-        "Media View": {"terms": {"field": "mediaview.keyword"}},
+        "Media View": {"terms": {"field": "doc.Mediaview.keyword"}},
         "Date of Photograph_daterange": {
-            "filter": {"type": {"value": "photos"}},
+            "filter": {"term": {"doc.ES_index": "photos"}},
             "aggregations": {
                 "Date of Photograph_daterange": {
-                    "terms": {"field": "entrydate_ms", "size": 10000}
+                    "terms": {"field": "doc.Entrydate_ms", "size": 10000}
                 }
             },
         },
         "Photographer": {
-            "nested": {"path": "relateditems"},
+            "nested": {"path": "doc.RelatedItems"},
             "aggregations": {
                 "photographer_aggs": {
                     "filter": {
                         "term": {
-                            "relateditems.modernpeople.role.keyword": "Photographer"
+                            "doc.RelatedItems.ModernPeople.Role.keyword": "Photographer"
                         }
                     },
                     "aggregations": {
                         "Photographer": {
                             "terms": {
-                                "field": "relateditems.modernpeople.displayname.keyword"
+                                "field": "doc.RelatedItems.ModernPeople.DisplayName.keyword"
                             }
                         }
                     },
@@ -555,10 +553,10 @@ FACETS_PER_CATEGORY = {
             },
         },
         "MET": {
-            "nested": {"path": "MET"},
+            "nested": {"path": "doc.MET"},
             "aggregations": {
-                "Codes": {"terms": {"field": "MET.Codes.keyword", "size": 1000}},
-                "Paths": {"terms": {"field": "MET.Path.keyword", "size": 1000}},
+                "Codes": {"terms": {"field": "doc.MET.Codes.keyword", "size": 1000}},
+                "Paths": {"terms": {"field": "doc.MET.Path.keyword", "size": 1000}},
             },
         },
     },
@@ -566,26 +564,26 @@ FACETS_PER_CATEGORY = {
     "people": {
         "Gender": {
             "filter": {
-                "type": {"value": "ancientpeople"},
-                "type": {"value": "modernpeople"},
+                "term": {"doc.ES_index": "ancientpeople"},
+                "term": {"doc.ES_index": "modernpeople"},
             },
-            "aggregations": {"Gender": {"terms": {"field": "gender.keyword"}}},
+            "aggregations": {"Gender": {"terms": {"field": "doc.Gender.keyword"}}},
         }
     },
     # 'ancientpeople' document type
     "ancientpeople": {
         "Gender": {
-            "filter": {"type": {"value": "ancientpeople"}},
-            "aggregations": {"Gender": {"terms": {"field": "gender.keyword"}}},
+            "term": {"doc.ES_index": "ancientpeople"},
+            "aggregations": {"Gender": {"terms": {"field": "doc.Gender.keyword"}}},
         },
         "Associated Tombs": {
-            "nested": {"path": "relateditems"},
+            "nested": {"path": "doc.RelatedItems"},
             "aggregations": {
-                "relateditems.sites": {
-                    "filter": {"type": {"value": "sitenumber.keyword"}}
+                "RelatedItems.Sites": {
+                    "filter": {"type": {"value": "doc.SiteNumber.keyword"}}
                 },
                 "Associated Tombs": {
-                    "terms": {"field": "relateditems.sites.sitenumber.keyword"}
+                    "terms": {"field": "doc.RelatedItems.Sites.SiteNumber.keyword"}
                 },
             },
         },
@@ -593,13 +591,13 @@ FACETS_PER_CATEGORY = {
     # 'modernpeople' document type
     "modernpeople": {
         "Gender": {
-            "filter": {"type": {"value": "modernpeople"}},
-            "aggregations": {"Gender": {"terms": {"field": "gender.keyword"}}},
+            "term": {"doc.ES_index": "modernpeople"},
+            "aggregations": {"Gender": {"terms": {"field": "doc.Gender.keyword"}}},
         },
-        "Nationality": {"terms": {"field": "nationality.keyword"}},
-        "Institution": {"terms": {"field": "institution.keyword"}},
-        "Year of Birth": {"terms": {"field": "begindate.keyword"}},
-        "Year of Death": {"terms": {"field": "enddate.keyword"}},
+        "Nationality": {"terms": {"field": "doc.Nationality.keyword"}},
+        "Institution": {"terms": {"field": "doc.Institution.keyword"}},
+        "Year of Birth": {"terms": {"field": "doc.BeginDate.keyword"}},
+        "Year of Death": {"terms": {"field": "doc.EndDate.keyword"}},
     },
     # 'institutions' document type
     "institutions": {},
@@ -612,9 +610,11 @@ FACETS_PER_CATEGORY = {
     # 'videos' document type
     "videos": {
         "Owning Institution": {
-            "filter": {"type": {"value": "videos"}},
+            "filter": {
+                "term": {"doc.ES_index": "videos"}
+            },
             "aggregations": {
-                "Owning Institution": {"terms": {"field": "department.keyword"}}
+                "Owning Institution": {"terms": {"field": "doc.Department.keyword"}}
             },
         },
         "Media View": {"terms": {"field": "mediaview.keyword"}},
@@ -622,12 +622,14 @@ FACETS_PER_CATEGORY = {
     # 'audio' document type
     "audio": {
         "Owning Institution": {
-            "filter": {"type": {"value": "audio"}},
+            "filter": {
+                "term": {"doc.ES_index": "audio"}
+            },
             "aggregations": {
-                "Owning Institution": {"terms": {"field": "department.keyword"}}
+                "Owning Institution": {"terms": {"field": "doc.Department.keyword"}}
             },
         },
-        "Media View": {"terms": {"field": "mediaview.keyword"}},
+        "Media View": {"terms": {"field": "doc.Mediaview.keyword"}},
     },
     # 'iiifmanifest' document type
     "iiifmanifest": {},

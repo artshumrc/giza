@@ -8,7 +8,7 @@ try:
 except ImportError as error:
     print(error)
 
-class ED:
+class Date_Conversion:
     def __init__(self, module_type):
         self.regex = compile('[@_!#$%^&*()<>?/\|}{~:]')
         self.progress = []

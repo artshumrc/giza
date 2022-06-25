@@ -1,20 +1,20 @@
 <div class="feature-block secondary" id="jumpmenu">
     <div class="feature-block__body">
         <ul class="vertical menu">
-            {{ type }}
+            {{ index }}
             {{ id }}
             {% if user %}
             <h5 class="heading-em">Hi {% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}</h5>
             <li>
-                <a class="my-giza-lnk modal" data-url="{% url 'get-form' form='collection_form' type=type id=id %}">
+                <a class="my-giza-lnk modal" data-url="{% url 'get-form' index=index id=id form='collection' %}">
                     <span class="icon-plus-circle icon-fw"></span> Add this to a collection
                 </a>
             </li>
             {% endif %}
             <h5 class="heading-em">Jump to:</h5>
             <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
-            {% for type, item in items.items %}
-            <li><a href='#{{ type }}'><span class="icon-{{ item.icon }} icon-fw"></span> {{ item.category }}
+            {% for index, item in items.items %}
+            <li><a href='#{{ index }}'><span class="icon-{{ item.icon }} icon-fw"></span> {{ item.category }}
                     <span class="badge">{{ item.items|length }}</span>
                 </a></li>
             {% endfor %}

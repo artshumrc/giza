@@ -1,9 +1,9 @@
 try:
     from os import cpu_count
-    from cursor_FSS import file_open
     from concurrent.futures import ThreadPoolExecutor
-    from helper_date_conversion import ED
     from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
+    from helper_date_conversion import Date_Conversion
+    from cursor_FSS import file_open
 except ImportError as error:
     print(error)
 
@@ -37,11 +37,13 @@ class Base:
     def __init__(self, module_type=None):
         self.module_type = module_type
 
-        self.ed = ED(module_type)
+        self.dc = Date_Conversion(module_type)
 
         self.constituenttypes = CONSTITUENTTYPES
         self.classifications = CLASSIFICATIONS
         self.mediatypes = MEDIATYPES
+
+        self.thumbnail_urls = {}
 
         self.records = {}
         self.relations = {}
@@ -95,6 +97,7 @@ class Base:
                 if len(result.res):
                     res.append(result.rec['RecID'])
                     self.records[str(result.rec['RecID'])].update(result.rec)
+                    self.thumbnail_urls.update(result.thumbnail_urls)
                     if len(result.relations):
                         self.relations[list(result.relations.keys())[0]] = list(result.relations.values())[0]
                 else:
@@ -106,7 +109,7 @@ class Base:
         manifests = overall_progress['iiif']['compilation'] if len(overall_progress['iiif']['compilation']) else file_open('compiled', 'iiif', 'iiif', True)
         met = overall_progress['met']['compilation'] if len(overall_progress['met']['compilation']) else file_open('compiled', 'relations', 'met', True)
 
-        # TO PREVENT RACE CONDITIONS EACH INDIVIDUAL RECORD IS UPDATED IN A SEPARATE THREAD
+        # TO PREVENT RACE CONDITIONS EACH INDIVIDUAL RECORD IS UPDATED IN ITS OWN THREAD
         with ThreadPoolExecutor(int((cpu_count()/2)-1)) as executor:
             for row in sorted_by_row.values():
                 if 'ConstituentTypeID' in row[0] and row[0]['ConstituentTypeID'].lower() != "null": doc_type = self.constituenttypes.get(int(row[0]['ConstituentTypeID']))
@@ -138,17 +141,34 @@ class Base:
                 if 'RelatedItems' not in self.records[row['RecID']]: self.records[row['RecID']]['RelatedItems'] = {}
                 if 'Sites' not in self.records[row['RecID']]['RelatedItems']: self.records[row['RecID']]['RelatedItems']['Sites'] = []
                 
-                drs_id = "" if row['ArchIDNum'].lower() == "null" else row['ArchIDNum']
-                thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
-                if not thumbnail_url and drs_id: thumbnail_url = self.thumbnail_url(drs_id)
+                drs_id = row['ArchIDNum']
+
+                thumbnail_id = f'Sites-{row["RecID"]}'
+
+                thumbnail_id = drs_id
+
+                # if 'ConstituentTypeID' in row: thumbnail_id = f'{self.constituenttypes.get(int(row["ConstituentTypeID"]))}-{row["RecID"]}'
+                # if 'ClassificationID' in row: thumbnail_id = f'{self.classifications.get(int(row["ClassificationID"]))}-{row["RecID"]}'
+                # if 'MediaTypeID' in row: thumbnail_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'
+                
+                if drs_id:
+                    thumbnail_url = self.thumbnail_url(drs_id)
+
+                if drs_id.lower() == "null" or not drs_id:
+                    thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+
+                if len(thumbnail_url) and thumbnail_id not in self.thumbnail_urls:
+                    self.thumbnail_urls[thumbnail_id] = { 'Thumbnail_ID' : thumbnail_id, 'url' : thumbnail_url }
 
                 site = {
                     'RecID' : row['SiteID'],
                     'SiteName' : row['SiteName'],
                     'SiteNumber' : row['SiteNumber'],
                     'DisplayText' : f'{row["SiteName"]}, {row["SiteNumber"]}',
-                    'Thumbnail' : thumbnail_url,
-                    'HasManifest' : False if drs_id == "" else True
+                    'Thumbnail' : thumbnail_url if len(thumbnail_url) else "thumbnails/no_image.jpg",
+                    'Thumbnail_ID' : thumbnail_id,
+                    'DRS_ID' : drs_id,
+                    'HasManifest' : False if row['ArchIDNum'] == "" else True
                 }
                 
                 self.records[row['RecID']]['RelatedItems']['Sites'].append(site)
@@ -180,6 +200,7 @@ class Base:
         -------
         - dict : processing results
         """
+
         res, err = [], []
         
         for row in rows:
@@ -195,9 +216,24 @@ class Base:
                     idx = row['ObjectNumber'].find('_')
                     object_title = row['ObjectNumber'][idx+1:]
 
-                drs_id = "" if row['ArchIDNum'].lower() == "null" else row['ArchIDNum']
-                thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
-                if not thumbnail_url and drs_id: thumbnail_url = self.thumbnail_url(drs_id)              
+                drs_id = row['ArchIDNum']
+
+                # if 'ConstituentTypeID' in row: thumbnail_id = f'{self.constituenttypes.get(int(row["ConstituentTypeID"]))}-{row["RecID"]}'
+                # if 'ClassificationID' in row: thumbnail_id = f'{self.classifications.get(int(row["ClassificationID"]))}-{row["RecID"]}'
+                # if 'MediaTypeID' in row: thumbnail_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'
+                # thumbnail_id = f'{classification}-{row["ObjectID"]}'
+
+                thumbnail_id = drs_id
+                
+                if drs_id:
+                    thumbnail_url = self.thumbnail_url(drs_id)
+
+                if drs_id.lower() == "null" or not drs_id:
+                    thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+
+                if len(thumbnail_url) and thumbnail_id not in self.thumbnail_urls:
+                    self.thumbnail_urls[thumbnail_id] = { 'Thumbnail_ID' : thumbnail_id, 'url' : thumbnail_url }
+
                 
                 self.records[row['RecID']]['RelatedItems'][classification].append({
                     'RecID': row['ObjectID'],
@@ -206,7 +242,9 @@ class Base:
                     'ClassificationID': int(row['ClassificationID']),
                     'Number': row['ObjectNumber'],
                     'Date': "" if row['ObjectDate'].lower() == "null" else row['ObjectDate'],
-                    'Thumbnail': thumbnail_url,
+                    'Thumbnail' : thumbnail_url if len(thumbnail_url) else "thumbnails/no_image.jpg",
+                    'Thumbnail_ID' : thumbnail_id,
+                    'DRS_ID' : row['ArchIDNum'],
                     'HasManifest': False if drs_id == "" else True
                 })
                 
@@ -231,6 +269,7 @@ class Base:
         -------
         - dict : processing results
         """
+
         res, err = [], []
 
         for row in rows:
@@ -239,17 +278,29 @@ class Base:
                 if 'RelatedItems' not in self.records[row['RecID']]: self.records[row['RecID']]['RelatedItems'] = {}
                 if 'PublishedDocuments' not in self.records[row['RecID']]['RelatedItems']: self.records[row['RecID']]['RelatedItems']['PublishedDocuments'] = []
 
+                # NOTE: Some dates like '1990-91' will cause an index error in ElasticSearch, because 
+                # dynamic mapping tries to assign a date-field to what is essentially a string. 
+
+                # TODO: Add a new method to the Date_Conversion class to deal with the above types of dates
+                
                 document = {
                     'RecID' : row['ReferenceID'],
                     'BoilerText' : row['BoilerText'],
                     'DisplayText' : row['BoilerText'],
-                    # 'PublicationDate' : row['DisplayDate'],
-                    'PublicationDate' : ED().extract_year(row['DisplayDate']),
+                    'PublicationDate' : Date_Conversion('published').chkDatePattern(row['DisplayDate']),
                     'URL' : self.get_media_url(row['MainPathName'], row['MainFileName'])
                 }
 
                 if 'ThumbPathName' and 'ThumbFileName' in row:
-                    document['Thumbnail'] = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+                    thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+
+                    thumbnail_id = f'PublishedDocuments-{row["ReferenceID"]}'
+
+                    if len(thumbnail_url) and thumbnail_id not in self.thumbnail_urls:
+                        self.thumbnail_urls[thumbnail_id] = { 'Thumbnail_ID' : thumbnail_id, 'url' : thumbnail_url }
+                        document['Thumbnail'] = thumbnail_url
+
+                    # self.thumbnail_urls.append({ 'Thumbnail_ID' : f'PublishedDocuments-{row["ReferenceID"]}', 'url' : document['Thumbnail'] })
 
                 self.records[row['RecID']]['RelatedItems']['PublishedDocuments'].append(document)
 
@@ -274,6 +325,7 @@ class Base:
         -------
         - dict : processing results
         """
+
         res, err = [], []
         
         for row in rows:
@@ -303,6 +355,7 @@ class Base:
         -------
         - dict : processing results
         """
+
         res, err = [], []
 
         for row in rows:
@@ -312,10 +365,25 @@ class Base:
                 constituent_type = self.constituenttypes.get(int(row['ConstituentTypeID']))
                 if constituent_type not in self.records[row['RecID']]['RelatedItems']: self.records[row['RecID']]['RelatedItems'][constituent_type] = []
 
-                drs_id = "" if row['ArchIDNum'].lower() == "null" else row['ArchIDNum']
-                thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
-                if not thumbnail_url and drs_id: thumbnail_url = self.thumbnail_url(drs_id)
-                
+                drs_id = row['ArchIDNum']
+
+                thumbnail_id = f'{constituent_type}-{row["ConstituentID"]}'
+
+                thumbnail_id = drs_id
+
+                # if 'ConstituentTypeID' in row: thumbnail_id = f'{self.constituenttypes.get(int(row["ConstituentTypeID"]))}-{row["RecID"]}'
+                # if 'ClassificationID' in row: thumbnail_id = f'{self.classifications.get(int(row["ClassificationID"]))}-{row["RecID"]}'
+                # if 'MediaTypeID' in row: thumbnail_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'
+
+                if drs_id:
+                    thumbnail_url = self.thumbnail_url(drs_id)
+
+                if drs_id.lower() == "null" or not drs_id:
+                    thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+
+                if len(thumbnail_url) and thumbnail_id not in self.thumbnail_urls:
+                    self.thumbnail_urls[thumbnail_id] = { 'Thumbnail_ID' : thumbnail_id, 'url' : thumbnail_url }
+                                    
                 if row['Role'] not in self.records[row['RecID']]['Roles']: 
                     if row['Role'] == "Photographer": 
                         self.records[row['RecID']]['Roles'].insert(0, row['Role'])
@@ -336,7 +404,9 @@ class Base:
                     'DisplayDate' : row['DisplayDate'] if row['DisplayDate'] != "NULL" else "",
                     'DisplayText' : row['DisplayName'],
                     'Description' : row['Remarks'] if row['Remarks'] != "NULL" else "",
-                    'Thumbnail' : thumbnail_url,
+                    'Thumbnail' : thumbnail_url if len(thumbnail_url) else "thumbnails/no_image.jpg",
+                    'Thumbnail_ID' : thumbnail_id,
+                    'DRS_ID' : row['ArchIDNum'],
                     'HasManifest' : False if drs_id == "" else True
                 })
 
@@ -354,6 +424,7 @@ class Worker(Base):
     Sub-class of Base for heavy lifting. This class only serves to update general 
     properties broadly shared across all records.
     """
+
     def __init__(self, rec, rec_type, new_rows, manifests=None, met=None):
         super().__init__()
       
@@ -375,63 +446,77 @@ class Worker(Base):
                     # ADD MEDIA TYPES IN RELATED ITEMS
                     media_type = self.mediatypes.get(int(row['MediaTypeID']))
                     if media_type not in self.rec['RelatedItems']: self.rec['RelatedItems'][media_type] = []
-                    if media_type == 'Photos': self.rec['HasPhoto'] = True
+                    if media_type == 'Image': self.rec['HasPhoto'] = True
 
                     # PREPARE DISPLAY TEXT
                     mediaview = "" if row['MediaView'].lower() == "null" else row['MediaView']
                     caption = "" if row['PublicCaption'].lower() == "null" else row['PublicCaption']
                     display_text = ": ".join([mediaview, caption])
 
-                    # HAS A MANIFEST
-                    drs_id = "" if row['ArchIDNum'].lower() == "null" else row['ArchIDNum']
-                    has_manifest = False if drs_id == "" else True
-                    
-                    # CREATE THUMBNAIL
-                    thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
-                    if not thumbnail_url and drs_id: thumbnail_url = self.thumbnail_url(drs_id)
+                    drs_id = row['ArchIDNum']
 
+                    has_manifest = False if drs_id == "" else True
+
+                    # if 'ConstituentTypeID' in row: thumbnail_id = f'{self.constituenttypes.get(int(row["ConstituentTypeID"]))}-{row["RecID"]}'
+                    # if 'ClassificationID' in row: thumbnail_id = f'{self.classifications.get(int(row["ClassificationID"]))}-{row["RecID"]}'
+                    # if 'MediaTypeID' in row: thumbnail_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'
+                    
+                    # thumbnail_id = f'{media_type}-{row["RecID"]}'
+                
+                    if drs_id:
+                        thumbnail_url = self.thumbnail_url(drs_id)
+
+                    if drs_id.lower() == "null" or not drs_id:
+                        thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+
+                    if len(thumbnail_url) and drs_id not in self.thumbnail_urls:
+                        self.thumbnail_urls[drs_id] = { 'Thumbnail_ID' : drs_id, 'url' : thumbnail_url }
+                        
                     if int(row['MediaTypeID']) == 3:
                         if not row['MainFileName'].endswith('mp4'):
                             continue
 
                     if bool(int(row['PrimaryDisplay'])):
                         self.rec['PrimaryDisplay'] = {
-                            'Thumbnail' : thumbnail_url,
+                            'Thumbnail' : thumbnail_url if len(thumbnail_url) else "thumbnails/no_image.jpg",
+                            'Thumbnail_ID' : drs_id,
+                            'DRS_ID' : row['ArchIDNum'],
                             'Main' : self.get_media_url(row['MainPathName'], row['MainFileName']),
                             'DisplayText' : display_text,
                             'Number' : "" if row['RenditionNumber'].lower() == "null" else row['RenditionNumber'],
                             'Description' : "" if row['Description'].lower() == "null" else row['Description'],
-                            'HasManifest' : has_manifest,
+                            'HasManifest' : False if drs_id == "" else True,
                             'MediaMasterID' : row['MediaMasterID']
                         }
 
-                    if met and row['MediaMasterID'] in met:
-                        self.rec['MET'] = met[row['MediaMasterID']]
+                    if met and row['RecID'] in met:
+                        self.rec['MET'] = met[row['RecID']]
 
                     classification = self.classifications.get(int(row['ClassificationID'])) if 'ClassificationID' in row and row['ClassificationID'].lower() != 'null' else rec_type.title()
 
                     if not (classification == '3Dmodels' and media_type == '3Dmodels'):
                         self.rec['RelatedItems'][media_type].append({
-                            'MediaMasterID': row['MediaMasterID'],
+                            'RecID': row['RecID'],
                             'DisplayText': display_text,
                             'PrimaryDisplay': bool(int(row['PrimaryDisplay'])),
-                            'Thumbnail': thumbnail_url,
+                            'Thumbnail' : thumbnail_url if len(thumbnail_url) else "thumbnails/no_image.jpg",
+                            'Thumbnail_ID' : drs_id,
+                            'DRS_ID' : drs_id,
                             'Main': self.get_media_url(row['MainPathName'], row['MainFileName']),
                             'Number': "" if row['RenditionNumber'].lower() == "null" else row['RenditionNumber'],
                             'Description': "" if row['Description'].lower() == "null" else row['Description'],
-                            'HasManifest': has_manifest,
-                            'DRS_ID': drs_id
+                            'HasManifest': has_manifest
                         })
 
                     if has_manifest:
                         try:
-                            resource = manifests[f'{media_type}-{row["MediaMasterID"]}']['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
-                            canvas_label = manifests[f'{media_type}-{row["MediaMasterID"]}']['manifest']['description']
-                            canvas_metadata = manifests[f'{media_type}-{row["MediaMasterID"]}']['manifest']['metadata']
+                            resource = manifests[f'{media_type}-{row["RecID"]}']['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
+                            canvas_label = manifests[f'{media_type}-{row["RecID"]}']['manifest']['description']
+                            canvas_metadata = manifests[f'{media_type}-{row["RecID"]}']['manifest']['metadata']
 
                             rec_id = f'{classification}-{row["RecID"]}'
                         
-                            if row['RecID'] not in self.relations.keys(): 
+                            if rec_id not in self.relations.keys(): 
                                 metadata = self.add_metadata(rec)
                                 self.relations[rec_id] = {
                                     'Description': row['Description'],
@@ -452,11 +537,11 @@ class Worker(Base):
                                 self.relations[rec_id]['startCanvas'] = drs_id
 
                         except Exception as e:
-                            self.err.append(row['MediaMasterID'])
+                            self.err.append(row['RecID'])
                     
-                    self.res.append(row['MediaMasterID'])
+                    self.res.append(row['RecID'])
                 except Exception as e:
-                    self.err.append(row['MediaMasterID'])
+                    self.err.append(row['RecID'])
 
         except Exception as e:
             print(e)
@@ -473,6 +558,7 @@ class Worker(Base):
         -------
         - metadata (list) : metadata to be added to the record
         """
+
         metadata = []
 
         # IF RECORD TYPE IS A SITE
@@ -511,7 +597,7 @@ class Worker(Base):
             if 'AlternativeNumbers' in rec: 
                 [metadata.append({'Label' : altnum['Note'], 'Value' : altnum['Description'] }) for altnum in rec['AlternativeNumbers']]
 
-        # IF RECORD TYPE IS AN OBJECT
+        # IF RECORD TYPE IS A CONSTITUENT
         if self.rec_type == 'constituent':
             if 'ConstituentType' in rec and rec['ConstituentType']: metadata.append({ 'Label' : 'Type', 'Value' : rec['ConstituentType'] })
             if 'Gender' in rec and rec['Gender']: metadata.append({ 'Label' : 'Gender', 'Value' : rec['Gender'] })

@@ -59,12 +59,13 @@ urlpatterns = [
     path('search/lookup', views.search_token, name='search_token'),
 
     path('search/results', search_views.search_results, name='search_results'),
-    path('search/results/<str:form>/<str:type>/<str:id>', views.get_form, name='get-form'),
-    path('search/results/<str:type>/<str:id>/<str:view>', search_views.get_type_html, name='get_type_html'),
+    path('search/results/<str:index>/<str:id>/<str:form>', views.get_form, name='get-form'),
+    path('search/results/documents/<str:index>/<str:id>/<str:view>', search_views.get_type_html, name='get_type_html'),
+    path('search/results/iiif/<str:index>/<str:id>/', tms_views.get_manifest, name="iiif-manifest"),
 
     # re_path(r'^/<str:tab>/<str:type>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection'),
-    path('search/results/<str:tab>/<str:type>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection-new'),
-    path('search/results/<str:tab>/<str:type>/<int:id>/<str:name>/', views.my_giza_add, name='add-to-my-giza-collection'),
+    path('search/results/<str:tab>/<str:index>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection-new'),
+    path('search/results/<str:tab>/<str:index>/<int:id>/<str:name>/', views.my_giza_add, name='add-to-my-giza-collection'),
     # path('search/result/<str:type>/<int:id>/<uuid:collection>', views.collections_add, name="mygiza_collections_add"),
     # path('search/results/add-to-collection', views.collections_add, name='my-giza-add-to-collection'),
     path('search/show', search_views.search_show, name='search_show'),
@@ -101,7 +102,7 @@ urlpatterns = [
     re_path(r'^activation-complete/(?P<uidb64>[\w-]+)/(?P<token>[\w-]+)/$', views.activate_account, name="activation-complete"),
 
     # MIRADOR MANIFEST ROUTES
-	path('search/results/manifests/<str:type>/<int:id>/', tms_views.get_manifest, name="iiif-manifest"),
+	
 	path('manifests/<slug:id>/sequence/0', tms_views.get_sequence, name="iiif-manifest-sequence"),
 	path('manifests/<slug:id>/canvas/<int:canvas_index>', tms_views.get_canvas, name="iiif-manifest-canvas"),
 	path('manifests/<slug:id>/annotation/canvas/<int:canvas_index>', tms_views.get_annotation, name="iiif-manifest-annotation"),

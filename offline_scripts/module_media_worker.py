@@ -39,6 +39,8 @@ class Media_Worker(Base):
         # CONVERT ROWS TO DICTS; MICROFILM AND DOCUMENT TYPES ARE FILTERED OUT BY SKIPPING INDICES 4 AND 5
         new_rows = [{ y : row[self.cols.index(y)] for y in self.cols } for row in self.rows if int(row[self.cols.index('MediaTypeID')]) not in [4, 5]]
 
+        thumbnails = []
+
         for row in new_rows:
             row = { k : '' if v == ",," else v for k, v in row.items() }                                        # REMOVE DOUBLE COMMAS
             row = { k : v.replace('  ', '') if type(v) == str and '  ' in v else v for k, v in row.items() }    # REMOVE DOUBLE SPACES
@@ -68,10 +70,31 @@ class Media_Worker(Base):
             
             media['Roles'] = []
 
-            drs_id = "" if str(row['ArchIDNum']).lower() == "null" else str(row['ArchIDNum'])
+            # drs_id = "" if str(row['ArchIDNum']).lower() == "null" else str(row['ArchIDNum'])
 
-            thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
-            if not thumbnail_url and drs_id: thumbnail_url = self.thumbnail_url(drs_id)
+            # thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+            # if not thumbnail_url and drs_id: thumbnail_url = self.thumbnail_url(drs_id)
+
+            # if thumbnail_url:
+            #     self.thumbnail_urls.append({ 'drs_id' : drs_id, 'url' : thumbnail_url })
+
+            drs_id = row['ArchIDNum']
+
+            if 'ConstituentTypeID' in row:  # NOT USED?
+                thumbnail_id = f'{self.constituenttypes.get(int(row["ConstituentTypeID"]))}-{row["RecID"]}' # NOT USED?
+            if 'ClassificationID' in row: # NOT USED?
+                thumbnail_id = f'{self.classifications.get(int(row["ClassificationID"]))}-{row["RecID"]}'
+            if 'MediaTypeID' in row: 
+                thumbnail_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'  # NOT USED?
+
+            if drs_id:
+                thumbnail_url = self.thumbnail_url(drs_id)
+
+            if drs_id.lower() == "null" or not drs_id:
+                thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+
+            if len(thumbnail_url) and thumbnail_id not in self.thumbnail_urls:
+                self.thumbnail_urls[thumbnail_id] = { 'Thumbnail_ID' : thumbnail_id, 'url' : thumbnail_url }
 
             media['DRS_ID'] = drs_id
             media['PrimaryDisplay'] = {
@@ -130,4 +153,4 @@ class Media_Worker(Base):
                 res[method] = { 'res' : { 'summary' : len(result[method]['res']), 'res' : result[method]['res'] }}
                 err[method] = { 'err' : { 'summary' : len(result[method]['err']), 'err' : result[method]['err'] }}
 
-            return self.records, self.relations, { 'media_worker_res' : res, 'media_worker_err' : err }
+            return self.records, self.relations, self.thumbnail_urls, { 'media_worker_res' : res, 'media_worker_err' : err }

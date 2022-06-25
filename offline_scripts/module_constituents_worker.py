@@ -47,14 +47,17 @@ class Constituents_Worker(Base):
             row = { k : '' if v == ",," else v for k, v in row.items() }                                        # REMOVE DOUBLE COMMAS
             row = { k : v.replace('  ', '') if type(v) == str and '  ' in v else v for k, v in row.items() }    # REMOVE DOUBLE SPACES
             row = { k : v.rstrip() if type(v) == str else v for k, v in row.items() }                           # REMOVE RIGHT WHITE SPACES
-            row = { k : sub(r"(\w)([A-Z])", r"\1 \2", v) if type(v) == str else v for k, v in row.items() }  # INSERT SPACES BEFORE CAPITAL LETTERS MID-SENTENCE
+            row = { k : sub(r"(\w)([A-Z])", r"\1 \2", v) if type(v) == str else v for k, v in row.items() }     # INSERT SPACES BEFORE CAPITAL LETTERS MID-SENTENCE
             row = { k : None if ('BeginDate' in k or 'EndDate' in k) and v == 0 else v for k, v in row.items() }
 
             if ('BeginDate' in row and row['BeginDate'] is not None) or ('EndDate' in row and row['EndDate'] is not None):
                 row['EntryDate'] = "-".join([str(row['BeginDate']), str(row['EndDate'])])
             if 'EntryDate' in row:
                 if type(row['EntryDate']) == str and row['EntryDate'].lower() != 'null':
-                    row['EntryDate_ms'] = self.ed.chkDatePattern(row['EntryDate'])
+                    date = self.dc.chkDatePattern(row['EntryDate'])
+                    if date is not None:
+                        row['EntryDate_string'] = date
+                        row['EntryDate_ms'] = [float(x[1]) for x in row['EntryDate_string']]
 
             row['Type'] = self.constituenttypes.get(int(row['ConstituentTypeID']))
             row['DisplayText'] = row['DisplayName']
@@ -103,7 +106,7 @@ class Constituents_Worker(Base):
                 res[method] = { 'res' : { 'summary' : len(result[method]['res']), 'res' : result[method]['res'] }}
                 err[method] = { 'err' : { 'summary' : len(result[method]['err']), 'err' : result[method]['err'] }}
 
-            return self.records, self.relations, { 'constituents_worker_res' : res, 'constituents_worker_err' : err }
+            return self.records, self.relations, self.thumbnail_urls, { 'constituents_worker_res' : res, 'constituents_worker_err' : err }
 
     def altnames(self, rows:list):
         """

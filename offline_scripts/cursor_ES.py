@@ -1,11 +1,12 @@
 try:
     from elasticsearch import Elasticsearch
-    from elasticsearch.helpers import streaming_bulk
-    from math import ceil
-    from time import sleep
+    from elasticsearch.helpers import streaming_bulk, BulkIndexError
+    from elastic_transport import ObjectApiResponse
     from requests import head
     from unicodedata import normalize
+    from math import ceil
     from credentials import es_cert, es_user, es_password
+    from helper_es_index_settings import ANALYZERS
 except ImportError as error:
     print(error)
 
@@ -18,7 +19,8 @@ class ES:
     - check_connection() -> ObjectApiResponse/bool : begins a sequence to verify (and redownload) drs_metadata
     - indices() -> list/bool : retrieves all indices (excluding hidden ones) from ElasticSearch
     - del_index(index=str) -> ObjectApiResponse : deletes an index (including contents, shards and metadata)
-    - add_index(index=str, doc=dict) -> ObjectApiResponse : add document to an index
+    - add_index(index=str) -> ObjectApiResponse : add an index (with specific settings)
+    - add_doc(index=str, doc=dict) -> ObjectApiResponse : add document to an index
     - save(data=dict) -> Generator : bulk insert records into ElasticSearch
     - build_library -> Generator : compile records for the 'library' on the site and bulk insert into ElasticSearch
 
@@ -71,7 +73,7 @@ class ES:
         except:
             return False
 
-    def del_index(self, index:str):
+    def del_index(self, index:str) -> ObjectApiResponse:
         """
         Deletes an index (including contents, shards and metadata)
         
@@ -85,7 +87,21 @@ class ES:
         """
         return self.es.options(ignore_status=[400, 404]).indices.delete(index=index)
 
-    def add_index(self, index:str, doc:dict):
+    def add_index(self, index:str) -> ObjectApiResponse:
+        """
+        Adds a new index (including settings defined in helper_es_index_settings.py)
+
+        Parameters
+        ----------
+        - index (str) : name of index to add
+
+        Returns
+        -------
+        - ObjectApiResponse : response from ElasticSearch
+        """
+        return self.es.indices.create(index=index, settings=ANALYZERS[index])
+
+    def add_doc(self, index:str, doc:dict) -> ObjectApiResponse:
         """
         Add document to an index
 
@@ -100,14 +116,14 @@ class ES:
         """
         return self.es.index(index=index, document=doc)
 
-    def save(self, data:dict):
+    def save(self, data:dict) -> dict:
         """
         Generator function that batch processes data for writing to ElasticSearch in batches of 250.
 
         NOTE:   Connection time-out may occur if chunk_size is set too high and/or request_timeout too low. 
                 If the process stalls this will inadvertently interrupt the insertion process. In that case, 
                 the safest option is to simply restart the program. Also note that documents are indexed upon 
-                insertion, which may take long depending on complexity of document. the refresh parameter on
+                insertion, which may take long depending on complexity of document. The refresh parameter on
                 the streaming_bulk API prevents indices not to be ready for querying and needs to be set to 
                 'wait_for' to make sure the build_library method is able to request all documents in the 
                 publisheddocuments index.
@@ -115,6 +131,10 @@ class ES:
         Parameters
         ----------
         - data (dict) : the dictionary with compiled resources to push to ElasticSearch
+
+        Yields
+        ------
+        - result (dict) : result of streaming insert operation
         """
         try:
             
@@ -122,31 +142,36 @@ class ES:
 
             for index in indices:
                 self.del_index(index)
+                self.add_index(index) # THIS CHANGES SETTINGS OF THE NEW INDEX AND NEEDS TO BE TESTED
 
                 def data_generator(data):
                     for v in data.values():
                         yield {
                             "_index" : v['ES_index'],
+                            "_id" : f'{v["ES_index"]}-{v["ID"]}',
                             "doc" : v
                         }
 
-            for ok, result in streaming_bulk(self.es, data_generator(data), chunk_size=250, request_timeout=60, refresh='wait_for'):
-                if ok is not True:
-                    print(str(result))
-                else:
-                    yield result
+            try:
+
+                for ok, result in streaming_bulk(self.es, data_generator(data), chunk_size=5000, request_timeout=60, refresh='wait_for'):
+                    if ok is not True:
+                        print(str(result))
+                    else:
+                        yield result
+            except BulkIndexError as e:
+                raise e
         except Exception as e:
-            print(e)
             raise e
     
-    def build_library(self):
+    def build_library(self) -> dict:
         """
         Builds a 'library' of published documents with PDFs only, grouped by author.
         Uses the class save-function to bulk-insert the library into ElasticSearch.
 
         Yields
         ------
-        Results from the generator
+        dict : result of streaming insert operation
 
         """
 

@@ -57,37 +57,15 @@ def add_headers(response):
 	response["Content-Type"] = "application/ld+json"
 	return response
 
-def get_manifest_data(request, type, id):
-	ES_INDEX_IIIF = 'iiif'
-	try:
-		base_uri = request.build_absolute_uri('/manifests/')
-		id = f'{type}-{id}'
-		data = models.get_item(id, "manifest", ES_INDEX_IIIF)
-		manifest = data['manifest']
-		manifest['@id'] = base_uri + manifest['@id']
-		if 'startCanvas' in manifest["sequences"][0]:
-			manifest["sequences"][0]['startCanvas'] = base_uri + manifest["sequences"][0]['startCanvas']
-		manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
-		canvases = manifest['sequences'][0]['canvases']
-		for canvas in canvases:
-			canvas['@id'] = base_uri + canvas['@id']
-			for image in canvas['images']:
-				image['@id'] = base_uri + image['@id']
-				image['on'] = canvas['@id']
-		return manifest
-	except:
-		return None
-
-
-def get_manifest(request, type, id):
-	manifest = get_manifest_data(request, type, id)
+def get_manifest(request, index, id):
+	rec_id = f'iiif-{index.title()}-{id}'
+	manifest = get_manifest_data(request, rec_id)
 	if manifest:
 		response = JsonResponse(manifest)
 		response["Access-Control-Allow-Origin"] = "*"
 		return response
 	else:
 		raise Http404("There was an error getting this manifest")
-
 
 def get_sequence(request, id):
 	manifest = get_manifest_data(request, id)
@@ -116,3 +94,23 @@ def get_annotation(request, id, canvas_index):
 			raise Http404("There was an error getting this manifest")
 	else:
 		raise Http404("There was an error getting this manifest")
+
+def get_manifest_data(request, rec_id):
+	try:
+		base_uri = request.build_absolute_uri('/iiif/')
+		# id = f'{index}-{id}'
+		data = models.get_item('iiif', rec_id)
+		manifest = data['manifest']
+		manifest['@id'] = base_uri + manifest['@id']
+		if 'startCanvas' in manifest["sequences"][0]:
+			manifest["sequences"][0]['startCanvas'] = base_uri + manifest["sequences"][0]['startCanvas']
+		manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
+		canvases = manifest['sequences'][0]['canvases']
+		for canvas in canvases:
+			canvas['@id'] = base_uri + canvas['@id']
+			for image in canvas['images']:
+				image['@id'] = base_uri + image['@id']
+				image['on'] = canvas['@id']
+		return manifest
+	except:
+		return None

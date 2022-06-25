@@ -1,18 +1,20 @@
 {% if search.categories|length %}
-<ul id="advanced_search_categories" class="accordion" data-accordion data-allow-all-closed="true"
-    data-multi-expand="false">
+
+<ul class="vertical menu drilldown" data-drilldown data-auto-height="true" data-animate-height="true">
     {% for category in search.categories %}
-    <li class="accordion-item" data-accordion-item>
-        <a class="accordion-title" data-category="{{ category.key }}">{{ category.displaytext }}{% if 'doc_count' in category %}({{ category.doc_count }}){% endif %}</a>
-        <div class="accordion-content" data-tab-content>
+        <li>
+            <a data-category="{{ category.key }}">{{ category.displaytext }}{% if 'doc_count' in category %}({{ category.doc_count }}){% endif %}</a>
+            <ul class="menu vertical nested">
+                {% for key, val in category.fields.items %}
+                <input type="checkbox" class="facet_checkbox" id="{{ search.category }}_{{ type }}_{{ facet.display_text }}" name="{{ type }}_{{ facet.display_text }}" {% if facet.selected %} checked {% endif %} onclick="toggle_facet('{{ type }}_{{ facet.display_text }}')">
+                <label for="{{ search.category }}_{{ type }}_{{ facet.display_text }}">{{ facet.display_text }} ({{ facet.doc_count }})</label>
 
-            {% for key, val in category.fields.items %}
-            <input type="text" id="{{ category.key }}_{{ key }}" placeholder="{{ val }}"
-                name="{{ category.key }}_{{ key }}">
-            {% endfor %}
-
-        </div>
-    </li>
+                <a>
+                    <input type="text" id="{{ category.key }}_{{ key }}" placeholder="{{ val }}" name="{{ category.key }}_{{ key }}">            
+                </a>
+                {% endfor %}
+            </ul>
+        </li>
     {% endfor %}
 </ul>
 {% endif %}

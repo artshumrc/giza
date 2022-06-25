@@ -1,9 +1,9 @@
 try:
+    from typing import Tuple, Union
     from base import Base
     from cursor_FSS import file_open
-    from sql import DRS
-    from typing import Tuple, Union
     from cursor_TMS import TMS
+    from sql import DRS
 except ImportError as error:
     print(error)
 
@@ -25,7 +25,7 @@ class IIIF_Worker(Base):
         self.data = data
 
         try:
-            self.drs_metadata = file_open('tables', 'drs_metadata', 'iiif')
+            self.drs_metadata = file_open('tables', 'drs', 'iiif')
         except:
             raise "The IIIF module could not access DRS data from file"
 
@@ -44,9 +44,13 @@ class IIIF_Worker(Base):
             # EXCLUDE NON-PHOTO RECORDS BY EQUALING MEDIATYPEID TO 1
             new_rows = [{ y : row[self.cols.index(y)] for y in self.cols } for row in self.rows if int(row[self.cols.index('MediaTypeID')]) == 1]
             
-            def generate_iiif_manifest(data) -> Union[dict,None]:
+            def generate_iiif_manifest(data:dict) -> Union[dict,None]:
                 """
                 Compiles a JSON representation of a IIIF manifest
+
+                Parameters
+                ----------
+                - data (dict) : 
 
                 Returns
                 -------
@@ -54,13 +58,17 @@ class IIIF_Worker(Base):
                 #### OR
                 - None
                 """
-                if data['DRS_ID'] in self.drs_metadata:
-                    manifest = build_base_manifest(data['Manifest_ID'], data)
-                    manifest["sequences"] = build_manifest_sequences(data['Manifest_ID'])
-                    manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['Manifest_ID'], data['DRS_ID'], 0, data['resource'] if 'resource' in data else None, None, None)]
-                    return manifest
-                else:
-                    return None
+
+                try:
+                    if data['DRS_ID'] in self.drs_metadata:
+                        manifest = build_base_manifest(data['Manifest_ID'], data)
+                        manifest["sequences"] = build_manifest_sequences(data['Manifest_ID'])
+                        manifest["sequences"][0]["canvases"] = [build_manifest_canvas(data['Manifest_ID'], data['DRS_ID'], 0, data['resource'] if 'resource' in data else None, None, None)]
+                        return manifest
+                    else:
+                        return None
+                except Exception as e:
+                    raise e
 
             def build_base_manifest(manifest_id:str, data:dict) -> dict:
                 """
@@ -75,17 +83,21 @@ class IIIF_Worker(Base):
                 -------
                 - ob (dict) : the base for a IIIF manifest
                 """
-                ob = {
-                    "description": data['description'],
-                    "@context": "https://iiif.io/api/presentation/2/context.json",
-                    "@id": manifest_id,
-                    "label": data['label'],
-                    "@type": "sc:Manifest"
-                }
-                
-                if 'metadata' in data: ob['metadata'] = data['metadata']
-                
-                return ob
+
+                try:
+                    ob = {
+                        "description": data['description'],
+                        "@context": "https://iiif.io/api/presentation/2/context.json",
+                        "@id": manifest_id,
+                        "label": data['label'],
+                        "@type": "sc:Manifest"
+                    }
+                    
+                    if 'metadata' in data: ob['metadata'] = data['metadata']
+                    
+                    return ob
+                except Exception as e:
+                    raise e
 
             def build_manifest_sequences(manifest_id:str) -> list:
                 """
@@ -99,13 +111,17 @@ class IIIF_Worker(Base):
                 -------
                 - list : a sequence list
                 """
-                return [
-                    {
-                        "label": "Default order",
-                        "@type": "sc:Sequence",
-                        "@id": manifest_id
-                    }
-                ]
+
+                try:
+                    return [
+                        {
+                            "label": "Default order",
+                            "@type": "sc:Sequence",
+                            "@id": manifest_id
+                        }
+                    ]
+                except Exception as e:
+                    raise e
 
             def build_manifest_canvas(manifest_id:str, drs_id:str, idx:int, resource:dict, label:str, metadata:list) -> dict:
                 """
@@ -124,29 +140,33 @@ class IIIF_Worker(Base):
                 -------
                 - dict : canvas
                 """
-                if resource is None: resource = build_resource(drs_id)
 
-                canvas = {
-                    "@id": f'{manifest_id}/canvas/{idx}',
-                    "label": label if label else str(idx+1),
-                    "@type": "sc:Canvas",
-                    "width": resource['width'],
-                    "height": resource['height'],
-                    "images": [
-                        {
-                            "on": f'{manifest_id}/canvas/{idx}',
-                            "motivation": "sc:painting",
-                            "@type": "oa:Annotation",
-                            "@id": f'{manifest_id}/annotation/canvas/{idx}',
-                            "resource": resource
-                        }
-                    ]
-                }
+                try:
+                    if resource is None: resource = build_resource(drs_id)
 
-                if metadata: 
-                    canvas['metadata'] = metadata
+                    canvas = {
+                        "@id": f'{manifest_id}/canvas/{idx}',
+                        "label": label if label else str(idx+1),
+                        "@type": "sc:Canvas",
+                        "width": resource['width'],
+                        "height": resource['height'],
+                        "images": [
+                            {
+                                "on": f'{manifest_id}/canvas/{idx}',
+                                "motivation": "sc:painting",
+                                "@type": "oa:Annotation",
+                                "@id": f'{manifest_id}/annotation/canvas/{idx}',
+                                "resource": resource
+                            }
+                        ]
+                    }
 
-                return canvas
+                    if metadata: 
+                        canvas['metadata'] = metadata
+
+                    return canvas
+                except Exception as e:
+                    raise e
 
             def build_resource(drs_id) -> dict:
                 """
@@ -161,17 +181,22 @@ class IIIF_Worker(Base):
                 - dict : manifest resource
                 """
                 
-                return {
-                    "width": self.drs_metadata[drs_id]['width'],
-                    "@id": f'https://ids.lib.harvard.edu/ids/iiif/{drs_id}/full/full/0/default.jpg',
-                    "@type": "dctypes:Image",
-                    "height": self.drs_metadata[drs_id]['height'],
-                    "service": {
-                        "@context": "https://iiif.io/api/presentation/2/context.json",
-                        "@id": f'https://ids.lib.harvard.edu/ids/iiif/{drs_id}',
-                        "profile": "http://iiif.io/api/image/2/level1.json"
+                try:
+                
+                    return {
+                        "width": self.drs_metadata[drs_id]['width'],
+                        "@id": f'https://ids.lib.harvard.edu/ids/iiif/{drs_id}/full/full/0/default.jpg',
+                        "@type": "dctypes:Image",
+                        "height": self.drs_metadata[drs_id]['height'],
+                        "service": {
+                            "@context": "https://iiif.io/api/presentation/2/context.json",
+                            "@id": f'https://ids.lib.harvard.edu/ids/iiif/{drs_id}',
+                            "profile": "http://iiif.io/api/image/2/level1.json"
+                        }
                     }
-                }
+                
+                except Exception as e:
+                    raise e
 
             for row in new_rows:
 
@@ -184,7 +209,9 @@ class IIIF_Worker(Base):
                 department = "" if row['Department'].lower() == "null" else row['Department']
                 date = "" if row['DateOfCapture'].lower() == "null" else row['DateOfCapture']
                 problemsquestions = "" if row['ProblemsQuestions'].lower() == "null" else row['ProblemsQuestions']
+                
                 manifest_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'
+                # manifest_id = f'{"".join([x.title() for x in row["MediaView"].split(" ")])}-{row["RecID"]}'
 
                 metadata = []
                 if number: metadata.append({'label' : 'ID', 'value' : number})
@@ -209,12 +236,18 @@ class IIIF_Worker(Base):
                         manifest_ob['resource'] = resource
 
                 # ADD THE NEW MANIFEST TO THE MANIFEST DICTIONARY ON THE CLASS OBJECT
-                self.relations[manifest_id] = { "id": manifest_id, "manifest": generate_iiif_manifest(manifest_ob), "ES_index" : "iiif" }
+                self.relations[manifest_id] = { 
+                    # "id": manifest_id,
+                    "RecID" : manifest_id,
+                    "ES_index" : self.mediatypes.get(int(row["MediaTypeID"])),
+                    "manifest": generate_iiif_manifest(manifest_ob), "ES_index" : "iiif"
+                }
 
             return self
 
         except Exception as e:
             print(e)
+            raise e
 
     def start(self) -> Tuple[dict, dict]:
         """
@@ -244,7 +277,7 @@ class IIIF_Worker(Base):
             }
         }
 
-        return self.records, self.relations, { 'iiif_worker_res' : photographers_result }
+        return self.records, self.relations, self.thumbnail_urls, { 'iiif_worker_res' : photographers_result }
 
 def check_drs(tms:TMS) -> Union[list, dict]:
     """
@@ -262,7 +295,7 @@ def check_drs(tms:TMS) -> Union[list, dict]:
     """
     try:
         # RETURNING PROPER DRS_METADATA FOUND ON DISK
-        drs_metadata = file_open('tables', 'drs_metadata', 'iiif')
+        drs_metadata = file_open('tables', 'drs', 'iiif')
         if drs_metadata:
             return drs_metadata
         else:
@@ -273,5 +306,5 @@ def check_drs(tms:TMS) -> Union[list, dict]:
                 return [{ 'id' : row[0], 'url' : f'https://ids.lib.harvard.edu/ids/iiif/{row[0]}/info.json' } for row in ArchIDNums[0] if row[0].lower() != 'null']
             except:
                 raise
-    except:
-        raise
+    except Exception as e:
+        raise e

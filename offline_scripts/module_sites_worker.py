@@ -1,8 +1,8 @@
 try:
     from os import cpu_count
     from concurrent.futures import ThreadPoolExecutor, wait
-    from base import Base
     from re import sub
+    from base import Base
 except ImportError as error:
     print(error)
 
@@ -102,7 +102,7 @@ class Sites_Worker(Base):
                 res[method] = { 'res' : { 'summary' : len(result[method]['res']), 'res' : result[method]['res'] }}
                 err[method] = { 'err' : { 'summary' : len(result[method]['err']), 'err' : result[method]['err'] }}
 
-            return self.records, self.relations, { 'sites_worker_res' : res, 'sites_worker_err' : err }
+            return self.records, self.relations, self.thumbnail_urls, { 'sites_worker_res' : res, 'sites_worker_err' : err }
 
     def dates(self, rows:list):
         """

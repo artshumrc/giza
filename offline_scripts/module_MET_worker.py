@@ -236,4 +236,4 @@ class MET_Worker(Base):
                 # to another definition of MET in TMS. This will therefore throw an error, but this is a minor problem.
                 continue
 
-        return self.records, self.relations, { 'MET_worker_res' : 0, 'MET_worker_err' : 0 }
+        return self.records, self.relations, self.thumbnail_urls, { 'MET_worker_res' : 0, 'MET_worker_err' : 0 }

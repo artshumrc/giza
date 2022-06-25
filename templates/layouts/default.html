@@ -121,75 +121,83 @@
     })
 
     $('body').on('click', '.my-giza-lnk', e => {
-      e.preventDefault()
-      console.log(1)
+      try {
+        e.preventDefault()
+        console.log(1)
 
-      spinner.removeAttribute('hidden')
+        spinner.removeAttribute('hidden')
 
-      target = $(e.currentTarget)
+        target = $(e.currentTarget)
 
-      if (target.data('active')) {
-        return
-      }
+        if (target.data('active')) {
+          return
+        }
 
-      target.data('active', true)
+        target.data('active', true)
 
-      settings = $(target).hasClass('post') ? {
-        method: 'POST',
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          'X-CSRFToken': $.cookie('csrftoken')
-        }),
-        body: JSON.stringify($(target).closest('form').serializeArray().reduce((obj, item) => (obj[item
-            .name] =
-          item.value, obj), {}))
-      } : {}
+        settings = $(target).hasClass('post') ? {
+          method: 'POST',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'X-CSRFToken': $.cookie('csrftoken')
+          }),
+          body: JSON.stringify($(target).closest('form').serializeArray().reduce((obj, item) => (obj[item
+              .name] =
+            item.value, obj), {}))
+        } : {}
 
-      fetch($(e.currentTarget).data('url'), settings)
-        .then(response => response.json())
-        .then(response => {
+        fetch($(e.currentTarget).data('url'), settings)
+          .then(response => response.json())
+          .then(response => {
 
-          spinner.setAttribute('hidden', '')
+            spinner.setAttribute('hidden', '')
 
-          console.log(response)
+            console.log(response)
 
-          if (response.success) {
+            if (response.success) {
 
-            // PROCESS HTML
-            if (response.hasOwnProperty('html')) {
-              for (html in response.html) {
-                if (response.html[html].hasOwnProperty('html')) $(html).empty().html(response.html[html].html)
-                  .foundation() // RENDER HTML
-                if (response.html[html].hasOwnProperty('action')) $(html).foundation(response.html[html]
-                  .action).foundation() // TOGGLE MODALS
-                if (html.includes('header_bar')) $('.user-function').toggle() && $(html)
-                  .foundation() // REFRESH HEADER AND USER FUNCTIONS
+              // PROCESS HTML
+              if (response.hasOwnProperty('html')) {
+                for (html in response.html) {
+                  if (response.html[html].hasOwnProperty('html')) $(html).empty().html(response.html[html].html)
+                    .foundation() // RENDER HTML
+                  if (response.html[html].hasOwnProperty('action')) $(html).foundation(response.html[html]
+                    .action).foundation() // TOGGLE MODALS
+                  if (html.includes('header_bar')) $('.user-function').toggle() && $(html)
+                    .foundation() // REFRESH HEADER AND USER FUNCTIONS
+                }
               }
+
+              // if (response.hasOwnProperty('MyGIZA-tab')) {
+              //   console.log(response)
+              //   $('.modal.reveal').foundation('close')
+              //   $('#MyGIZAdiv').empty().html(response.html)
+              //   $('.my-giza-lnk.my-giza').removeClass('active')
+              //   $(response.target).addClass('active')
+              // }
+
+              // if (response.hasOwnProperty('MyGIZADiv')) {
+              //   $(".modal.reveal").foundation('close')
+              //   $('#' + response.target).empty().html(response.html)
+              //   $('.my-giza-lnk.my-giza').removeClass('active')
+              //   $(response.target).addClass('active')
+              // }
+              // } else if ($(target).hasClass('my-giza')) {
+              //   console.log(3)
+              // } else {
+              //   console.log(response)
             }
 
-            // if (response.hasOwnProperty('MyGIZA-tab')) {
-            //   console.log(response)
-            //   $('.modal.reveal').foundation('close')
-            //   $('#MyGIZAdiv').empty().html(response.html)
-            //   $('.my-giza-lnk.my-giza').removeClass('active')
-            //   $(response.target).addClass('active')
-            // }
-
-            // if (response.hasOwnProperty('MyGIZADiv')) {
-            //   $(".modal.reveal").foundation('close')
-            //   $('#' + response.target).empty().html(response.html)
-            //   $('.my-giza-lnk.my-giza').removeClass('active')
-            //   $(response.target).addClass('active')
-            // }
-            // } else if ($(target).hasClass('my-giza')) {
-            //   console.log(3)
-            // } else {
-            //   console.log(response)
-          }
-
-        })
-        .then(() => target.data('active', false))
-        .catch((error) => console.log(error))
+          })
+          .then(() => target.data('active', false))
+          .catch((error) => {
+            spinner.setAttribute('hidden', '')
+            console.log(error)
+          })
+        } catch {
+          console.log('error')
+          spinner.setAttribute('hidden', '')
+        }
     })
 
     // CLIENT FUNCTION TO GENERATE PAGE NUMBERS FOR QUICK VIEWING WITHOUT HITTING THE DATABASE

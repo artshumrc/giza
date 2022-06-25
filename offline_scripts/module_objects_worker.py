@@ -52,10 +52,10 @@ class Objects_Worker(Base):
                 row = { k : v.replace('  ', '') if type(v) == str else v for k, v in row.items() }                  # REMOVE DOUBLE SPACES
                 row = { k : v.rstrip() if type(v) == str else v for k, v in row.items() }                           # REMOVE RIGHT WHITE SPACES
                 
-                # RECOGNIZE ENTRY-DATES IN TITLE IF DOCUMENT TYPE IS 'diarypages'
+                # RECOGNIZE ENTRY-DATES IN TITLE IF DOCUMENT TYPE IS 'DiaryPages'
                 # 1) WOULD THIS BE USEFUL FOR OTHER DOCUMENT TYPES?
                 # 2) SHOULD WE TRY TO PARSE ALL FIELDS TO EXTRACT ANY OTHER POTENTIAL DATE RANGES?
-                if 'diarypages' in self.classifications.get(int(row['ClassificationID'])).lower():
+                if 'DiaryPages' in self.classifications.get(int(row['ClassificationID'])).lower():
                     if 'Title' in row and (type(row['Title']) == str and '_' in row['Title']) or (row['Title'] == 'NULL'):
                         if row['Title'] != 'NULL':
                             row['EntryDate'] = row['Title']
@@ -63,7 +63,10 @@ class Objects_Worker(Base):
                             row['Title'] = row['EntryDate']
                 if 'EntryDate' in row:
                     if type(row['EntryDate']) == str and row['EntryDate'].lower() != 'null':
-                        row['EntryDate_ms'] = self.ed.chkDatePattern(row['EntryDate'])
+                        date = self.dc.chkDatePattern(row['EntryDate'])
+                        if date is not None:
+                            row['EntryDate_string'] = date
+                            row['EntryDate_ms'] = [float(x[1]) for x in row['EntryDate_string']]
 
                 # ASSIGN MET TERMS
                 row['MET'] = []
@@ -85,7 +88,7 @@ class Objects_Worker(Base):
 
                 self.records[str(row['RecID'])] = row
 
-            self.ed.save_progress()
+            self.dc.save_progress()
 
             return self
         except Exception as e:
@@ -108,6 +111,7 @@ class Objects_Worker(Base):
         -------
         - self.records (dict) : data relevant to generation of object records
         - self.relations (dict) : data relevant to manifest generation derived from the object records
+        - self.thumbnail_urls (dict) : data relevant to thumbnail downloading
         - dict : processing results
         """
         with ThreadPoolExecutor(int((cpu_count()/2)-1)) as executor:
@@ -136,7 +140,7 @@ class Objects_Worker(Base):
                 res[method] = { 'res' : { 'summary' : len(result[method]['res']), 'res' : result[method]['res'] }}
                 err[method] = { 'err' : { 'summary' : len(result[method]['err']), 'err' : result[method]['err'] }}
 
-            return self.records, self.relations, { 'objects_worker_res' : res, 'sites_worker_err' : err }
+            return self.records, self.relations, self.thumbnail_urls, { 'objects_worker_res' : res, 'sites_worker_err' : err }
 
     def altnums(self, rows:list):
         """
@@ -240,10 +244,23 @@ class Objects_Worker(Base):
                 if 'RelatedItems' not in self.records[row['RecID']]: self.records[row['RecID']]['RelatedItems'] = {}
                 if 'UnpublishedDocuments' not in self.records[row['RecID']]['RelatedItems']: self.records[row['RecID']]['RelatedItems']['UnpublishedDocuments'] = []
 
-                drs_id = "" if row['ArchIDNum'].lower() == "null" else row['ArchIDNum']
-                
-                thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
-                if not thumbnail_url and drs_id: thumbnail_url = self.thumbnail_url(drs_id)
+                drs_id = row['ArchIDNum']
+
+                if 'ConstituentTypeID' in row: 
+                    thumbnail_id = f'{self.constituenttypes.get(int(row["ConstituentTypeID"]))}-{row["RecID"]}' # NOT USED?
+                if 'ClassificationID' in row: 
+                    thumbnail_id = f'{self.classifications.get(int(row["ClassificationID"]))}-{row["RecID"]}'
+                if 'MediaTypeID' in row: 
+                    thumbnail_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'  # NOT USED?
+
+                if drs_id:
+                    thumbnail_url = self.thumbnail_url(drs_id)
+
+                if drs_id.lower() == "null" or not drs_id:
+                    thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+
+                if len(thumbnail_url) and thumbnail_id not in self.thumbnail_urls:
+                    self.thumbnail_urls[thumbnail_id] = { 'Thumbnail_ID' : thumbnail_id, 'url' : thumbnail_url }
 
                 self.records[row['RecID']]['RelatedItems']['UnpublishedDocuments'].append({
                     'RecID' : row['UnpublishedID'],
@@ -252,10 +269,11 @@ class Objects_Worker(Base):
                     'Date' : "" if row['ObjectDate'].lower() == "null" else row['ObjectDate'],
                     'Number' : row['ObjectNumber'],
                     'Thumbnail' : thumbnail_url,
+                    'Thumbnail_ID' : thumbnail_id,
                     'HasManifest' : False if drs_id == "" else True
                 })
 
-                self.records[row['ID']]['relateditems']['unpubdocs'].sort(key=itemgetter('displaytext'))
+                self.records[row['RecID']]['relateditems']['unpubdocs'].sort(key=itemgetter('displaytext'))
 
                 res.append(f'Object-{row["RecID"]}')
             except:

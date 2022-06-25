@@ -55,7 +55,7 @@ SQL = {
      'sites': {
          'sites': 
                """
-               SELECT Sites.SiteID AS ID, SiteName, SiteNumber AS Number, SiteSortNumber, HistoricalNotes,
+               SELECT Sites.SiteID AS RecID, SiteName, SiteNumber AS Number, SiteSortNumber, HistoricalNotes,
                LegalNotes + ',,' AS BibReferences, LocationNotes,
                Sites.Remarks + ',,' AS Remarks,
                Sites.Description + ',,' AS Description, Condition,
@@ -86,7 +86,7 @@ SQL = {
                AND AltNum IS NOT NULL
                ORDER BY Sites.SiteID
                """,
-          'sites_objects': 
+          'sites_objects':
                """
                SELECT DISTINCT Sites.SiteID AS RecID, SiteObjXrefs.ObjectID,
                replace(replace(ObjTitles.Title, char(10), ''), char(13), ' ') AS Title, Objects.ObjectNumber, Objects.ClassificationID, Objects.Dated AS ObjectDate,
@@ -108,7 +108,7 @@ SQL = {
                OR (MediaPaths.Path IS NUll AND MediaRenditions.ThumbFileName IS NULL AND MediaFiles.ArchIDNum IS NULL))
                ORDER BY Sites.SiteID, SiteObjXrefs.ObjectID
                """,
-          'sites_constituents': 
+          'sites_constituents':
                """
                SELECT DISTINCT ConXrefs.ID AS RecID, Roles.Role, ConXrefDetails.ConstituentID, Constituents.ConstituentTypeID,
                Constituents.DisplayName, Constituents.DisplayDate, replace(replace(Constituents.Remarks, char(10), ''), char(13), ' ') AS Remarks,
@@ -152,7 +152,7 @@ SQL = {
                """,
           'sites_media': 
                """
-               SELECT DISTINCT MediaXrefs.ID AS RecID, MediaMaster.MediaMasterID, MediaXrefs.PrimaryDisplay,
+               SELECT DISTINCT MediaXrefs.ID AS RecID, MediaMaster.MediaMasterID AS RecID, MediaXrefs.PrimaryDisplay,
                MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description,
                MediaMaster.MediaView, MediaMaster.PublicCaption,
                ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
@@ -303,7 +303,7 @@ SQL = {
                """,
           'objects_media' :
                """
-               SELECT MediaXrefs.ID AS RecID, MediaMaster.MediaMasterID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
+               SELECT MediaXrefs.ID AS ID, MediaMaster.MediaMasterID AS RecID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
                MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description,
                MediaMaster.MediaView, replace(replace(MediaMaster.PublicCaption, char(10), ''), char(13), ' ') AS PublicCaption,
                ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
@@ -493,7 +493,7 @@ SQL = {
                ORDER BY ReferenceMaster.ReferenceID, ConXrefDetails.ConstituentID
                """,
           'published_media' : """
-               SELECT ReferenceMaster.ReferenceID AS RecID,
+               SELECT ReferenceMaster.ReferenceID AS RecID, MediaMaster.MediaMasterID,
                ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
                MainPath.Path AS MainPathName, MediaFiles.FileName AS MainFileName
                FROM ReferenceMaster
