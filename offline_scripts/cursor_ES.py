@@ -148,7 +148,7 @@ class ES:
                     for v in data.values():
                         yield {
                             "_index" : v['ES_index'],
-                            "_id" : f'{v["ES_index"]}-{v["ID"]}',
+                            "_id" : f'{v["ES_index"]}-{v["RecID"]}',
                             "doc" : v
                         }
 

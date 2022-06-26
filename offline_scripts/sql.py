@@ -152,7 +152,7 @@ SQL = {
                """,
           'sites_media': 
                """
-               SELECT DISTINCT MediaXrefs.ID AS RecID, MediaMaster.MediaMasterID AS RecID, MediaXrefs.PrimaryDisplay,
+               SELECT DISTINCT MediaXrefs.ID AS RecID, MediaMaster.MediaMasterID, MediaXrefs.PrimaryDisplay,
                MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description,
                MediaMaster.MediaView, MediaMaster.PublicCaption,
                ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
@@ -303,7 +303,7 @@ SQL = {
                """,
           'objects_media' :
                """
-               SELECT MediaXrefs.ID AS ID, MediaMaster.MediaMasterID AS RecID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
+               SELECT MediaXrefs.ID AS RecID, MediaMaster.MediaMasterID AS MediaMasterID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
                MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description,
                MediaMaster.MediaView, replace(replace(MediaMaster.PublicCaption, char(10), ''), char(13), ' ') AS PublicCaption,
                ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,
@@ -402,7 +402,7 @@ SQL = {
                ORDER BY Constituents.ConstituentID
                """,
           'constituents_media' : """
-               SELECT DISTINCT MediaXrefs.ID AS RecID, Constituents.ConstituentTypeID,  MediaMaster.MediaMasterID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
+               SELECT DISTINCT MediaXrefs.ID AS RecID, Constituents.ConstituentTypeID, MediaMaster.MediaMasterID, Objects.ClassificationID, MediaXrefs.PrimaryDisplay,
                MediaRenditions.MediaTypeID, MediaRenditions.RenditionNumber, replace(replace(MediaMaster.Description, char(10), ''), char(13), ' ') AS Description,
                MediaMaster.MediaView, replace(replace(MediaMaster.PublicCaption, char(10), ''), char(13), ' ') AS PublicCaption,
                ThumbPath.Path AS ThumbPathName, MediaRenditions.ThumbFileName,

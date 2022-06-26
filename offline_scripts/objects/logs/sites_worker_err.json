@@ -25,8 +25,10 @@
     },
     "objects_worker_media":{
         "err":{
-            "err":[],
-            "summary":0
+            "err":[
+                71041
+            ],
+            "summary":1
         }
     },
     "objects_worker_published":{

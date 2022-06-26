@@ -81,14 +81,17 @@ class Base:
         """
 
         from module import overall_progress
+        from module_iiif_worker import IIIF_Worker
 
+        iiif_worker = IIIF_Worker()
+        
         res, err = [], []
 
-        sorted_by_row = {}
+        sorted_by_mmid = {}
 
         for row in rows:
-            if row['RecID'] not in sorted_by_row: sorted_by_row[row['RecID']] = []
-            sorted_by_row[row['RecID']].append(row)
+            if row['MediaMasterID'] not in sorted_by_mmid: sorted_by_mmid[row['MediaMasterID']] = []
+            sorted_by_mmid[row['MediaMasterID']].append(row)
 
         def progress_indicator(future):
             try:
@@ -111,11 +114,11 @@ class Base:
 
         # TO PREVENT RACE CONDITIONS EACH INDIVIDUAL RECORD IS UPDATED IN ITS OWN THREAD
         with ThreadPoolExecutor(int((cpu_count()/2)-1)) as executor:
-            for row in sorted_by_row.values():
+            for row in sorted_by_mmid.values():
                 if 'ConstituentTypeID' in row[0] and row[0]['ConstituentTypeID'].lower() != "null": doc_type = self.constituenttypes.get(int(row[0]['ConstituentTypeID']))
                 if 'ClassificationID' in row[0] and row[0]['ClassificationID'].lower() != "null": doc_type = self.classifications.get(int(row[0]['ClassificationID']))
                 if 'MediaTypeID' in row[0] and row[0]['MediaTypeID'].lower() != "null": doc_type = self.mediatypes.get(int(row[0]['MediaTypeID']))                    
-                future = executor.submit(Worker, self.records[row[0]['RecID']], doc_type, row, manifests, met)
+                future = executor.submit(Worker, self.records[row[0]['RecID']], doc_type, row, manifests, met, iiif_worker.drs_metadata)
                 future.add_done_callback(progress_indicator)
 
         # file_save('compiled', 'relations', self.relations, self.module_type)
@@ -425,7 +428,7 @@ class Worker(Base):
     properties broadly shared across all records.
     """
 
-    def __init__(self, rec, rec_type, new_rows, manifests=None, met=None):
+    def __init__(self, rec, rec_type, new_rows, manifests=None, met=None, drs_metadata=None):
         super().__init__()
       
         self.rec = rec
@@ -454,8 +457,6 @@ class Worker(Base):
                     display_text = ": ".join([mediaview, caption])
 
                     drs_id = row['ArchIDNum']
-
-                    has_manifest = False if drs_id == "" else True
 
                     # if 'ConstituentTypeID' in row: thumbnail_id = f'{self.constituenttypes.get(int(row["ConstituentTypeID"]))}-{row["RecID"]}'
                     # if 'ClassificationID' in row: thumbnail_id = f'{self.classifications.get(int(row["ClassificationID"]))}-{row["RecID"]}'
@@ -486,13 +487,16 @@ class Worker(Base):
                             'Number' : "" if row['RenditionNumber'].lower() == "null" else row['RenditionNumber'],
                             'Description' : "" if row['Description'].lower() == "null" else row['Description'],
                             'HasManifest' : False if drs_id == "" else True,
-                            'MediaMasterID' : row['MediaMasterID']
+                            'MediaMasterID' : row['MediaMasterID'] if 'MediaMasterID' in row else row['RecID']
                         }
 
-                    if met and row['RecID'] in met:
-                        self.rec['MET'] = met[row['RecID']]
+                    if met and row['MediaMasterID'] in met:
+                        self.rec['MET'] = met[row['MediaMasterID']]
 
                     classification = self.classifications.get(int(row['ClassificationID'])) if 'ClassificationID' in row and row['ClassificationID'].lower() != 'null' else rec_type.title()
+
+                    # SOME ARCHIDNUMS ARE ERRONEOUS AND DO NOT/NO LONGER EXIST WITH DRS (E.G. SQUEEZES)
+                    has_manifest = False if drs_id == "" or drs_id.lower() == 'null' or drs_id not in drs_metadata else True
 
                     if not (classification == '3Dmodels' and media_type == '3Dmodels'):
                         self.rec['RelatedItems'][media_type].append({
@@ -509,32 +513,34 @@ class Worker(Base):
                         })
 
                     if has_manifest:
-                        try:
-                            resource = manifests[f'{media_type}-{row["RecID"]}']['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
-                            canvas_label = manifests[f'{media_type}-{row["RecID"]}']['manifest']['description']
-                            canvas_metadata = manifests[f'{media_type}-{row["RecID"]}']['manifest']['metadata']
+                        rec_id = f'{rec_type}-{row["MediaMasterID"]}'
 
-                            rec_id = f'{classification}-{row["RecID"]}'
+                        try:
+                            if rec_id in manifests and manifests[rec_id]['manifest'] is not None:
+
+                                resource = manifests[rec_id]['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
+                                canvas_label = manifests[rec_id]['manifest']['description']
+                                canvas_metadata = manifests[rec_id]['manifest']['metadata']
                         
-                            if rec_id not in self.relations.keys(): 
-                                metadata = self.add_metadata(rec)
-                                self.relations[rec_id] = {
-                                    'Description': row['Description'],
-                                    'Label': self.rec['DisplayText'],
-                                    'Resources': [resource],
-                                    'Classification': classification,
-                                    'DRS_IDs' : [drs_id],
-                                    'Canvas_labels' : [canvas_label],
-                                    'Canvas_metadatas' : [canvas_metadata],
-                                    'Metadata' : metadata
-                                }
-                            else:
-                                self.relations[rec_id]['Resources'].append(resource)
-                                self.relations[rec_id]['DRS_IDs'].append(drs_id)
-                                self.relations[rec_id]['Canvas_labels'].append(canvas_label)
-                                self.relations[rec_id]['Canvas_metadatas'].append(canvas_metadata)
-                            if bool(int(row['PrimaryDisplay'])):
-                                self.relations[rec_id]['startCanvas'] = drs_id
+                                if rec_id not in self.relations.keys(): 
+                                    metadata = self.add_metadata(rec)
+                                    self.relations[rec_id] = {
+                                        'Description': row['Description'],
+                                        'Label': self.rec['DisplayText'],
+                                        'Resources': [resource],
+                                        'Classification': classification,
+                                        'DRS_IDs' : [drs_id],
+                                        'Canvas_labels' : [canvas_label],
+                                        'Canvas_metadatas' : [canvas_metadata],
+                                        'Metadata' : metadata
+                                    }
+                                else:
+                                    self.relations[rec_id]['Resources'].append(resource)
+                                    self.relations[rec_id]['DRS_IDs'].append(drs_id)
+                                    self.relations[rec_id]['Canvas_labels'].append(canvas_label)
+                                    self.relations[rec_id]['Canvas_metadatas'].append(canvas_metadata)
+                                if bool(int(row['PrimaryDisplay'])):
+                                    self.relations[rec_id]['startCanvas'] = drs_id
 
                         except Exception as e:
                             self.err.append(row['RecID'])

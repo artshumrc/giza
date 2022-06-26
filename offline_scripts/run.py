@@ -50,7 +50,7 @@ def main():
 		parser.add_argument('-p', '--push', type=str2bool, help='Push all data to ElasticSearch at the end of the program', required=False, default=True)
 		parser.add_argument('-t','--tables', type=str2bool, help='Only store copies of the tables for later reuse', required=False, default=True)
 		parser.add_argument('-th', '--thumbnails', type=str2bool, help='Batch download and store thumbnails in the Django static folder for quickly loading records', required=False, default=True)
-		parser.add_argument('-r','--refresh', type=str2bool, help='Refresh JSON tables', required=False, default=True)
+		parser.add_argument('-r','--refresh', type=str2bool, help='Refresh JSON tables', required=False, default=False)
 		parser.add_argument('-tr', '--thumbnails_refresh', type=str2bool, help='Refresh all thumbnails in the filesystem. This is a long operation!', required=False, default=False)
 		parser.add_argument('-c','--compile', type=str2bool, help='Compile JSON files using local tables (if available)', required=False, default=True)
 		parser.add_argument('-s', '--store', type=str2bool, help='Store a copy of the compiled files on disk', required=False, default=False)
@@ -67,7 +67,8 @@ def main():
 		for module in args.modules:
 			Module(MODULES, module, cursor, drs=args.drs, memory=args.memory, push=args.push, tables=args.tables, store=args.store, thumbnails=args.thumbnails, thumbnails_refresh=args.thumbnails_refresh, refresh=args.refresh, compile=args.compile, es=args.es) if module in ALLOWED_MODULES else print(f'>>> UNKNOWN MODULE: "{module}"')
 	except Exception as e:
-		print("There is a problem running this program. Please make sure you have administrator privileges and have set the correct connection parameters.")
+		print("There is a problem running this program.")
+		print(e)
 
 if __name__ == "__main__":
    main()
