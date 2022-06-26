@@ -11,7 +11,7 @@ try:
     from cursor_FSS import file_open, file_save
     from helper_logger import Logger
     from sql import SQL
-    from credentials import tms_databases, tms_dsn, tms_user, tms_password
+    from credentials_default import tms_databases, tms_dsn, tms_user, tms_password
 except ImportError as error:
     print(error)
 

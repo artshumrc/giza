@@ -5,7 +5,7 @@ try:
     from requests import head
     from unicodedata import normalize
     from math import ceil
-    from credentials import es_cert, es_user, es_password
+    from credentials_default import es_cert, es_user, es_password
     from helper_es_index_settings import ANALYZERS
 except ImportError as error:
     print(error)

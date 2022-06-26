@@ -4,9 +4,6 @@ from math import ceil
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed, Future, wait
 from requests.adapters import HTTPAdapter
 from requests import Session
-from os import mkdir
-from os.path import exists
-from cursor_FSS import list_folder
 
 THREAD_POOL = 32
 
