@@ -52,7 +52,7 @@
   <div class="d-inline-block img-fluid-mw150">
     <select id="sortResults">
       {% for option in search.result.sort_options %}
-      <option value="{{ option }}" {% if option == search.result.sort %} selected {% endif %}>{{ option }}</option>
+      <option value="{{ option.key }}" {% if option == search.result.sort %} selected {% endif %}>{{ option.key }}</option>
       {% endfor %}
     </select>
   </div>

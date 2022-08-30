@@ -9,7 +9,7 @@
 <div class="page-header header-bg-1" id="content">
     <div class="row title">
       <header class="large-8 columns">
-        <h1>{{ object.displaytext }}<a name="top"></a></h1>
+        <h1>{{ object.DisplayText }}<a name="top"></a></h1>
         <!-- <h3 class="page-header__meta"><a href="javascript:history.back()"><i class="icon-angle-left"></i> Back</a></h3> -->
       </header>
     </div>
@@ -25,7 +25,7 @@
           <h3 class="feature-block__title">
             <i class="icon-camera icon-padded"></i> All Photos
             <a name=""></a>
-            <span class="badge">{{ object.relateditems.photos|length }}</span>
+            <span class="badge">{{ object.RelatedItems.Photos|length }}</span>
           </h3>
           <button class="toggler" data-toggle="featureBlock_">
             <span class="sr-only">Collapse or Expand</span>
@@ -43,20 +43,20 @@
         </div>
 
         <ul id="links" class="feature-block__list item-grid thumbsize-lg thumbs-square">
-          {% for item in object.relateditems.photos %}
+          {% for item in object.RelatedItems.Photos %}
           <li>
             <div class="media-object list-item list-item-thumbonly">
               <div class="media-object-section">
                 <div class="thumbnail">
                 {% if item.drs_id and item.drs_id != '' %}
                   <a>
-                    <img src="{{ item.thumbnail }}" alt="{{ item.displaytext }}" data-drs-id="{{ item.drs_id }}">
+                    <img src="{{ item.Thumbnail }}" alt="{{ item.DisplayText }}" data-drs-id="{{ item.drs_id }}">
                   </a>
                 {% else %}
-                  <a href="{{ item.main }}" title="{{ item.displaytext }}" data-title="<p><b>ID:</b> <a href=&quot;{% url 'get_type_html' 'photos' item.id 'full' %}&quot;>{{ item.number }}</a></p>
-                    <p><b>Subjects:</b> {{ item.displaytext }}</p>
-                    <p><b>Description:</b> {{ item.description }}</p>">
-                    <img src="{{ item.thumbnail }}" alt="{{ item.displaytext }}">
+                  <a href="{{ item.Main }}" title="{{ item.DisplayText }}" data-title="<p><b>ID:</b> <a href=&quot;{% url 'get_type_html' 'photos' item.id 'full' %}&quot;>{{ item.number }}</a></p>
+                    <p><b>Subjects:</b> {{ item.DisplayText }}</p>
+                    <p><b>Description:</b> {{ item.Description }}</p>">
+                    <img src="{{ item.Thumbnail }}" alt="{{ item.DisplayText }}">
                   </a>
                 {% endif %}
                 </div>

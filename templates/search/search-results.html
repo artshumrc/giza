@@ -33,12 +33,12 @@
 
       <!-- CATEGORIES -->
       <div id=search_categories>
-        {% include 'search-categories.html' %}
+        {% include 'search-categories-accordion.html' %}
       </div>
 
       <!-- FACETS -->
       <div id=search_facets>
-        {% include 'search-facets.html' %}
+        {% include 'search-facets-accordion.html' %}
       </div>
     </div>
   </aside>
@@ -100,16 +100,41 @@ $(document).ready(() => {
   */
   toggle_facet = facet => {
 
+    console.log(facet)
+
     // RESET THE PAGE FOR VIEWING
     st['result']['pages']['page'] = 1
 
     // CHECK IF FACET IS BEING ADDED OR REMOVED
     facet = facet.split('_')
-    idx = st['facets']['all_facets'][facet[0]].map(e => e.display_text).indexOf(String(facet[1]))
-    st['facets']['all_facets'][facet[0]][idx]['selected'] = !st['facets']['all_facets'][facet[0]][idx]['selected']
+    category = facet[0]
+    facet_name = facet[1]
+    facet_value = facet[2]
 
-    // SEND AJAX POST REQUEST
-    update_search()
+    if (!st['facets']['selected'].hasOwnProperty(category)) {
+      st['facets']['selected'][category] = {}
+    }
+    
+    if (!st['facets']['selected'][category].hasOwnProperty(facet_name)) {
+      st['facets']['selected'][category][facet_name] = []
+    }
+     
+    idx = st['facets']['selected'][category][facet_name].indexOf(facet_value)
+    if (idx != -1) {
+      st['facets']['selected'][category][facet_name].splice(idx, -1)
+    } else {
+      st['facets']['selected'][category][facet_name].push(facet_value)
+    }
+
+    // st['facets']['all_facets'][category]
+    // idx = st['facets']['all_facets'][facet[0]].map(e => e.display_text).indexOf(String(facet[1]))
+    // st['facets']['all_facets'][facet[0]][idx]['selected'] = !st['facets']['all_facets'][facet[0]][idx]['selected']
+
+    // SEND AJAX POST REQUEST TO UPDATE SEARCH RESULTS ONLY
+    // update_search()
+
+    console.log(st['facets']['selected'])
+    update_results()
   }
 
   /*
@@ -118,22 +143,31 @@ $(document).ready(() => {
   */
   toggle_category = category => {
 
+    console.log(category)
+
     // RESET THE CURRENT PAGE
     st['result']['pages']['page'] = 1
 
     // RESET THE DATE SLIDER
-    delete st['fields']['EntryDate_ms']
+    // delete st['fields']['EntryDate_ms']
     
     // SET NEW CATEGORY STATE
-    console.log(category)
-    st['category'] = category.split('_')[1]
+    // st['category'] = category.split('_')[1]
+    if (!st['category'].includes(category)) {
+      st['category'].push(category)
+    } else {
+      let index = st['category'].indexOf(category)
+      if (index !== -1) {
+        st['category'].splice(index, 1)
+      }
+    }
     
     // SEND AJAX POST REQUEST
     update_search()
   }
 
   /*
-  * This method is called when a category is clicked and updates the global items object accordingly.
+  * This method is called when a page number is clicked and updates the global items object accordingly.
   * It then calls the post method (see update_search).
   */
   toggle_page = page => {
@@ -142,13 +176,94 @@ $(document).ready(() => {
     st['result']['pages']['page'] = page
     
     // SEND AJAX POST REQUEST
-    update_search()
+    update_results()
+  }
+
+  /**
+   * This method refreshes a few of the Django templates on the search-results page
+   * NOTE: Foundation elements do not like to be updated and instantiated in this fashion.
+   * They should therefore not be updated frequently.
+   */
+  refresh_search_results = data => {
+
+    let active_facet_tab = $('#search_facets .is-active').prev().text().replace(/[^a-z0-9\s]/gi, ' ').trim()
+
+    $('#search_result').empty().html(data['search_result'])
+    $('#search_stats').empty().html(data['search_stats'])
+    $('#search_params').empty().html(data['search_params'])
+    $('#search_pagination').empty().html(data['search_pagination'])
+    // $('#search_options').empty().html(data['search_options'])
+    // $('#search_categories').empty().html(data['search_categories'])
+    $('#search_facets').empty().html(data['search_facets'])
+    // $('#search_MET').empty().html(data['search_MET']).foundation()
+
+    facet_menu(active_facet_tab)
+
+
+    // REOPEN THE CURRENT FACET TABS
+
+    // SET GLOBALS
+    user = data['user'], st = data['search']
+
+    // update_facet_count(st['facets']['all_facets'])
+
+    // SET DATE SLIDER IF NECESSARY
+    setSlider()
+
+    // POPULATE MET IF NECESSARY
+    // populate_MET()
+  }
+
+  facet_menu = active_facet_tab => {
+    console.log(active_facet_tab)
+
+
+    
+
+
+
+    // addClass('is-active')
+    // checked = true
+
+
+    if (active_facet_tab != '') {
+      menu = new Foundation.AccordionMenu($('#search_facets'), { 'multiOpen' : false })
+      $(`a:contains(${active_facet_tab})`).prev()
+      menu.toggle($(`a:contains(${active_facet_tab})`).next())
+    }
+  }
+
+  update_facet_count = facets => {
+    for (new_facet_name in facets) {
+      for (new_facet in facets[new_facet_name]) {
+        let facet = facets[new_facet_name][new_facet]
+        $("label:contains(" + facet['display_text'] + ")").text(`${facet['display_text']} (${facet['doc_count']})`)
+      }
+    }
+
+    // $('#search_facets').find('li').each((idx, facet) => {
+    //   if ($(facet).hasClass('search-facet-item')) {
+    //     label = $(facet).find('label')[0]
+    //     for (new_facet_name in facets) {
+    //       for (new_facet in facets[new_facet_name]) {
+    //         let f = facets[new_facet_name][new_facet]
+    //         console.log($(label).text())
+    //         if ($(label).text().includes(f['display_text'])) {
+    //           console.log(33)
+    //           $(label).text(`${f['display_text']} (${f['doc_count']})`)
+    //         }
+    //       }
+    //     }
+    //   }
+    // })
   }
 
   /**
    * This method refreshes all Django templates on the search-results page
    */
   refresh_results = data => {
+
+    console.log(data)
     
     // UPDATE HTML AND ITEMS OBJECT
     $('#search_result').empty().html(data['search_result'])
@@ -190,14 +305,14 @@ $(document).ready(() => {
         $(e.currentTarget).remove()
         // $("#METfilterList").find("#list_" + MET_term.code).remove()
         st['MET']['MET_paths'] = st['MET']['MET_paths'].filter(obj => obj.code !== MET_term.code)
-        update_search()
+        update_results()
       })
       
       children = $('#METfilterList')
 
       $('#METfilterList').append(li)
       st['MET']['MET_paths'].push(MET_term)
-      update_search()
+      update_results()
     }
   }
   
@@ -227,22 +342,37 @@ $(document).ready(() => {
     .then(response => refresh_results(response))
   }
 
+  update_results = () => {
+    settings = {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-CSRFToken': $.cookie('csrftoken')
+        }),
+        body: JSON.stringify(st)
+      }
+
+    fetch("{% url 'search_results_update' %}", settings)
+    .then(response => response.json())
+    .then(response => refresh_search_results(response))
+  }
+
   /* BIND METHODS TO THE DOM */
   $(document)
   .on('change', '#showResults', e => {
     console.log(e)
     st['result']['size'] = parseInt($(e.currentTarget).val())
-    update_search()
+    update_results()
   })
   .on('change', '#sortResults', e => {
     console.log(e)
     st['result']['sort'] = $(e.currentTarget).val()
-    update_search()
+    update_results()
   })
   .on('change', '#sortOrder', e => {
     console.log(e)
     st['result']['sort_order'] = $(e.currentTarget).val()
-    update_search()
+    update_results()
   })
   .on('click', '#addToCollectionBtn', e => $('#add_collection').find('a').data('object-name', $(e.currentTarget).data('id')))
   .on('click', '.add_to_collection_modal', e => {
@@ -356,7 +486,7 @@ $(document).ready(() => {
             ).on('click', e => {
               $(e.currentTarget).remove()
               st['MET']['MET_paths'] = st['MET']['MET_paths'].filter(obj => obj.code !== $(e.currentTarget).attr('id').substring(5))
-              update_search()
+              // update_results()
             })
             $('#METfilterList').append(li)
           }
@@ -378,10 +508,11 @@ $(document).ready(() => {
         @param max_range: range of slider, array of integers
         @param value_range : range to set handles, array of integers
         */
-        makeSlider = (max_range, value_range) => {
+        makeSlider = (dateRange, max_range, value_range) => {
+          // console.log(max_range, value_range)
           $('#date_slider_from').text(new Date(value_range[0] * 1000).toDateString())
           $('#date_slider_to').text(new Date(value_range[1] * 1000).toDateString())
-          console.log($('#slider-range'))
+          // console.log($('#slider-range'))
           $("#slider-range").slider({
             range : true,
             min : max_range[0],
@@ -394,28 +525,33 @@ $(document).ready(() => {
               $('#date_slider_from').text(new Date(ui.values[0] * 1000).toDateString())
               $('#date_slider_to').text(new Date(ui.values[1] * 1000).toDateString())
             },
-            change: () => {
-              st['fields']['EntryDate_ms'] = [parseInt($('#date_start').val()), parseInt($('#date_end').val())]
-              update_search()
+            change: (event, ui) => {
+              if (event.toElement != undefined) {
+                st['facets']['selected'][dateRange] = [ui.values[0], ui.values[1]]
+                update_results()
+                // console.log(event)
+              }
+              // st['facets']['selected'][dateRange] = [ui.values[0], ui.values[1]]
+              // update_results()
             }
           })
           setSliderTicks(new Date(max_range[0] * 1000).getFullYear(), new Date(max_range[1] * 1000).getFullYear())
         }
 
         // IF ADVANCED SEARCH INCLUDED DATE
-        if ('EntryDate_ms' in st['fields'] && st['fields']['EntryDate_ms'].length) {
+        // if ('EntryDate_ms' in st['facets'] && st['fields']['EntryDate_ms'].length) {
           
-          if ('EntryDate_ms' in st['fields']) {
-            minimum_set_value = st['fields']['EntryDate_ms'][0]
-            maximum_set_value = st['fields']['EntryDate_ms'][1]
-            max_range = st['fields']['EntryDate_ms']
-          } else {
-            minimum_set_value = st['fields']['EntryDate_ms'][0]
-            maximum_set_value = (typeof st['fields']['EntryDate_ms'][1] !== 'undefined') ? st['fields']['EntryDate_ms'][1] : 0
-            max_range = st['fields']['EntryDate_ms']
-          }
+        //   if ('EntryDate_ms' in st['facets']) {
+        //     minimum_set_value = st['fields']['EntryDate_ms'][0]
+        //     maximum_set_value = st['fields']['EntryDate_ms'][1]
+        //     max_range = st['fields']['EntryDate_ms']
+        //   } else {
+        //     minimum_set_value = st['fields']['EntryDate_ms'][0]
+        //     maximum_set_value = (typeof st['fields']['EntryDate_ms'][1] !== 'undefined') ? st['fields']['EntryDate_ms'][1] : 0
+        //     max_range = st['fields']['EntryDate_ms']
+        //   }
           
-        } else {
+        // } else {
 
           dateRange = Object.keys(st['facets']['all_facets']).filter(key => key.includes('_daterange'))
 
@@ -423,20 +559,20 @@ $(document).ready(() => {
             range = st['facets']['all_facets'][dateRange].map(i => parseInt(i['display_text'])).sort((a, b) => a - b)
             max_range = [range[0], range[range.length - 1 ]]
 
-            // SEARCH DID NOT INITIALLY INCLUDE A DATE; ENTRYDATES_MS PARAMETERS IN ST AT NEXT REQUEST
-            if ('EntryDate_ms' in st['fields']) {
-              minimum_set_value = st['fields']['EntryDate_ms'][0]
-              maximum_set_value = st['fields']['EntryDate_ms'][1]
+            // IF THE SLIDER HAS BEEN SET WITH BEGIN/END VALUES
+            if (dateRange.length && st['facets']['selected'][dateRange]) {
+              minimum_set_value = st['facets']['selected'][dateRange][0]
+              maximum_set_value = st['facets']['selected'][dateRange][1]
             } else {
               minimum_set_value = max_range[0]
               maximum_set_value = max_range[1]
             }
           }
-        }
+        // }
 
         if (typeof max_range !== 'undefined') {
           if (max_range.length && minimum_set_value && maximum_set_value) {
-            makeSlider(max_range, [minimum_set_value, maximum_set_value])
+            makeSlider(dateRange, max_range, [minimum_set_value, maximum_set_value])
           }
         }
       }

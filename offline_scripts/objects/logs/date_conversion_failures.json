@@ -1193,6 +1193,14 @@
     },
     {
         "dates":{},
+        "val":"G 1014, Shaft __"
+    },
+    {
+        "dates":{},
+        "val":"G 1014, Shaft __"
+    },
+    {
+        "dates":{},
         "val":"Tombs excavated between 1912 and 1929"
     },
     {
@@ -10713,10 +10721,6 @@
     },
     {
         "dates":{},
-        "val":""
-    },
-    {
-        "dates":{},
         "val":"1903\u20131904"
     },
     {
@@ -19890,5 +19894,45 @@
     {
         "dates":{},
         "val":"01/1927; 02/1927; 03/1927"
+    },
+    {
+        "dates":{},
+        "val":"Arabic Diary, Vol.25, p.2024_in1"
+    },
+    {
+        "dates":{},
+        "val":"Arabic Diary, Vol.25, p.2024_in2"
+    },
+    {
+        "dates":{},
+        "val":"Arabic Diary, Vol.32, p.2706_inscription"
+    },
+    {
+        "dates":{},
+        "val":"HUMFA_Arabic_diary_36_p3120_1insert_b"
+    },
+    {
+        "dates":{},
+        "val":"HUMFA_Arabic_diary_36_p3120_1insert_f"
+    },
+    {
+        "dates":{},
+        "val":"HUMFA_Arabic_diary_36_insert"
+    },
+    {
+        "dates":{},
+        "val":"\u201cChair B\" of Queen Hetepheres I (HSM_2015.2.1)"
+    },
+    {
+        "dates":{},
+        "val":"Carrying chair of Queen Hetepheres I (GEM_6362)"
+    },
+    {
+        "dates":{},
+        "val":"Fabric sample from RPM_2640"
+    },
+    {
+        "dates":{},
+        "val":"Skeleton from coffin RPM_3114"
     }
 ]

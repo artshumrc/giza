@@ -42,28 +42,35 @@ class Constituents_Worker(Base):
         new_rows = [{ y : row[self.cols.index(y)] for y in self.cols } for row in self.rows ]
 
         for row in new_rows:
-            row = { k : int(v) if v.isdigit() else v for k, v in row.items() }                                  # NON-DIGITS TO DIGITS
-            row = { k : None if v == "NULL" else v for k, v in row.items() }                                    # NULL VALUES TO NONE
-            row = { k : '' if v == ",," else v for k, v in row.items() }                                        # REMOVE DOUBLE COMMAS
-            row = { k : v.replace('  ', '') if type(v) == str and '  ' in v else v for k, v in row.items() }    # REMOVE DOUBLE SPACES
-            row = { k : v.rstrip() if type(v) == str else v for k, v in row.items() }                           # REMOVE RIGHT WHITE SPACES
+
+            row = self.sanitize(row)
+
             row = { k : sub(r"(\w)([A-Z])", r"\1 \2", v) if type(v) == str else v for k, v in row.items() }     # INSERT SPACES BEFORE CAPITAL LETTERS MID-SENTENCE
             row = { k : None if ('BeginDate' in k or 'EndDate' in k) and v == 0 else v for k, v in row.items() }
 
             if ('BeginDate' in row and row['BeginDate'] is not None) or ('EndDate' in row and row['EndDate'] is not None):
                 row['EntryDate'] = "-".join([str(row['BeginDate']), str(row['EndDate'])])
-            if 'EntryDate' in row:
-                if type(row['EntryDate']) == str and row['EntryDate'].lower() != 'null':
-                    date = self.dc.chkDatePattern(row['EntryDate'])
-                    if date is not None:
-                        row['EntryDate_string'] = date
-                        row['EntryDate_ms'] = [float(x[1]) for x in row['EntryDate_string']]
+            if 'EntryDate' in row and type(row['EntryDate']) == str:
+                date = self.dc.chkDatePattern(row['EntryDate'])
+                if date is not None:
+                    row['EntryDate_string'] = date
+                    row['EntryDate_ms'] = [float(x[1]) for x in row['EntryDate_string']]
 
-            row['Type'] = self.constituenttypes.get(int(row['ConstituentTypeID']))
+            # row['Type'] = self.constituenttypes.get(row['ConstituentTypeID'])
             row['DisplayText'] = row['DisplayName']
-            row['ES_index'] = self.constituenttypes.get(int(row['ConstituentTypeID'])).lower()
+            row['ES_index'] = self.constituenttypes.get(row['ConstituentTypeID']).lower()
 
-            self.records[str(row['RecID'])] = row
+            display = []
+            if 'Remarks' in row: display.append('Remarks')
+            if 'Gender' in row: display.append('Gender')
+            if 'ConstituentType' in row: 
+                row['Type'] = row['ConstituentType']
+                display.append('Type')
+            if 'DisplayDate' in row: 
+                row['Nationality'] = row['DisplayDate']
+                display.append('Nationality')
+
+            self.records[row['RecID']] = row
         
         return self
 
@@ -87,11 +94,11 @@ class Constituents_Worker(Base):
             for rows in self.data:
 
                 # CONVERT ROWS TO DICTS
-                row = [{ y : row[rows['cols'].index(y)] for y in rows['cols'] } for row in rows['rows']]
+                row = [{ y : int(row[rows['cols'].index(y)]) if row[rows['cols'].index(y)].isdigit() else row[rows['cols'].index(y)] for y in rows['cols'] } for row in rows['rows']]
 
                 # CONSTITUENTS TASKS
                 if 'constituents_sites' in rows['key']: self.futures.append(executor.submit(self.sites, row))
-                if 'constituents_media' in rows['key']: self.futures.append(executor.submit(self.media, row))
+                if 'constituents_media' in rows['key']: self.futures.append(executor.submit(self.media, 'constituents', row))
                 if 'constituents_objects' in rows['key']: self.futures.append(executor.submit(self.objects, row))
                 if 'constituents_altnames' in rows['key']: self.futures.append(executor.submit(self.altnames, row))
                 if 'constituents_published' in rows['key']: self.futures.append(executor.submit(self.published, row))
@@ -124,6 +131,8 @@ class Constituents_Worker(Base):
 
         for row in rows:
             try:
+                row = self.sanitize(row)
+
                 if 'AlternativeNames' not in self.records[row['RecID']]: self.records[row['RecID']]['AlternativeNames'] = []
                 self.records[row['RecID']]['AlternativeNames'].append({ 'Name' : row['DisplayName'], 'Type' : row['NameType'] })
 

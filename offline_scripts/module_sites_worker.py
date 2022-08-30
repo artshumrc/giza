@@ -12,8 +12,10 @@ class Sites_Worker(Base):
     
     Methods
     -------
-    - build_sites() -> Sites_Worker : builds the basic site JSON record
-    - start() -> dict, dict : the start method of the Sites_Worker module
+    - build_sites () -> Sites_Worker : builds the basic site JSON record
+    - start () -> dict, dict : the start method of the Sites_Worker module
+    - dates (rows) -> dict : the result of the operation
+    - altnums (rows) -> dict : the result of the operation
     """
     def __init__(self, rows, cols, data=None):
         super().__init__('sites')
@@ -25,6 +27,8 @@ class Sites_Worker(Base):
     def build_sites(self):
         """
         Transforms the top-level record to a JSON format.
+
+        NOTE: RecID is the Site ID in TMS
 
         Parameters
         ----------
@@ -39,24 +43,19 @@ class Sites_Worker(Base):
         new_rows = [{ y : row[self.cols.index(y)] for y in self.cols } for row in self.rows ]
 
         for row in new_rows:
-            row = { k : int(v) if v.isdigit() else v for k, v in row.items() }                                  # NON-DIGITS TO DIGITS
-            row = { k : None if v == "NULL" else v for k, v in row.items() }                                    # NULL VALUES TO NONE
-            row = { k : v.replace(',,', '') if type(v) == str else v for k, v in row.items() }                  # REMOVE DOUBLE COMMAS
-            row = { k : v.replace('  ', '') if type(v) == str else v for k, v in row.items() }                  # REMOVE DOUBLE SPACES
-            row = { k : v.rstrip() if type(v) == str else v for k, v in row.items() }                           # REMOVE RIGHT WHITE SPACES
-            row = { k : sub(r"(\w)([A-Z])", r"\1 \2", v) if type(v) == str else v for k, v in row.items() }  # INSERT SPACES BEFORE CAPITAL LETTERS MID-SENTENCE
+            row = self.sanitize(row)
 
-            number = row['Number']
-            prefix_idx = number.find('_')
-            row['AllNumbers'] = list(set([number, number[prefix_idx+1:], "".join(number.split())]))
-            row['DisplayText'] = number
-            row['TombOwner'] = False
-            row['Roles'] = []
-            row['People'] = []
-            row['DateValues'] = []
+            row = { k : sub(r"(\w)([A-Z])", r"\1 \2", v) if type(v) == str else v for k, v in row.items() }     # INSERT SPACES BEFORE CAPITAL LETTERS MID-SENTENCE
+
+            row['DisplayText'] = row['Number']
+
+            row['AllNumbers'] = list(set([row['Number'], row['Number'][row['Number'].find('_')+1:], "".join(row['Number'].split())]))
+            
+            row['Roles'], row['People'], row['DateValues'] = [], [], []
+
             row['ES_index'] = self.module_type.lower()
             
-            self.records[str(row['RecID'])] = row
+            self.records[row['RecID']] = row
         
         return self
 
@@ -82,15 +81,15 @@ class Sites_Worker(Base):
             for rows in self.data:
 
                 # COMBINE ROWS AND COLS TO SINGLE DICTIONARY
-                row = [{ y : row[rows['cols'].index(y)] for y in rows['cols'] } for row in rows['rows']]
+                new_rows = [{ y : int(row[rows['cols'].index(y)]) if row[rows['cols'].index(y)].isdigit() else row[rows['cols'].index(y)] for y in rows['cols'] } for row in rows['rows']]
                 
                 # SITES TASKS
-                if 'sites_dates' in rows['key']: self.futures.append(executor.submit(self.dates, row))
-                if 'sites_media' in rows['key']: self.futures.append(executor.submit(self.media, row))
-                if 'sites_altnums' in rows['key']: self.futures.append(executor.submit(self.altnums, row))
-                if 'sites_objects' in rows['key']: self.futures.append(executor.submit(self.objects, row))
-                if 'sites_published' in rows['key']: self.futures.append(executor.submit(self.published, row))
-                if 'sites_constituents' in rows['key']: self.futures.append(executor.submit(self.constituents, row))
+                if 'sites_dates' in rows['key']: self.futures.append(executor.submit(self.dates, new_rows))
+                if 'sites_media' in rows['key']: self.futures.append(executor.submit(self.media, 'sites', new_rows))
+                if 'sites_altnums' in rows['key']: self.futures.append(executor.submit(self.altnums, new_rows))
+                if 'sites_objects' in rows['key']: self.futures.append(executor.submit(self.objects, new_rows))
+                if 'sites_published' in rows['key']: self.futures.append(executor.submit(self.published, new_rows))
+                if 'sites_constituents' in rows['key']: self.futures.append(executor.submit(self.constituents, new_rows))
 
             done, not_done = wait(self.futures)
             
@@ -106,7 +105,9 @@ class Sites_Worker(Base):
 
     def dates(self, rows:list):
         """
-        Updates date values in the site records. These records are kept in self.records on the class.
+        Updates date values in the site records, kept in self.records on this class instance. 
+        
+        NOTE: RecID is the Site ID in TMS
 
         Parameters
         ----------
@@ -120,17 +121,24 @@ class Sites_Worker(Base):
         
         for row in rows:
             try:
-                if 'SiteDates' not in self.records[row['RecID']]: self.records[row['RecID']]['SiteDates'] = []
-                self.records[row['RecID']]['SiteDates'].append({ 'Type': row['EventType'], 'Date': row['DateText'] })
-                self.records[row['RecID']]['DateValues'].append(row['DateText'])
-                res.append(row['RecID'])
+                row = self.sanitize(row)
+
+                if 'EventType' in row and 'DateText' in row:
+
+                    if 'SiteDates' not in self.records[row['RecID']]: self.records[row['RecID']]['SiteDates'] = []
+                    self.records[row['RecID']]['SiteDates'].append({ 'Type': row['EventType'], 'Date': row['DateText'] })
+                    self.records[row['RecID']]['DateValues'].append(row['DateText'])
+                                    
+                    res.append(row['RecID'])
             except:
                 err.append(row['RecID'])
         return { 'sites_worker_dates' : { 'res' : res, 'err' : err } }
 
     def altnums(self, rows:list):
         """
-        Updates alternative numbers in the site records. These records are kept in self.records on the class.
+        Updates alternative numbers in the site records, kept in self.records on this class instance.
+
+        NOTE: RecID is the Site ID in TMS
 
         Parameters
         ----------
@@ -144,9 +152,12 @@ class Sites_Worker(Base):
 
         for row in rows:
             try:
+                row = self.sanitize(row)
+
                 if 'AlternativeNumbers' not in self.records[row['RecID']]: self.records[row['RecID']]['AlternativeNumbers'] = []
                 if 'AlternativeNumbersTypes' not in self.records[row['RecID']]: self.records[row['RecID']]['AlternativeNumbersTypes'] = []
                 self.records[row['RecID']]['AlternativeNumbers'].append({ "Description" : row['AltNum'], "Note" : row['Description'] })
+
                 res.append(row['RecID'])
             except:
                 err.append(row['RecID'])

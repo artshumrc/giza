@@ -30,7 +30,7 @@ class Objects_Worker(Base):
 
     def build_objects(self):
         """
-        Transforms the top-level record to a JSON format.
+        Transforms the top-level record to a JSON format. Data for display on the website are added to the object's Display property.
 
         Parameters
         ----------
@@ -47,46 +47,54 @@ class Objects_Worker(Base):
             rows = [{ y : row[self.cols.index(y)] for y in self.cols } for row in self.rows]
             
             for row in rows:
-                row = { k : int(v) if v.isdigit() else v for k, v in row.items() }                                  # NON-DIGITS TO DIGITS
-                row = { k : v.replace(',,', '') if type(v) == str else v for k, v in row.items() }                  # REMOVE DOUBLE COMMAS
-                row = { k : v.replace('  ', '') if type(v) == str else v for k, v in row.items() }                  # REMOVE DOUBLE SPACES
-                row = { k : v.rstrip() if type(v) == str else v for k, v in row.items() }                           # REMOVE RIGHT WHITE SPACES
+                row = self.sanitize(row)
                 
                 # RECOGNIZE ENTRY-DATES IN TITLE IF DOCUMENT TYPE IS 'DiaryPages'
                 # 1) WOULD THIS BE USEFUL FOR OTHER DOCUMENT TYPES?
                 # 2) SHOULD WE TRY TO PARSE ALL FIELDS TO EXTRACT ANY OTHER POTENTIAL DATE RANGES?
-                if 'DiaryPages' in self.classifications.get(int(row['ClassificationID'])).lower():
-                    if 'Title' in row and (type(row['Title']) == str and '_' in row['Title']) or (row['Title'] == 'NULL'):
-                        if row['Title'] != 'NULL':
-                            row['EntryDate'] = row['Title']
-                        else:
+                if 'ClassificationID' in row:
+                    row['Classification'] = self.classifications.get(row['ClassificationID'])
+                    row['ES_index'] = self.classifications.get(row['ClassificationID']).lower()
+                    
+                    if row['Classification'] == "DiaryPages" and ('Title' not in row or ('Title' in row and row['Title'] == None)):
+                        number = row['Number']
+                        row['Title'] = number[number.find('_')+1:]
+                        row['AllNumbers'] = list(set([number, row['Title'], "".join(number.split())]))
+                    
+                    if 'EntryDate' not in row:
+                        if 'Title' in row:
+                            if '_' in row['Title']:
+                                row['EntryDate'] = row['Title']
+
+                    if 'EntryDate' in row:
+                        if 'Title' not in row:
                             row['Title'] = row['EntryDate']
-                if 'EntryDate' in row:
-                    if type(row['EntryDate']) == str and row['EntryDate'].lower() != 'null':
+
+                        if type(row['EntryDate']) == int: row['EntryDate'] = str(row['EntryDate'])
+
                         date = self.dc.chkDatePattern(row['EntryDate'])
                         if date is not None:
                             row['EntryDate_string'] = date
                             row['EntryDate_ms'] = [float(x[1]) for x in row['EntryDate_string']]
 
                 # ASSIGN MET TERMS
-                row['MET'] = []
+                # row['MET'], row['Roles'] = [], []
+
+                row['DisplayText'] = row['Title'] if 'Title' in row else row['Number']
                 
-                number = row['Number']
+                # row['HasPhoto'] = False
 
-                row['Classification'] = self.classifications.get(int(row['ClassificationID']))
-                if row['Classification'] == "DiaryPages" and row['Title'] == None:
-                    row['Title'] = number[number.find('_')+1:]
-
-                row['DisplayText'] = row['Title']
-                row['AllNumbers'] = list(set([number, row['Title'], "".join(number.split())]))
-                row['Roles'] = []
-                row['HasPhoto'] = False
-                row['ES_index'] = self.classifications.get(int(row['ClassificationID'])).lower()
-
-                if str(row['RecID']) in self.records and '_' in row['Title']: 
+                display = []
+                if 'Title' in row: display.append({ 'Title' : row['DisplayText'] })
+                if 'CreditLine' in row: display.append({ 'Credit' : row['CreditLine'] })
+                if 'Department' in row: display.append({ 'Department' : row['Department'] })
+                if 'EntryDate' in row: display.append({ 'Date' : row['EntryDate'] })
+                if 'DiaryTranscription' in row: display.append({ 'Transcription' : row['DiaryTranscription'] })
+                    
+                if row['RecID'] in self.records and '_' in row['Title']: 
                     continue
 
-                self.records[str(row['RecID'])] = row
+                self.records[row['RecID']] = row
 
             self.dc.save_progress()
 
@@ -118,11 +126,11 @@ class Objects_Worker(Base):
             for rows in self.data:
 
                 # COMBINE ROWS AND COLS TO SINGLE DICTIONARY
-                row = [{ y : row[rows['cols'].index(y)] for y in rows['cols'] } for row in rows['rows']]
+                row = [{ y : int(row[rows['cols'].index(y)]) if row[rows['cols'].index(y)].isdigit() else row[rows['cols'].index(y)] for y in rows['cols'] } for row in rows['rows']]
                 
                 # OBJECTS TASKS
                 if 'objects_sites' in rows['key']: self.futures.append(executor.submit(self.sites, row))
-                if 'objects_media' in rows['key']: self.futures.append(executor.submit(self.media, row))
+                if 'objects_media' in rows['key']: self.futures.append(executor.submit(self.media, 'objects', row))
                 if 'objects_altnums' in rows['key']: self.futures.append(executor.submit(self.altnums, row))
                 if 'objects_geocodes' in rows['key']: self.futures.append(executor.submit(self.geocodes, row))
                 if 'objects_published' in rows['key']: self.futures.append(executor.submit(self.published, row))
@@ -158,17 +166,26 @@ class Objects_Worker(Base):
 
         for row in rows:
             try:
+                row = self.sanitize(row)
+
                 if 'AlternativeNumbers' not in self.records[row['RecID']]: self.records[row['RecID']]['AlternativeNumbers'] = []
 
-                altnum = row['AltNum']
-                without_prefix = altnum[altnum.find('_')+1:]
-                description = row['Description'] if row['Description'] != "NULL" else ""
-                self.records[row['RecID']]['AlternativeNumbers'].append({"Description" : altnum, "Note" : description, 'without_prefix': without_prefix})
-                self.records[row['RecID']]['AllNumbers'].extend((altnum, without_prefix))
-
+                if 'AltNum' in row:
+                    altnum = row['AltNum']
+                    without_prefix = altnum[altnum.find('_')+1:]
+                
+                    if 'Description' in row:
+                        self.records[row['RecID']]['AlternativeNumbers'].append({
+                            "Description" : altnum, 
+                            "Note" : row['Description'], 
+                            'without_prefix': without_prefix
+                        })
+                
+                    self.records[row['RecID']]['AllNumbers'].extend((altnum, without_prefix))
+    
                 self.records[row['RecID']]['AllNumbers'] = list(set(self.records[row['RecID']]['AllNumbers']))
                 self.records[row['RecID']]['AllNumbers'] = [x for x in self.records[row['RecID']]['AllNumbers'] if x is not None]
-
+                
                 res.append(f'Object-{row["RecID"]}')
             except:
                 err.append(f'Object-{row["RecID"]}')
@@ -191,7 +208,14 @@ class Objects_Worker(Base):
 
         for row in rows:
             try:
-                self.records[row['RecID']]['Geocode'] = { 'GeoCodeID' : row['GeoCodeID'], 'Geocode' : row['GeoCode'], 'Region' : row['Region'], 'City' : row['City'] }
+                row = self.sanitize(row)
+
+                self.records[row['RecID']]['Geocode'] = { 
+                    'GeoCodeID' : row['GeoCodeID'], 
+                    'Geocode' : row['GeoCode'], 
+                    'Region' : row['Region'], 
+                    'City' : row['City']
+                }
 
                 res.append(f'Object-{row["RecID"]}')
             except:
@@ -215,6 +239,8 @@ class Objects_Worker(Base):
 
         for row in rows:
             try:
+                row = self.sanitize(row)
+
                 if 'FlexFields' not in self.records[row['RecID']]: self.records[row['RecID']]['FlexFields'] = {}
                 if row['GroupName'] not in self.records[row['RecID']]['FlexFields']: self.records[row['RecID']]['FlexFields'][row['GroupName']] = []
                 self.records[row['RecID']]['FlexFields'][row['GroupName']].append({row['UserFieldName'] : row['FieldValue']})
@@ -241,28 +267,24 @@ class Objects_Worker(Base):
 
         for row in rows:
             try:
+                row = self.sanitize(row)
+
                 if 'RelatedItems' not in self.records[row['RecID']]: self.records[row['RecID']]['RelatedItems'] = {}
                 if 'UnpublishedDocuments' not in self.records[row['RecID']]['RelatedItems']: self.records[row['RecID']]['RelatedItems']['UnpublishedDocuments'] = []
 
-                drs_id = row['ArchIDNum']
-
-                if 'ConstituentTypeID' in row: 
-                    thumbnail_id = f'{self.constituenttypes.get(int(row["ConstituentTypeID"]))}-{row["RecID"]}' # NOT USED?
                 if 'ClassificationID' in row: 
-                    thumbnail_id = f'{self.classifications.get(int(row["ClassificationID"]))}-{row["RecID"]}'
-                if 'MediaTypeID' in row: 
-                    thumbnail_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'  # NOT USED?
+                    thumbnail_id = f'{self.classifications.get(row["ClassificationID"])}-{row["RecID"]}'
 
-                if drs_id:
-                    thumbnail_url = self.thumbnail_url(drs_id)
-
-                if drs_id.lower() == "null" or not drs_id:
-                    thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+                if 'ArchIDNum' in row:
+                    thumbnail_url = self.thumbnail_url(row['ArchIDNum'])
+                else:
+                    if 'ThumbPathName' in row and 'ThumbFileName' in row:
+                        thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
 
                 if len(thumbnail_url) and thumbnail_id not in self.thumbnail_urls:
                     self.thumbnail_urls[thumbnail_id] = { 'Thumbnail_ID' : thumbnail_id, 'url' : thumbnail_url }
-
-                self.records[row['RecID']]['RelatedItems']['UnpublishedDocuments'].append({
+                
+                unpublishedDocument = {
                     'RecID' : row['UnpublishedID'],
                     'Text' : row['UnpublishedTitle'],
                     'DisplayText' : row['UnpublishedTitle'],
@@ -270,10 +292,12 @@ class Objects_Worker(Base):
                     'Number' : row['ObjectNumber'],
                     'Thumbnail' : thumbnail_url,
                     'Thumbnail_ID' : thumbnail_id,
-                    'HasManifest' : False if drs_id == "" else True
-                })
+                    # 'HasManifest' : False if drs_id == "" else True
+                }
 
-                self.records[row['RecID']]['relateditems']['unpubdocs'].sort(key=itemgetter('displaytext'))
+                self.records[row['RecID']]['RelatedItems']['UnpublishedDocuments'].append(unpublishedDocument)
+
+                self.records[row['RecID']]['RelatedItems']['UnpublishedDocuments'].sort(key=itemgetter('DisplayText'))
 
                 res.append(f'Object-{row["RecID"]}')
             except:

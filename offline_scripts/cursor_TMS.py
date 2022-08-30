@@ -1,6 +1,3 @@
-from attr import Attribute
-
-
 try:
     import pyodbc, pymssql, time
     from os import cpu_count
@@ -11,7 +8,7 @@ try:
     from cursor_FSS import file_open, file_save
     from helper_logger import Logger
     from sql import SQL
-    from credentials_default import tms_databases, tms_dsn, tms_user, tms_password
+    from credentials import tms_databases, tms_dsn, tms_user, tms_password
 except ImportError as error:
     print(error)
 
@@ -243,7 +240,7 @@ def __process(urls:list):
                 idx, response = out.result()
                 if response.status_code == 200:
                     response = response.json()
-                    results[idx] = { 'width' : response['width'], 'height' : response['height'] }
+                    results[int(idx)] = { 'width' : response['width'], 'height' : response['height'] }
                 else:
                     results[idx] = 'error'
         return results

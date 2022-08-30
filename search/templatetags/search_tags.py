@@ -1,4 +1,5 @@
 from django import template
+import re
 register = template.Library()
 
 from utils.views_utils import CATEGORIES
@@ -6,6 +7,23 @@ from utils.views_utils import CATEGORIES
 @register.filter
 def keyvalue(dict, key):
     return dict[key]
+
+@register.filter
+def get_type(value):
+    return value.__class__.__name__
+
+@register.filter
+def add_space(value):
+    idx = [idx for idx in range(len(value)) if value[idx].isupper()]
+    if len(idx) and '3D' not in value:
+        for id in reversed(idx):
+            if id != 0:
+                value = value[:id] + ' ' + value[id:]
+        return value
+    elif '3D' in value:
+        return '3D Models'
+    else:
+        return value
 
 @register.filter
 def array_value(array, key):

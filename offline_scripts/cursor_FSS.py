@@ -55,8 +55,7 @@ def file_open(dir:str, file:str, module:str=None, open_file:bool=True):
 
 def file_save(dir:str, file:str, data:list, module:str=None):
     """
-    This method saves a .json-file exists at a given path, can be successfully read, 
-    and optionally returns the contents of that file.
+    This method saves a .json-file exists at a given path.
 
     Parameters
     ----------
@@ -65,20 +64,25 @@ def file_save(dir:str, file:str, data:list, module:str=None):
     - data (list) : list containing data
     - module (str) : module calling the method (optional)
     """
+    try:
 
-    if dir and module:
-        base_dir = f'offline_scripts/{module}'
-        dir = f'{base_dir}/{dir}'
+        if dir and module:
+            base_dir = f'offline_scripts/{module}'
+            dir = f'{base_dir}/{dir}'
+        
+        if not exists(dir):
+            base_dir = f'offline_scripts/{module}'
+            if not exists(base_dir): mkdir(base_dir)
+            mkdir(dir)
 
-    if file:
-        file = file if 'json' in file else f'{file}.json'
+        if file:
+            file = file if 'json' in file else f'{file}.json'
+        
+        with open(f'{dir}/{file}', 'w') as f:
+            f.write(dumps(data, indent=4, separators=(',',':'), sort_keys=True, cls=SetEncoder))
     
-    if not exists(dir):
-        if not exists(base_dir): mkdir(base_dir)
-        mkdir(dir)
-
-    with open(f'{dir}/{file}', 'w') as f:
-        f.write(dumps(data, indent=4, separators=(',',':'), sort_keys=True, cls=SetEncoder))
+    except Exception as e:
+        print(e)
 
 def file_del(module:str, folder:str, filename:str='', exclude:list=[]) -> bool:
     """

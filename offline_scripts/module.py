@@ -1,3 +1,6 @@
+from typing import Iterable
+
+
 try:
     from helper_logger import Logger
 
@@ -37,7 +40,7 @@ class Module(object):
     - check_drs() : begins a sequence to verify (and redownload) drs_metadata
     - check_records() : checks if the tables are ready and accessible
     - process() : calls the main methods for each module
-    - add_manifests() : generate manifests for each document type
+    # - add_manifests() : generate manifests for each document type
     - save() : save compiled data to ElasticSearch
     """
     def __init__(self, modules, module_type, cursor, drs, memory, push, tables, store, thumbnails, thumbnails_refresh, refresh, compile, es):
@@ -110,7 +113,7 @@ class Module(object):
         if self.refresh or self.compile: rebuild()
         
         try:
-            # THE COMPILED FILE DOES NOT EXISTS OR IS LIKELY CORRUPT
+            # THE COMPILED FILE DOES NOT EXIST OR IS LIKELY CORRUPT
             if not file_open('compiled', module_type, module_type, False):
                 rebuild()
 
@@ -164,7 +167,11 @@ class Module(object):
             if 'iiif' in self.module_type or 'met' in self.module_type: self.compiled_data = self.relations
 
             if self.memory:
-                overall_progress[self.module_type] = { 'compilation' : self.compiled_data, 'relations' : self.relations, 'thumbnails' : self.thumbnail_urls }
+                overall_progress[self.module_type] = { 
+                    'compilation' : self.compiled_data, 
+                    'relations' : self.relations, 
+                    'thumbnails' : self.thumbnail_urls 
+                }
 
             if self.thumbnails and self.module_type not in ['iiif', 'met']:
 
@@ -214,7 +221,7 @@ class Module(object):
                     self.logger.log(f'>>> NO NEW THUMBNAILS FOR MODULE "{self.module_type.upper()}"', self.module_type)
 
             # BULK UPDATE MANIFESTS (EXCEPT IIIF, MET, PUBLISHED AND MEDIA)
-            if self.module_type not in ['iiif', 'met', 'published', 'media']: self.add_manifests()
+            # if self.module_type not in ['iiif', 'met', 'published', 'media']: self.add_manifests()
 
             # BULK WRITE COMPILATIONS TO FILE (COSTLY OPERATION)
             if self.store:
@@ -222,6 +229,9 @@ class Module(object):
                 file_save('compiled', self.module_type, self.compiled_data, self.module_type)
                 file_save('compiled', 'relations', self.relations, self.module_type)
 
+            if self.module_type not in ['iiif','met']:
+                self.add_to_display()
+            
             # PUSH ALL DATA TO ELASTICSEARCH IN ONE GO AT THE VERY END, IF SO DESIRED
             if self.es:
                 
@@ -242,13 +252,97 @@ class Module(object):
         except:
             raise
 
+    def add_to_display(self):
+        """
+        Adds a piece of data to the display property of the row being processed. 
+        This property is rendered in the Details section on the website in search-result-details.html
+        """
+
+        for id, row in self.compiled_data.items():
+            
+            display = {}
+            fields = {
+                'Number' : 'ID',
+                'TombOwner' : { 'Tomb Owner' : 'DisplayName' },
+                'SiteType' : 'Site Type',
+                'Remarks' : 'Remarks',
+                'Title' : 'Description',
+                'CreditLine' : 'Credit Line'
+            }
+            
+            for key, value in row.items():
+                if key in fields:
+                    if type(fields[key]) == dict:
+                        display[list(fields[key].keys())[0]] = row[key][list(fields[key].values())[0]]
+                    else:
+                        display[fields[key]] = value
+
+            # if 'sites' in self.module_type:
+                # if 'Number' in row: display['ID'] = row['Number']
+                # if 'TombOwner' in row: display['Tomb Owner'] = row['TombOwner']['DisplayName']
+            if 'RelatedItems' in row:
+                if 'ModernPeople' in row['RelatedItems']:
+                    persons = []
+                    for person in row['RelatedItems']['ModernPeople']:
+                        persons.append(person['DisplayText'])
+                    display[person['Role']] = persons
+                if 'AncientPeople' in row['RelatedItems']:
+                    persons = []
+                    for person in row['RelatedItems']['AncientPeople']:
+                        persons.append(person['DisplayText'])
+                    display[person['Role']] = persons
+            if 'SiteDates' in row:
+                for date in row['SiteDates']:
+                    display[date['Type']] = date['Date']
+                # if 'SiteType' in row:
+                    # display['Site type'] = row['SiteType']
+                # if 'Remarks' in row:
+                    # display['Remarks'] = row['Remarks']
+                # if 'Title' in row:
+                    # display['Description'] = row['Title']
+            row['Display'] = display
+
+            # if 'objects' in self.module_type:
+                #                 ID
+                # GEM_6329
+                # Department
+                # Grand Egyptian Museum
+                # Classification
+                # Vessels
+                # Findspot
+                # G 7000 X
+                # Material
+                # Alabaster
+                # Dimensions
+                # H 10.5 cm x Diam. 43 cm; 6340 g
+                # if 'CreditLine' in row:
+                    # display['Credit Line'] = row['CreditLine']
+                
+                # Journal d'Entree number
+                # EMC_JE_52375
+                # Cairo Special Register number
+                # EMC_SR_1/10179
+                # Hetepheres findspot number
+                # HH_629
+                # Period
+                # Old Kingdom, Dynasty 4, reign of Khufu
+                # Excavator
+                # George Andrew Reisner, American, 1867–1942
+                # Notes
+                # From excavations of George Reisner, 1925. A large portion of Special Register section 7 (volumes 13-16) was originally misnumbered, with the object numbers following in sequence from section 1 volume 4; these numbers have thus been given EMC_SR_1 prefixes, despite being recorded in section 7.
+                # Remarks
+                # RELATED CONSTITUENT(S): George Reisner; ALTERNATE NUMBER(S): EMC_JE_52375; EMC_SR_1.10179; HH_629; RELATED OBJECTS: MFAB_Vol.17.p.384; MFAB_Vol.17.p.389; MFAB_Vol.17.390; MFAB_Vol.18.p.391; MFAB_Vol.18.p.393; MFAB_Vol.18.p.394; MFAB_Vol.18.p.395; MFAB_Vol.18.p.396; MFAB_Vol.18.p.397
+
+
+            self.compiled_data.update({ id : row })
+
     def write(self, module, data):
         self.save(module, data['compilation'])
         if module == 'published':
             self.logger.log(f'>>> DEVELOPING LIBRARY', self.module_type)
             results = 0
             for res in self.cursor.es.build_library():
-                if res:
+                if res: 
                     results = results + 1
                     self.logger.log(f'>>> WRITTEN DOCS: {results}', 'library', end=True)
 
@@ -360,15 +454,17 @@ class Module(object):
 
     def build_base_manifest(self, manifest_id, data):
         """ This method returns the base parameters for an IIIF manifest. All subsequent methods will add to the resulting object from this method. """
-        ob = {
-            "description": data['Description'],
+        base_manifest = {
             "@context": "https://iiif.io/api/presentation/2/context.json",
-            "@id": f'{manifest_id}',
-            "label": data['Label'],
+            "@id": manifest_id,
             "@type": "sc:Manifest"
         }
-        if 'Metadata' in data: ob['metadata'] = data['Metadata']
-        return ob
+
+        if 'Description' in data: base_manifest['Description'] = data['Description']
+        if 'Label' in data: base_manifest['Label'] = data['Label']
+        if 'Metadata' in data: base_manifest['Metadata'] = data['Metadata']
+
+        return base_manifest
 
     def generate_multi_canvas_iiif_manifest(self, manifest_id, data):
         """ Compile all the resources associated with a site into one manifest """
@@ -393,50 +489,50 @@ class Module(object):
         manifest = self.build_base_manifest(manifest_id, data)
         manifest["sequences"] = build_multi_image_sequence(manifest_id, data['Resources'], data['DRS_IDs'], data['Canvas_labels'], data['Canvas_metadatas'])
         for canvas in manifest["sequences"][0]["canvases"]:
-            if "startCanvas" in data and data["startCanvas"] in canvas["images"][0]["resource"]["service"]["@id"]:
+            if "startCanvas" in data and str(data["startCanvas"]) in canvas["images"][0]["resource"]["service"]["@id"]:
                 manifest["sequences"][0]["startCanvas"] = canvas["@id"]
         return manifest
 
-    def add_manifests(self):
-        """
-        Checks if records are complete: tables and compilations resulting from the tables.
-        If not, will initiate download and/or compilation of files.
-        """
-        try:
-            self.logger.log(f">>> COMPILING RESOURCES FOR {self.module_type.upper()}", self.module_type)
+    # def add_manifests(self):
+    #     """
+    #     Checks if records are complete: tables and compilations resulting from the tables.
+    #     If not, will initiate download and/or compilation of files.
+    #     """
+    #     try:
+    #         self.logger.log(f">>> COMPILING RESOURCES FOR {self.module_type.upper()}", self.module_type)
 
-            manifests = overall_progress['iiif']['compilation'] if self.memory else file_open('compiled', 'iiif', 'iiif', True)
-            relations = overall_progress[self.module_type]['relations'] if self.memory else file_open('compiled', 'relations', self.module_type, True)
+    #         manifests = overall_progress['iiif']['compilation'] if self.memory else file_open('compiled', 'iiif', 'iiif', True)
+    #         relations = overall_progress[self.module_type]['relations'] if self.memory else file_open('compiled', 'relations', self.module_type, True)
             
-            # UPDATING THE MANIFESTS
-            for manifest_id, v in relations.items():
-                manifest_id = "-".join([self.module_type.title(), manifest_id.split('-')[1]])
-                manifest = {                    
-                    "RecID": manifest_id,
-                    "manifest": self.generate_multi_canvas_iiif_manifest(manifest_id, v),
-                    'ES_index' : 'iiif'
-                }
+    #         # UPDATING THE MANIFESTS
+    #         for manifest_id, v in relations.items():
+    #             manifest_id = "-".join([self.module_type.title(), manifest_id.split('-')[1]])
+    #             manifest = {                    
+    #                 "RecID": manifest_id,
+    #                 "manifest": self.generate_multi_canvas_iiif_manifest(manifest_id, v),
+    #                 'ES_index' : 'iiif'
+    #             }
 
-                # if manifest_id in manifests:
-                    # print('manifest needs updating instead?')
+    #             # if manifest_id in manifests:
+    #                 # print('manifest needs updating instead?')
                 
-                manifests[manifest_id] = manifest
+    #             manifests[manifest_id] = manifest
             
-            self.logger.log(f">>> ADDED {len(relations)} MANIFESTS FOR {self.module_type.upper()}", self.module_type)
+    #         self.logger.log(f">>> ADDED {len(relations)} MANIFESTS FOR {self.module_type.upper()}", self.module_type)
 
-            overall_progress['iiif']['compilation'] = manifests
+    #         overall_progress['iiif']['compilation'] = manifests
 
-            # SAVE FINAL MANIFESTS TO DISK
-            if self.store: file_save('compiled', 'iiif', manifests, 'iiif')
+    #         # SAVE FINAL MANIFESTS TO DISK
+    #         if self.store: file_save('compiled', 'iiif', manifests, 'iiif')
 
-            # THE LAST MODULE TO ADD MANIFESTS IS PUBLISHED AND SHOULD SAVE THE MOST COMPLETE ITERATION OF ALL MANIFESTS TO ELASTICSEARCH
-            if 'published' in self.module_type:
+    #         # THE LAST MODULE TO ADD MANIFESTS IS PUBLISHED AND SHOULD SAVE THE MOST COMPLETE ITERATION OF ALL MANIFESTS TO ELASTICSEARCH
+    #         if 'published' in self.module_type:
                 
-                # WE MAKE SURE THE MOST RECENT MANIFESTS ARE WRITTEN TO ELASTICSEARCH
-                overall_progress['iiif']['compilation'] = manifests
+    #             # WE MAKE SURE THE MOST RECENT MANIFESTS ARE WRITTEN TO ELASTICSEARCH
+    #             overall_progress['iiif']['compilation'] = manifests
                 
-        except:
-            print('problem updating manifests!')
+    #     except:
+    #         print('problem updating manifests!')
 
     def save(self, module:str, data:dict):
         try:

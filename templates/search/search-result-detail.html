@@ -49,14 +49,13 @@
     {% endif %}
 
     <!-- PRIMARY TEXT: DIARY TRANSCRIPTION, OBJECT DESCRIPTION -->
-    {% if object.DiaryTranscription %}
+    {% if object.DiaryTranscription and "null" not in object.DiaryTranscription|lower %}
     <div class="item__overview text-alt">
       <h5>Diary Transcription:</h5>
       {{ object.DiaryTranscription|linebreaks }}
     </div>
     {% elif object.Description %}
     <div class="item__overview">
-
       <p class="lead text-alt">
         {{ object.Description }}
       </p>
@@ -74,16 +73,12 @@
           </h3>
         </a>
         <div class="accordion-content feature-block__body" data-tab-content>
-          {% with template_name="tms/"|add:index|add:".html" %}
-            {% include template_name %}
-          {% endwith %}
+          {% include 'search-result-details.html' with object=object %}
         </div>
         {% for index, items in object.RelatedItems.items %}
-          {% with index=index|lower %}
-            {% if not '3dmodels' in index and not 'videos' in index and not 'people' in index and not 'institutions' in index and not 'groups' in index and not 'animals' in index %}
-              {% include 'search-details-relateditems.html' with index=index items=items %}
-            {% endif %}
-          {% endwith %}
+          {% if not '3Dmodels' in index and not 'Video' in index and not 'ModernPeople' in index and not 'AncientPeople' in index and not 'institutions' in index and not 'groups' in index and not 'animals' in index %}
+            {% include 'search-details-relateditems.html' with index=index items=items %}
+          {% endif %}
         {% endfor %}
       </li>
 
@@ -102,11 +97,11 @@
 
     <!-- RELATED ITEMS ON THE RIGHT-HAND SIDE -->
     <ul class="accordion" data-accordion data-multi-expand="true" data-allow-all-closed="true">
-      {% for index, items in object.RelatedItems.items %}
-        {% if '3dmodels' in index or 'videos' in index or 'people' in index or 'institutions' in index or 'groups' in index or 'animals' in index %}
-          {% include 'search-details-relateditems.html' with index=index items=items %}
-        {% endif %}
-      {% endfor %}
+        {% for index, items in object.RelatedItems.items %}
+          {% if '3Dmodels' in index or 'Video' in index or 'ModernPeople' in index or 'AncientPeople' in index or 'Institutions' in index or 'Groups' in index or 'Animals' in index %}
+            {% include 'search-details-relateditems.html' with index=index items=items %}
+          {% endif %}
+        {% endfor %}
     </ul>
   </section>
   </section>

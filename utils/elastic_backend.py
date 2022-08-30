@@ -39,9 +39,11 @@ ES_INDEX = ES_BACKEND.pop('INDEX', 'giza')
 ES_TIMEOUT = ES_BACKEND.pop('TIMEOUT', 5)
 
 # TODO: THESE VARIABLES SHOULD COME FROM A SAFE PLACE
-ES_HOSTS = f'https://localhost:9200'
-es_user = 'elastic'
-es_password = '0xlEM4BduYCAHCE3XaKH'
-es_cert = 'D:\elasticsearch-8.1.2\config\certs\http_ca.crt'
+ES_HOSTS = f'https://localhost:443'
+ES_CERT = 'D:\elasticsearch-8.1.2\config\certs\http_ca.crt'
+ES_USER = 'elastic'
+ES_PASSWORD = '0xlEM4BduYCAHCE3XaKH'
 
-es = Elasticsearch(hosts=ES_HOSTS, ca_certs=es_cert, basic_auth=(es_user, es_password))
+es = Elasticsearch(hosts=ES_HOSTS, ca_certs=ES_CERT, basic_auth=(ES_USER, ES_PASSWORD), request_timeout=30)
+es.transport.max_retries=10
+es.transport.retry_on_timeout=True

@@ -222,15 +222,14 @@ class MET_Worker(Base):
         # RESOLVE ALL CODES TO COMPLETE PATHS
         for row in rows:
             try:
+                row = self.sanitize(row)
+
                 if row['MediaMasterID'] not in self.relations: self.relations[row['MediaMasterID']] = []
-                met_term = {
-                    'CN' : row['CN'],
-                    'Term' : row['Term'],
-                    'NodeDepth' : row['NodeDepth'],
-                    'Codes' : findPath(row['CN'])[0],
-                    'Paths' : findPath(row['CN'])[1]
-                }
-                self.relations[row['MediaMasterID']].append(met_term)
+
+                row['Codes'] = findPath(row['CN'])[0]
+                row['Paths'] = findPath(row['CN'])[1]
+
+                self.relations[row['MediaMasterID']].append(row)
             except:
                 # NOTE: MediaMasterID 1521 has a problematic code (AAE.AAC.AAE.AAO), which apparently relates
                 # to another definition of MET in TMS. This will therefore throw an error, but this is a minor problem.

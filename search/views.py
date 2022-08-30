@@ -5,6 +5,8 @@ import json
 import os
 from json.decoder import JSONDecodeError
 
+from distutils.util import strtobool
+
 from django.contrib.sites.shortcuts import get_current_site
 from django.http.response import Http404, JsonResponse
 from django.template.loader import render_to_string
@@ -32,7 +34,9 @@ from utils.views_utils import (
     MET,
     MET_SIMPLE,
     MET_SIMPLE_REVERSED,
-    MONTHS
+    MONTHS,
+    CATEGORIES_INV,
+    FACET_TYPES
 )
 
 ####################################
@@ -45,6 +49,51 @@ from utils.views_utils import (
 def search_show(request):
     return render(request, "pages/searchresults.html")
 
+def search_show_result(request, index, id):
+    rec_id = f'{index}-{id}'
+    # type_object = models.get_item(index, rec_id)
+    type_object = es.get(index=index, id=rec_id)["_source"]
+
+    # if view == "intro": view = "full"
+
+    if "RelatedItems" in type_object:
+        for item in type_object["RelatedItems"]:
+            new_item = {
+                "category": CATEGORIES[item.lower()]["key"],
+                "icon": CATEGORIES[item.lower()]["icon"],
+                "items": type_object["RelatedItems"][item],
+            }
+            type_object["RelatedItems"][item] = new_item
+
+    # add form for creating a new collection in modal
+    # collection_form = CollectionForm()
+
+    # response = JsonResponse()
+
+    # response["Access-Control-Allow-Origin"] = "*"
+
+    return JsonResponse(
+        {
+            "success": True,
+            "html": {
+                "#search_result_modal_form": {
+                    "html": render_to_string(
+                        "search-result-detail.html",
+                        {
+                            "object": type_object,
+                            "index": index,
+                            # 'manifest' : tmsViews.get_manifest_data(request, type, id),
+                            # 'collection_form': collection_form,
+                            "user": request.user
+                        }
+                    )
+                },
+                "#search_result_modal": {
+                    "action": "open"
+                }
+            }
+        }
+    )
 
 def search_results(request, items=None):
     """
@@ -621,8 +670,9 @@ def search_execute(request=None, dictionary=None):
                 (
                     items["search"]["query"],
                     items["search"]["category"],
+                    items["search"]["facets"],
                     items["search"]["fields"],
-                ) = ("", "", {})
+                ) = ("", [], {}, {})
 
                 # SIMPLE SEARCH
                 if "query" in body:
@@ -634,6 +684,9 @@ def search_execute(request=None, dictionary=None):
 
                 if "fields" in body:
                     items["search"]["fields"] = body['fields']
+
+                items['search']['facets']['all_facets'] = {}
+                items['search']['facets']['selected'] = {}
 
                 # ADVANCED SEARCH
                 # if "category" in body:
@@ -687,14 +740,34 @@ def search_execute(request=None, dictionary=None):
                     else {"MET_tree": {}, "MET_paths": [], "MET_terms": []}
                 )
 
-                # GET SELECTED FACETS
-                selected = { facet : [ val['display_text'] for val in values if val['selected'] ] for facet, values in body['facets']["all_facets"].items() } if 'facets' in body and body['facets'] else {}
+                # GET SELECTED FACETS PER CATEGORY
+                selected = {}
+                for category in items['search']['category']:
+                    category_name = CATEGORIES[category]['displaytext']
+                    if category_name in body['facets']['selected']:
+                        selected[category_name] = body['facets']['selected'][category_name]
+                    # selected[category] = {
+                    #     facet : [ val['displaytext'] for val in values if val['selected'] ] 
+                    #     for facet, values in body['facets']["all_facets"][CATEGORIES[category]['displaytext']].items() 
+                    # } if 'facets' in body and CATEGORIES[category]['displaytext'] in body['facets']['all_facets'] else {}
+
+                        # IF DATE RANGE IS IN SELECTED FACETS
+                        if any(x for x in selected[category_name] if '_daterange' in x):
+                            ranges = [x for x in selected[category_name] if '_daterange' in x]
+                            for range in ranges:
+                                selected[category_name][range] = body['facets']['selected'][category_name][range] if range in body['facets']['selected'][category_name] else []
+                    items['search']['facets']['all_facets'][category_name] = FACETS_PER_CATEGORY[category]
                 
                 # ASSIGN UN/SELECTED FACETS TO THE ITEMS OBJECT FOR PROCESSING
-                items["search"]["facets"] = { 
-                    "all_facets" : body['facets']["all_facets"] if 'facets' in body and body['facets']["all_facets"] else {}, 
-                    "selected" : { facet : values for facet, values in selected.items() if len(values) } if len(selected) else {} 
-                }
+                items["search"]["facets"]['selected'] = selected
+                    # "all_facets" : body['facets']["all_facets"] if 'facets' in body and body['facets']["all_facets"] else {}, 
+                    # "selected" : selected
+                        # "selected" : { 
+                        #     category : {
+                        #         facet : values for facet, values in selected.items() if len(values) } if len(selected) else {} 
+                        #     }  
+                    # }
+                    
 
                 # EXTRACT FIELDS THAT WERE SEARCHED FOR
                 items["search"]["result"] = {
@@ -753,9 +826,9 @@ def search_execute(request=None, dictionary=None):
         # SEARCH CATEGORY IS SPECIFIED
         if items["search"]["category"]:
 
-            items["search"]["result"]["sort_options"] = SORT_FIELDS_PER_CATEGORY[
-                items["search"]["category"]
-            ]
+            for category in items['search']['category']:
+                for key, value in SORT_FIELDS_PER_CATEGORY[category].items():
+                    items["search"]["result"]["sort_options"].append({ 'key' : key, 'value' : value })
 
             # CHECK IF USER IS SEARCHING FOR DATE OR DATE RANGE
             if items["search"]["fields"]:
@@ -785,27 +858,50 @@ def search_execute(request=None, dictionary=None):
     # 		SEPARATE	 	#
     #########################
     if "aggregations" in search_results:
-        p = search_results["aggregations"]
-        if not 'doc_types' in p:
-            for key, v in p.items():
-                if key in v and 'buckets' in v[key]:
-                    items["search"]["categories"] = [
-                        {
-                            "key": key,
-                            "displaytext": x["key"],
-                            "doc_count": x["doc_count"],
-                        }
-                        for x in v[key]['buckets']
-                    ]
+
+
+
+
+
+        # p = search_results["aggregations"]
+        if not 'doc_types' in search_results["aggregations"]:
+
+            for category in items['search']['category']:
+                search_results_per_category = { agg_name : values  for agg_name, values in search_results['aggregations'].items() if agg_name.startswith(category) }
+                items["search"]["facets"]["all_facets"][CATEGORIES[category]['displaytext']] = {
+                    k : v
+                    for x in __recurse_aggs(category, "", search_results_per_category, [], items["search"]["facets"]["selected"])
+                    for k, v in x.items()
+                }
+        #     items['search']['categories'] = body['categories']
+
+        #     for key, v in p.items():
+        #         category = [category for category in items['search']['category'] if category in key][0]
+        #         key = key.split('_')
+        #         key.remove(category)
+        #         key = "_".join(key)
+        #         if key in v and 'buckets' in v[key]:
+        #             if CATEGORIES[category]['displaytext'] not in items["search"]["facets"]['all_facets']:
+        #                 items["search"]["facets"]['all_facets'][CATEGORIES[category]['displaytext']] = {}
+
+        #             if key not in items["search"]["facets"]['all_facets'][CATEGORIES[category]['displaytext']]:
+        #                 items["search"]["facets"]['all_facets'][CATEGORIES[category]['displaytext']][key] = {}
+
+        #             for x in v[key]['buckets']:
+
+        #                 if 'key_as_string' in x and (x['key_as_string'] == 'false' or x['key_as_string'] == 'true'):
+        #                     x['key'] = str(bool(strtobool(x['key_as_string'])))
+
+        #                 # ONLY ADD FACET IF IT DOESN'T ALREADY EXIST
+        #                 items["search"]["facets"]['all_facets'][CATEGORIES[category]['displaytext']][key][x["key"]] = x["doc_count"]
 
                 # items["search"]["categories"][key][key]['buckets']
 
         else:
 
-
             items["search"]["categories"] = [
                 {
-                    "displaytext": CATEGORIES[x["key"]]["key"],
+                    "displaytext": CATEGORIES[x["key"]]["displaytext"],
                     "key": x["key"],
                     "doc_count": x["doc_count"],
                 }
@@ -827,9 +923,10 @@ def search_execute(request=None, dictionary=None):
         search_results
     )
 
-    if 'category' in items['search'] and len(items['search']['category']):
-        items["search"]["result"]['category'] = {}
-        items["search"]["result"]['category'] = CATEGORIES[items['search']['category']]
+    if len(items['search']['category']):
+        items["search"]["result"]['category'] = []
+        for category in items['search']['category']:
+            items["search"]["result"]['category'].append(CATEGORIES[category])
         # category = items['search']['category']
         # items['search']['category'] = CATEGORIES[category]
 
@@ -838,24 +935,25 @@ def search_execute(request=None, dictionary=None):
     # if 'selected' in items["search"]["facets"]:
 
     # CHECK IF THE USER REQUIRES A SLIDER TO NAVIGATE DATES
-    if "_daterange" in items["search"]["facets"]["all_facets"]:
+    # if "_daterange" in items["search"]["facets"]["all_facets"]:
 
-        # GET MIN AND MAX VALS; NOTE: datetime OBJECT IS IN SECONDS
-        dates = sorted(
-            items["search"]["facets"]["all_facets"]["Dates"], key=lambda x: x["display_text"]
-        )
-        for idx, x in enumerate(dates):
-            dates[idx]["datetime"] = datetime(1970, 1, 1) + timedelta(
-                seconds=(float(f'{x["display_text"]}0000'))
-            )
+    #     # GET MIN AND MAX VALS; NOTE: datetime OBJECT IS IN SECONDS
+    #     dates = sorted(
+    #         items["search"]["facets"]["all_facets"]["Dates"], key=lambda x: x["display_text"]
+    #     )
+    #     for idx, x in enumerate(dates):
+    #         dates[idx]["datetime"] = datetime(1970, 1, 1) + timedelta(
+    #             seconds=(float(f'{x["display_text"]}0000'))
+    #         )
 
-        items["search"]["result"]["date_slider"] = dates
+    #     items["search"]["result"]["date_slider"] = dates
 
-    items["search"]["facets"]["all_facets"] = {
-        k : v
-        for x in __recurse_aggs("", search_results, [], items["search"]["facets"]["selected"])
-        for k, v in x.items()
-    }
+    # for category in items['search']['category']:
+    #     items["search"]["facets"]["all_facets"] = {
+    #         k : v
+    #         for x in __recurse_aggs(category, "", search_results, [], items["search"]["facets"]["selected"])
+    #         for k, v in x.items()
+    #     }
 
     # APPEND TWENTY SEARCH RESULTS FOR DISPLAY
     # items["search"]["result"]["total"] = (
@@ -905,20 +1003,15 @@ def __execute(items:dict):
     items = __post_filter(items)                        # BUILD POST FILTER
 
 
-    addToClipBoard(json.dumps(__build_query(items)))	# DEBUGGING ELASTICSEARCH QUERY
+    addToClipBoard(json.dumps(__build_query(items)['query']))	# DEBUGGING ELASTICSEARCH QUERY
 
     return items, __search_get_results(__build_query(items)).body
 
 def __base_query(items):
     """
-    Private method to construct the ElasticSearch base query
-    
-    Add search term
-    Add category
-    Add fields
-    Add MET terms
-    Add facets
-    
+    Private method to construct the ElasticSearch base query. Additional search criteria should be
+    added to the post-filter. Therefore, only search terms and categories are part of the base query.
+        
     Parameters
     ----------
     - items (dict) : search parameters
@@ -929,7 +1022,7 @@ def __base_query(items):
     """
 
     items["base"] = {}
-    must, must_not = [], []
+    must, should, must_not = [], [], []
 
     # IF NO SEARCH TERM, FIELDS OR CATEGORIES ARE PROVIDED, RETURN EVERYTHING FROM ELASTICSEARCH
     if not len(items["query"]) and not len(items['fields']) and not len(items["category"]):
@@ -941,145 +1034,177 @@ def __base_query(items):
         must.append({ "match_all" : {} })
     else:
 
-        category_names = [category['key'].lower() for category in CATEGORIES.values()]
-        category_codes = { category[0] : category[1]['key'] for category in CATEGORIES.items() }
-        query = [ word for word in re.findall(r'\b\S+\b', items['query']) if len(word) > 1 ]
-
-        category = [category_name for category_name in category_names for word in query if word.lower() in category_name.lower()]
-
-        if not len(items['query']) or '*' in items['query']:
+        if '*' in items['query']:
             must.append({ 
                 "query_string" : { 
                     "query" : items["query"],
                     "analyzer" : "pattern"
-                    }
-                })
-
-        # THE QUERY CONTAINS THE 
-        elif category:
-            must.append({
-                "query_string" : { 
-                    "query" : items["query"],
                 }
             })
-            for cat in category:
-                must.append({
-                    "match" : { 
-                        "doc.ES_index" : category_codes[cat],
-                    }
-                })
-        else:        
+        
+        else:
+
             must.append({ 
                 "multi_match" : { 
                     "query" : items["query"],
-                    "analyzer": "synonym_pattern"
+                    "analyzer": "keyword"
                 }
             })
 
-                # COULD BE KEYWORD ANALYZER?
+            # category_names = [category['key'].lower() for category in CATEGORIES.values()]
+            # category_codes = { category[0] : category[1]['key'] for category in CATEGORIES.items() }
+            # query = [ word for word in re.findall(r'\b\S+\b', items['query']) if len(word) > 1 ]
+
+            # category = [category_name for category_name in category_names for word in query if word.lower() in category_name.lower()]
+
+            # if not len(items['query']) or '*' in items['query']:
+            #     must.append({ 
+            #         "query_string" : { 
+            #             "query" : items["query"],
+            #             "analyzer" : "pattern"
+            #             }
+            #         })
+
+            # THE QUERY CONTAINS ONE OR MORE CATEGORIES 
+            # elif category:
+            if len(items["category"]):
+                bool_query = {}
+                should = { 'should' : [] }
+                for category in items['category']:
+                    should['should'].append({
+                        "match": {
+                            "ES_index": category
+                        }
+                    })
+                
+                bool_query['bool'] = should
+
+                must.append(bool_query)
+
+                # must.append({
+                #     "query_string" : { 
+                #         "query" : items["query"],
+                #     }
+                # })
+                # for cat in category:
+                #     must.append({
+                #         "match" : { 
+                #             "ES_index" : category_codes[cat],
+                #         }
+                #     })
+            # else:        
+                # must.append({ 
+                #     "multi_match" : { 
+                #         "query" : items["query"],
+                #         "analyzer": "synonym"
+                #     }
+                # })
+
+                    # COULD BE KEYWORD ANALYZER?
         
 
     # ADD CATEGORY INFORMATION
-    if items["category"]:
-        must.append({
-            "match": {
-                "doc.ES_index": items["category"]
-            }
-        })
+    # if len(items["category"]):
+    #     for category in items['category']:
+    #         should.append({
+    #             "match": {
+    #                 "ES_index": category
+    #             }
+    #         })
 
         # if 'query' in items and len(items['query']):
         #     must.append({
         #         "match": {
-        #             "doc.ES_index": items["category"]
+        #             "ES_index": items["category"]
         #         }
         #     })
 
-    if len(items['facets']['selected']):
-        # ADD FACETS FROM ACROSS MULTIPLE CATEGORIES?
+    # if len(items['facets']['selected']):
+    #     # ADD FACETS FROM ACROSS MULTIPLE CATEGORIES?
 
-        for facet_name, facet_value in items['facets']['selected'].items():
-            for facet in facet_value:
-                must.append({ "match" : {
-                    FACETS_PER_CATEGORY[items['category']][facet_name]["terms"]["field"] : facet }
-                })
+    #     for facet_name, facet_value in items['facets']['selected'].items():
+    #         for facet in facet_value:
+    #             should.append({ "match" : {
+    #                 FACETS_PER_CATEGORY[items['category']][facet_name]["aggregations"][facet_name]["terms"]["field"] : facet }
+    #             })
 
 
-    # ADD SPECIFIC SEARCH FIELD INFORMATION
-    if items['fields']:
-        field = "_"
-        if "_ms" in items["fields"].keys():
-            field = "EntryDate_ms"
+    # # ADD SPECIFIC SEARCH FIELD INFORMATION
+    # if items['fields']:
+    #     field = "_"
+    #     if "_ms" in items["fields"].keys():
+    #         field = "EntryDate_ms"
 
-        fields = { k: v for k, v in items["fields"].items() if k != field.split("_")[0] }
+    #     fields = { k: v for k, v in items["fields"].items() if k != field.split("_")[0] }
 
-        for k, v in fields.items():
+    #     for k, v in fields.items():
 
-            # RANGE MATCH IF THE SEARCH IS FOR A DATE (IN SECONDS)
-            if "EntryDate" in k:
-                if "EntryDate_ms" in k and len(v):
-                    xrange = [float(x['display_text']) for x in items['facets']['all_facets']['Year_daterange']]
-                    xrange.sort()
-                    earliest, latest = xrange[0], xrange[-1]
-            # range = items['facets']['all_facets']['Year_daterange'].map(lambda i: int(i['display_text']))
-            # max_range = [range[0], range[range.length - 1 ]]
-                    must.append({
-                        "match": {
-                            k : v[0]
-                        }
-                    }) if len(v) == 1 else must.append({
+    #         # RANGE MATCH IF THE SEARCH IS FOR A DATE (IN SECONDS)
+    #         if "EntryDate" in k:
+    #             if "EntryDate_ms" in k and len(v):
+    #                 xrange = [float(x['display_text']) for x in items['facets']['all_facets']['Year_daterange']]
+    #                 xrange.sort()
+    #                 earliest, latest = xrange[0], xrange[-1]
+    #         # range = items['facets']['all_facets']['Year_daterange'].map(lambda i: int(i['display_text']))
+    #         # max_range = [range[0], range[range.length - 1 ]]
+    #                 must.append({
+    #                     "match": {
+    #                         k : v[0]
+    #                     }
+    #                 }) if len(v) == 1 else must.append({
 
-                    # must.append({
-                        "range": {
-                            "doc.EntryDate_ms": {
-                                "gte": earliest,
-                                "lte": latest,
-                            }
-                        }
-                    })
-                    #     "range": {
-                    #         f'doc.{k}': {
-                    #             "gte": v[0],
-                    #             "lte": v[1],
-                    #         },
-                    #     },
-                    # })
+    #                 # must.append({
+    #                     "range": {
+    #                         "EntryDate_ms": {
+    #                             "gte": earliest,
+    #                             "lte": latest,
+    #                         }
+    #                     }
+    #                 })
+    #                 #     "range": {
+    #                 #         f'{k}': {
+    #                 #             "gte": v[0],
+    #                 #             "lte": v[1],
+    #                 #         },
+    #                 #     },
+    #                 # })
 
-            # NESTED QUERY
-            elif k.count(".") >= 2:
-                v = (
-                    re.split(" |-\.", v)
-                    if "Provenance" in k or "Description" in k or "Transcription" in k
-                    else [v]
-                )
-                q = {
-                    "nested": {
-                        "path": k.split(".")[0],
-                        "query": {"bool": {"must": [__bool_must_match(k, v, {})]}},
-                    }
-                }
-                must.append(q)
-            else:
-                v = (
-                    re.split(" |-|\.", v)
-                    if "Provenance" in k
-                    or "Description" in k
-                    or "Transcription" in k
-                    or "Title" in k
-                    else [v]
-                )
-                must.append(__bool_must_match(k, v, {}))
+    #         # NESTED QUERY
+    #         elif k.count(".") >= 2:
+    #             v = (
+    #                 re.split(" |-\.", v)
+    #                 if "Provenance" in k or "Description" in k or "Transcription" in k
+    #                 else [v]
+    #             )
+    #             q = {
+    #                 "nested": {
+    #                     "path": k.split(".")[0],
+    #                     "query": {"bool": {"must": [__bool_must_match(k, v, {})]}},
+    #                 }
+    #             }
+    #             must.append(q)
+    #         else:
+    #             v = (
+    #                 re.split(" |-|\.", v)
+    #                 if "Provenance" in k
+    #                 or "Description" in k
+    #                 or "Transcription" in k
+    #                 or "Title" in k
+    #                 else [v]
+    #             )
+    #             must.append(__bool_must_match(k, v, {}))
 
-    # ADD MET INFORMATION
-    if len(items["MET"]["MET_paths"]):
-        for v in items["MET"]["MET_paths"]:
-            must.append({
-                "nested": {
-                    "path": "MET",
-                    "query": {
-                        "bool": {"must": [{"match": {"MET.Codes.keyword": v["code"]}}]}
-                    },
-                }
-            })
+    # # ADD MET INFORMATION
+    # if len(items["MET"]["MET_paths"]):
+    #     for v in items["MET"]["MET_paths"]:
+    #         must.append({
+    #             "nested": {
+    #                 "path": "MET",
+    #                 "query": {
+    #                     "bool": {"must": [{"match": {"MET.Codes.keyword": v["code"]}}]}
+    #                 },
+    #             }
+    #         })
 
     items["base"]["bool"] = { "must": must, "must_not" : must_not }
 
@@ -1163,7 +1288,6 @@ def __sort_results(items):
     else:
         return [{"_score": {"order": "desc"}}]
 
-
 def __bool_must_match(key:str, value:list, query:dict):
     """
     This method appends 'match' queries to the 'must' list in the base_query
@@ -1202,7 +1326,7 @@ def __build_aggregations(items):
     """
     This method builds the aggregation dictionaries to append to the query. There are two types of aggregations that are
     being processed. The first is to retrieve all document types related to the query, for example, photos, 3D models etc.
-    The second type of aggregation is that of all facets related to the query.
+    The second type of aggregation is that of all facets related to the query. Filters are dynamically applied to all facets.
     
     Parameters
     ----------
@@ -1218,7 +1342,7 @@ def __build_aggregations(items):
     # SIMPLE SEARCH USE-CASE
     # if not items['category']:
     #     items["aggs"]["doc_types"] = {
-    #         "terms": {"field": "doc.ES_index.keyword"}
+    #         "terms": {"field": "ES_index.keyword"}
     #     }
         # print('ok')
 
@@ -1228,28 +1352,121 @@ def __build_aggregations(items):
         # SHOW RELEVANT FACETS
         # items["aggs"] = [ { name : term_agg for name, term_agg in list(FACETS_PER_CATEGORY[category].items()) } for category in categories]
 
-    # AGGREGATE ALL FACETS REGISTERED FOR THE CURRENT DOCUMENT TYPE
+    # AGGREGATE ALL FACETS REGISTERED FOR THE SELECTED CATEGORIES
     if items["category"]:
-        items["aggs"] = {
-            name: term_agg
-            for name, term_agg in list(FACETS_PER_CATEGORY[items["category"]].items())
-        }
+        items["aggs"] = {}
+        for category in items['category']:
+            for name, term_agg in list(FACETS_PER_CATEGORY[category].items()):
+                items["aggs"][f'{category}_{name}'] = term_agg
+
+        # LIMIT AGGREGATIONS TO DATERANGE SLIDER WITH FILTER
+        if any(x for x in items['facets']['all_facets'] if '_daterange' in x):
+          
+            dateRanges = [x for x in items['facets']['all_facets'] if '_daterange' in x]
+
+            for daterange in dateRanges:
+
+                if len(items['facets']['all_facets'][daterange]):
+                    f = []
+                    
+                    f.append(items["aggs"][daterange]['filter']) if 'bool' not in items["aggs"][daterange]['filter'] else f.append(items["aggs"][daterange]['filter']['bool']['must'][0])
+
+                    f.append({ 
+                        "range" : {
+                            'EntryDate_ms' : {
+                                'gte' : items['facets']['selected'][daterange][0],
+                                'lte' : items['facets']['selected'][daterange][1]
+                            }
+                        }
+                    })
+
+                    query = {
+                        "filter" : {
+                            "bool" : {
+                                "must" : f
+                            }
+                        }
+                    }
+
+                    for key in items['aggs'].keys():
+                        if '_' not in key:
+                            items["aggs"][key].update(query)
+
+            # # THE USER IS PLAYING WITH THE DATE RANGE SLIDER AND THE FACETS
+            # # WE WANT TO LIMIT AGGREGATIONS TO THE SELECTED DATE RANGE
+            # else:
+
+            #     for daterange in dateRanges:
+            #         q.append(items["aggs"][daterange]['filter']) if 'bool' not in items["aggs"][daterange]['filter'] else q.append(items["aggs"][daterange]['filter']['bool']['must'][0])
+
+            #         for k, v in items['facets']['selected'].items():
+            #             if '_daterange' not in k:
+            #                 for val in v:
+            #                     q.append({ 
+            #                         "term" : {
+            #                             items['aggs'][k]['aggregations'][k]['terms']['field'] : val
+            #                         }
+            #                     })
+
+            #         query = {
+            #             "filter" : {
+            #                 "bool" : {
+            #                     "must" : q
+            #                 }
+            #             }
+            #         }
+                            
+            #         items["aggs"][daterange].update(query)
+
+
+
+                    # q = {
+                    #         "inner": {
+                    #             "filter": {
+                    #                 "bool": {
+                    #                     "must": [{
+                    #                         "match": {
+                    #                             "EntryDate_ms": 
+                    #                         }
+                    #                     }]
+                    #                 }
+                    #             }
+                    #         }
+                    #     }
+                        # items["aggs"]["MET"]["aggregations"].update(q)
+                        
+            # facets = list(items['aggs'].keys())
+            # APPLY SELECTED FACET TO EACH SUBFACET
 
         # LIMIT MET AGGREGATIONS TO SELECTED CATEGORY
         if "MET" in items["aggs"]:
+            m = []
+            for category in items['category']:
+                qp = {
+                    "match": {
+                        "type": category
+                    }
+                }
+                m.append(qp)
+            
             q = {
                 "inner": {
                     "filter": {
-                        "bool": {"must": [{"match": {"type": items["category"]}}]}
+                        "bool": {
+                            "must": m
+                        }
                     }
                 }
             }
+
             items["aggs"]["MET"]["aggregations"].update(q)
 
     # AGGREGATE ALL DATA TYPES IN THE DATA SET
     if 'ignore' in items and items['ignore']:
         items["aggs"]["doc_types"] = {
-            "terms": {"field": "doc.ES_index.keyword"}
+            "terms": {
+                "field": "ES_index.keyword"
+            }
         }
 
     return items
@@ -1259,6 +1476,10 @@ def __post_filter(items:dict) -> dict:
     """
     Private method to build a boolean filter. The filter is appended to the query and individual facets
     to narrow facet results to relevant categories only.
+    
+    MET terms
+    Facets
+
     
     Parameters
     ----------
@@ -1270,11 +1491,11 @@ def __post_filter(items:dict) -> dict:
     """
     
     items["post"] = {"bool": {}}
-    must, should = [], []
+    post_filters, must, should = {}, [], []
 
     if not items['category'] and items['query']:
         indices = __get_indices(['iiif', 'library'])
-        
+       
         # for index in indices:
         #     should.append({
         #     "match": { 
@@ -1283,28 +1504,157 @@ def __post_filter(items:dict) -> dict:
         # })
         # must.append({"match": { "ES_Index": index }} for index in indices)
         # items["aggs"]["doc_types"] = {
-            # "terms": {"field": "doc.ES_index.keyword"}
+            # "terms": {"field": "ES_index.keyword"}
         # }
 
     # LIMIT RETURNED RESULTS TO DOCUMENT TYPE (CATEGORY)
-    if items["category"]:
+    # if items["category"]:
 
-        # ADD ENTRYDATES TO ENABLE FILTERING BY DATES
-        print('date')
-        if "EntryDate_ms" in items["fields"].keys():
-            should.append(
-                {
-                    "range": {
-                        "doc.EntryDate_ms": {
-                            "gte": items["fields"]["EntryDate_ms"][0],
-                            "lte": items["fields"]["EntryDate_ms"][1],
+    #     # ADD ENTRYDATES TO ENABLE FILTERING BY DATES
+    #     print('date')
+    #     if "EntryDate_ms" in items["fields"].keys():
+    #         must.append(
+    #             {
+    #                 "range": {
+    #                     "EntryDate_ms": {
+    #                         "gte": items["fields"]["EntryDate_ms"][0],
+    #                         "lte": items["fields"]["EntryDate_ms"][1],
+    #                     }
+    #                 }
+    #             }
+    #         )
+
+    # ADD SPECIFIC FACET INFORMATION TO POST-FILTER
+    if 'selected' in items['facets']:
+
+        
+        # field = "EntryDate_ms" if "_ms" in items["fields"].keys() else "_"
+        # fields = { k: v for k, v in items["fields"].items() if k != field.split("_")[0] }
+
+        for category, facets in items['facets']['selected'].items():
+
+            for key, val in facets.items():
+
+                if key in FACET_TYPES[category]['normal']:
+
+                    bool_filter = {
+                        'bool' : {
+                            'must' : [],
+                            'should' : [],
                         }
                     }
+
+                    bool_filter['bool']['must'].append({
+                        'match' : {
+                            'ES_index' : CATEGORIES_INV[category]
+                        }
+                    })
+
+                    # RANGE MATCH IF THE SEARCH IS FOR A DATE (IN SECONDS)
+                    if "_daterange" in key:
+                        earliest, latest = val[0], val[1]
+                        should.append({
+                            "match": {
+                                'EntryDate_ms' : val[0]
+                            }
+                        }) if len(val) == 1 else should.append({
+                            "range": {
+                                "EntryDate_ms": {
+                                    "gte": earliest,
+                                    "lte": latest,
+                                }
+                            }
+                        })
+
+                # NESTED FILTERS
+                if key in FACET_TYPES[category]['nested']:
+                    
+                    post_filters = {
+                        "bool" : {
+                            "should" : []
+                        }
+                    }
+
+                    for v in val:
+                        
+                        # post_filter = {
+                        #     "nested" : {
+                        #         "path" : "RelatedItems",
+                        #         "query" : []
+                        #     }
+                        # }
+                        # if len(val) == 1:
+                        # for v in val:
+                        if v == 'False': v = False
+                        if v == 'True' : v = True
+                        post_filter = {
+                            "nested" : {
+                                "path" : "RelatedItems",
+                                "query" : {
+                                    "match" : { 
+                                        items['aggs'][f'{CATEGORIES_INV[category]}_{key}']['aggregations'][key]['terms']['field'] : v 
+                                    }
+                                }
+                            }
+                        }
+                        # post_filter['nested']['query'].append({ 
+                            # "match" : { 
+                                # items['aggs'][f'{CATEGORIES_INV[category]}_{key}']['aggregations'][key]['aggregations'][key]['terms']['field'] : v 
+                            # }
+                        # })
+
+                        post_filters['bool']['should'].append(post_filter)
+
+                    # post.append(post_filter)
+                    # else:
+
+                    # q = {
+                    #         "match" : {
+                    #             items['aggs'][k]['aggregations'][k]['terms']['field'] : val
+                    #         }
+                    #         for val in v
+                    #     }
+                        # for v in val:
+                            # should.append({ "match" : { items['aggs'][f'{CATEGORIES_INV[category]}_{key}']['aggregations'][key]['terms']['field'] : v }})
+            # elif k.count(".") >= 2:
+            #     v = (
+            #         re.split(" |-\.", v)
+            #         if "Provenance" in k or "Description" in k or "Transcription" in k
+            #         else [v]
+            #     )
+            #     q = {
+            #         "nested": {
+            #             "path": k.split(".")[0],
+            #             "query": {"bool": {"must": [__bool_must_match(k, v, {})]}},
+            #         }
+            #     }
+            #     should.append(q)
+            # else:
+            #     v = (
+            #         re.split(" |-|\.", v)
+            #         if "Provenance" in k
+            #         or "Description" in k
+            #         or "Transcription" in k
+            #         or "Title" in k
+            #         else [v]
+            #     )
+            #     should.append(__bool_must_match(k, v, {}))
+
+    # ADD MET INFORMATION
+    if len(items["MET"]["MET_paths"]):
+        for v in items["MET"]["MET_paths"]:
+            should.append({
+                "nested": {
+                    "path": "MET",
+                    "query": {
+                        "bool": {"must": [{"match": {"MET.Codes.keyword": v["code"]}}]}
+                    },
                 }
-            )
+            })
+
 
     # INCLUDE FACETS
-    if len(items["facets"]["selected"]):
+    # if len(items["facets"]["selected"]):
 
         # PROCESS SELECTED FACETS
         # for facet_category in items["facets"].keys():
@@ -1312,34 +1662,50 @@ def __post_filter(items:dict) -> dict:
                 # x for x in items["facets"][facet_category] if x["selected"] == True
             # ]
 
-        for category, facets in items["facets"]["selected"].items():
-            if len(facets):
-                if category in FACETS_PER_CATEGORY[items["category"]]:
-                    field = list(find_key("field", FACETS_PER_CATEGORY[items["category"]][category]))[0]
-                    for facet in facets:
-                        if "nested" in FACETS_PER_CATEGORY[items["category"]][category]:
-                            path = FACETS_PER_CATEGORY[items["category"]][category]["nested"]["path"]
-                            should.append({
-                                "nested": {
-                                    "path": path,
-                                    "query": {
-                                        "term": {
-                                            field: facet
-                                        }
-                                    },
-                                }
-                            })
-                        else:
-                            should.append({
-                                "term": {
-                                    field: facet
-                                }
-                            })
+            # if len(items['facets']['selected']):
+        # ADD FACETS FROM ACROSS MULTIPLE CATEGORIES?
+
+        # for facet_name, facet_value in items['facets']['selected'].items():
+        #     for facet in facet_value:
+        #         should.append({ "match" : {
+        #             FACETS_PER_CATEGORY[items['category']][facet_name]["aggregations"][facet_name]["terms"]["field"] : facet }
+        #         })
+
+        # for category, facets in items["facets"]["selected"].items():
+        #     if len(facets):
+        #         if category in FACETS_PER_CATEGORY[items["category"]]:
+        #             field = list(find_key("field", FACETS_PER_CATEGORY[items["category"]][category]))[0]
+        #             for facet in facets:
+        #                 if "nested" in FACETS_PER_CATEGORY[items["category"]][category]:
+        #                     path = FACETS_PER_CATEGORY[items["category"]][category]["nested"]["path"]
+        #                     should.append({
+        #                         "nested": {
+        #                             "path": path,
+        #                             "query": {
+        #                                 "term": {
+        #                                     field: facet
+        #                                 }
+        #                             },
+        #                         }
+        #                     })
+        #                 else:
+        #                     should.append({
+        #                         "term": {
+        #                             field: facet
+        #                         }
+        #                     })
 
     # must.append({"bool": {"should": should}})
 
-    # ASSIGNING THE FILTER ON THE ITEMS DICTIONARY TO BE PROCESSED IN THE QUERY
-    items["post"]["bool"] = {"must": must, "should" : should}
+    # ASSIGNING THE POST FILTER ELEMENTS ON THE ITEMS DICTIONARY TO BE PROCESSED IN THE QUERY
+    if post_filters:
+        items["post"]["bool"]['filter'] = post_filters
+    
+    if must:
+        items["post"]["must"] = must
+
+    if should:
+        items["post"]["should"] = should
 
     return items
 
@@ -1350,7 +1716,7 @@ def __post_filter(items:dict) -> dict:
 ####################################
 ###		CONVENIENCE METHODS		 ###
 ####################################
-def __recurse_aggs(agg_name:str, search_results:dict, facets, selected_facets:dict):
+def __recurse_aggs(category:str, agg_name:str, search_results:dict, facets:list, selected_facets:dict):
     """
     This method iterates through the different levels of the search results to bring all aggregations to the same top-level and
     is called after the search has been returned from ElasticSearch. Some aggregated data comes from nested fields
@@ -1358,9 +1724,10 @@ def __recurse_aggs(agg_name:str, search_results:dict, facets, selected_facets:di
     
     Parameters
     ----------
+    - category (str) : category being searched
     - agg_name (str) : 
     - search_results (dict) :
-    - facets () : 
+    - facets (list) : 
     - selected_facets (list) : list of dictionaries
 
     Returns
@@ -1370,40 +1737,41 @@ def __recurse_aggs(agg_name:str, search_results:dict, facets, selected_facets:di
     if type(search_results) != type(dict()):
         return facets
 
-    if "aggregations" not in search_results:
-        facet_array = []
-        if "buckets" in search_results:
-            for bucket in search_results["buckets"]:
-                if bucket["key"] and bucket["doc_count"]:
-                    agg = {
-                        "display_text" : str(bucket["key"]),
-                        "doc_count" : bucket["doc_count"],
-                        "selected" : True if any([key for key, value in selected_facets.items() if key == agg_name and bucket["key"] in value ]) else False
-                        # if any(
-                            # [
-                                # x
-                                # for x in selected_facets
-                                # for y in x.values()
-                                # if str(y) == str(bucket["key"])
-                            # ]
-                        # )
-                        # else False,
-                    }
-                    facet_array.append(agg)
-            if agg_name in selected_facets:
-                facets.insert(0, {agg_name: facet_array})
-            else:
-                facets.append({agg_name: facet_array})
-            return facets
+    # if "aggregations" not in search_results:
+    facet_array = []
+    if "buckets" in search_results:
+        for bucket in search_results["buckets"]:
+            if bucket["key"] and bucket["doc_count"]:
+                agg = {
+                    # "category" : category['displaytext'],
+                    "display_text" : bucket["key_as_string"] if 'key_as_string' in bucket else str(bucket["key"]),
+                    "doc_count" : bucket["doc_count"],
+                    "selected" : True if any([key for key, value in selected_facets.items() if key == agg_name and bucket["key"] in value ]) else False
+                    # if any(
+                        # [
+                            # x
+                            # for x in selected_facets
+                            # for y in x.values()
+                            # if str(y) == str(bucket["key"])
+                        # ]
+                    # )
+                    # else False,
+                }
+                facet_array.append(agg)
+        if agg_name in selected_facets:
+            facets.insert(0, {agg_name: facet_array})
         else:
-            for agg_name, value in list(search_results.items()):
-                __recurse_aggs(agg_name, value, facets, selected_facets)
-            return facets
-    else:
-        for agg_name, value in list(search_results["aggregations"].items()):
-            if agg_name != "code" and agg_name != "paths":
-                __recurse_aggs(agg_name, value, facets, selected_facets)
+            facets.append({agg_name: facet_array})
         return facets
+    else:
+        for agg_name, value in list(search_results.items()):
+            __recurse_aggs(category, agg_name, value, facets, selected_facets)
+        return facets
+    # else:
+        # for agg_name, value in list(search_results["aggregations"].items()):
+            # if agg_name != "code" and agg_name != "paths":
+                # __recurse_aggs(category, agg_name, value, facets, selected_facets)
+        # return facets
 
 
 def find_key(key, value):
@@ -1710,6 +2078,39 @@ def convertToMS(value):
         )
     elif len(splitVal[0]) == 4:
         return value, (parser().parse(value) - datetime(1970, 1, 1)).total_seconds()
+
+def get_manifest(request, index, id):
+	rec_id = f'iiif-{CATEGORIES[index]["iiif"]}-{id}'
+	manifest = get_manifest_data(request, rec_id)
+	if manifest:
+		response = JsonResponse(manifest)
+		response["Access-Control-Allow-Origin"] = "*"
+		return response
+	else:
+		raise Http404("There was an error getting this manifest")
+
+def get_manifest_data(request, rec_id):
+    try:
+        base_uri = request.build_absolute_uri('/iiif/')
+        data = es.get(index='iiif', id=rec_id)["_source"]
+        manifest = data['manifest']
+        manifest['@id'] = base_uri + manifest['@id']
+        if 'startCanvas' in manifest["sequences"][0]:
+            manifest["sequences"][0]['startCanvas'] = base_uri + manifest["sequences"][0]['startCanvas']
+        manifest['sequences'][0]['@id'] = base_uri + manifest['sequences'][0]['@id']
+        canvases = manifest['sequences'][0]['canvases']
+        for canvas in canvases:
+            canvas['@id'] = base_uri + canvas['@id']
+            for image in canvas['images']:
+                image['@id'] = base_uri + image['@id']
+                image['on'] = canvas['@id']
+        return manifest
+    except:
+        return None
+
+
+
+
 
 # METHODS THAT HAVE BEEN CHECKED, VERIFIED AND ARE READY BELOW
 def __get_indices(exclude:list=None):

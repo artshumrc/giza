@@ -844,8 +844,10 @@ def get_form(request, index=None, id=None, form=None):
                             },
                         ),
                     },
-                    "#collection_modal": {"action": "open"},
-                },
+                    "#collection_modal": {
+                        "action": "open"
+                    }
+                }
             }
         )
         

@@ -1,7 +1,7 @@
 {% load static %}
 <div class="media-object-holder search-result-thumbnail-view">
   {% for result in search_result.hits %}
-    {% with doc=result.source.doc %}
+    {% with doc=result.source %}
     {% if doc.RecID %}
     <div class="media-object list-item search-result thumbsize-md thumbs-square">
       <div class="media-object-section">
@@ -24,7 +24,7 @@
             <span class="icon-plus-circle icon-fw"></span> Add this to a collection
           </a> -->
         <div class="thumbnail {% if not 'PrimaryDisplay' in doc %} no-img {% endif %}">
-          <a class="my-giza-lnk modal" data-url="{% url 'get_type_html' index=doc.ES_index id=doc.RecID view='full' %}">
+          <a class="my-giza-lnk modal" data-url="{% url 'search_show_result' index=doc.ES_index id=doc.RecID %}">
             <img
             {# src="{% if doc.PrimaryDisplay.Thumbnail_ID %}{% static 'images/thumbnails/'|add:doc.PrimaryDisplay.Thumbnail_ID|add:'.jpg' %}{% else %}{% static 'images/object1.png' %}{% endif %}" #}
 src="{% if doc.PrimaryDisplay.Thumbnail %}{{ doc.PrimaryDisplay.Thumbnail }}{% else %}{% static 'images/object1.png' %}{% endif %}"
@@ -33,7 +33,7 @@ src="{% if doc.PrimaryDisplay.Thumbnail %}{{ doc.PrimaryDisplay.Thumbnail }}{% e
       </div>
       <div class="media-object-section">
         <p class="media-object-title"><a class="my-giza-lnk modal"
-            data-url="{% url 'get_type_html' index=doc.ES_index id=doc.RecID view='full' %}">{{ doc.DisplayText }}</a></p>
+            data-url="{% url 'search_show_result' index=doc.ES_index id=doc.RecID %}">{{ doc.DisplayText }}</a></p>
         <ul class="subheader">
           {% if doc.ES_index == 'sites' %}
           <li>{{ doc.SiteName }}</li>
@@ -58,7 +58,7 @@ src="{% if doc.PrimaryDisplay.Thumbnail %}{{ doc.PrimaryDisplay.Thumbnail }}{% e
           <div class="row align-right search-result-list-view-item">
             <div class="column small-2 text-left">
               <a class="my-giza-lnk modal thumbnail {% if not 'PrimaryDisplay' in doc %} no-img {% endif %}"
-                data-url="{% url 'get_type_html' index=doc.ES_index id=doc.RecID view='full' %}">
+                data-url="{% url 'search_show_result' index=doc.ES_index id=doc.RecID %}">
                 <img
                 {# src="{% if doc.PrimaryDisplay.Thumbnail_ID %}{% static 'images/thumbnails/'|add:doc.PrimaryDisplay.Thumbnail_ID|add:'.jpg' %}{% else %}{% static 'images/object1.png' %}{% endif %}" #}
                   src="{% if PrimaryDisplay.Thumbnail %}{{ PrimaryDisplay.Thumbnail }}{% else %}{% static 'images/object1.png' %}{% endif %}"
@@ -66,7 +66,7 @@ src="{% if doc.PrimaryDisplay.Thumbnail %}{{ doc.PrimaryDisplay.Thumbnail }}{% e
             </div>
             <div class="column {% if 'sites' in doc.ES_index %}small-4{% else %}small-8{% endif %}">
               <p class="media-object-title"><a class="my-giza-lnk modal"
-                  data-url="{% url 'get_type_html' index=doc.ES_index id=doc.RecID view='full' %}">{{ doc.DisplayText }}</a>
+                  data-url="{% url 'search_show_result' index=doc.ES_index id=doc.RecID %}">{{ doc.DisplayText }}</a>
               </p>
             </div>
             {% if doc.ES_index == 'sites' %}

@@ -1,20 +1,10 @@
 {% if search.categories|length %}
+<ul class="vertical menu accordion-menu" data-accordion-menu data-multi-open="false">
 {% for category in search.categories %}
-<li data-category="{{ category.key }}">
-  <h1 class="search-facet-title">{{ category.displaytext }}
-    {% if 'doc_count' in category %}({{ category.doc_count }}) {% endif %}</h1>
-  <a>
-    <ul class="menu vertical">
-      {% for key, val in category.fields.items %}
-      <li>
-        <a>
-          <input type="text" id="{{ category.key }}_{{ key }}" placeholder="{{ val }}"
-            name="{{ category.key }}_{{ key }}">
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-  </a>
+<li>
+  <input type="checkbox" class="facet_checkbox" id="{{ category.key }}" placeholder="{{ val }}" name="{{ category.key }}" {% if category.selected %} checked {% endif %} onclick="toggle_category('{{ category.key }}')">
+  <label for="{{ category.key }}">{{ category.displaytext }} {% if 'doc_count' in category %} ({{ category.doc_count }}) {% endif %}</label>
 </li>
 {% endfor %}
+</ul>
 {% endif %}

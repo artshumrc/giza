@@ -59,9 +59,10 @@ urlpatterns = [
     path('search/lookup', views.search_token, name='search_token'),
 
     path('search/results', search_views.search_results, name='search_results'),
+    path('search/results/<str:index>/<str:id>', search_views.search_show_result, name='search_show_result'),
     path('search/results/<str:index>/<str:id>/<str:form>', views.get_form, name='get-form'),
-    path('search/results/documents/<str:index>/<str:id>/<str:view>', search_views.get_type_html, name='get_type_html'),
-    path('search/results/iiif/<str:index>/<str:id>/', tms_views.get_manifest, name="iiif-manifest"),
+    # path('search/results/documents/<str:index>/<str:id>/<str:view>', search_views.get_type_html, name='get_type_html'),
+    path('search/results/iiif/<str:index>/<str:id>/', search_views.get_manifest, name="iiif-manifest"),
 
     # re_path(r'^/<str:tab>/<str:type>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection'),
     path('search/results/<str:tab>/<str:index>/<int:id>/', views.my_giza_add, name='add-to-my-giza-collection-new'),
@@ -108,7 +109,7 @@ urlpatterns = [
 	path('manifests/<slug:id>/annotation/canvas/<int:canvas_index>', tms_views.get_annotation, name="iiif-manifest-annotation"),
 
     # UNKNOWN~POTENTIALLY NOT LONGER IN USE
-    re_path(r'^v1/(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html_legacy, name='get_type_html_legacy'),
+    # re_path(r'^v1/(?P<type>[0-9a-z]+)/(?P<id>[\d]+)/(?P<view>intro|full|allphotos)?/$', tms_views.get_type_html_legacy, name='get_type_html_legacy'),
     re_path(r'^(?P<type>[0-9a-z]+)/(?P<id>[\d]+)\.json$', tms_views.get_type_json, name='get_type_json'),
     # re_path(r'^mygiza/collections/private/$', views.collections_private, name= "mygiza_private_collections"),
     # re_path(r'^mygiza/collections/public/$', views.collections_public, name= "mygiza_public_collections"),
