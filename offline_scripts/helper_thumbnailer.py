@@ -1,9 +1,11 @@
-import time
-from os import cpu_count
+from io import BytesIO
+from base64 import b64encode
+from os import cpu_count, path, makedirs, getcwd
 from math import ceil
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed, Future, wait
 from requests.adapters import HTTPAdapter
 from requests import Session
+from PIL import Image
 
 THREAD_POOL = 32
 
@@ -56,6 +58,26 @@ def download_thumbnails(urls:list):
 
     return res, error
 
+def thumbnail(file, file_name):
+    dir = path.join(getcwd(), 'static', 'media', 'thumbnails')
+    if not path.exists(dir): makedirs(dir)
+    
+    # BUFFER FOR THE IMAGE
+    buffer = BytesIO(file)
+    thumb = Image.open(buffer)
+    thumb.thumbnail((100, 100))
+
+    # BUFFER FOR THE THUMBNAIL
+    buf = BytesIO()
+    
+    # RESAVE THUMB TO BUFFER
+    thumb.save(buf, format=thumb.format)
+    
+    # SAVE THUMB TO FS
+    thumb.save(f'{path.join(dir, file_name)}.jpg', format=thumb.format)
+    
+    return buf
+
 def __process(urls:list, folder:str=None):
     """
     Private method that processes a list of urls in a multithreading environment.
@@ -73,9 +95,9 @@ def __process(urls:list, folder:str=None):
         with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
             jobs = [executor.submit(__get_url, *url, folder) for url in zip(urls)]
             for out in as_completed(jobs):
-                idx, response = out.result()
+                url, response = out.result()
                 if response.status_code != 200:
-                    results[idx] = 'error'
+                    results[url['Thumbnail_ID']] = 'error'
         return results
     except:
         raise
@@ -99,9 +121,11 @@ def __get_url(url:dict, folder:str=None):
             return url['Thumbnail_ID'], response
         while response.status_code != 200:
             response = session.get(url['url'])
-        with open(f'{folder}/{url["Thumbnail_ID"]}.jpg', 'wb') as fobj:
-            fobj.write(response.content)
-        return url['Thumbnail_ID'], response
+            buffer = thumbnail(response.content, str(url['Thumbnail_ID']))
+            url['base64'] = f'data:{response.headers["Content-Type"]};base64,{b64encode(buffer.getvalue()).decode("utf-8")}'
+        # with open(f'{folder}/{url["Thumbnail_ID"]}.jpg', 'wb') as fobj:
+            # fobj.write(response.content)
+        return url, response
     except Exception as e:
         print(e)
         raise e

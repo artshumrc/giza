@@ -190,7 +190,7 @@ class Base:
                     if len(thumbnail_url) and row['ArchIDNum'] not in self.thumbnail_urls:
                         self.thumbnail_urls[row['ArchIDNum']] = { 
                             'Thumbnail_ID' : row['ArchIDNum'], 
-                            'url' : thumbnail_url 
+                            'url' : thumbnail_url
                         }
                 else:
                     if 'ThumbPathName' in row and 'ThumbFileName' in row:

@@ -164,7 +164,7 @@ def get_thumbnails(module=None):
         # RETURN ALL IF WE CAN'T OPEN THE FILE OR RETURN ONLY THOSE APPLICABLE TO THE MODULE
         return [file.split('.')[0] for file in list_folder(dir)]
 
-def save_thumbnails(module, thumbnails):
+def save_thumbnails(module:str, thumbnails):
     
     # SAVE THUMBNAILS TO THE STATIC FOLDER
     base_dir = f'static/images'

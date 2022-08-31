@@ -6,7 +6,7 @@ try:
 
     from cursor_FSS import file_open, file_del, file_save, get_thumbnails, save_thumbnails
     from cursor_TMS import get_drs_metadata
-    from helper_thumbnailer import download_thumbnails
+    from helper_thumbnailer import download_thumbnails, thumbnail
     from module_iiif_worker import check_drs
 
     from module_iiif_worker import IIIF_Worker
@@ -206,6 +206,9 @@ class Module(object):
                 if len(thumbnail_urls) > 0:
                     self.logger.log(f'>>> DOWNLOADING {len(thumbnail_urls)} NEW THUMBNAILS FOR "{self.module_type.upper()}"', self.module_type)
                     res, error = download_thumbnails(thumbnail_urls)
+
+                    # 'base64' : f'data:{request.FILES["Thumbnail"].content_type};base64,{base64.b64encode(buffer.getvalue()).decode("utf-8")}'
+
                     self.logger.log(f'>>> {len(error)} ERRORS DOWNLOADING THUMBNAILS FOR "{self.module_type.upper()}"', self.module_type)
 
                     # UPDATE THE LOG ON DISK
