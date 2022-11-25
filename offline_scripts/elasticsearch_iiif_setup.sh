@@ -25,19 +25,21 @@ curl -XPUT 'http://localhost:9200/iiif' -d '
 			}
 		}
 	},
-	"manifest" : {
-		"properties": {
-			"displaytext": {
-				"type" : "text",
-				"analyzer" : "case_insensitive_sort",
-				"include_in_all" : false
-			},
-			"relateditems" : {
-				"type" : "nested",
-				"include_in_all" : false
-			},
-			"manifest": {
-					"type" : "object"
+	"mappings" : {
+		"manifest" : {
+			"properties": {
+				"displaytext": {
+					"type" : "text",
+					"analyzer" : "case_insensitive_sort",
+					"include_in_all" : false
+				},
+				"relateditems" : {
+					"type" : "nested",
+					"include_in_all" : false
+				},
+				"manifest": {
+						"type" : "object"
+				}
 			}
 		}
 	}
