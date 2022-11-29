@@ -1,0 +1,48 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+
+services:
+  django:
+    build:
+      context: ../ # use the parent directory as the build context
+      dockerfile: docker/Dockerfile.dev
+    image: giza-django
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    # volumes:
+    #   - giza:/app
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    environment:
+      YARNBUILD: 'False'
+      LOAD: 'False'
+
+  postgres:
+    hostname: postgres
+    image: postgres:9.5.15 # same version as prod FASRC cluster
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    env_file:
+      - .env
+
+  # static:
+  #   image: node:16
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./fionn_cycle/frontend:/app/frontend
+  #   working_dir: /app/frontend
+  #   command: /bin/sh -c 'yarn install && yarn start --host'
+  #   environment:
+  #     # Localhost GA property; these aren't being passed in correctly
+  #     VITE_APP_GOOGLE_ANALYTICS_TRACKING_ID: 'G-16GZBJ8MTS'
+  #     VITE_APP_GOOGLE_ANALYTICS_STORAGE_KEY: 'ga_local_key'
+
