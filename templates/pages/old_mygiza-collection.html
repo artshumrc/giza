@@ -1,0 +1,280 @@
+{% extends 'layouts/default.html' %}
+{% load static %}
+{% load search_tags %}
+{% set
+  title: "MyGIZA",
+  section: "mygiza",
+  section_mygiza: true,
+  mygiza_auth: true,
+  class: "p-t-1"
+%}
+
+{% block title %}{{ "MyGIZA" }}{% endblock %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'page-header.html' with bg="7" title="MyGIZA"%}
+{% endblock  %}
+
+{% block 'main_content' %}
+  <!-- GDPR cookies callout
+
+    TODO: reinstate with https://github.com/osano/cookieconsent
+
+  <div class="row">
+    <div class="columns">
+      <div class="callout primary text-smaller" data-closable>
+        <span>
+          <strong>Cookie use:</strong> This site uses cookies to track items that you add to MyGiza if
+          you do not have an account. To use MyGiza, you must
+          <a href="#">opt into our cookies policy</a>, or
+          <a href="#" data-open="login_new">create or log into a My Giza
+          account</a> to save collections of items from the Digital Giza
+          library and share those items.
+        </span>
+        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+    <div class="row">
+      <div class="columns">
+        <div class="titles">
+        <a href="/collections/all" >Collections</a>
+        <a href="/search/all">Saved Searches</a>
+        </div>
+        {% if user.is_superuser %}
+          <a href="/admin/giza/collection/add" class="add" ><span class="sr-only">add</span></a>
+        {% elif user.is_authenticated %}
+          <a href="/collections/create" class="add" ><span class="sr-only">add</span></a>
+        {% else %}
+          <a href="/sign-in" class="add" ><span class="sr-only">add</span></a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="row links">
+      <div class="columns">
+        <ul class="dropdown menu" data-dropdown-menu>
+          <li class="{% if request.path == '/collections/' %}active{% endif %}">
+            <a href="/collections/all" >All Collections</a>
+            {% if user.is_authenticated %}
+              <ul class="menu show-for-small-only">
+                <li>
+                  <a href="/collections/user">My Collections</a>
+                </li>
+              <!--li><a href="#">Collections Shared with Me</a></li-->
+              </ul>
+            {% endif %}
+          </li>
+          {% if user.is_authenticated %}
+            <li class="hide-for-small-only {% if request.path == '/collections/user' %}active{% endif %}">
+              <a href="/collections/user" >My Collections</a>
+            </li>
+          {% endif %}
+          <!--li class="hide-for-small-only"><a href="#">Collections Shared with Me</a></li-->
+        </ul>
+        <!-- a href="/collections/" class="go-back">Back to Individual Collections</a-->
+      </div>
+    </div>
+  </div>
+
+  <!--
+  TODO: Add collection slider when it's determined how to choose which collections are
+    featured in the slider
+  div class="row collection-section hide-for-small-only">
+    <div class="columns">
+
+      <div class="collection-slider">
+        <div class="slide">
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static 'images/img-n9-small.jpg' %}, {% static 'images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static 'images/img-n9.jpg' %}, {% static 'images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>My Latest Project</strong>
+                <span>17 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+        </div>
+        <div class="slide">
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static 'images/img-n10.jpg' %}, {% static 'images/img-n10@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n10.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Sample Collection</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+        </div>
+        <div class="slide">
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static 'images/img-n9-small.jpg' %}, {% static 'images/img-n9-small@2x.jpg' %} 2x" media="(max-width: 639px)"/>
+                <source srcset="{% static 'images/img-n9.jpg' %}, {% static 'images/img-n9@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n9.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Favorite Items</strong>
+                <span>214 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+        </div>
+        <div class="slide">
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static 'images/img-n11.jpg' %}, {% static 'images/img-n11@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n11.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>Statues</strong>
+                <span>1 item</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+        </div>
+        <div class="slide">
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static 'images/img-n12.jpg' %}, {% static 'images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+        </div>
+        <div class="slide">
+          <div class="item-wrap">
+            <a href="#">
+              <picture>
+                <source srcset="{% static 'images/img-n12.jpg' %}, {% static 'images/img-n12@2x.jpg' %} 2x"/>
+                <img src="{% static 'images/img-n12.jpg' %}" alt="image description" width="250" height="250">
+              </picture>
+              <div class="caption">
+                <strong>A Collection with a Much Longer Name</strong>
+                <span>5 items</span>
+              </div>
+              <i class="fas fa-chevron-right show-for-small-only"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div-->
+
+  <section class="collection-section two-columns">
+    <div class="row row-padded">
+    <aside class="sidebar"">
+
+        <h5 class="heading-alt">Search Options</h5>
+        <p>
+          <!--a href="">Save this search</a--><br>
+          <a href="/search/">Start a new search</a>
+        </p>
+
+    </aside>
+      <div class="content-heading">
+        <h1>{{collection.title}}</h1>
+        <ul class="links">
+          <li>{{hits|length}} items</li>
+          <!--li class="active"><a href="#">3 Collaborators</a></li-->
+          <li>
+            Created by
+            {% for owner in collection.owners.all %}
+              <span class="collection-meta-creator">
+                {% if owner.full_name %}
+                  {{owner.full_name}}
+                {% else %}
+                  {{owner.username}}
+                {% endif %}
+              </span>
+            {% endfor %}
+          </li>
+        </ul>
+        <!--ul class="view-switcher hide-for-small-only">
+          <li><a href="#" class="switcher"><span class="bar-ico"><span>bar</span></span></a></li>
+          <li><a href="#" class="switcher"><i class="fas fa-th-large"></i><span class="sr-only">grid</span></a></li>
+        </ul-->
+        <!--ul class="dropdown menu show-for-small-only" data-dropdown-menu>
+          <li>
+            <a href="#" class="show-for-small-only"><i class="fas fa-ellipsis-h"></i></a>
+            <ul class="menu">
+              <li><a href="#" data-open="email_collection">Email this Collection</a></li>
+              <li><a href="#">Copy Collection Link</a></li>
+            </ul>
+          </li>
+        </ul-->
+        <a href="#" class="show-for-small-only back-link"><i class="fas fa-chevron-left show-for-small-only"></i><span class="sr-only">back link</span></a>
+      </div>
+      <ul class="collections-list">
+        {% for result in hits %}
+          <li>
+            <div class="item-wrap">
+
+              <a href="{% url 'get_type_html' result.type result.id 'full' %}">
+                <picture>
+                  {% if result.source.primarydisplay.thumbnail %}
+                    {% if result.source.primarydisplay %}<img src="{{ result.source.primarydisplay.thumbnail }}" alt="">{% endif %}
+                  {% else %}
+                    <img src="{% static 'images/thumb-default.png' %}" alt="image description" width="180" height="180">
+                  {% endif %}
+                </picture>
+                <div class="caption">
+                  <p class="media-object-title">{{ result.source.displaytext }}</p>
+                  {% if result.type == 'sites' %}
+                  <span>{{ result.source.sitename }}</span>
+                  {% else %}
+                  <span>{{ result.source.number }}</span>
+                  {% endif %}
+                </div>
+                <i class="fas fa-chevron-right show-for-small-only"></i>
+              </a>
+
+              {% if user in collection.owners.all %}
+                <a href="/collections/{{collection.slug}}/edit?remove_item_id={{result.id}}&remove_item_type={{result.type}}" tabindex="0">
+                  <span class="icon-minus-circle icon-fw"></span> Remove
+                </a>
+              {% endif %}
+
+            </div>
+          </li>
+          {% empty %}
+          <li>
+            <p>
+              There are no items in this collection yet.
+              <br>
+              <a href="/search/" class="add" >Add one.</a>
+            </p>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

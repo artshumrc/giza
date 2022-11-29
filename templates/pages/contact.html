@@ -1,17 +1,9 @@
-{% extends 'layouts/default.html' %}
 {% load static %}
-{% set
-  title: "Contact Us",
-  section: "about",
-  section_about: true
-%}
-
-{% block title %}{{ "Contact Us" }}{% endblock %}
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {% block 'page_headers' %}
-  {% include 'partials/page-header.html' with bg="6" title="Contact Us" %}
+  {% include 'page-header.html' with bg="6" title="Contact Us" %}
 {% endblock  %}
 
 {% block 'main_content' %}

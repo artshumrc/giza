@@ -1,0 +1,14 @@
+{% load search_tags %}
+<li>
+     <a href='#' name="{{item.path}}" id="{{item.path}}" data-term="{{item.key}}" draggable=true
+          ondragstart="drag(event, '{{ item.path }}', '{{ item.key }}')" class=METvalue>{{item.key}}</a>
+     {% if item|length > 2 %}
+          <ul class="menu">
+               {% for key, path in item.items %}
+                    {% if 'key' not in key and 'path' not in key %}
+                         {% include 'search-MET-terms-a.html' with item=path %}
+                    {% endif %}
+               {% endfor %}
+          </ul>
+     {% endif %}
+</li>

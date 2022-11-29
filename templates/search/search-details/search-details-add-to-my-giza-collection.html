@@ -1,0 +1,47 @@
+<div class="grid-container">
+    <div class="grid-x">
+        <h3>Add to MyGiza</h3>
+        <div class="cell medium-3">
+            {% if user_collections|length %}
+            <form>
+                {% for collection in user_collections %}
+                <a class="button primary my-giza-lnk modal post"
+                    data-url="{% url 'add-to-my-giza-collection' tab='collection' index=index id=id name=collection.title %}">
+                    <!-- UNDERNEATH WHEN USED TO VIEW COLLECTION -->
+                    <!-- ABOVE WHEN USED TO VIEW OBJECT FROM SEARCH RESULTS -->
+                    {{ collection.title }}
+                </a>
+                {% endfor %}
+            </form>
+            {% endif %}
+        </div>
+        <span class="title">New Collection</span>
+        <div class="jcf-scrollable">
+            <form method="post" class="disable_submit">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                <br>
+                {% endif %}
+                {{ collection_form.as_p }}
+                <input type="hidden" name="index" value="{{ index }}">
+                <input type="hidden" name="id" value="{{id}}">
+                <div class="btn-row">
+                    <a class="button primary my-giza-lnk modal post"
+                        data-url="{% url 'add-to-my-giza-collection-new' tab='collection' index=index id=id %}">New
+                        Collection</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(() => {
+        $('.disable_submit').on('submit', e => {
+            e.preventDefault()
+        })
+    })
+</script>

@@ -1,0 +1,11 @@
+{% extends 'page-subheader.html' %}
+
+{% block 'subheader_content' %}
+<p class="lead">
+  <strong class="accent-red">
+    Welcome {% if last_login|date:"SHORT_DATETIME_FORMAT" > now|date:"SHORT_DATETIME_FORMAT" %}back{% endif %}
+    {{ user.full_name }} (not you? <a class='my-giza-lnk' data-url="{% url 'sign-out' %}">Click here</a>)
+  </strong></br>
+  You last signed in on {{ user.last_login|date:"SHORT_DATETIME_FORMAT" }}
+</p>
+{% endblock %}

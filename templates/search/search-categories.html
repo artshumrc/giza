@@ -1,0 +1,14 @@
+{% if search.categories|length > 0 %}
+<div class="search-facet-section">
+  <h6 class="search-facet-title">Categories:</h6>
+  <ul class="search-facet-list">
+
+    <!-- DISPLAY CATEGORY FACETS -->
+    {% for category in search.categories %}
+      <li class="search-facet-item {% if category.key == search.category %} is-active {% endif %}">
+        <a onclick="toggle_category('toggle_{{ category.key }}')" class="search-category">{{ category.displaytext }} ({{ category.doc_count }})</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

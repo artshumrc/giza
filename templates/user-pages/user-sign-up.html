@@ -1,0 +1,17 @@
+<!-- BEGIN MAIN CONTENT ROWS -->
+<div class="auth-layout">
+  <div class="auth-form signup-form">
+    <form>
+      <ul class="messages" id="messages"></ul>
+      <br>
+      {{ custom_user_form.as_p }}
+      <label class="custom-checkbox">
+        <input type="checkbox">
+        <span class="fake-input"></span>
+        I accept the <a href="/terms">Terms & Conditions</a> of the Digital Giza Website
+      </label>
+      <br>
+      <a class="my-giza-lnk post button primary" data-url="{% url 'sign-up' %}">Sign Up</a> 
+    </form>
+  </div>
+</div>

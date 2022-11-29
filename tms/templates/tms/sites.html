@@ -1,33 +1,33 @@
 <div class="feature-block__body">
   <ul class="feature-block__list multicol-2">
-    {% for role in object.roles %}
+    {% for role in object.Roles %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>{{role}}</dt>
-          {% for item in object.relateditems.modernpeople %}
-            {% if item.role == role %}
-            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+          {% for item in object.RelatedItems.ModernPeople %}
+            {% if item.Role == role %}
+            <dd>{{ item.DisplayText }}{% if item.DisplayDate %}, {{ item.DisplayDate }}{% endif %}</dd>
             {% endif %}
           {% endfor %}
-          {% for item in object.relateditems.ancientpeople %}
-            {% if item.role == role %}
-            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+          {% for item in object.RelatedItems.AncientPeople %}
+            {% if item.Role == role %}
+            <dd>{{ item.DisplayText }}{% if item.DisplayDate %}, {{ item.DisplayDate }}{% endif %}</dd>
             {% endif %}
           {% endfor %}
-          {% for item in object.relateditems.institutions %}
-            {% if item.role == role %}
-            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+          {% for item in object.RelatedItems.Institutions %}
+            {% if item.Role == role %}
+            <dd>{{ item.DisplayText }}{% if item.DisplayDate %}, {{ item.DisplayDate }}{% endif %}</dd>
             {% endif %}
           {% endfor %}
-          {% for item in object.relateditems.groups %}
-            {% if item.role == role %}
-            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+          {% for item in object.RelatedItems.Groups %}
+            {% if item.Role == role %}
+            <dd>{{ item.DisplayText }}{% if item.DisplayDate %}, {{ item.DisplayDate }}{% endif %}</dd>
             {% endif %}
           {% endfor %}
-          {% for item in object.relateditems.animals %}
-            {% if item.role == role %}
-            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+          {% for item in object.RelatedItems.Animals %}
+            {% if item.Role == role %}
+            <dd>{{ item.DisplayText }}{% if item.DisplayDate %}, {{ item.DisplayDate }}{% endif %}</dd>
             {% endif %}
           {% endfor %}
         </dl>
@@ -48,52 +48,52 @@
       </div>
     </li>
     {% endfor %}
-    {% for sitedate in object.sitedates %}
+    {% for sitedate in object.SiteDates %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
-          {% if sitedate.type %}<dt>{{ sitedate.type }}</dt>{% endif %}
-          <dd>{{ sitedate.date|default:"" }}</dd>
+          {% if sitedate.Type %}<dt>{{ sitedate.Type }}</dt>{% endif %}
+          <dd>{{ sitedate.Date|default:"" }}</dd>
         </dl>
       </div>
     </li>
     {% endfor %}
-    {% if object.sitetype %}
+    {% if object.SiteType %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Site Type</dt>
-          <dd>{{ object.sitetype.sitetype }}</dd> <!-- Add search by sitetype id -->
+          <dd>{{ object.SiteType.sitetype }}</dd> <!-- Add search by sitetype id ?? -->
         </dl>
       </div>
     </li>
     {% endif %}
-    {% if object.shafts %}
+    {% if object.Shafts %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Shafts</dt>
-          <dd>{{ object.shafts }}</dd>
+          <dd>{{ object.Shafts }}</dd>
         </dl>
       </div>
     </li>
     {% endif %}
-    {% if object.remarks %}
+    {% if object.Remarks %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Remarks</dt>
-          <dd>{{ object.remarks }}</dd>
+          <dd>{{ object.Remarks }}</dd>
         </dl>
       </div>
     </li>
     {% endif %}
-    {% if object.problemsquestions %}
+    {% if object.ProblemsQuestions %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Problems/Questions</dt>
-          <dd>{{ object.problemsquestions }}</dd>
+          <dd>{{ object.ProblemsQuestions }}</dd>
         </dl>
       </div>
     </li>

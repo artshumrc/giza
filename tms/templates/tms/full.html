@@ -176,9 +176,9 @@
 
       {% if object.diarytranscription %}
       <div class="item__overview text-alt">
-            <h5>Diary Transcription:</h5>
-            {{ object.diarytranscription|linebreaks }}
-          </div>
+        <h5>Diary Transcription:</h5>
+        {{ object.diarytranscription|linebreaks }}
+      </div>
       {% elif object.description %}
       <div class="item__overview">
 
@@ -199,9 +199,9 @@
           {% endif %}
         </ul> -->
 
-          <p class="lead text-alt">
-            {{ object.description }}
-          </p>
+        <p class="lead text-alt">
+          {{ object.description }}
+        </p>
 
       </div>
       {% endif %}

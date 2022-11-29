@@ -1,0 +1,36 @@
+{% load static %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'page-header.html' with bg="9" title="Giza @ School"%}
+
+  {% include 'page-subheader.html' with backlink_url="giza-at-school" backlink_text="Back to Giza @ School" %}
+{% endblock  %}
+
+{% block 'main_content' %}
+  <div class="row">
+
+    <aside class="large-4 large-push-8 columns">
+
+      {% include 'feature-block-start.html' with feature_title="Contents" feature_block_class="secondary" feature_icon="list" %}
+        <ul class="menu vertical">
+          {% for lesson in lessons %}
+            <li><a class="my-giza-lnk modal" data-url="{% url 'lesson' pk=lesson.pk %}">{{lesson.title}}</a></li>
+          {% endfor %}
+        </ul>
+      {% include 'feature-block-end.html' %}
+
+    </aside>
+    <section class="large-8 large-pull-4 columns">
+
+      {% for lesson in lessons %}
+        {% include 'lesson-topic-blurb.html' %}
+      {% endfor %}
+
+    </section>
+
+  </div>
+{% endblock %}
+
+<!-- END MAIN CONTENT ROWS -->

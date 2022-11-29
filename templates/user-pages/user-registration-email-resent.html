@@ -1,0 +1,10 @@
+{% block content %}
+  <h3>Hi {{ user.first_name }}</h3>
+  <p>This account appears inactive.</p>
+  <br>
+  <p>We've sent instructions to activate your password to your email address ({{ user.email }})</p>
+  <br>
+  <p>You should receive an email from us within the next couple of minutes and you should complete the activation within the next hour.</p>
+  <p>Make sure you check your spam folder!</p>
+  <p>If you did not receive the instruction email from us, try to <a class="my-giza-lnk modal" data-url="{% url 'sign-in' %}">sign in</a> again.</p>
+{% endblock %}

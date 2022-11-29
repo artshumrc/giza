@@ -1,0 +1,62 @@
+{% load search_tags %}
+{% if items.items|length > 0 %}
+
+    <li class="accordion-item" data-accordion-item id="{{ index }}_accordion_div">
+        <a href='#' class="accordion-title feature-block__header" name="{{ index }}">
+            <h3 class="feature-block__title">
+                <i class="icon-{{ items.icon }} icon-padded"></i>{{ index|add_space}}
+                <span class="badge">{{ items.items|length }}</span></h3>
+        </a>
+        <div class="accordion-content feature-block__body" data-tab-content>
+            <ul id="{{ items.category }}_items"
+                class="feature-block__list {% if 'photos' in index %} item-grid thumbsize-sm thumbs-square {% else %} multicol-2 {% endif %}">
+                {% with "elements_"|add:items.category as name %}
+                    {{ items|json_script:name }}
+                {% endwith %}
+                {% for related_item in items.items %}
+                    {% if forloop.counter <= 20 %}
+                    <li id="{{ items.category }}_{{ related_item.RecID }}">
+                        <div
+                            class="media-object list-item {% if 'photos' in index %} list-item-thumbonly {% elif 'videos' in index or 'unpublisheddocuments' in index or 'publisheddocuments' in index %} list-item-thumbcaption {% else %} list-item-document {% endif %}">
+                            <div class="media-object-section">
+                                {% if 'Thumbnail' in related_item %}
+                                <div id="{{ items.category }}_thumbnails" class="thumbnail">
+                                    <a data-open="gallery{{ related_item.RecID }}"><img src="{{ related_item.Thumbnail }}"></a>
+                                </div>
+                                {% elif 'Doc' in index %}
+                                <a class="my-giza-lnk modal icon-large icon-{{ items.icon }}" data-url=""></a>
+                                {% elif 'Videos' in index %}
+                                <video width="100%" height="100%"
+                                    {% if related_item.Thumbnail %}poster="{{ related_item.Thumbnail }}" {% endif %} controls>
+                                    <source src="{{ related_item.Main }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                {% endif %}
+                            </div>
+                            <div class="media-object-section">
+                                <div class="media-object list-item list-item-thumbcaption">
+                                    <p class="media-object-title"><a class="my-giza-lnk modal"
+                                            data-url="{% url 'search_show_result' index=index|lower id=related_item.RecID %}">{{ related_item.DisplayText | safe | linebreaks }}</a>
+                                    </p>
+                                    {% if related_item.Date %}
+                                    <ul class="subheader">
+                                        <li>Date: {{ related_item.Date }}</li>
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+            <!-- PAGINATION -->
+            {% if items.items|length > 20 %}
+            <nav aria-label="Pagination">
+                <ul class="pagination m-l-neghalf" id="{{ index }}_thumbnail_pagination"></ul>
+            </nav>
+            {% endif %}
+        </div>
+    </li>
+{% endif %}

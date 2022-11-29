@@ -1,0 +1,44 @@
+{% load static %}
+
+<div class="collection-blurb d-flex m-b-2">
+  <div class="collection-image flex-fixed flex-mw-150 m-r-1">
+    <a href="/mygiza-collection/">
+      <!--
+        {% include 'mygiza-collection-thumb.html' with  images_1="topic-collection-images1" images_4="topic-collection-images4" images_9="topic-collection-images9" offset="topic-collection-offset" caption=False %}
+      -->
+      <div class="collection-thumb">
+        <div class="collection-thumb-grid grid-images-1">
+          <div class="grid-image">
+            {% if lesson.picture %}
+            <img src="{{lesson.picture}}">
+            {% else %}
+            <img src="{% static 'images/thumb-default.png' %}">
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="collection-body flex-fluid">
+    <div class="collection-text">
+      <h3 class="collection-title heading-mixedcase">
+        <a href="/collections/{{collection.slug}}">
+          {{collection.title}}
+        </a>
+      </h3>
+      <p class="text-smaller">
+        <strong class="collection-meta-count">{{collection.items.all|length}} items</strong><br>
+        {% for owner in collection.owners.all %}
+          <span class="collection-meta-creator">
+            Created by
+            {% if owner.full_name %}
+              {{owner.full_name}}
+            {% else %}
+              {{owner.username}}
+            {% endif %}
+          </span>
+        {% endfor %}
+      </p>
+    </div>
+  </div>
+</div>

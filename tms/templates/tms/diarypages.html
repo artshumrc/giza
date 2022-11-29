@@ -1,66 +1,66 @@
 <div class="feature-block__body">
   <ul class="feature-block__list multicol-2">
-    {% if object.classificationtext %}
+    {% if object.ClassificationText %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Classification</dt>
-          <dd>{{ object.classificationtext }}</dd>
+          <dd>{{ object.ClassificationText }}</dd>
         </dl>
       </div>
     </li>
     {% endif %}
-    {% if object.department %}
+    {% if object.Department %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Department</dt>
-          <dd>{{ object.department }}</dd>
+          <dd>{{ object.Department }}</dd>
         </dl>
       </div>
     </li>
     {% endif %}
-    {% if object.creditline %}
+    {% if object.CreditLine %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Credit Line</dt>
-          <dd>{{ object.creditline }}</dd>
+          <dd>{{ object.Creditline }}</dd>
         </dl>
       </div>
     </li>
     {% endif %}
-    {% if object.period %}
+    {% if object.Period %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Display Page Dates</dt>
-          <dd>{{ object.period }}</dd>
+          <dd>{{ object.Period }}</dd>
         </dl>
       </div>
     </li>
     {% endif %}
-    {% if object.entrydate %}
+    {% if object.EntryDate %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Display Page Dates</dt>
-          <dd>{{ object.entrydate }}</dd>
+          <dd>{{ object.EntryDate }}</dd>
         </dl>
       </div>
     </li>
     {% endif %}
-    {% for role in object.roles %}
+    {% for role in object.Roles %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
-          <dt>{{role}}</dt>
-          {% for item in object.relateditems.modernpeople %}
-            {% if item.role == role %}
-            <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
+          <dt>{{ role }}</dt>
+          {% for item in object.RelatedItems.Modernpeople %}
+            {% if item.Role == role %}
+            <dd>{{ item.DisplayText }}{% if item.DisplayDate %}, {{ item.DisplayDate }}{% endif %}</dd>
             {% endif %}
           {% endfor %}
-          {% for item in object.relateditems.ancientpeople %}
+          {% for item in object.Relateditems.AncientPeople %}
             {% if item.role == role %}
             <dd>{{ item.displaytext }}{% if item.displaydate %}, {{ item.displaydate }}{% endif %}</dd>
             {% endif %}

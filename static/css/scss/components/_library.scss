@@ -1,0 +1,35 @@
+//
+// Digital Giza Library items
+//
+
+.library-item {
+  padding: ($global-padding * .75);
+  margin-top: -($global-margin * .75);
+  margin-bottom: ($global-margin * .75);
+  border-bottom: solid 1px $sand-light;
+  
+  :first-child > & {
+    
+  }
+  
+  :last-child > & {
+    margin-bottom: $global-margin;
+  }
+  
+}
+
+.library-item__primary {
+}
+
+.library-item__secondary {
+  @extend .text-muted;
+  @extend .text-smaller;
+}
+
+  .library-item__format {
+    
+  }
+  
+  .library-item__filesize {
+    display: block;
+  }

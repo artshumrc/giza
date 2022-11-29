@@ -1,0 +1,20 @@
+<span class="title">
+    <span><a class="my-giza-lnk sign-up" data-url="{% url 'search' %}">Add items</a></span>
+    <span class="separator"> | </span>
+    <span><a class="my-giza-lnk sign-in" data-url="{% url 'sign-in' %}">Delete collection</a></span>
+    <span class="separator"> | </span>
+    <span><a class="my-giza-lnk sign-in" data-url="{% url 'sign-in' %}">Share collection</a></span>
+    {% include 'close-button.html' with label="Close modal" %}
+    <ul class="no-bullet share-links__icons">
+        <li>
+            <a class="share-facebook" href="{{facebook_link}}">
+            <i class="icon-trash-o"></i>
+            </a>
+        </li>
+        <li>
+            <a class="share-facebook" href="{{facebook_link}}">
+            <i class="link"></i>
+            </a>
+        </li>
+    </ul>
+</span>

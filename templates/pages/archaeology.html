@@ -1,18 +1,9 @@
-{% extends 'layouts/default.html' %}
 {% load static %}
-{% set
-  title: "Archaeology at Giza",
-  section: "about",
-  section_about: true
-%}
-
-{% block title %}{{ "Archaeology at Giza" }}{% endblock %}
-
 
 <!-- BEGIN MAIN CONTENT ROWS -->
 
 {% block 'page_headers' %}
-  {% include 'partials/page-header.html' with bg="6" title="Archaeology at Giza"%}
+  {% include 'page-header.html' with bg="6" title="Archaeology at Giza"%}
 {% endblock  %}
 
 {% block 'main_content' %}
