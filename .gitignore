@@ -4,3 +4,7 @@
 
 .envrc
 secure.py
+
+bin
+lib
+env

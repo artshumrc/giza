@@ -1,33 +1,21 @@
-{% extends 'layouts/default.html' %}
 {% load static %}
 
-
-{% block 'title' %}
-{{ "Giza 3D" }}
-{% endblock %}
-
-{% block 'section' %}
-giza3d
-{% endblock %}
-
-{% block 'section_giza3d' %}
-true
-{% endblock %}
-
 {% block 'page_headers' %}
-  {% include 'partials/page-header.html' with bg="1" title="Giza 3D" %}
+  {% include 'page-header.html' with bg="1" title="Giza 3D" %}
 {% endblock  %}
 
 {% block 'main_content' %}
+{{ mode }}
+{{ id }}
   <!-- BEGIN MAIN CONTENT ROWS -->
   <div class="row">
     <div class="large-12 columns">
       {% if request.GET.mode == 'matterport' %}
         <iframe class="viewerEmbed matterportEmbed" src='https://my.matterport.com/show/?m={{request.GET.m}}' frameborder='0' allowfullscreen allow='vr'></iframe>
       {% elif request.GET.mode == 'sketchfab' %}
-        <iframe class="viewerEmbed sketchfabEmbed" src="https://sketchfab.com/models/{{request.GET.id}}/embed?preload=1&amp;ui_controls=1&amp;ui_infos=1&amp;ui_inspector=1&amp;ui_stop=1&amp;ui_watermark=1&amp;ui_watermark_link=1" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+        <iframe class="viewerEmbed sketchfabEmbed" src="https://sketchfab.com/models/{{ id }}/embed?preload=1&amp;ui_controls=1&amp;ui_infos=1&amp;ui_inspector=1&amp;ui_stop=1&amp;ui_watermark=1&amp;ui_watermark_link=1" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
       {% else %}
-        <iframe class="viewerEmbed giza3dEmbed" src="https://sfa.giza.archimedes.digital/?mode={{ request.GET.mode|default:'FreeExplore'}}{% if request.GET.guidedTourId %}&guidedTourId={{request.GET.guidedTourId}}{% endif %}{% if request.GET.itemID %}&itemID={{request.GET.itemID}}{% endif %}" frameborder='0' allowfullscreen allow='vr' style="display: none;"></iframe>
+        <iframe class="viewerEmbed giza3dEmbed" src="https://sfa.giza.archimedes.digital/?mode={{ mode|default:'FreeExplore'}} {% if id %}&guidedTourId={{ id }}{% endif %}{% if request.GET.itemID %}&itemID={{request.GET.itemID}}{% endif %}" frameborder='0' allowfullscreen allow='vr' style="display: none;"></iframe>
         <div class="viewerEmbed giza3dEmbedToggle" >
           <div class="gizaViewer">
             <div class="viewerCover"></div>
@@ -43,7 +31,7 @@ true
       <br>
     </div>
   </div>
-  {% include 'partials/3d-tours-list.html' %}
+  {% include '3d-tours-list.html' %}
 {% endblock %}
 
 <!-- END MAIN CONTENT ROWS -->

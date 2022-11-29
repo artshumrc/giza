@@ -1,0 +1,54 @@
+{% load search_tags %}
+<div class="feature-block__body">
+    <ul class="feature-block__list multicol-2">
+        {% if object.manifest %}
+        <li>
+          <div style="height:500px;width:100%;">
+            <div id="mirador"></div>
+          </div>
+        </li>
+        {% endif %}
+        {% for key, value in object.Display.items %}
+        <li>
+          <div class="media-object list-item list-item-textinfo">
+          <dl class="dl-slim">
+              <dt>{{ key }}</dt>
+              <dd>
+                {% if value|get_type == 'list' %}
+                  {{ value|join:", "}}
+                {% else %}
+                  {{ value }}
+                {% endif %}
+              </dd>
+          </dl>
+          </div>
+        </li>
+        {% endfor %}
+
+      {% if object.PDF %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          <dd><a href="{{ object.PDF }}">Download PDF</a></dd>
+        </dl>
+      </div>
+    </li>
+    {% endif %}
+    {% if object.AlternativeNumberTypes %}
+    {% for altnumtype in object.AlternativeNumberTypes %}
+    <li>
+      <div class="media-object list-item list-item-textinfo">
+        <dl class="dl-slim">
+          {% if altnumtype %}<dt>{{ altnumtype }}</dt>{% endif %}
+          {% for altnum in object.altnums %}
+            {% if altnum.description == altnumtype %}
+              <dd>{{ altnum.altnum|default:"" }}</dd>
+            {% endif %}
+          {% endfor %}
+        </dl>
+      </div>
+    </li>
+    {% endfor %}
+    {% endif %}
+    </ul>
+  </div>

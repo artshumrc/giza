@@ -4,33 +4,41 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Lesson, Topic, Collection, ElasticsearchItem
+from .models import CustomUser, Lesson, Topic, Collection, ElasticSearchItem
+
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ['email', 'username', 'full_name']
+    list_display = ["email", "username", "full_name"]
     fieldsets = UserAdmin.fieldsets + (
-            (None, {'fields': ('full_name', 'bio', 'tagline', 'picture')}),
+        (None, {"fields": ("full_name", "bio", "tagline", "picture")}),
     )
 
 
 class ElasticsearchItemInline(admin.TabularInline):
-    model = ElasticsearchItem
+    model = ElasticSearchItem
+
 
 class CollectionAdmin(admin.ModelAdmin):
-    readonly_fields=('slug',)
+    # readonly_fields = ("slug",)
+    readonly_fields = ("id",)
 
     inlines = [
         ElasticsearchItemInline,
     ]
 
+
 class LessonAdmin(admin.ModelAdmin):
-    readonly_fields=('slug',)
+    # readonly_fields = ("slug",)
+    readonly_fields = ("id",)
+
 
 class TopicAdmin(admin.ModelAdmin):
-    readonly_fields=('slug',)
+    # readonly_fields = ("slug",)
+    readonly_fields = ("id",)
+
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Lesson, LessonAdmin)

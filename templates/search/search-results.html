@@ -1,0 +1,583 @@
+{% load static %}
+{% load search_tags %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'page_headers' %}
+  {% include 'page-header.html' with bg="5" title="Search the Archives" %}
+{% endblock  %}
+
+{% block 'content' %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+
+{{ search|json_script:"search" }}
+{{ search_result|json_script:"result" }}
+
+<div class="row" id="search_results">
+
+  <!-- SIDE MENU BAR -->
+  <aside class="medium-3 medium-pull-9 columns">
+
+    <div class="feature-block secondary text-smaller">
+      <h5 class="heading-alt">Search Options</h5>
+      
+      <!-- SEARCH OPTIONS -->
+      <div id="search_options">
+        {% include 'search-options.html' %}
+      </div>
+
+      <!-- CURRENT SEARCH PARAMETERS -->
+      <div id=search_parameters>
+        {% include 'search-params.html' %}
+      </div>
+
+      <!-- CATEGORIES -->
+      <div id=search_categories>
+        {% include 'search-categories-accordion.html' %}
+      </div>
+
+      <!-- FACETS -->
+      <div id=search_facets>
+        {% include 'search-facets-accordion.html' %}
+      </div>
+    </div>
+  </aside>
+
+  <section class="medium-9 medium-push-3 columns">
+    
+    <!-- SEARCH STATISTICS -->
+    <div class="row" id='search_stats'>
+      {% include 'search-stats.html' %}
+    </div>
+
+    <!-- SEARCH RESULTS -->
+    <div id="search_result">
+        {% include 'search-result.html' %}
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="row" id='search_pagination'>
+      {% include 'search-pagination.html' %}
+    </div>
+
+  </section>
+
+  <!-- MET -->
+  <aside class="medium-3 medium-pull-9 columns">
+    <div id='search_MET'>
+      {% include 'search-MET.html' %}
+    </div>
+  </aside>
+
+</div>
+
+{% endblock %}
+<!-- END MAIN CONTENT ROWS -->
+
+<!-- JAVASCRIPT -->
+<script>
+  $(document).foundation()
+
+$(document).ready(() => {
+
+  st = JSON.parse($(search).text())
+
+  // This method adds parameters to hidden fields in the post form to hide them in the URL
+  $('input.advanced_search_field').on('change', e => addHidden($(e.currentTarget)))
+
+  $('#advanced-search-form-btn')
+  .on('click', e => {
+    $('.advanced_search_field').removeAttr('name')
+    $('#advanced-search-form').submit()
+  })
+
+  MET_list = []
+
+  /*
+  * This method is called when a facet's checkbox is toggled. The method first checks if a facet is selected/deselected
+  * and updates the global items object accordingly. It then calls the post method (see update_search).
+  * @param {string} facet The facet to evaluate for adding/removing
+  */
+  toggle_facet = facet => {
+
+    console.log(facet)
+
+    // RESET THE PAGE FOR VIEWING
+    st['result']['pages']['page'] = 1
+
+    // CHECK IF FACET IS BEING ADDED OR REMOVED
+    facet = facet.split('_')
+    category = facet[0]
+    facet_name = facet[1]
+    facet_value = facet[2]
+
+    if (!st['facets']['selected'].hasOwnProperty(category)) {
+      st['facets']['selected'][category] = {}
+    }
+    
+    if (!st['facets']['selected'][category].hasOwnProperty(facet_name)) {
+      st['facets']['selected'][category][facet_name] = []
+    }
+     
+    idx = st['facets']['selected'][category][facet_name].indexOf(facet_value)
+    if (idx != -1) {
+      st['facets']['selected'][category][facet_name].splice(idx, -1)
+    } else {
+      st['facets']['selected'][category][facet_name].push(facet_value)
+    }
+
+    // st['facets']['all_facets'][category]
+    // idx = st['facets']['all_facets'][facet[0]].map(e => e.display_text).indexOf(String(facet[1]))
+    // st['facets']['all_facets'][facet[0]][idx]['selected'] = !st['facets']['all_facets'][facet[0]][idx]['selected']
+
+    // SEND AJAX POST REQUEST TO UPDATE SEARCH RESULTS ONLY
+    // update_search()
+
+    console.log(st['facets']['selected'])
+    update_results()
+  }
+
+  /*
+  * This method is called when a category is clicked and updates the global items object accordingly.
+  * It then calls the post method (see update_search).
+  */
+  toggle_category = category => {
+
+    console.log(category)
+
+    // RESET THE CURRENT PAGE
+    st['result']['pages']['page'] = 1
+
+    // RESET THE DATE SLIDER
+    // delete st['fields']['EntryDate_ms']
+    
+    // SET NEW CATEGORY STATE
+    // st['category'] = category.split('_')[1]
+    if (!st['category'].includes(category)) {
+      st['category'].push(category)
+    } else {
+      let index = st['category'].indexOf(category)
+      if (index !== -1) {
+        st['category'].splice(index, 1)
+      }
+    }
+    
+    // SEND AJAX POST REQUEST
+    update_search()
+  }
+
+  /*
+  * This method is called when a page number is clicked and updates the global items object accordingly.
+  * It then calls the post method (see update_search).
+  */
+  toggle_page = page => {
+    
+    // SET NEW PAGE
+    st['result']['pages']['page'] = page
+    
+    // SEND AJAX POST REQUEST
+    update_results()
+  }
+
+  /**
+   * This method refreshes a few of the Django templates on the search-results page
+   * NOTE: Foundation elements do not like to be updated and instantiated in this fashion.
+   * They should therefore not be updated frequently.
+   */
+  refresh_search_results = data => {
+
+    let active_facet_tab = $('#search_facets .is-active').prev().text().replace(/[^a-z0-9\s]/gi, ' ').trim()
+
+    $('#search_result').empty().html(data['search_result'])
+    $('#search_stats').empty().html(data['search_stats'])
+    $('#search_params').empty().html(data['search_params'])
+    $('#search_pagination').empty().html(data['search_pagination'])
+    // $('#search_options').empty().html(data['search_options'])
+    // $('#search_categories').empty().html(data['search_categories'])
+    $('#search_facets').empty().html(data['search_facets'])
+    // $('#search_MET').empty().html(data['search_MET']).foundation()
+
+    facet_menu(active_facet_tab)
+
+
+    // REOPEN THE CURRENT FACET TABS
+
+    // SET GLOBALS
+    user = data['user'], st = data['search']
+
+    // update_facet_count(st['facets']['all_facets'])
+
+    // SET DATE SLIDER IF NECESSARY
+    setSlider()
+
+    // POPULATE MET IF NECESSARY
+    // populate_MET()
+  }
+
+  facet_menu = active_facet_tab => {
+    console.log(active_facet_tab)
+
+
+    
+
+
+
+    // addClass('is-active')
+    // checked = true
+
+
+    if (active_facet_tab != '') {
+      menu = new Foundation.AccordionMenu($('#search_facets'), { 'multiOpen' : false })
+      $(`a:contains(${active_facet_tab})`).prev()
+      menu.toggle($(`a:contains(${active_facet_tab})`).next())
+    }
+  }
+
+  update_facet_count = facets => {
+    for (new_facet_name in facets) {
+      for (new_facet in facets[new_facet_name]) {
+        let facet = facets[new_facet_name][new_facet]
+        $("label:contains(" + facet['display_text'] + ")").text(`${facet['display_text']} (${facet['doc_count']})`)
+      }
+    }
+
+    // $('#search_facets').find('li').each((idx, facet) => {
+    //   if ($(facet).hasClass('search-facet-item')) {
+    //     label = $(facet).find('label')[0]
+    //     for (new_facet_name in facets) {
+    //       for (new_facet in facets[new_facet_name]) {
+    //         let f = facets[new_facet_name][new_facet]
+    //         console.log($(label).text())
+    //         if ($(label).text().includes(f['display_text'])) {
+    //           console.log(33)
+    //           $(label).text(`${f['display_text']} (${f['doc_count']})`)
+    //         }
+    //       }
+    //     }
+    //   }
+    // })
+  }
+
+  /**
+   * This method refreshes all Django templates on the search-results page
+   */
+  refresh_results = data => {
+
+    console.log(data)
+    
+    // UPDATE HTML AND ITEMS OBJECT
+    $('#search_result').empty().html(data['search_result'])
+    $('#search_stats').empty().html(data['search_stats'])
+    $('#search_params').empty().html(data['search_params'])
+    $('#search_pagination').empty().html(data['search_pagination'])
+    $('#search_options').empty().html(data['search_options'])
+    $('#search_categories').empty().html(data['search_categories'])
+    $('#search_facets').empty().html(data['search_facets']).foundation()
+    $('#search_MET').empty().html(data['search_MET']).foundation()
+
+    // SET GLOBALS
+    user = data['user'], st = data['search']
+
+    // SET DATE SLIDER IF NECESSARY
+    setSlider()
+
+    // POPULATE MET IF NECESSARY
+    populate_MET()
+  }
+
+  // $('#METfilter').on('keyup', e => {
+  //   console.log($(e.currentTarget).val())
+  // })
+
+  /* MET DROP METHOD */
+  drop = e => {
+    e.preventDefault()
+    MET_term = JSON.parse(e.dataTransfer.getData("MET_term"))
+    if ($("#METfilterList").find("#list_" + MET_term.code).length == 0) {
+      li = $('<li>')
+      .attr('id', 'list_' + MET_term.code)
+      .append(
+        $('<a>')
+        .attr('href', '#')
+        .text(MET_term.term)
+      )
+      .on('click', e => {
+        $(e.currentTarget).remove()
+        // $("#METfilterList").find("#list_" + MET_term.code).remove()
+        st['MET']['MET_paths'] = st['MET']['MET_paths'].filter(obj => obj.code !== MET_term.code)
+        update_results()
+      })
+      
+      children = $('#METfilterList')
+
+      $('#METfilterList').append(li)
+      st['MET']['MET_paths'].push(MET_term)
+      update_results()
+    }
+  }
+  
+  /* MET DRAG METHOD */
+  drag = (e, code, term) => e.dataTransfer.setData("MET_term", JSON.stringify({ 'code': code, 'term' : term }))
+
+  /* MET ALLOWDROP METHOD */
+  allowDrop = e => e.preventDefault()
+
+  /*
+  * This method posts a request to the server and processes the response. 
+  * The response contains an updated items object as well as partials rendered in HTML that are loaded in
+  * individual tags in the search-results.html template.
+  */
+  update_search = () => {
+    settings = {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-CSRFToken': $.cookie('csrftoken')
+        }),
+        body: JSON.stringify(st)
+      }
+
+    fetch("{% url 'search_results_update' %}", settings)
+    .then(response => response.json())
+    .then(response => refresh_results(response))
+  }
+
+  update_results = () => {
+    settings = {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-CSRFToken': $.cookie('csrftoken')
+        }),
+        body: JSON.stringify(st)
+      }
+
+    fetch("{% url 'search_results_update' %}", settings)
+    .then(response => response.json())
+    .then(response => refresh_search_results(response))
+  }
+
+  /* BIND METHODS TO THE DOM */
+  $(document)
+  .on('change', '#showResults', e => {
+    console.log(e)
+    st['result']['size'] = parseInt($(e.currentTarget).val())
+    update_results()
+  })
+  .on('change', '#sortResults', e => {
+    console.log(e)
+    st['result']['sort'] = $(e.currentTarget).val()
+    update_results()
+  })
+  .on('change', '#sortOrder', e => {
+    console.log(e)
+    st['result']['sort_order'] = $(e.currentTarget).val()
+    update_results()
+  })
+  .on('click', '#addToCollectionBtn', e => $('#add_collection').find('a').data('object-name', $(e.currentTarget).data('id')))
+  .on('click', '.add_to_collection_modal', e => {
+    $.post({
+      url : 'add-to-collection',
+      data : {
+        'collection' : $(e.currentTarget).data('collection-id'),
+        'object' : JSON.stringify($(e.currentTarget).data('object-name')) 
+      },
+      success : response => {
+        if (response.success) {
+          console.log(response)
+        }
+        
+        // $('#exampleModal3').foundation('reveal', 'open')
+        // modal = new Foundation.Reveal($('.add_to_collection_modal'))
+        // modal.close()
+        // SOMEHOW MARK OBJECTS THAT ARE ALREADY IN A COLLECTION?
+      }
+    })
+  })
+
+  $(document).on('keyup', '#search_token', e => {
+    if (e.which == 13){
+      $('#search_token_form').submit()
+    }
+  })
+
+  // REQUEST ALL PRIVATE COLLECTIONS
+  $(document).on('click', '.collections_content', e => {
+    console.log('click')
+    // id = $(e.currentTarget).attr('id')
+    // $.get({
+    //   url : '',
+    // success : response => {
+    //   $('#collections').empty().html(response[''])
+    // }
+      
+    // })
+  })
+
+  $(document).on('click', '#reset_facets', e => {
+    st['facets'].map(e => e)
+    
+  })
+
+  $(document).on('click', '#redeem_token', e => {
+    $.post("/mygiza/search/lookup/", { 'token' : $('#token').val() })
+    .done(response => {
+      (response.success) ? refresh_results(response.response) : alert(response.response)
+      $('#token').val('')
+    })
+    .fail(response => {
+      console.log(response, 2)
+    })
+    // success = response => {
+    //   console.log(response)
+    //   // refresh_results(response)
+    // },
+    // error = response => {
+    //   console.log(response)
+    // })
+  })
+
+  // $('#search_pagination select').on('change', e => {
+  //   st['result']['size'] = parseInt($(e.currentTarget).val())
+  //   console.log('resultsize')
+  //   update_search()
+  // })
+
+  $('.add_to_collection').on('click', e => {
+    console.log('click')
+  })
+
+
+  // $('#sortResults').on('change', e => {
+  //   st['result']['sort'] = $(e.currentTarget).val()
+  //   update_search()
+  // })
+
+
+    /*
+    * IF SEARCH TERMS ARE DEFINED ON THE PAGE (I.E. THE USER HAS SEARCH RESULTS TO PLAY WITH)
+    */
+    if (typeof st !== 'undefined') {
+
+      // POPULATE MET LIST FILTER AUTOCOMPLETE BOX
+      populate_MET = () => {
+
+        if ('MET_terms' in st['MET'] && st['MET']['MET_terms'].length) {
+          MET_list = st['MET']['MET_terms'].map(e => e.Term)
+
+          // $('#METfilter').autocomplete({ 
+          //   source : MET_list,
+          //   minLength:2,
+          //   position: { my : "center", at: "center", of: "#METfilter" }, 
+          //   select: (e, ui) => { 
+          //     console.log(e, ui)
+          //     // goTo(ui.item.value)
+          //     // return false
+          //   }         
+          // })
+
+          for (idx in st['MET']['MET_paths']) {
+            li = $('<li>')
+            .attr('id', 'list_' + st['MET']['MET_paths'][idx].code)
+            .append(
+              $('<a>')
+              .attr('href', '#')
+              .text(st['MET']['MET_paths'][idx].term)
+            ).on('click', e => {
+              $(e.currentTarget).remove()
+              st['MET']['MET_paths'] = st['MET']['MET_paths'].filter(obj => obj.code !== $(e.currentTarget).attr('id').substring(5))
+              // update_results()
+            })
+            $('#METfilterList').append(li)
+          }
+        }
+      }
+
+      // Set date slider as a facet
+      setSlider = () => {
+
+        // SET SLIDER TICKS
+        setSliderTicks = (minimum, maximum) => {
+          let $slider = $('#slider-range').find('.ui-slider-tick-mark').remove()
+          $('<span class="ui-slider-tick-mark"></span>').text(minimum).css('left', '-15px').appendTo($slider)
+          $('<span class="ui-slider-tick-mark"></span>').text(maximum).css('right', '15px').appendTo($slider)
+        }
+
+        /*
+        Construct a date slider
+        @param max_range: range of slider, array of integers
+        @param value_range : range to set handles, array of integers
+        */
+        makeSlider = (dateRange, max_range, value_range) => {
+          // console.log(max_range, value_range)
+          $('#date_slider_from').text(new Date(value_range[0] * 1000).toDateString())
+          $('#date_slider_to').text(new Date(value_range[1] * 1000).toDateString())
+          // console.log($('#slider-range'))
+          $("#slider-range").slider({
+            range : true,
+            min : max_range[0],
+            max : max_range[1],
+            step: 1,
+            values: value_range,
+            slide: (event, ui) => {
+              $('#date_start').val(ui.values[0])
+              $('#date_end').val(ui.values[1])
+              $('#date_slider_from').text(new Date(ui.values[0] * 1000).toDateString())
+              $('#date_slider_to').text(new Date(ui.values[1] * 1000).toDateString())
+            },
+            change: (event, ui) => {
+              if (event.toElement != undefined) {
+                st['facets']['selected'][dateRange] = [ui.values[0], ui.values[1]]
+                update_results()
+                // console.log(event)
+              }
+              // st['facets']['selected'][dateRange] = [ui.values[0], ui.values[1]]
+              // update_results()
+            }
+          })
+          setSliderTicks(new Date(max_range[0] * 1000).getFullYear(), new Date(max_range[1] * 1000).getFullYear())
+        }
+
+        // IF ADVANCED SEARCH INCLUDED DATE
+        // if ('EntryDate_ms' in st['facets'] && st['fields']['EntryDate_ms'].length) {
+          
+        //   if ('EntryDate_ms' in st['facets']) {
+        //     minimum_set_value = st['fields']['EntryDate_ms'][0]
+        //     maximum_set_value = st['fields']['EntryDate_ms'][1]
+        //     max_range = st['fields']['EntryDate_ms']
+        //   } else {
+        //     minimum_set_value = st['fields']['EntryDate_ms'][0]
+        //     maximum_set_value = (typeof st['fields']['EntryDate_ms'][1] !== 'undefined') ? st['fields']['EntryDate_ms'][1] : 0
+        //     max_range = st['fields']['EntryDate_ms']
+        //   }
+          
+        // } else {
+
+          dateRange = Object.keys(st['facets']['all_facets']).filter(key => key.includes('_daterange'))
+
+          if (dateRange.length) {
+            range = st['facets']['all_facets'][dateRange].map(i => parseInt(i['display_text'])).sort((a, b) => a - b)
+            max_range = [range[0], range[range.length - 1 ]]
+
+            // IF THE SLIDER HAS BEEN SET WITH BEGIN/END VALUES
+            if (dateRange.length && st['facets']['selected'][dateRange]) {
+              minimum_set_value = st['facets']['selected'][dateRange][0]
+              maximum_set_value = st['facets']['selected'][dateRange][1]
+            } else {
+              minimum_set_value = max_range[0]
+              maximum_set_value = max_range[1]
+            }
+          }
+        // }
+
+        if (typeof max_range !== 'undefined') {
+          if (max_range.length && minimum_set_value && maximum_set_value) {
+            makeSlider(dateRange, max_range, [minimum_set_value, maximum_set_value])
+          }
+        }
+      }
+
+      setSlider()
+    }
+})
+</script>

@@ -1,0 +1,21 @@
+<span class="title">
+    <span><a class="my-giza-lnk sign-up" data-url="{% url 'sign-up' %}">Sign up for My Giza </a></span><span class="separator"> | </span><span><a class="my-giza-lnk sign-in" data-url="{% url 'sign-in' %}">Sign in to My Giza</a></span><span class="separator"> | </span>
+    <ul class="no-bullet share-links__icons">
+        <li>
+            <a class="share-facebook" href="{{facebook_link}}">
+            <i class="icon-facebook-square"></i>
+            </a>
+        </li>
+        <li>
+            <a class="share-twitter" href="{{twitter_link}}">
+            <i class="icon-twitter-square"></i>
+            </a>
+        </li>
+        <li>
+            <a class="share-instagram" href="{{instagram_link}}">
+            <i class="icon-instagram"></i>
+            </a>
+        </li>
+    </ul>
+    {% include 'close-button.html' with label="Close modal" %}
+</span>

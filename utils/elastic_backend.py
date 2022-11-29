@@ -1,7 +1,13 @@
 from django.conf import settings
-from django.utils.six.moves.urllib.parse import urlparse
+# Django 2.2.24:
+# from django.utils.six.moves.urllib.parse import urlparse
+
+# Django 3:
+from urllib.parse import urlparse
+
 
 from elasticsearch import Elasticsearch
+# from elasticsearch.helpers import scan
 
 ES_BACKEND = getattr(settings, 'SEARCH_BACKENDS').get('default')
 
@@ -32,6 +38,12 @@ if ES_HOSTS is None:
 ES_INDEX = ES_BACKEND.pop('INDEX', 'giza')
 ES_TIMEOUT = ES_BACKEND.pop('TIMEOUT', 5)
 
-es = Elasticsearch(
-        hosts=ES_HOSTS,
-        timeout=ES_TIMEOUT)
+# TODO: THESE VARIABLES SHOULD COME FROM A SAFE PLACE
+ES_HOSTS = f'https://localhost:443'
+ES_CERT = 'D:\elasticsearch-8.1.2\config\certs\http_ca.crt'
+ES_USER = 'elastic'
+ES_PASSWORD = '0xlEM4BduYCAHCE3XaKH'
+
+es = Elasticsearch(hosts=ES_HOSTS, ca_certs=ES_CERT, basic_auth=(ES_USER, ES_PASSWORD), request_timeout=30)
+es.transport.max_retries=10
+es.transport.retry_on_timeout=True

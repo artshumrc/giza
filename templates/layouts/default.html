@@ -4,61 +4,395 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Giza | {% block title %}{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/app.css' %}">
-    <link rel="stylesheet" href="{% static 'css/project.css' %}">
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
 
-    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" href="{% static 'favicon-32x32.png" sizes="32x32' %}">
-    <link rel="icon" type="image/png" href="{% static 'favicon-16x16.png" sizes="16x16' %}">
-    <link rel="manifest" href="{% static 'manifest.json' %}">
-    <link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
-    <meta name="theme-color" content="#ffffff">
-  </head>
-  <body class="{% block body_class %}{% endblock %}">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Giza | {% block title %}{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600" rel="stylesheet">
+  <!-- <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"> -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+    integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+  <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+  <!-- <link rel="stylesheet" href="{% static 'css/scss/app.min.css' %}"> -->
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <link rel="stylesheet" href="{% static 'css/project.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+  <link rel="apple-touch-icon" sizes="144x144" href="{% static 'apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" href="{% static 'images/favicon-16x16.png' %}">
+  <link rel="icon" type="image/png" href="{% static 'images/favicon-32x32.png' %}">
+  <!-- <link rel="manifest" href="{% static 'manifest.json' %}"> -->
+  <link title="timeline-styles" rel="stylesheet"
+    href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+  <meta name="theme-color" content="#ffffff">
+</head>
 
-    {% include 'partials/header.html' %}
+<!-- LOCAL JS SYSTEM DEPENDENCIES -->
+<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.cookie.js' %}"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="{% static 'js/foundation.min (2).js' %}"></script>
+{# <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.4/dist/js/foundation.min.js" crossorigin="anonymous"></script> #}
 
-    {% block 'page_headers' %}
+<!-- LOCAL JS ADD-ON DEPENDENCIES -->
+<script src="{% static 'js/mirador.min.js' %}"></script>
+<!-- <script src="{% static 'js/mirador-giza.js' %}"></script> -->
+<script src="{% static 'js/timeline.js' %}"></script>
+<script src="{% static 'js/slick.js' %}"></script>
+<script src="{% static 'js/picturefill.min.js' %}"></script>
+<script src="{% static 'js/jquery.vide.min.js' %}"></script>
+<script src="{% static 'js/giza.js' %}"></script>
+<script>
+  $(document).ready(() => {
+    $(document).mouseup(() => {
+      text = getSelectedText()
+      if (text != '') navigator.clipboard.writeText(text)
+    });
+
+    function getSelectedText() {
+      if (window.getSelection) {
+        return window.getSelection().toString()
+      } else if (document.selection) {
+        return document.selection.createRange().text
+      }
+      return '';
+    }
+
+    const spinner = document.getElementById("spinner")
+
+    preload = () => {
+      let defer = $.Deferred()
+      spinner.removeAttribute('hidden')
+
+      try {
+        fetch('/search/categories/')
+          .then(response => response.json())
+          .then(response => {
+            $('#search_categories').html(response.html).foundation()
+
+            // var elem = new Foundation.ResponsiveAccordionTabs($("#advanced_search_categories"))
+            // for (category in response.extra.categories) {
+            //   cat = response.extra.categories[category]
+            //   console.log(cat)
+            //   menu = new Foundation.AccordionMenu($('<div>'), {
+            //     'multiOpen': false,
+            //     'submenuToggle': true,
+            //     'submenuToggleText': cat.displaytext
+            //   })
+
+            //   $('#search_categories').append(menu)
+            // }
+            // console.log(response)
+            // advanced_search = new Foundation.AccordionMenu($('#advanced_search_categories'), {
+            //   'multiOpen': false,
+            //   'submenuToggle': true,
+            //   'submenuToggleText': 'bla'
+            // })
+            // $('#search_categories')
+          })
+          .then(() => {
+            fetch('/search/MET/')
+              .then(response => response.json())
+              .then(response => {
+                $('#MET_search_modal').html(response.html).foundation()
+                MET_drilldown = new Foundation.Drilldown($('#METAccordion'), {
+                  'autoHeight': true,
+                  'animateHeight': true
+                })
+                $('#main-menu').foundation()
+                defer.resolve()
+              })
+          })
+      } catch {
+        defer.reject('error loading categories/MET')
+      }
+
+      return defer.promise()
+    }
+
+    $.when(preload()).then((success, error) => {
+      if (success || error) console.log(success, error)
+      spinner.setAttribute('hidden', '')
+    })
+
+    $('body').on('click', '.my-giza-lnk', e => {
+      try {
+        e.preventDefault()
+        console.log(1)
+
+        spinner.removeAttribute('hidden')
+
+        target = $(e.currentTarget)
+
+        if (target.data('active')) {
+          return
+        }
+
+        target.data('active', true)
+
+        settings = $(target).hasClass('post') ? {
+          method: 'POST',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'X-CSRFToken': $.cookie('csrftoken')
+          }),
+          body: JSON.stringify($(target).closest('form').serializeArray().reduce((obj, item) => (obj[item
+              .name] =
+            item.value, obj), {}))
+        } : {}
+
+        fetch($(e.currentTarget).data('url'), settings)
+          .then(response => response.json())
+          .then(response => {
+
+            spinner.setAttribute('hidden', '')
+
+            console.log(response)
+
+            if (response.success) {
+
+              // PROCESS HTML
+              if (response.hasOwnProperty('html')) {
+                for (html in response.html) {
+                  if (response.html[html].hasOwnProperty('html')) $(html).empty().html(response.html[html].html)
+                    .foundation() // RENDER HTML
+                  if (response.html[html].hasOwnProperty('action')) $(html).foundation(response.html[html]
+                    .action).foundation() // TOGGLE MODALS
+                  if (html.includes('header_bar')) $('.user-function').toggle() && $(html)
+                    .foundation() // REFRESH HEADER AND USER FUNCTIONS
+                }
+              }
+
+              // if (response.hasOwnProperty('MyGIZA-tab')) {
+              //   console.log(response)
+              //   $('.modal.reveal').foundation('close')
+              //   $('#MyGIZAdiv').empty().html(response.html)
+              //   $('.my-giza-lnk.my-giza').removeClass('active')
+              //   $(response.target).addClass('active')
+              // }
+
+              // if (response.hasOwnProperty('MyGIZADiv')) {
+              //   $(".modal.reveal").foundation('close')
+              //   $('#' + response.target).empty().html(response.html)
+              //   $('.my-giza-lnk.my-giza').removeClass('active')
+              //   $(response.target).addClass('active')
+              // }
+              // } else if ($(target).hasClass('my-giza')) {
+              //   console.log(3)
+              // } else {
+              //   console.log(response)
+            }
+
+          })
+          .then(() => target.data('active', false))
+          .catch((error) => {
+            spinner.setAttribute('hidden', '')
+            console.log(error)
+          })
+        } catch {
+          console.log('error')
+          spinner.setAttribute('hidden', '')
+        }
+    })
+
+    // CLIENT FUNCTION TO GENERATE PAGE NUMBERS FOR QUICK VIEWING WITHOUT HITTING THE DATABASE
+    /* 
+    This function takes in the elements for which to calculate page numbers, pages ranges, 
+    the div where the range is to be displayed and the div to be updated with new results
+    :param: elements Object with three properties, typically a related_item returned from Django
+    :param: pages Object with six properties
+    :number_div: jQuery element
+    :target_div: jQuery element
+    */
+    create_pages = (elements, pages, number_div, target_div) => {
+
+      prev = $('<li>').addClass('pagination-previous')
+      prev_a = $('<a>').prop("aria-label", "Previous page")
+      if (pages['previous']) {
+        prev_a.text("Previous")
+      } else {
+        prev_a.addClass('disabled')
+      }
+      prev.append(prev_a)
+
+      next = $('<li>').addClass('pagination-next')
+      next_a = $('<a>').prop("aria-label", "Next page")
+      if (pages['next']) {
+        next_a.text("Next")
+      } else {
+        next_a.addClass('disabled')
+      }
+      next.append(next_a)
+
+      number_div.empty().append(prev)
+
+      for (page of pages['range']) {
+        li = $('<li>')
+        if (page == -1) {
+          li.addClass('ellipsis')
+        } else {
+          if (page == pages['current_page']) {
+            li.addClass('current').text(page)
+          } else {
+            li.data('page', page).append($('<a>').prop('aria-label', `Page ${page}`).text(page)).on('click',
+              e => {
+                next_page = $(e.currentTarget).data('page')
+                from = pages['current_page']++ * pages['num_per_page']
+                to = pages['current_page']-- * pages['num_per_page']
+                elems = elements['items'].slice(from, to)
+
+                target_div.empty()
+
+                addElements(elems, elements, target_div)
+
+                // DEFINE NEW PAGE RANGE
+                create_pages(elements, page_range(elements.items.length, 20, next_page), number_div, target_div)
+              })
+          }
+        }
+        number_div.append(li)
+      }
+      number_div.append(next)
+    }
+
+    addElements = (elems, elements, target_div) => {
+      for (elem of elems) {
+        $(`#${elements['category']}_items`)
+
+        li = $('<li>')
+
+        div_1 = $('<div>').addClass('media-object').addClass('list-item')
+        if (elements['category'].indexOf('photos')) {
+          div_1.addClass('list-item-thumbonly')
+        } else if (elements['category'].indexOf('video') || elements['category'].indexOf('pubdoc')) {
+          div_1.addClass('list-item-thumbcaption')
+        } else {
+          div_1.addClass('list-item-document')
+        }
+
+        div_2a = $('<div>').addClass('media-object-section')
+        div_2b = $('<div>').addClass('media-object-section')
+
+        div_2b_a = $('<div>').addClass('media-object, list-item, list-item-thumbcaption')
+        div_2b_a_p = $('<p>').addClass('media-object-title')
+        div_2b_a_p_a = $('<a>').addClass('my-giza-lnk modal').text(elem['displaytext'])
+
+        div_2b.append(div_2b_a.append(div_2b_a_p.append(div_2b_a_p_a)))
+
+        if (elem.hasOwnProperty('thumbnail')) {
+          div_3 = $('<div>').addClass('thumbnail').append($('<a>').append($('<img>').attr('src', elem[
+            'thumbnail'])))
+        }
+        if (elem.hasOwnProperty('doc')) div_3 = $('<a>').addClass(
+          `my-giza-lnk, modal, icon-large, icon-${elems['icon']}`)
+        if (elem.hasOwnProperty('videos')) div_3 = $('<video>')
+
+        target_div.append(li.append(div_1.append(div_2a.append(div_3)).append(div_2b)))
+      }
+    }
+
+    // CLIENT FUNCTION TO CALCULATE PAGE RANGES
+    page_range = (total, num_per_page, current_page) => {
+      pages = {
+        'total_results': total,
+        'total_pages': Math.ceil(total / num_per_page),
+        'current_page': current_page,
+        'num_per_page': num_per_page,
+        'range': [total],
+        'previous': current_page > 1 ? true : false,
+        'next': current_page > 0 && current_page < Math.ceil(total / num_per_page) ? true : false
+      }
+
+      if (total > 0) pages['range'] = __create_page_ranges(pages)
+
+      return pages
+    }
+
+    __create_page_ranges = pages => {
+
+      num_pages_range = [1]
+
+      if (pages['current_page'] - 2 > 2) num_pages_range.push(-1)
+
+      if (pages['current_page'] - 2 <= 1) {
+        for (let step = 2; step < pages['current_page'] + 1; step++) {
+          num_pages_range.push(step)
+        }
+      } else {
+        for (let step = pages['current_page']; step < pages['current_page'] - 2; step++) {
+          num_pages_range.push(step)
+        }
+      }
+
+      if (pages['current_page'] != 1 && pages['current_page'] != pages['total_pages'] && !num_pages_range
+        .includes(pages['current_page'])) num_pages_range.push(pages['current_page'])
+
+      if (pages['current_page'] + 2 >= pages['total_pages']) {
+        for (let step = pages['current_page'] + 1; step < pages['total_pages']; step++) {
+          num_pages_range.push(step)
+        }
+      } else {
+        for (let step = pages['current_page'] + 1; step < pages['current_page'] + 3; step++) {
+          num_pages_range.push(step)
+        }
+      }
+
+      if (pages['current_page'] + 2 < pages['total_pages'] - 1) num_pages_range.push(-1)
+      if (!num_pages_range.includes(pages['total_pages'])) num_pages_range.push(pages['total_pages'])
+      return num_pages_range
+    }
+  })
+</script>
+
+<body class="{% block body_class %}{% endblock %}">
+
+  {% include 'modals.html' %}
+
+  <div id="header_bar">
+    {% include 'header.html' %}
+  </div>
+
+  {% block 'page_headers' %}
+  {% endblock %}
+
+  <!-- GOOGLE ANALYTICS -->
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-98043800-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+  <div id="main_content">
+    {% block 'content' %}{% endblock %}
+  </div>
+
+  <div id="main_content2" class="content-main {{class|default:'p-t-2'}}">
+    {% block 'main_content' %}
     {% endblock %}
+  </div>
 
-    {% block 'content' %}
-    {% endblock %}
+  {% include 'footer.html' %}
 
-    <div class="content-main {{class|default:'p-t-2'}}">
-      {% block 'main_content' %}
-      {% endblock %}
-    </div>
+  {% block extra_js %}{% endblock %}
 
-    {% include 'partials/footer.html' %}
-    {% include 'partials/modals.html' %}
-    
-    {# Global javascript #}
-    <!-- Core JavaScript and required libraries -->
-    <script src="{% static 'js/app.js' %}"></script>
-    <!-- App-specific JavaScript -->
-    <script src="{% static 'js/giza.js' %}"></script> 
-   
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  <div hidden id="spinner"></div>
 
-        ga('create', 'UA-98043800-1', 'auto');
-        ga('send', 'pageview');
-    </script>
+</body>
 
-    {% block extra_js %}
-      {# Override this in templates to add extra javascript #}
-    {% endblock %}
-
-  </body>
 </html>

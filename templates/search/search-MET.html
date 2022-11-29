@@ -1,0 +1,20 @@
+{% if MET_tree|length %}
+  <div class="feature-block secondary text-smaller">
+    <h5 id="METthesaurus" class="heading-alt">MET<span class="show-for-medium icon-info-circle has-tip top" data-tooltip
+      aria-haspopup="true" data-disable-hover="false" tabindex="2"
+      title="The Multilingual Egyptological Thesaurus provides a standardized vocabulary to filter your search results. Drag terms from the list below onto the field above to apply these terms to your search query."></span></h5>
+    <div>
+      <!-- <legend class="search-facet-title">MET Terms</legend> -->
+      <!-- <input id=METfilter name=METfilter placeholder="Type MET terms here" type=text> -->
+      <ul class="search-facet-title" id="METfilterList" ondrop=drop(event) ondragover=allowDrop(event)>Drag and drop terms here
+      </ul>
+    </div>
+    <ul id=METAccordion class="vertical menu accordion-menu" data-accordion-menu data-multi-open="false">
+        <ul class="vertical menu">
+          {% for k in MET_tree %}
+            {% include "search-MET-terms.html" with dict=k%}
+          {% endfor %}
+        </ul>
+    </ul>
+  </div>
+{% endif %}

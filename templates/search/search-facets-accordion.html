@@ -1,0 +1,45 @@
+{% if search.facets.all_facets|length %}
+  <ul class="vertical menu accordion-menu" data-accordion-menu data-multi-open="false">
+    {% for category, facets in search.facets.all_facets.items %}
+      <h5 class="heading-alt">{{ category }}</h6>
+        {% for type, subfacets in facets.items %}
+          {% if "_daterange" in type %}
+          <li>
+            <a href="#">
+              <div class="search-facet-section">
+              <fieldset>
+                <legend class="search-facet-title">{{ type|slice:":-10" }}</legend>
+                <p>
+                  <label for="date_slider_from">From:<span id="date_slider_from"></span></label>
+                  <label for="date_slider_to">To:<span id="date_slider_to"></span></label>
+                  <input type="hidden" id="date_start">
+                  <input type="hidden" id="date_end">
+                </p>
+                <div id="slider-range"></div>
+              </fieldset>
+            </div>
+            </a>
+          </li>
+          {% elif '_daterange' not in type and 'Codes' not in type and 'Paths' not in type %}
+          <li>
+            <a href='#'>
+              <h6 class="search-facet-title">{{ type }}:</h6>
+              <ul class="menu vertical nested" data-multi-open="false">
+                {% for facet in subfacets %}
+                  {% if "null" != facet.display_text.lower %}
+                    <a href='#'>
+                      <li class="search-facet-item {% if facet.selected %}is-active{% endif %}">
+                        <input type="checkbox" class="facet_checkbox" id='{{ category }}_{{ type.split|join:"_" }}_{{ facet.display_text }}' name='{{ category }}_{{ type.split|join:"_" }}_{{ facet }}' {% if facet.selected %} checked {% endif %} onclick="toggle_facet('{{ category }}_{{ type }}_{{ facet.display_text }}')">
+                        <label for='{{ category }}_{{ type.split|join:"_" }}_{{ facet.display_text }}'>{{ facet.display_text }} ({{ facet.doc_count }})</label>
+                      </li>
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </a>        
+          </li>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </ul>
+{% endif %}

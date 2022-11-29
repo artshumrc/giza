@@ -1,0 +1,173 @@
+//
+// Timeline Styles (Archaeology at Giza)
+//
+
+// Beware, here be many !important dragons; 
+// TimelineJS defaults need a lot of overriding
+//
+// Reference: https://timeline.knightlab.com/
+
+#timeline-embed {
+  
+  // Large screens / All screens (TimelineJS is not mobile-first)
+  
+  .tl-timenav-slider {
+    background-color: rgba(240,234,228,1);
+  }
+  
+  .tl-timemarker .tl-timemarker-content-container {
+    background-color: rgba(243,238,233,1) !important;
+    border: 1px solid rgba(219,214,207,1) !important;
+    
+    :hover{
+        background-color: rgba(255,255,255,1) !important;
+    }
+  }
+  
+  .tl-timemarker-content-container .tl-timemarker-content-container-small :hover {
+    border: 1px solid rgba(107,98,92,1) !important;
+  }
+  
+  .tl-timemarker-active .tl-timemarker-content-container {
+    background-color: rgba(255,255,255,1) !important;
+  }
+  
+  .tl-timemarker .tl-timemarker-content-container .tl-timemarker-content .tl-timemarker-text h2.tl-headline, 
+  .tl-timemarker .tl-timemarker-content-container .tl-timemarker-content .tl-timemarker-text h2.tl-headline p {
+    color: rgba(107,98,92,1) !important;
+  }
+  
+  .tl-slide-content {
+    max-width: 1200px !important;
+  }
+  
+  #timeline-embed {
+    background-color: rgba(255,250,245,1) !important;
+  }
+  
+  .tl-timemarker.tl-timemarker-active .tl-timemarker-line-left {
+    border: solid 1.5px rgba(165,27,48,1) !important;
+    padding-top: 20px !important;
+  }
+  
+  .tl-timenav-slider {
+    box-shadow: inset 0 1px 0 0 rgba(107,98,92,0.5), inset 0 1px 6px 0 rgba(0,0,0,0.2) !important;
+  }
+  
+  .tl-timeaxis-content-container {
+    background-color: rgba(255,250,245,1) !important;
+    padding-top: 5px !important;
+  }
+  
+  .tl-text-content-container .tl-headline {
+    color: rgba(115,20,34,1) !important;
+    font-size: 24px !important;
+    font-weight: 500 !important;
+  }
+  
+  .tl-text-content-container .tl-text-content p {
+    color: rgba(49,46,43,1);
+  }
+  
+  .tl-headline-date {
+    color: rgba(107,98,92,1) !important;
+    font-size: 16px !important;
+    padding-top: 20px !important;
+  }
+  
+  .tl-media .tl-media-content-container .tl-media-content img {
+    padding-top: 20px !important;
+  }
+  
+  .tl-slidenav-content-container {
+    opacity: 0.6 !important;
+   
+    * {
+      color: rgba(107,98,92,1) !important;
+      line-height: 19px !important;
+      text-shadow: none !important;
+      opacity: 1 !important;
+      width: 120px !important;
+    }
+  }
+  
+  .tl-slidenav-title, .tl-slidenav-description {
+    font-size: 12px !important;
+  }
+  
+  .tl-slidenav-description {
+    font-weight: bold !important;
+  }
+  
+ .tl-slidenav-icon {
+    font-family: "giza-project-icons" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    position: relative !important;
+    right: 18px !important;
+  }
+  
+  .tl-slidenav-next {
+    text-align: right !important;
+    right: 140px !important;
+  }
+  
+  .tl-slidenav-next .tl-slidenav-icon:before {
+    content: "\62" !important; // chevron-right icon
+  }
+  
+  .tl-slidenav-previous {
+    text-align: left !important;
+  }
+  
+  .tl-slidenav-previous .tl-slidenav-icon:before {
+    content: "\61" !important; // chevron-left icon
+  }
+  
+  .tl-slidenav-icon:before {
+    font-size: 100px !important;
+  }
+  
+  .tl-timemarker-active .tl-timemarker-line-left:after {
+    background-color: rgba(165,27,48,1) !important;
+  }
+  
+  .tl-timemarker .tl-timemarker-line-left:after, .tl-timemarker .tl-timemarker-line-right:after {
+    height: 8px !important;
+    width: 8px !important;
+    bottom: -1px !important;
+    background-color: rgba(0,0,0,.15) !important;
+  }
+  
+  .tl-caption {
+    font-size: 12px !important;
+    line-height: 12px !important;
+    width: 90% !important;
+  }
+  
+  .tl-media-content img {
+    max-height: 375px !important;
+  }
+
+  // Special styles for small screens
+  
+  @media screen and (max-width: 667px) {
+    
+    .tl-slidenav-next {
+      right: 80px !important;
+    }
+    
+    .tl-media-content img {
+      max-height: 240px !important;
+    }
+    
+    .tl-media-content-container {
+      padding-bottom: 40px !important;
+    }
+    
+    .tl-slidenav-icon:before {
+      font-size: 50px !important;
+    }
+  }
+}

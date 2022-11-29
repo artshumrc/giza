@@ -1,43 +1,43 @@
 <div class="feature-block__body">
   <ul class="feature-block__list multicol-2">
-    {% if object.constituenttype %}
+    {% if object.ConstituentType %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Type</dt>
-          <dd>{{ object.constituenttype }}</dd>
+          <dd>{{ object.ConstituentType }}</dd>
         </dl>
       </div>
     </li>
     {% endif %}
-    {% if object.gender %}
+    {% if object.Gender %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Gender</dt>
-          <dd>{{ object.gender }}</dd>
+          <dd>{{ object.Gender }}</dd>
         </dl>
       </div>
     </li>
     {% endif %}
-    {% if object.altnames %}
+    {% if object.AlternativeNames %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Also Known As</dt>
-          {% for name in object.altnames %}
-          <dd>{{ name.type }} : {{ name.name }}</dd>
+          {% for name in object.AlternativeNames %}
+          <dd>{{ name.Type }} : {{ name.Name }}</dd>
           {% endfor %}
         </dl>
       </div>
     </li>
     {% endif %}
-    {% if object.remarks %}
+    {% if object.Remarks %}
     <li>
       <div class="media-object list-item list-item-textinfo">
         <dl class="dl-slim">
           <dt>Remarks</dt>
-          <dd>{{ object.remarks }}</dd>
+          <dd>{{ object.Remarks }}</dd>
         </dl>
       </div>
     </li>

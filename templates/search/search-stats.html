@@ -1,0 +1,129 @@
+{% load search_tags %}
+<div class="medium-6 columns">
+  <h3 class="heading-alt m-t-half m-b-1">
+    {% if search.result.total.value == 10000 and 'gte' in search.result.total.relation %}
+    Your query returned over {{ search.result.total.value }} results so for performance reasons we fetched 10,000 for you to browse. Please refine your search parameters.
+    {% else %}
+      Your query 
+      {% if 'query' in search and search.query %}
+        ("{{ search.query }}")
+      {% endif %}
+      returned {{ search.result.total.value }}
+      {% if 'category' in search and search.category %} 
+        {{ search.result.category.key.lower }}
+      {% else %}
+        records
+      {% endif %}      
+      {% if search.fields.items|length %}
+          {% for key, value in search.fields.items %}
+            {% if not '_ms' in key %}
+              {% if search.fields|length == 1 %}
+                "{{ value }}"
+
+            {# {% if search.MET.MET_paths|length %} #}
+            {# (with MET term  #}
+            {# {% for term in search.MET.MET_paths %} #}
+            {# {{ term.term }} #}
+            {# {% endfor%} #}
+            {# }. #}
+            {# {% else %} #}
+            {# }. #}
+            {#            {% endif %} #}
+            .
+              {% else %}
+                {% if forloop.first %}
+                "{{ value }}"
+                {% elif forloop.last %}
+                  and "{{ value }}".
+                {% else %}
+                  "{{ value }}",
+                {% endif %}
+              {% endif %}
+            {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endif %}
+  </h3>
+</div>
+
+<div class="medium-6 columns text-right">
+  {% if search.result.sort_options|length %}
+  <label for="sortResults" class="d-inline-block middle m-r-qt">Sort:</label>
+  <div class="d-inline-block img-fluid-mw150">
+    <select id="sortResults">
+      {% for option in search.result.sort_options %}
+      <option value="{{ option.key }}" {% if option == search.result.sort %} selected {% endif %}>{{ option.key }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  {% endif %}
+  <!-- <ul class="d-inline-block sort-order p-y-qt m-l-1 hide-for-small-only">
+        <li>
+          <a href="#">
+            <i class="fa fa-fw fa-arrow-down"></i><span class="sr-only">Desc</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-fw fa-arrow-up"></i><span class="sr-only">Asc</span>
+          </a>
+        </li>
+      </ul> -->
+  <ul class="d-inline-block view-switcher p-y-qt m-l-1 hide-for-small-only">
+    <li>
+      <a id="toggle_results_view" class="switcher">
+        <i class="fa fa-fw fa-align-justify has-tip" data-tooltip aria-haspopup="true" data-disable-hover="false"
+          tabindex="2" title="Toggle between list and thumbnail view">
+        </i>
+        <span class="sr-only">List</span>
+      </a>
+    </li>
+    <li>
+      <a class="my-giza-lnk modal" data-url="{% url 'my-giza-save-search' %}">
+        <i class="fas fa-save fa-lg has-tip" data-tooltip aria-haspopup="true" data-disable-hover="false" tabindex="2"
+          title="Save your current search query parameters">
+        </i>
+        <span class="sr-only">List</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<script>
+  $('#toggle_results_view').on('click', e => {
+    if ($('.fa.fa-fw').hasClass('fa-th-large')) {
+      $('.fa.fa-fw').removeClass('fa-th-large').addClass('fa-align-justify')
+    } else {
+      $('.fa.fa-fw').removeClass('fa-align-justify').addClass('fa-th-large')
+    }
+
+    $('.search-result-list-view').toggle()
+    $('.search-result-thumbnail-view').toggle()
+  })  
+
+  // $(document).on('click', '#saveSearch', () => {
+  //   console.log('save')
+  //   input = prompt("Please give a name to this search", "Simple")
+  //   if (input != null || input != '') {
+  //     $.post({
+  //       url: '/mygiza/search/save',
+  //       data: {
+  //         'name' : input,
+  //         'search' : JSON.stringify(st)
+  //         // 'term' : json.stringify(st['term']),
+  //         // 'category' : json.stringify(st['category']),
+  //         // 'fields' : JSON.stringify(st['fields']),
+  //         // 'MET' : st['MET']
+  //       },
+  //       // contentType: "application/json",
+  //       // dataType: 'json',
+  //       success: data => {
+  //         alert('search saved')
+  //       },
+  //       error: res => {
+  //         console.log(res.responseText)
+  //       }
+  //     })
+  //   }
+  // })
+</script>

@@ -1,9 +1,9 @@
-{% extends 'partials/home-4col-block.html' %}
+{% extends 'home-4col-block.html' %}
 {% load static %}
 
 {% block '4col_block_partial' %}
   <p>
-    <a href="{{block_destination}}">
+    <a class="my-giza-lnk" data-url="{{ block_destination }}">
       <img class="img-fluid img-fluid-mw325 border-dark"
         src="{% static 'images/home-feature-giza3d.png' %}"
         alt="Digital rendering of the Giza Plateau as seen from the air">

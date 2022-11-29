@@ -1,0 +1,39 @@
+<div class="home-hero-container">
+    <div class="grid-x">
+      <div class="row video-bg-home">
+        <div
+          style="position: absolute; z-index: -1; top: 0px; left: 0px; bottom: 0px; right: 0px; overflow: hidden; -webkit-background-size: cover; background-size: cover; background-color: transparent; background-image: none; background-position: 0% -5%; background-repeat: no-repeat no-repeat;">
+          <video autoplay="" loop="" muted="" style="margin: auto; position: absolute; z-index: -1; top: -5%; left: 0%; visibility: visible; opacity: 1; width: 1172px; height: auto;" playsinline="">
+            <source src="//gizamedia.rc.fas.harvard.edu/images/website/GizaHome_web.mp4" type="video/mp4">
+            <source src="//gizamedia.rc.fas.harvard.edu/images/website/GizaHome_web.webm" type="video/webm">
+            <source src="//gizamedia.rc.fas.harvard.edu/images/website/GizaHome_web.ogv" type="video/ogg"></video></div>
+  
+        <div class="home-hero-title">
+          <h1><span class="title-text-alt">Welcome to the</span> Giza Plateau</h1>
+        </div>
+  
+        <div class="home-hero-content">
+          <div class="medium-12 columns">
+            <p class="lead text-alt" style="line-height: 1.4">The Giza Project gives you access to the largest collection of information, media, and research materials ever assembled about the Pyramids and related sites on Egypt&rsquo;s Giza Plateau. Start your journey to Giza in the archives today!</p>
+          </div>
+        </div>
+  
+        <div class="home-hero-overlay"></div>
+      </div>
+  
+        <!--<div id="hero-home" data-interchange="[home/small.html, small], [home/medium.html, medium], [home/large.html, large]"></div> -->
+  
+    </div>
+  </div>
+  
+  <div class="row p-r-1" data-equalizer data-equalize-on="medium">
+  
+    {% include 'home-4col-block--gizaatschool.html' with block_title="Giza @ School" block_button="View Resources" block_destination="giza-at-school" %}
+
+    {% include 'home-4col-block--giza3d.html' with block_title="Explore Giza 3D" block_button="Jump In" block_destination="giza-3d" %}
+  
+    {% include 'home-4col-block--mygiza.html' with block_title="Make it Yours: MyGiza" block_button="Start Collecting" block_destination="my-giza-landing" %}
+  
+    {% include 'home-4col-block--donate.html' with block_title="Support the Project" block_button="Donate Now" block_destination="https://community.alumni.harvard.edu/give/34086571" %}
+  
+  </div>

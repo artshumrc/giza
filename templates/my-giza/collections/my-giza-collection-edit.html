@@ -1,0 +1,16 @@
+<span class="title">Collection "{{ collection.title }}"</span>
+<section class="columns">
+    <div>
+        {% if search_result.hits|length %}
+        {% include 'search-result.html' with user=user collection=collection.pk %}
+        {% else %}
+        <p>This collection does not contain any items.</p>
+        {% endif %}
+    </div>
+</section>
+</div>
+<script>
+    // $( document ).click(function() {
+    //   $( "#openAdvancedSearchPane" ).effect( "highlight", {color:"#669966"}, 3000 );
+    // })
+</script>

@@ -9,32 +9,32 @@
       <div class="row">
 
         <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{% url 'library' %}">Library</a></h6>
+          <h6><a class="my-giza-lnk" data-url="{% url 'library' %}">Library</a></h6>
         </div>
 
         <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{% url 'explore' 'gizaatschool' %}">Giza @ School</a></h6>
+          <h6><a class="my-giza-lnk" data-url="{% url 'giza-at-school' %}">Giza @ School</a></h6>
           <ul class="footer-menu-list">
-            <li><a href="{% url 'lessons' %}">Lesson Topics</a></li>
-            <li><a href="{% url 'explore' 'commontopics' %}">People and Places of Giza</a></li>
-            <li><a href="{% url 'explore' 'faq' %}">Glossary and FAQ</a></li>
-            <li><a href="{% url 'videos' %}">Video Library</a></li>
+            <li><a class="my-giza-lnk" data-url="{% url 'lessons' %}">Lesson Topics</a></li>
+            <li><a class="my-giza-lnk" data-url="{% url 'common-topics' %}">People and Places of Giza</a></li>
+            <li><a class="my-giza-lnk" data-url="{% url 'faq' %}">Glossary and FAQ</a></li>
+            <li><a class="my-giza-lnk" data-url="{% url 'videos' %}">Video Library</a></li>
           </ul>
         </div>
 
         <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{% url 'explore' 'giza3d' %}/">Giza 3D</a></h6>
+          <h6><a class="my-giza-lnk" data-url="{% url 'giza-3d' %}/">Giza 3D</a></h6>
           <ul class="footer-menu-list vertical menu accordion-slim" data-accordion-menu>
             <li>
               <a href="#0" class="accordion-toggletext" data-closed-text="Show models" data-open-text="Hide models">Show models</a>
               <ul class="no-bullet menu vertical nested">
-                <li><a href="{% url 'explore' 'giza3d' %}">Giza Plateau</a></li>
-                <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=neZZCDSf5">A Walking Tour of the Giza Plateau</a></li>
+                <li><a class='my-giza-lnk' data-url="{% url 'giza-3d' %}">Giza Plateau</a></li>
+                <li><a class="my-giza-lnk" data-url="{% url 'giza-3d-model' mode='Guided' id='neZZCDSf5' %}">A Walking Tour of the Giza Plateau</a></li>
                 <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=neZZCDSf5">Khafre Pyramid and Temples</a></li>
                 <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=neZZCDSf5">Khufu Pyramid</a></li>
                 <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=neZZCDSf5">Menkaure Pyramid</a></li>
                 <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=neZZCDSf5">Great Sphinx</a></li>
-                <li><a href="/giza3d/?mode=GuidedTour&guidedTourId=nGQi15GpZ">Great Sphinx Interactive Video</a></li>
+                <li><a class="my-giza-lnk" data-url="{% url 'giza-3d-model' mode='Guided' id='nGQi15GpZ' %}">Great Sphinx Interactive Video</a></li>
               </ul>
             </li>
         </div>
@@ -46,34 +46,34 @@
       <div class="row">
 
         <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{% url 'mygiza' %}">My Giza</a></h6>
+          <h6><a class="my-giza-lnk heading-link" data-url="{% url 'my-giza-landing' %}">My Giza</a></h6>
           <ul class="footer-menu-list">
 
             {% if user.is_authenticated %}
-              <li><a href="{% url 'collections_user' %}">My Collections</a></li>
+              <li><a class="my-giza-lnk" data-url="{% url 'collections' %}">My Collections</a></li>
             {% endif %}
             <!--li><a href="/mygiza-saved-searches/">My Saved Searches</a></li-->
-            <li><a href="{% url 'collections' %}">Browse Collections</a></li>
+            <li><a class="my-giza-lnk" data-url="{% url 'collections' %}">Browse Collections</a></li>
             {% if not user.is_authenticated %}
-              <li><a href="{% url 'login' %}">Log In</a></li>
-              <li><a href="{% url 'sign_up' %}">Create a MyGiza Account</a></li>
+              <li><a class="my-giza-lnk modal" data-url="{% url 'sign-in' %}">Log In</a></li>
+              <li><a class="my-giza-lnk modal" data-url="{% url 'sign-up' %}">Create a MyGiza Account</a></li>
             {% endif %}
           </ul>
         </div>
 
         <div class="medium-4 columns">
-          <h6><a class="heading-link" href="{% url 'explore' 'gizaintro' %}">About the Project</a></h6>
+          <h6><a class="my-giza-lnk heading-link" data-url="{% url 'giza-intro' %}">About the Project</a></h6>
           <ul class="footer-menu-list">
-            <li><a href="{% url 'explore' 'gizaintro' %}">Introduction to Giza</a></li>
-            <li><a href="{% url 'about' 'about' %}">What is the Giza Project?</a></li>
-            <li><a href="{% url 'explore' 'archaeology' %}">Archaeology at Giza</a></li>
+            <li><a class="my-giza-lnk" data-url="{% url 'giza-intro' %}">Introduction to Giza</a></li>
+            <li><a class="my-giza-lnk" data-url="{% url 'about' %}">What is the Giza Project?</a></li>
+            <li><a class="my-giza-lnk" data-url="{% url 'archaeology' %}">Archaeology at Giza</a></li>
           </ul>
         </div>
 
         <div class="medium-4 columns">
           <h6><a class="heading-link" href="https://community.alumni.harvard.edu/give/34086571">Donate</a></h6>
-          <h6><a class="heading-link" href="{% url 'search' %}">Search</a></h6>
-          <h6><a class="heading-link" href="{% url 'about' 'contact' %}">Contact</a></h6>
+          {# <h6><a class="my-giza-lnk heading-link" data-url="{% url 'search' %}">Search</a></h6> #}
+          <h6><a class="my-giza-lnk heading-link" data-url="{% url 'contact' %}">Contact</a></h6>
         </div>
 
       </div>
@@ -130,3 +130,8 @@
 </div>
 -->
 {% endif %}
+<script>
+  $(document).ready(() => {
+    $(document).foundation()
+  })
+</script>

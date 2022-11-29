@@ -3,22 +3,22 @@
     <header class="large-12 columns">
       <h1>
         {% if backlink_url %}
-        <a href="/{{backlink_url}}">
-          {{title}}
+        <a class="my-giza-lnk" data-url="{{ backlink_url }}">
+          {{ title }}
         </a>
         {% else %}
-        {{title}}
+          {{ title }}
         {% endif %}
         <a name="top"></a>
       </h1>
       {% if page_header_meta_text %}
       <h3 class="page-header__meta">
-        {{page_header_meta_text}}
+        {{ page_header_meta_text }}
       </h3>
       {% endif %}
       {% if page_header_meta_link %}
       <h3 class="page-header__meta">
-        <a href="/{{page_header_meta_link}}">
+        <a href="{{ page_header_meta_link }}">
           <i class="icon-angle-left"></i> Back
         </a>
       </h3>

@@ -1,0 +1,269 @@
+{% load static %}
+
+{% block content %}
+
+{{ object|json_script:"search_result_detail" }}
+<!-- MODAL TITLE -->
+<div class="page-header header-bg-1" id="content">
+  <div class="row title">
+    <header class="large-12 columns">
+      <h1>{{ object.DisplayText }}<a name="top"></a></h1>
+      {% if index == 'sites' %}<h3 class="page-header__meta">{{ object.SiteName }}</h3>{% endif %}
+    </header>
+  </div>
+</div>
+
+<!-- MODAL CONTENT -->
+<div class="row content-start">
+
+  <!-- CONTENT CONTAINERS -->
+  <section class="large-8 columns content-col-primary">
+
+    <!-- PRIMARY DISPLAY IMAGE: MIRADOR, VIDEO, 3DMODEL, STILL -->
+    {% if object.PrimaryDisplay.Main %}
+    <div class="item__featured-image">
+      <div style="height:500px;width:100%;">
+        <div id="mirador"></div>
+      </div>
+      {% if index == '3dmodels' %}
+      <iframe allowfullscreen height="500px" width="100%" src="{{ object.PrimaryDisplay.Main }}"></iframe>
+      {% elif index == 'publisheddocuments' and object.PDF %}
+      <a href="{{ object.PDF }}"><img src="{{ object.PrimaryDisplay.Main }}" alt=""></a>
+      {% elif index == 'videos' %}
+      <video width="100%" height="100%"
+        {% if object.PrimaryDisplay.Thumbnail %}poster="{{ object.PrimaryDisplay.Thumbnail }}" {% endif %} controls>
+        <source src="{{ object.PrimaryDisplay.Main }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      {% elif index == 'photos' %}
+      <img src="{{ object.PrimaryDisplay.Main }}" alt="">
+      {% endif %}
+
+      {% if object.PrimaryDisplay.DisplayText %}
+      <p class="item__featured-image__caption">
+        {{ object.PrimaryDisplay.DisplayText }}
+      </p>
+      {% endif %}
+
+    </div>
+    {% endif %}
+
+    <!-- PRIMARY TEXT: DIARY TRANSCRIPTION, OBJECT DESCRIPTION -->
+    {% if object.DiaryTranscription and "null" not in object.DiaryTranscription|lower %}
+    <div class="item__overview text-alt">
+      <h5>Diary Transcription:</h5>
+      {{ object.DiaryTranscription|linebreaks }}
+    </div>
+    {% elif object.Description %}
+    <div class="item__overview">
+      <p class="lead text-alt">
+        {{ object.Description }}
+      </p>
+
+    </div>
+    {% endif %}
+
+    <ul class="accordion" data-accordion data-multi-expand="true" data-allow-all-closed="true">
+
+      <!-- DETAILS -->
+      <li class="accordion-item is-active" data-accordion-item id="details_accordion_div">
+        <a name="details" class="accordion-title feature-block__header" name="{{ index }}">
+          <h3 class="feature-block__title">
+            <i class="icon-info-circle icon-padded"></i>Details
+          </h3>
+        </a>
+        <div class="accordion-content feature-block__body" data-tab-content>
+          {% include 'search-result-details.html' with object=object %}
+        </div>
+        {% for index, items in object.RelatedItems.items %}
+          {% if not '3Dmodels' in index and not 'Video' in index and not 'ModernPeople' in index and not 'AncientPeople' in index and not 'institutions' in index and not 'groups' in index and not 'animals' in index %}
+            {% include 'search-details-relateditems.html' with index=index items=items %}
+          {% endif %}
+        {% endfor %}
+      </li>
+
+      <!-- RELATED ITEMS BELOW -->
+    </ul>
+
+  </section>
+
+  <section class="large-4 columns content-col-secondary">
+
+    <!-- JUMP MENU -->
+    <div class="title-bar" data-responsive-toggle="jumpmenu" data-hide-for="medium">
+      <button class="icon-bars icon-padded title-bar-title" type="button" data-toggle>Jump to...</button>
+    </div>
+    {% include 'search-details-jumpmenu.html' with items=object.RelatedItems user=user index=index id=object.RecID %}
+
+    <!-- RELATED ITEMS ON THE RIGHT-HAND SIDE -->
+    <ul class="accordion" data-accordion data-multi-expand="true" data-allow-all-closed="true">
+        {% for index, items in object.RelatedItems.items %}
+          {% if '3Dmodels' in index or 'Video' in index or 'ModernPeople' in index or 'AncientPeople' in index or 'Institutions' in index or 'Groups' in index or 'Animals' in index %}
+            {% include 'search-details-relateditems.html' with index=index items=items %}
+          {% endif %}
+        {% endfor %}
+    </ul>
+  </section>
+  </section>
+</div>
+
+<!-- PHOTO VIEWING MODAL -->
+
+
+{% endblock %}
+<script>
+  $(document).ready(() => {
+
+    $(document).foundation()
+
+    search_result_detail = JSON.parse($('#search_result_detail').text())
+
+    url = "{% url 'iiif-manifest' index=index id=object.RecID %}";
+
+    console.log(url)
+
+    mir = Mirador.viewer({
+      id: 'mirador',
+      selectedTheme: 'light',
+      themes: {
+        light: {
+          palette: {
+            type: 'light',
+            primary: {
+              main: '#731422',
+            },
+          },
+        },
+      },
+
+      windows: [{
+        manifestId: "{% url 'iiif-manifest' index=index id=object.RecID %}"
+      }]
+    })
+
+    // SUBSCRIBE TO MIRADOR'S REDUX STORE
+    mir.store.subscribe(() => {
+      let state = this.mir.store.getState()
+      for (let w in state.windows) {
+        // CHANGE IN MIRADOR
+        console.log(state.windows[w].canvasId)
+      }
+    })
+
+    current_canvas = () => {
+      state = mir.store.getState().windows
+      canvas = []
+      for (let w in state) {
+        canvas.push(state[w].canvasId)
+      }
+      return canvas
+    }
+
+    canvas = current_canvas()
+
+    if (canvas != current_canvas()) {
+      canvas = current_canvas()
+      console.log(canvas)
+    }
+
+
+    
+    // CHECK WHICH ITEMS ARE LOADED IN TABS
+
+    // CHECK WHICH ITEMS ARE ON SCREEN
+
+    // ON SCROLL:
+    // IF SCROLL IS AT BOTTOM
+    // LOAD ITEMS NOT ON SCREEN AND NOT ALREADY LOADED IN TABS
+
+    // GET ALL ACTIVE TABS
+    active_divs = $('.accordion-item*[id*=_accordion_div].is-active')
+
+    $('.accordion-item*[id*=_accordion_div]').on('click', e => {
+      active_divs = $('.accordion-item*[id*=_accordion_div].is-active')
+    })
+
+    // for (div of active_divs) {
+    //   $('.reveal-overlay').on('scroll', e => {
+    //     bottom_of_screen = $(window).scrollTop() + $(window).innerHeight()
+    //     top_of_screen = $(window).scrollTop()
+    //     console.log(div)
+    //   })
+    // }
+
+      // if ($('#{{index}}_accordion_div').hasClass('is-active')) {
+
+    //     $('.reveal-overlay').on('scroll', e => {
+    //       bottom_of_screen = $(window).scrollTop() + $(window).innerHeight()
+    //       top_of_screen = $(window).scrollTop()
+
+    //       for (item of elements.items) {
+
+    //         // if ($(`#${elements.category}_accordion_div`).hasClass('is-active')) {
+
+    //         // FIND ITEMS IN LIST THAT ARE LOADED
+    //         element = "#{{index}}" + item.id
+    //         element = $(element)
+
+    //         if (elem != 'undefined') {
+    //           top_of_element = element.offset().top;
+    //           bottom_of_element = element.offset().top + element.outerHeight()
+    //           console.log(element, top_of_element, bottom_of_element, top_of_screen,
+    //             bottom_of_screen)
+
+    //           if ((bottom_of_screen > top_of_element) && (top_of_screen <
+    //               bottom_of_element)) {
+    //             // CHECK IF DIV FROM elements IS VISIBLE
+    //             // IF NOT, ADD TO DIV
+
+    //             console.log('element visible')
+
+    //             // addElements(elements, $('#{{ items.category }}_items'))
+    //           } else {
+    //             console.log('element not visible')
+    //           }
+    //         }
+    //         // }
+    //       }
+
+    //       // var top_of_element = $("#{{index}}_accordion_div").offset().top;
+    //       // var bottom_of_element = $("#{{index}}_accordion_div").offset().top + $(
+    //       // "#{{index}}_accordion_div")
+    //       // .outerHeight();
+
+    //       // } else {
+
+    //       // console.log(
+    //       // '{{index}} not visible')
+
+    //     });
+
+
+    //     // $(window).scroll(() => {
+    //     //     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+    //     //         // WHAT DIV IS CURRENTLY ON SCREEN
+
+    //     //         //         from = ''
+    //     //         //         to = ''
+    //     //         //         elems = elements['items'].slice(from, to)
+    //     //         //         // 
+    //     //         //         // ADD ELEMENTS TO DIV CURRENTLY OPEN
+    //     //         //         // REMOVE ELEMENTS FROM elements
+    //     //         //         addElements(elements)
+    //     //         //         //Add something at the end of the page
+    //     //     }
+    //     //     // });
+
+    //     //     create_pages(elements, page_range(elements.items.length, 20, 1), $(
+    //     //         '#{{ index }}_thumbnail_pagination'), $('#{{ items.category }}_items'))
+    //     // })
+    //   }
+    // }
+
+
+
+
+
+
+  })
+</script>

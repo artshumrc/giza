@@ -1,0 +1,30 @@
+{% load search_tags %}
+<div class="feature-block secondary" id="jumpmenu">
+    <div class="feature-block__body">
+        <ul class="vertical menu">
+            {{ index }}
+            {{ id }}
+            {% if user %}
+            
+            <h5 class="heading-em">Hi {% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}</h5>
+            <li>
+                <a class="my-giza-lnk modal" data-url="{% url 'get-form' index=index id=id form='collection' %}">
+                    <span class="icon-plus-circle icon-fw"></span> Add this to a collection
+                </a>
+            </li>
+            {% endif %}
+            <h5 class="heading-em">Jump to:</h5>
+            <li><a href="#details"><span class="icon-info-circle icon-fw"></span> Details</a></li>
+            {% for index, item in items.items %}
+                {% if item.items|length > 0 %}
+                    <li>
+                        <a href='#{{ items.category }}'>
+                            <span class="icon-{{ item.icon }} icon-fw"></span> {{ index|add_space }}
+                            <span class="badge">{{ item.items|length }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>

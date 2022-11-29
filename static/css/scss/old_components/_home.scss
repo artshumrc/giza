@@ -1,0 +1,129 @@
+/*  Home
+--------------------------------------*/
+
+// Video bg hero
+
+.home-hero-container {
+  margin-bottom: 2rem;
+  // Permalink - use to edit and share this gradient: 
+  // http://colorzilla.com/gradient-editor/#71a7c4+0,9fbcca+27,c1c8ce+39,c6bfb4+41,d8cab3+48,dbc8b5+100
+  background: #71a7c4; /* Old browsers */
+  background: -moz-linear-gradient(top,  #71a7c4 0%, #9fbcca 27%, #c1c8ce 39%, #c6bfb4 41%, #d8cab3 48%, #dbc8b5 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  #71a7c4 0%,#9fbcca 27%,#c1c8ce 39%,#c6bfb4 41%,#d8cab3 48%,#dbc8b5 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom,  #71a7c4 0%,#9fbcca 27%,#c1c8ce 39%,#c6bfb4 41%,#d8cab3 48%,#dbc8b5 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#71a7c4', endColorstr='#dbc8b5',GradientType=0 ); /* IE6-9 */
+}
+
+.video-bg-home {
+  height: 550px;
+  position: relative;
+  z-index: 5;
+}
+
+.home-hero-overlay {
+  height: 100%;
+  background-color: $sand-dark;
+  opacity: 0.4;
+  position: relative;
+  z-index: 0;
+}
+
+.home-hero-title {
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  padding-top: 20px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  
+  @include media('<desktop', 1024 ) { // Smaller-screen fixes
+		padding-top: rem-calc(130px);
+		padding-left: 2.2rem;
+	}
+
+	@include media('<tablet') {
+		padding: rem-calc(50px 7px 0);
+	}
+  
+  @include breakpoint(medium) {
+    padding-top: 210px;
+    padding-left: 8.0rem;
+  }
+  
+  > h1 {
+    line-height: 1.0;
+    color: #fff;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    font-size: 3.75rem;
+    
+    @include breakpoint(medium) {
+      font-size: 6rem;
+    }
+    
+    .title-text-alt {
+      font-family: $accent-font-family;
+      font-style: italic;
+      font-size: 1.75rem;
+      padding-bottom: 0.25rem;
+      display: block;
+      text-transform: none;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.75);
+      
+      @include breakpoint(medium) {
+        font-size: 2.5rem;
+        padding-left: 0.5rem;
+        padding-bottom: 0;
+      }
+    } 
+  }
+}
+
+.home-hero-content {
+  background-color: rgba(49, 46, 43, 0.88); // $dune, not black
+  padding: 1.2rem 1.5rem 0.5rem;
+  position: absolute;
+  bottom: 0;
+  color: #fff;
+  z-index: 1;
+  
+  // Smaller-screen fixes
+  @include media('<tablet') {
+		padding: rem-calc(10px 4px);
+	}
+
+	.lead {
+		@include media('<desktop') {
+			font-size: rem-calc(18px);
+		}
+
+		@include media('<tablet') {
+			font-size: rem-calc(17px);
+		}
+	}
+
+	.button {
+		&.icon-search {
+			padding: 0.76em 1em;
+		}
+	}
+}
+
+// Callouts - chiefly the GDPR cookies banner on the homepage
+
+.callout[data-closable] {
+  padding-right: 3rem; // Leave room for the Close button without overlaps
+}
+
+// Special callout fixed to the bottom edge
+.callout-banner-bottom {
+  margin: 0;
+  position: fixed;
+  z-index: 99999;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  box-shadow: 0 -1px 4px rgba($dune, 0.2);
+}

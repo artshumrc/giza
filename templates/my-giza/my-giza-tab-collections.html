@@ -1,0 +1,159 @@
+{% load static %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'main_content' %}
+<div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+  <div class="row">
+    <div class="columns">
+      <div>
+        <label for=search-collections>Search for a collection</label>
+        <input type=search id=search-collections placeholder="Collection title or keywords">
+        <select>
+          <option>Giza Collections</option>
+          <option>My Collections</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="collection-section" id="MyGIZAviewer">
+  <div class="row save-heading">
+    <div class="columns">
+      <h3 id="saved_collections_total">
+        {% if collections|length == 0 %}
+        You have no collections yet.
+        {% elif collections|length == 1 %}
+        You have one collection.
+        {% else %}
+        There are {{ collections|length }} collections.
+        {% endif %}
+        </h3>
+    </div>
+  </div>
+
+  <div class="row row-padded">
+    <div id="collections_view" class="collections_content">
+      <ul class="collections-list">
+        {% include 'my-giza-collections-view.html' %}
+      </ul>
+    </div>
+    <div class="text-center columns p-t-1">
+      <nav aria-label="Pagination">
+        <ul class="pagination m-l-neghalf" id="collections_page_numbers">
+          <li class="pagination-previous {% if result.pages.page <= 1 %} disabled {% endif %}">
+            {% if search_result.pages.page > 1 %}
+              <a onclick="toggle_page({{ result.pages.page }} - 1)" aria-label="Previous page">Previous</a>
+            {% endif %}
+          </li>
+          {% for i in search_result.pages.range %}
+            {% if i == -1 %}
+              <li class="ellipsis"></li>
+            {% else %}
+              <li {% if i == result.pages.page %} class="current" {% endif %}>
+                {% if i == search_result.pages.page %}
+                  <span class="show-for-sr">You're on page</span>{{i}}
+                {% else %}
+                  <a href='#' onclick="toggle_page({{ i }})" aria-label="Page {{ i }}">{{i}}</a>
+                {% endif %}
+              </li>
+            {% endif %}
+          {% endfor %}
+          <li class="pagination-next {% if search_result.pages.page >= search_result.pages.range|last %} disabled {% endif %}">
+            {% if search_result.pages.page < search_result.pages.range|last %}
+              <a href='#' onclick="toggle_page({{ search_result.pages.page }} + 1 )" aria-label="Next page">Next</a>
+            {% endif %}
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+</section>
+
+<!-- 
+<div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+  <div class="row">
+    <div class="columns">
+      <ul class="menu" >
+        <li class="menu-text">Title</li>
+      </ul>
+      a href="/collections/" class="go-back">Back to Individual Collections</a
+    </div>
+  </div>
+
+  <li class="{% if request.path == '/collections/' %}active{% endif %}">
+    <a href="#" id="public_collections_link">All Collections</a>
+  </li>
+  <li>
+    <a href="#" id="my_collections_link">My Private Collections</a>
+  </li>
+  <li><a href="#">Collections Shared with Me</a></li
+  <li> -->
+{% if user.is_superuser %}
+<a href="/admin/giza/collection/add" class="add"><span class="sr-only">add</span></a>
+<!-- <a href="#" class="collection_lnk" data-open="new_collection" aria-controls="new_collection" -->
+<!-- aria-haspopup="true" tabindex="0" class="add"><span class="sr-only">add</span></a> -->
+{% else %}
+<a class="my-giza-lnk add collection modal" data-url="{% url 'my-giza-add' tab='collections' %}"><span
+    class="sr-only">add</span></a>
+{% endif %}
+</li>
+<!--li class="hide-for-small-only"><a href="#">Collections Shared with Me</a></li-->
+{% if collections|length %}
+
+
+{% endif %}
+</div>
+
+
+{% endblock %}
+<!-- END MAIN CONTENT ROWS -->
+<script>
+  $(document).ready(() => {
+
+    $(document).foundation()
+
+    elems = $('.collections-list li')
+
+    $('#search-collections').on('keyup', e => {
+      val = new RegExp($(e.currentTarget).val(), "i")
+      elements = elems.filter((i, e) => val.test($(e).data('title')))
+      collection_length = elements.length ? `There ${elements.length == 1 ? 'is' : 'are'} ${elements.length} collection${elements.length ? '' : 's'} that matches the search parameters.` : 'There are no collections that match the search parameters.'
+      create_pages(page_range(elements.length, 10, 1), $('#collections_page_numbers'))
+      $('#saved_collections_total').text(collection_length)
+      $('.collections-list').empty().append(elements)
+    })
+   
+    //   $('#my_collections_link').on('click', () => {
+    //     $.get('/mygiza/collections/private/')
+    //       .done(response => {
+    //         if (response.success) {
+    //           $('#collections_view').empty().html(response.html).show()
+    //         }
+    //       })
+    //   })
+
+    //   $('#public_collections_link').on('click', () => {
+    //     $.get('/mygiza/collections/public/')
+    //       .done(response => {
+    //         console.log('ok')
+    //         if (response.success) {
+    //           console.log(response.html)
+    //           $('#collections_view').empty().html(response.html).show()
+    //         }
+    //       })
+    //   })
+
+    //   $('.collection_lnk').on('click', e => {
+    //     $.get($(e.currentTarget).data('id'))
+    //       .done(response => {
+    //         if (response.success) {
+    //           $('#edit_collection_form').empty().html(response.html)
+    //           $('#edit_collection').foundation('open')
+    //         }
+    //       })
+    //   })
+  })
+</script>

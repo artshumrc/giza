@@ -1,0 +1,27 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Your request to reset your Digital Giza password
+From: uildriks.m@gmail.com
+To: bob@dylan.com
+Date: Fri, 17 Dec 2021 22:27:00 -0000
+Message-ID: <163978002028.22908.6262758235795989478@MSI>
+
+
+You're receiving this email because you requested a password reset 
+for your user account at Digital Giza.
+
+If you did not request this password reset, please ignore this email.
+
+Please go to the following page and choose a new password:
+
+http://localhost:8000/confirm-password/5wn-18e97442d4b6311e8b19/
+
+Your username, in case you've forgotten, is this email address.
+
+Thanks for using Digital Giza: your portal to the Giza Plateau!
+
+The Digital Giza team
+
+
+-------------------------------------------------------------------------------

@@ -1,0 +1,79 @@
+<div class="feature-block secondary text-smaller met-search">
+  <h5 id="METthesaurus" class="heading-alt">Multilingual Egyptological Thesaurus search<span
+      class="show-for-medium icon-info-circle has-tip top" data-tooltip aria-haspopup="true" data-disable-hover="false"
+      tabindex="2"
+      title="The Multilingual Egyptological Thesaurus provides a standardized vocabulary to filter your search results. Drag terms from the list below onto the field above to apply these terms to your search query."></span>
+  </h5>
+  <div>
+    <!-- <legend class="search-facet-title">MET Terms</legend> -->
+    <!-- <input id=METfilter name=METfilter placeholder="Type MET terms here" type=text> -->
+    {% if MET_tree|length %}
+    <form>
+      <ul class="search-facet-title" id="METSearchList" ondrop=drop(event) ondragover=allowDrop(event)>Drag and drop
+        terms here
+      </ul>
+      <ul class="menu vertical" id="METAccordion">
+        {% for items in MET_tree %}
+          {% include 'search-MET-terms-a.html' with item=items.1 %}
+        {% endfor %}
+      </ul>
+      <input type=hidden name=MET>
+      <button id="met_search_btn" class="button primary my-giza-lnk post" data-url="{% url 'search_results' %}"
+        id="advanced-search-form-btn" type="submit">Search</button>
+    </form>
+    {% else %}
+    <div>
+      No MET terms could be retrieved from the database.
+    </div>
+    {% endif %}
+  </div>
+  <script>
+    $(document).ready(() => {
+      /* MET DROP METHOD */
+      drop = e => {
+        e.preventDefault()
+        MET_term = JSON.parse(e.dataTransfer.getData("MET_term"))
+        if ($("#METSearchList").find("#list_" + MET_term.code).length == 0) {
+          li = $('<li>')
+            .attr('id', 'list_' + MET_term.code)
+            .append(
+              $('<a>')
+              .attr('href', '#')
+              .text(MET_term.term)
+            )
+            .on('click', e => {
+              $(e.currentTarget).remove()
+
+              console.log(MET_term.term)
+
+              // REMOVE FROM HIDDEN INPUT
+              let terms = $('input[name="MET"]').val().split(',')
+              let idx = terms.indexOf(MET_term.code)
+              if (idx !== -1) terms.splice(idx, 1)
+              terms.join(',')
+              $('input[name="MET"]').val(terms)
+            })
+
+          children = $('#METSearchList')
+
+          $('#METSearchList').append(li)
+
+          // ADD TO HIDDEN INPUT
+          terms = $('input[name="MET"]').val().split(',')
+          terms = terms.filter(a => a)
+          terms.push(MET_term.code)
+          terms.join(',')
+          $('input[name="MET"]').val(terms)
+        }
+      }
+
+      /* MET DRAG METHOD */
+      drag = (e, code, term) => e.dataTransfer.setData("MET_term", JSON.stringify({
+        'code': code,
+        'term': term
+      }))
+
+      /* MET ALLOWDROP METHOD */
+      allowDrop = e => e.preventDefault()
+    })
+  </script>

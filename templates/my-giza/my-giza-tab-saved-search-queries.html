@@ -1,0 +1,27 @@
+{% load static %}
+
+<!-- BEGIN MAIN CONTENT ROWS -->
+
+{% block 'main_content' %}
+
+<!-- START OF DIV WITH SEARCHES -->
+<div class="row save-heading">
+  <div class="columns">
+    <h3 id="saved_searches_total">You
+      {% if searches|length == 0 %}
+      do not have any saved search queries.
+      {% else %}
+        have {{ searches|length }} saved search 
+          {% if searches|length == 1 %} 
+            query.
+          {% else %}
+            queries.
+          {% endif %}
+      {% endif %}</h3>
+  </div>
+</div>
+<div class="row row-padded" id="saved_searches">
+  {% include 'my-giza-saved-searches.html' %}
+</div>
+{% endblock %}
+<!-- END MAIN CONTENT ROWS -->

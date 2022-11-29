@@ -1,0 +1,57 @@
+{% load static %}
+
+{% block 'page_headers' %}
+{% include 'page-header.html' with bg="9" title="MyGiza" %}
+{% include 'page-subheader--mygiza.html' %}
+{% endblock  %}
+
+{% block 'main_content' %}
+
+{{ collections_html|json_script:"collections_html" }}
+{{ searches_html|json_script:"searches_html" }}
+{{ lessons_html|json_script:"lessons_html" }}
+
+<div class="collection-heading p-t-half m-b-1 hide-for-small-only">
+  <div class="row">
+    <div class="columns">
+      <div class="titles">
+        <a class="my-giza-tab {% if 'saved-search-queries' in tab %}active{% endif %}"
+          data-url="saved-search-queries">Search Queries</a>
+        <a class="my-giza-tab {% if 'collections' in tab %}active{% endif %}" data-url="collections">Collections</a>
+        <a class="my-giza-tab {% if 'lessons' in tab %}active{% endif %}" data-url="lessons">Lesson Topics</a>
+        <a id="new-my-giza-item-lnk"><i class="icon-plus-circle my-giza-lnk modal" data-url="{% url 'my-giza-add' tab=tab %}"></i></a>
+        <!-- <a class="my-giza-lnk add collection modal" data-url="{% url 'my-giza-add' tab=tab %}"><span class="sr-only">add</span></a> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION FOR JSON DATA -->
+<section class="accordion-section" id="MyGIZAdiv">
+  <div id="saved-search-queries"></div>
+  <div id="collections"></div>
+  <div id="lessons"></div>
+</section>
+
+{% endblock %}
+<!-- END MAIN CONTENT ROWS -->
+
+<script>
+  $(document).ready(() => {
+    html = {}
+    html['saved-search-queries'] = JSON.parse($('#searches_html').text())
+    html['collections'] = JSON.parse($('#collections_html').text())
+    html['lessons'] = JSON.parse($('#lessons_html').text())
+    Object.keys(html).forEach(key => $('#' + key).empty().html(html[key]).hide())
+
+    $('#' + $('.my-giza-tab.active').data('url')).toggle()
+
+    $('.my-giza-tab').on('click', e => {
+      $('#MyGIZAdiv').children().each((i, child) => $(child).hide())
+      $('.my-giza-tab').removeClass('active')
+      $(e.currentTarget).addClass('active')
+      $('#new-my-giza-item-lnk i').data('url', 'mygiza/collections/add/'+$(e.currentTarget).data('url'))
+      $('#' + $(e.currentTarget).data('url')).show()
+    })
+  })
+</script>
