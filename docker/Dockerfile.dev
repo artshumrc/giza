@@ -18,7 +18,6 @@ RUN mkdir -p /var/log/nginx && \
 COPY nginx/nginx.dev.conf /etc/nginx/nginx.conf
 
 # Python requirements
-# RUN python3 -m pip install --upgrade pip
 COPY requirements.txt /app
 RUN pip install -r requirements.txt
 
@@ -30,7 +29,6 @@ COPY utils /app/utils
 COPY static /app/static
 COPY templates /app/templates
 COPY manage.py /app/manage.py
-# COPY --from=static-build /app/frontend/dist /app/static/frontend/dist
 
 # Setup
 RUN mkdir /app/setup
@@ -49,4 +47,3 @@ EXPOSE 8000 5000
 
 WORKDIR /app
 CMD setup/entrypoint
-# CMD ["sleep", "infinity"]
