@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        
+        ('auth', '0011_update_proxy_permissions'), # required for CustomUser.groups / .user_permissions
     ]
 
     operations = [
