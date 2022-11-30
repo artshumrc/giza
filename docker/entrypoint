@@ -58,10 +58,12 @@ nginx
 # Switching the WSGI host to Waitress, which seems faster, and more robust than Gunicorn for long running jobs when
 # sitting behind Nginx.
 if [[ (-z "$LOADER") || ("$LOADER" = "False")]]; then
-  if [[ ($WAITRESS) && ("$WAITRESS" = "True") ]]; then
-    echo "Bringing up waitress on port 5000 as wsgi host"
-    python3 /app/manage.py waitress --port=5000 --threads=16
-  else
-    python3 /app/manage.py runserver 5000
-  fi
+#   running into "Unknown command: 'waitress'" error
+#   if [[ ($WAITRESS) && ("$WAITRESS" = "True") ]]; then
+#     echo "Bringing up waitress on port 5000 as wsgi host"
+#     python3 /app/manage.py waitress --port=5000 --threads=16
+#   else
+#     python3 /app/manage.py runserver 5000
+#   fi
+    gunicorn --bind :5000 --workers 3 --threads 16 --timeout 0 giza.wsgi:application
 fi

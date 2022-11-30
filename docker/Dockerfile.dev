@@ -27,6 +27,8 @@ COPY giza /app/giza
 COPY tms /app/tms
 COPY search /app/search
 COPY utils /app/utils
+COPY static /app/static
+COPY templates /app/templates
 COPY manage.py /app/manage.py
 # COPY --from=static-build /app/frontend/dist /app/static/frontend/dist
 

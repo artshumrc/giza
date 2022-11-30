@@ -10,3 +10,6 @@ requests==2.26.0
 django-webpack-loader==1.4.1
 psycopg2>=2.9.2 # https://stackoverflow.com/questions/38807296/django-1-9-2-assertionerror-database-connection-isnt-set-to-utc
 python-dateutil==2.8.2
+django-waitress==0.1.0
+waitress==1.4.4
+gunicorn==20.1.0

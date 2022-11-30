@@ -15,6 +15,7 @@ from .secure import SECURE_SETTINGS
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,7 +27,11 @@ SECRET_KEY = SECURE_SETTINGS.get("DJANGO_SECRET_KEY", '9w)eu)4tj*v(x%8^tz$fsc8^t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['giza-web2.rc.fas.harvard.edu', 'giza.fas.harvard.edu']
+ALLOWED_HOSTS = [
+    'localhost',
+    'giza-web2.rc.fas.harvard.edu',
+    'giza.fas.harvard.edu'
+]
 
 
 # Application definition
@@ -62,6 +67,13 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             (os.path.join(BASE_DIR, 'templates')),
+            (os.path.join(BASE_DIR, 'templates/layouts')),
+            (os.path.join(BASE_DIR, 'templates/lessons')),
+            (os.path.join(BASE_DIR, 'templates/my-giza')),
+            (os.path.join(BASE_DIR, 'templates/pages')),
+            (os.path.join(BASE_DIR, 'templates/partials')),
+            (os.path.join(BASE_DIR, 'templates/search')),
+            (os.path.join(BASE_DIR, 'templates/user-pages')),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
