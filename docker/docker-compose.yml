@@ -41,6 +41,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
+      - ../es8-ingestion-scripts:/usr/share/elasticsearch/giza_ingest
     user: "0"
     command: >
       bash -c '
@@ -94,6 +95,7 @@ services:
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
+      - ../es8-ingestion-scripts:/usr/share/elasticsearch/giza_ingest
     ports:
       - ${ES_PORT}:9200
     environment:
@@ -132,3 +134,12 @@ services:
       retries: 120
     restart: always
 
+  elastic-ingest:
+    depends_on:
+      giza-es01:
+        condition: service_healthy
+    image:
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - esdata01:/usr/share/elasticsearch/data
+      - ../es8-ingestion-scripts:/usr/share/elasticsearch/giza_ingest

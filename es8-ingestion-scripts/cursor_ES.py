@@ -5,7 +5,7 @@ try:
     from requests import head
     from unicodedata import normalize
     from math import ceil
-    from credentials_default import es_cert, es_user, es_password
+    from credentials_default import es_cert, es_user, es_password, es_host
     from helper_es_index_settings import ANALYZERS
 except ImportError as error:
     print(error)
@@ -37,7 +37,7 @@ class ES:
         ----------
         - None
         """
-        self.es = Elasticsearch(f'https://localhost:9200', ca_certs=es_cert, basic_auth=(es_user, es_password))
+        self.es = Elasticsearch(es_host, ca_certs=es_cert, basic_auth=(es_user, es_password))
 
     def check_connection(self):
         """
