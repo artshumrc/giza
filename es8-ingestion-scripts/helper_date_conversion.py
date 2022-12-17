@@ -135,7 +135,7 @@ class Date_Conversion:
                                                 if year:
                                                     newValue[newValue.index(val)] = year
 
-                                date = self.convert_date("/".join([val for val in newValue if val is not '']), delimiter)
+                                date = self.convert_date("/".join([val for val in newValue if val != '']), delimiter)
                                 if date:
                                     string, ms = self.__convertToMS(f'{date.month}/{date.day}/{date.year}')
                                     dates[string] = str(ms)
