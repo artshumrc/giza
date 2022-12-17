@@ -52,7 +52,6 @@ fi
 #   nginx
 # fi
 
-# TODO move this to a separate container
 nginx
 
 # Switching the WSGI host to Waitress, which seems faster, and more robust than Gunicorn for long running jobs when

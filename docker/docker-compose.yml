@@ -87,7 +87,7 @@ services:
       timeout: 5s
       retries: 120
 
-  giza-es01:
+  es01:
     depends_on:
       setup-elastic:
         condition: service_healthy
@@ -136,10 +136,12 @@ services:
 
   elastic-ingest:
     depends_on:
-      giza-es01:
+      es01:
         condition: service_healthy
-    image:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.ingest.dev
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
-      - ../es8-ingestion-scripts:/usr/share/elasticsearch/giza_ingest
+      # - /es8-ingestion-scripts:/usr/share/elasticsearch/giza_ingest:ro
