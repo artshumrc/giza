@@ -29,7 +29,7 @@ def file_open(dir:str, file:str, module:str=None, open_file:bool=True):
     - bool : True/False locating/reading file
     """
     if dir and module:
-        dir = f'offline_scripts/{module}/{dir}'
+        dir = f'{module}/{dir}'
 
     if file:
         file = file if 'json' in file else f'{file}.json'
@@ -67,7 +67,7 @@ def file_save(dir:str, file:str, data:list, module:str=None):
     """
 
     if dir and module:
-        base_dir = f'offline_scripts/{module}'
+        base_dir = f'{module}'
         dir = f'{base_dir}/{dir}'
 
     if file:
@@ -97,7 +97,7 @@ def file_del(module:str, folder:str, filename:str='', exclude:list=[]) -> bool:
     -------
     - bool (optional): True/False locating/deleting file
     """
-    dir = f'offline_scripts/{module}/{folder}'
+    dir = f'{module}/{folder}'
     
     if filename:
         filename = filename if '.json' in filename else f'{filename}.json'

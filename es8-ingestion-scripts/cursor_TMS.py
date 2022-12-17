@@ -57,15 +57,22 @@ class TMS:
         try:            
             for database in tms_databases:
                 try:
-                    self.driver = pyodbc.connect(f'DSN={tms_dsn};UID={tms_user};PWD={tms_password};DATABASE={database};')                    
-                except:
+                    self.driver = pyodbc.connect(f'DSN={tms_dsn};UID={tms_user};PWD={tms_password};DATABASE={database};')                   
+                except Exception as e:
+                    self.logger.log("Failed to connect to TMS with pyodbc")
+                    self.logger.log(e)
                     try:
                         self.driver = pymssql.connect(tms_dsn, tms_user, tms_password, database)
-                    except:
+                    except Exception as e:
+                        self.logger.log("Failed to connect to TMS with pymssql")
+                        self.logger.log(e)
                         return False
-                if self.driver: 
+                if self.driver:
+                    self.logger.log("CHECK DRIVER SUCCESSFUL")
+                    self.logger.log(self.driver)
                     return True
         except:
+            self.logger.log("CHECK DRIVER FAILED")
             return False
 
     def fetch(self, statement:str, query:str):

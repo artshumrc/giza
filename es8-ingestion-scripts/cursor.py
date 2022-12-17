@@ -20,38 +20,74 @@ class Cursor:
         self.es = ES()
         self.args = args
 
-    def check_connections(self):
+    def check_es_connection(self):
         """
-        This method determines if connections can be established to ElasticSearch and either TMS or local files
-
+        Determine if connection can be established to Elasticsearch
         Raises
         ------
-        - ConnectionError : could not establish connection to TMS and/or ElasticSearch
+        - ConnectionError : could not establish connection to ElasticSearch
         """
         try:
-            
-
-            # CONNECTION TO ES: HALTS EVERYTHING IF REQUIRED AND FAILS
             if not self.es.check_connection() and len([arg for arg in [arg for arg in self.args if arg.startswith('es')] if self.args[arg]]): return False
+        except:
+            raise ConnectionError("Could not establish connection to ElasticSearch.")
+    
 
-            # CONNECTION TO TMS: HALTS EVERYTHING IF REQUIRED AND FAILS
+    def check_tms_connection(self):
+        """
+        Determine if connection can be established to TMS
+        Raises
+        ------
+        - ConnectionError : could not establish connection to TMS or local files
+        """
+        try:
             if not self.tms.check_driver():
             
                 # LOCAL TABLES:
                 if self.local_tables():
-
                     # HALT EVERYTHING IF TABLES NOT THERE OR CORRUPT
                     return True if tables_exists(modules=self.args.modules) else False
-
                 else:
-
                     # FULL STOP: WE EITHER NEED A CONNECTION TO TMS OR ACCESS TO LOCAL TABLES
-                    raise
-            
+                    raise ConnectionError("Could not establish connection to TMS or local files.")
             else:
                 return True
         except:
-            raise ConnectionError("Could not establish connections to TMS and/or ElasticSearch.")
+            raise ConnectionError("Could not establish connection to TMS or local files.")
+
+
+    # def check_connections(self):
+    #     """
+    #     This method determines if connections can be established to ElasticSearch and either TMS or local files
+
+    #     Raises
+    #     ------
+    #     - ConnectionError : could not establish connection to TMS and/or ElasticSearch
+    #     """
+    #     try:
+            
+
+    #         # CONNECTION TO ES: HALTS EVERYTHING IF REQUIRED AND FAILS
+    #         if not self.es.check_connection() and len([arg for arg in [arg for arg in self.args if arg.startswith('es')] if self.args[arg]]): return False
+
+    #         # CONNECTION TO TMS: HALTS EVERYTHING IF REQUIRED AND FAILS
+    #         if not self.tms.check_driver():
+            
+    #             # LOCAL TABLES:
+    #             if self.local_tables():
+
+    #                 # HALT EVERYTHING IF TABLES NOT THERE OR CORRUPT
+    #                 return True if tables_exists(modules=self.args.modules) else False
+
+    #             else:
+
+    #                 # FULL STOP: WE EITHER NEED A CONNECTION TO TMS OR ACCESS TO LOCAL TABLES
+    #                 raise
+            
+    #         else:
+    #             return True
+    #     except:
+    #         raise ConnectionError("Could not establish connections to TMS and/or ElasticSearch.")
 
     def local_tables(self):
         """ 
