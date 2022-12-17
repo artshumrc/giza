@@ -62,7 +62,8 @@ def main():
 
 		cursor = Cursor(args)
 
-		cursor.check_connections()
+		cursor.check_es_connection()
+		cursor.check_tms_connection()
 
 		for module in args.modules:
 			Module(MODULES, module, cursor, drs=args.drs, memory=args.memory, push=args.push, tables=args.tables, store=args.store, thumbnails=args.thumbnails, thumbnails_refresh=args.thumbnails_refresh, refresh=args.refresh, compile=args.compile, es=args.es) if module in ALLOWED_MODULES else print(f'>>> UNKNOWN MODULE: "{module}"')

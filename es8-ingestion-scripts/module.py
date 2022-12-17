@@ -25,7 +25,7 @@ class Module(object):
     
     Methods
     -------
-    - check_connection() : begins a sequence to verify (and redownload) drs_metadata
+    - check_connection() : begins a sequence to verify (and redownload) drs_metadata # this doesn't exist? Got moved to cursor?
     - indices() : retrieves all indices (excluding hidden ones) from ElasticSearch
     - del_index(index=str) : deletes an index (including contents, shards and metadata)
     # - add_index(index=str, doc=dict) : add document to an index
