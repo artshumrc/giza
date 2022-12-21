@@ -1,11 +1,8 @@
-try:
-    from os import cpu_count
-    from concurrent.futures import ThreadPoolExecutor
-    from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
-    from helper_date_conversion import Date_Conversion
-    from cursor_FSS import file_open
-except ImportError as error:
-    print(error)
+from os import cpu_count
+from concurrent.futures import ThreadPoolExecutor
+from classifications import CLASSIFICATIONS, CONSTITUENTTYPES, MEDIATYPES
+from helper_date_conversion import Date_Conversion
+from cursor_FSS import file_open
 
 class Base:
     """

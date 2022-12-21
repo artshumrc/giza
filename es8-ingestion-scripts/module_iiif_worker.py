@@ -1,11 +1,8 @@
-try:
-    from typing import Tuple, Union
-    from base import Base
-    from cursor_FSS import file_open
-    from cursor_TMS import TMS
-    from sql import DRS
-except ImportError as error:
-    print(error)
+from typing import Tuple, Union
+from base import Base
+from cursor_FSS import file_open
+from cursor_TMS import TMS
+from sql import DRS
 
 class IIIF_Worker(Base):
     """

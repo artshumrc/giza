@@ -1,8 +1,5 @@
-try:
-    from base import Base
-    from cursor_FSS import file_open, file_save
-except ImportError as error:
-    print(error)
+from base import Base
+from cursor_FSS import file_open, file_save
 
 class MET_Worker(Base):
     """

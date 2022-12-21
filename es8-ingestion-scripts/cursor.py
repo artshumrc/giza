@@ -1,10 +1,8 @@
-try:
-    from cursor_TMS import TMS
-    from cursor_ES import ES
-    from cursor_FSS import tables_exists
-    from sql import SQL
-except ImportError as error:
-    print(error)
+from cursor_TMS import TMS
+from cursor_ES import ES
+from cursor_FSS import tables_exists
+from sql import SQL
+
 
 class Cursor:
     """ 

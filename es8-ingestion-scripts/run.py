@@ -1,9 +1,6 @@
-try:
-	from argparse import ArgumentParser, ArgumentTypeError
-	from cursor import Cursor
-	from module import Module
-except ImportError as error:
-    print(error)
+from argparse import ArgumentParser, ArgumentTypeError
+from cursor import Cursor
+from module import Module
 
 # DEFAULT MODULES IN A LIST
 ALLOWED_MODULES = ['iiif', 'met', 'sites', 'objects', 'constituents', 'published', 'media']

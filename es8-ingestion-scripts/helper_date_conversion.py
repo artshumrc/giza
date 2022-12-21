@@ -1,12 +1,9 @@
-try:
-    from collections import Counter
-    from operator import itemgetter
-    from datetime import datetime
-    from dateutil.parser import parser
-    from cursor_FSS import file_save
-    from re import compile, search, findall
-except ImportError as error:
-    print(error)
+from collections import Counter
+from operator import itemgetter
+from datetime import datetime
+from dateutil.parser import parser
+from cursor_FSS import file_save
+from re import compile, search, findall
 
 class Date_Conversion:
     def __init__(self, module_type):

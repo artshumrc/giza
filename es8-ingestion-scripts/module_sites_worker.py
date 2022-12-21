@@ -1,10 +1,7 @@
-try:
-    from os import cpu_count
-    from concurrent.futures import ThreadPoolExecutor, wait
-    from re import sub
-    from base import Base
-except ImportError as error:
-    print(error)
+from os import cpu_count
+from concurrent.futures import ThreadPoolExecutor, wait
+from re import sub
+from base import Base
 
 class Sites_Worker(Base):
     """

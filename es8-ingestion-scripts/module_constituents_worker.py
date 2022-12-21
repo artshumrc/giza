@@ -1,10 +1,7 @@
-try:
-    from os import cpu_count
-    from concurrent.futures import ThreadPoolExecutor, wait
-    from base import Base
-    from re import sub
-except ImportError as error:
-    print(error)
+from os import cpu_count
+from concurrent.futures import ThreadPoolExecutor, wait
+from base import Base
+from re import sub
 
 class Constituents_Worker(Base):
     """

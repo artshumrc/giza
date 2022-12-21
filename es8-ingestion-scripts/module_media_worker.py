@@ -1,9 +1,6 @@
-try:
-    from os import cpu_count
-    from concurrent.futures import ThreadPoolExecutor, wait
-    from base import Base
-except ImportError as error:
-    print(error)
+from os import cpu_count
+from concurrent.futures import ThreadPoolExecutor, wait
+from base import Base
 
 class Media_Worker(Base):
     """

@@ -1,11 +1,8 @@
-try:
-    from os import cpu_count
-    from concurrent.futures import ThreadPoolExecutor, wait
-    from operator import itemgetter
-    from re import sub, compile, match, IGNORECASE
-    from base import Base
-except ImportError as error:
-    print(error)
+from os import cpu_count
+from concurrent.futures import ThreadPoolExecutor, wait
+from operator import itemgetter
+from re import sub, compile, match, IGNORECASE
+from base import Base
 
 class Published_Worker(Base):
     """

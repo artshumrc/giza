@@ -1,21 +1,17 @@
-try:
-    from helper_logger import Logger
+from helper_logger import Logger
 
-    from cursor_FSS import file_open, file_del, file_save, get_thumbnails, save_thumbnails
-    from cursor_TMS import get_drs_metadata
-    from helper_thumbnailer import download_thumbnails
-    from module_iiif_worker import check_drs
+from cursor_FSS import file_open, file_del, file_save, get_thumbnails, save_thumbnails
+from cursor_TMS import get_drs_metadata
+from helper_thumbnailer import download_thumbnails
+from module_iiif_worker import check_drs
 
-    from module_iiif_worker import IIIF_Worker
-    from module_MET_worker import MET_Worker
-    from module_sites_worker import Sites_Worker
-    from module_objects_worker import Objects_Worker
-    from module_constituents_worker import Constituents_Worker
-    from module_published_worker import Published_Worker
-    from module_media_worker import Media_Worker
-
-except ImportError as error:
-    print(error)
+from module_iiif_worker import IIIF_Worker
+from module_MET_worker import MET_Worker
+from module_sites_worker import Sites_Worker
+from module_objects_worker import Objects_Worker
+from module_constituents_worker import Constituents_Worker
+from module_published_worker import Published_Worker
+from module_media_worker import Media_Worker
 
 overall_progress = {}
 
