@@ -13,3 +13,4 @@ python-dateutil==2.8.2
 django-waitress==0.1.0
 waitress==1.4.4
 gunicorn==20.1.0
+python-environ==0.4.54

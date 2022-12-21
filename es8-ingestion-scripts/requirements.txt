@@ -5,6 +5,7 @@ Cython==0.29.32
 pymssql==2.2.7
 attrs==22.1.0
 python-dateutil==2.8.2
+python-environ==0.4.54
 
 # pytz==2019.1
 # sqlparse==0.4.2

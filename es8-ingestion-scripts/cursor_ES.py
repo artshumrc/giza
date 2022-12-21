@@ -1,14 +1,11 @@
-try:
-    from elasticsearch import Elasticsearch
-    from elasticsearch.helpers import streaming_bulk, BulkIndexError
-    from elastic_transport import ObjectApiResponse
-    from requests import head
-    from unicodedata import normalize
-    from math import ceil
-    from credentials_default import es_cert, es_user, es_password, es_host
-    from helper_es_index_settings import ANALYZERS
-except ImportError as error:
-    print(error)
+from elasticsearch import Elasticsearch
+from elasticsearch.helpers import streaming_bulk, BulkIndexError
+from elastic_transport import ObjectApiResponse
+from requests import head
+from unicodedata import normalize
+from math import ceil
+from helper_es_index_settings import ANALYZERS
+import environ
 
 class ES:
     """
@@ -37,7 +34,14 @@ class ES:
         ----------
         - None
         """
-        self.es = Elasticsearch(es_host, ca_certs=es_cert, basic_auth=(es_user, es_password))
+        env = environ.Env()
+        environ.Env.read_env()
+
+        self.es = Elasticsearch(
+            env('ELASTICSEARCH_URL'),
+            ca_certs=env('ELASTICSEARCH_CERT'),
+            basic_auth=(env('ELASTICSEARCH_USER'), env('ELASTIC_PASSWORD'))
+        )
 
     def check_connection(self):
         """

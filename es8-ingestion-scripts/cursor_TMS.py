@@ -1,19 +1,14 @@
 from attr import Attribute
-
-
-try:
-    import pyodbc, pymssql, time
-    from os import cpu_count
-    from math import ceil
-    from requests import Session
-    from requests.adapters import HTTPAdapter
-    from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, Future, as_completed, wait
-    from cursor_FSS import file_open, file_save
-    from helper_logger import Logger
-    from sql import SQL
-    from credentials_default import tms_databases, tms_dsn, tms_user, tms_password
-except ImportError as error:
-    print(error)
+import pyodbc, pymssql, time
+from os import cpu_count
+from math import ceil
+from requests import Session
+from requests.adapters import HTTPAdapter
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, Future, as_completed, wait
+from cursor_FSS import file_open, file_save
+from helper_logger import Logger
+from sql import SQL
+import environ
 
 THREAD_POOL = 16
 
@@ -48,6 +43,10 @@ class TMS:
         self.driver = None
 
         self.logger = Logger('tms')
+
+        env = environ.Env()
+        environ.Env.read_env()
+        self.tms_databases, self.tms_dsn, self.tms_user, self.tms_password = env('TMS_DATABASES'), env('TMS_DSN'), env('TMS_USER'), env('TMS_PASSWORD')
     
     def check_driver(self):
         """
@@ -55,14 +54,14 @@ class TMS:
         The method checks two different connection packages: pyodbc and pymssql (pyodbc was unsuccessful on my computer).
         """
         try:            
-            for database in tms_databases:
+            for database in self.tms_databases:
                 try:
-                    self.driver = pyodbc.connect(f'DSN={tms_dsn};UID={tms_user};PWD={tms_password};DATABASE={database};')                   
+                    self.driver = pyodbc.connect(f'DSN={self.tms_dsn};UID={self.tms_user};PWD={self.tms_password};DATABASE={database};')                   
                 except Exception as e:
                     self.logger.log("Failed to connect to TMS with pyodbc")
                     self.logger.log(e)
                     try:
-                        self.driver = pymssql.connect(tms_dsn, tms_user, tms_password, database)
+                        self.driver = pymssql.connect(self.tms_dsn, self.tms_user, self.tms_password, database)
                     except Exception as e:
                         self.logger.log("Failed to connect to TMS with pymssql")
                         self.logger.log(e)
@@ -201,9 +200,12 @@ def get_drs_metadata(urls:list):
     - dict : dictionary with drs id and nested dictionary with width and height properties.
     """
 
-    workers = int((cpu_count()/2)-1)
+    # workers = int((cpu_count()/2)-1)
+    workers = cpu_count()
     batch_size = ceil(len(urls)/workers)
     batch_results, futures = [], []
+
+    print(f"Starting {workers} processes with {batch_size} urls per process. {len(urls)} urls to process...")
 
     def progress_indicator(future:Future):
         """ 

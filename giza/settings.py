@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-from .secure import SECURE_SETTINGS
+import environ
+from django.core.exceptions import ImproperlyConfigured
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,20 +26,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = SECURE_SETTINGS.get("DJANGO_SECRET_KEY", '9w)eu)4tj*v(x%8^tz$fsc8^t@jj66_7_!_w2wo@9lcs)^xf6=')
+SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", True)
 
 ALLOWED_HOSTS = [
     'localhost',
     'giza-web2.rc.fas.harvard.edu',
     'giza.fas.harvard.edu'
-]
+] + env.list("ALLOWED_HOSTS", default=[])
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'search',
     'tms',
@@ -96,27 +99,23 @@ WSGI_APPLICATION = 'giza.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': SECURE_SETTINGS.get('DB_NAME', 'giza'),
-        'USER': SECURE_SETTINGS.get('DB_USER', 'postgres'),
-        'PASSWORD': SECURE_SETTINGS.get('DB_PASSWORD'),
-        'HOST': SECURE_SETTINGS.get('DB_HOST', '127.0.0.1'),
-        'PORT': SECURE_SETTINGS.get('DB_PORT', '5432'),  # Default postgres port
-    }
+    'default': env.db()
 }
-
 
 SEARCH_BACKENDS = {
     'default': {
         'BACKEND': 'elasticsearch',
-        'URLS': ['http://localhost:9200'],
+        'URLS': [
+            env('ELASTICSEARCH_URL', default='http://localhost:9200')
+        ],
         'INDEX': 'giza',
         'TIMEOUT': 5,
     },
     'iiif': {
         'BACKEND': 'elasticsearch',
-        'URLS': ['http://localhost:9200'],
+        'URLS': [
+            env('ELASTICSEARCH_URL', default='http://localhost:9200')
+        ],
         'INDEX': 'iiif',
         'TIMEOUT': 5,
     }
