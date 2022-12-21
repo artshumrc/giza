@@ -29,7 +29,7 @@ def file_open(dir:str, file:str, module:str=None, open_file:bool=True):
     - bool : True/False locating/reading file
     """
     if dir and module:
-        dir = f'{module}/{dir}'
+        dir = f'module_data/{module}/{dir}'
 
     if file:
         file = file if 'json' in file else f'{file}.json'
@@ -60,14 +60,14 @@ def file_save(dir:str, file:str, data:list, module:str=None):
 
     Parameters
     ----------
-    - folder (str) : folder
+    - folder (str) : subfolder in module_data
     - file (str) : filename
     - data (list) : list containing data
     - module (str) : module calling the method (optional)
     """
 
     if dir and module:
-        base_dir = f'{module}'
+        base_dir = f'module_data/{module}'
         dir = f'{base_dir}/{dir}'
 
     if file:
@@ -89,7 +89,7 @@ def file_del(module:str, folder:str, filename:str='', exclude:list=[]) -> bool:
     Parameters
     ----------
     - module (str) : module name calling the method
-    - folder (str) : subfolder in offline_scripts
+    - folder (str) : subfolder in module_data
     - filename (str) : filename (optional)
     - exclude (list) : list of filename strings to exclude from deletion process
 
@@ -97,7 +97,7 @@ def file_del(module:str, folder:str, filename:str='', exclude:list=[]) -> bool:
     -------
     - bool (optional): True/False locating/deleting file
     """
-    dir = f'{module}/{folder}'
+    dir = f'module_data/{module}/{folder}'
     
     if filename:
         filename = filename if '.json' in filename else f'{filename}.json'
