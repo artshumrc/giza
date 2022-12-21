@@ -38,16 +38,16 @@ SQL = {
      'met' : {
           'met' : """
                SELECT tm.DateEntered, t.Term, t.TermID, replace(NodeDepth, NodeDepth, NodeDepth-3) AS NodeDepth, substring(tm.CN, 13, 50) AS CN
-               FROM gizaCARDTMSThes_2.dbo.Terms t
-               JOIN gizaCARDTMSThes_2.dbo.TermMaster tm ON tm.TermMasterID=t.TermMasterID
+               FROM gizaCARDTMSThes.dbo.Terms t
+               JOIN gizaCARDTMSThes.dbo.TermMaster tm ON tm.TermMasterID=t.TermMasterID
                WHERE CN LIKE 'AUT.AAA.AAK%'
                ORDER BY NodeDepth ASC
           """,
           'xrefs' : """
                SELECT x.ID AS MediaMasterID, t.Term, t.TermID, replace(NodeDepth, NodeDepth, NodeDepth-3) AS NodeDepth, substring(tm.CN, 13, 50) AS CN
-               FROM gizaCARDTMSThes_2.dbo.Terms t
-               JOIN gizaCARDTMSThes_2.dbo.TermMaster tm ON tm.TermMasterID=t.TermMasterID
-               JOIN gizaCARDTMS_2.dbo.ThesXrefs x ON x.TermID=t.TermID
+               FROM gizaCARDTMSThes.dbo.Terms t
+               JOIN gizaCARDTMSThes.dbo.TermMaster tm ON tm.TermMasterID=t.TermMasterID
+               JOIN gizaCARDTMS.dbo.ThesXrefs x ON x.TermID=t.TermID
                WHERE NodeDepth > 2 AND CN LIKE 'AUT.AAA%'
                ORDER By MediaMasterID ASC
           """
@@ -330,7 +330,7 @@ SQL = {
                LEFT JOIN ConTypes ON Constituents.ConstituentTypeID=ConTypes.ConstituentTypeID
                LEFT JOIN ThesXrefs ON Constituents.ConstituentID=ThesXrefs.ID AND ThesXrefs.ThesXrefTypeID=2 AND ThesXrefs.TableID=23
                LEFT JOIN ThesXrefTypes ON ThesXrefs.ThesXrefTypeID=ThesXrefTypes.ThesXrefTypeID
-               LEFT JOIN gizaCARDTMSThes_2.dbo.Terms Terms ON ThesXrefs.TermID=Terms.TermID
+               LEFT JOIN gizaCARDTMSThes.dbo.Terms Terms ON ThesXrefs.TermID=Terms.TermID
                WHERE Constituents.PublicAccess=1
                AND Constituents.ConstituentTypeID>0
                ORDER BY Constituents.ConstituentID
