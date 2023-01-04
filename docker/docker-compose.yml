@@ -96,6 +96,7 @@ services:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
       - ../es8-ingestion-scripts:/usr/share/elasticsearch/giza_ingest
+      - ../es8-ingestion-scripts/analysis:/usr/share/elasticsearch/config/analysis
     ports:
       - ${ES_PORT}:9200
     environment:
@@ -118,6 +119,8 @@ services:
       - xpack.license.self_generated.type=${LICENSE}
       - ingest.geoip.downloader.enabled=false
       - xpack.ml.enabled=false
+    env_file:
+      - .env
     mem_limit: ${MEM_LIMIT}
     ulimits:
       memlock:
@@ -138,10 +141,13 @@ services:
     depends_on:
       es01:
         condition: service_healthy
+    env_file:
+      - .env
     build:
       context: ../
       dockerfile: docker/Dockerfile.ingest.dev
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
+      - ../es8-ingestion-scripts/analysis:/usr/share/elasticsearch/config/analysis
       # - /es8-ingestion-scripts:/usr/share/elasticsearch/giza_ingest:ro

@@ -44,7 +44,12 @@ class TMS:
 
         self.logger = Logger('tms')
 
-        env = environ.Env()
+        env = environ.Env(
+            TMS_DATABASES=(list),
+            TMS_DSN=(str),
+            TMS_USER=(str),
+            TMS_PASSWORD=(str)
+        )
         environ.Env.read_env()
         self.tms_databases, self.tms_dsn, self.tms_user, self.tms_password = env('TMS_DATABASES'), env('TMS_DSN'), env('TMS_USER'), env('TMS_PASSWORD')
     
