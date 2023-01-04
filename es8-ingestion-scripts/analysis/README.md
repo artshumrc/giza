@@ -1,0 +1,1 @@
+This is a directory of synonym files referenced by helper_es_index_settings.py. The files are used to generate synonyms for the ES index settings. Each line represents a synonym group and may contain as many synonyms as you like.
