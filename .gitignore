@@ -8,3 +8,5 @@ secure.py
 bin
 lib
 env
+.env
+es8-ingestion-scripts/credentials_default.py
