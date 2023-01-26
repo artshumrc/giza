@@ -39,74 +39,52 @@ class Media_Worker(Base):
         thumbnails = []
 
         for row in new_rows:
-            row = { k : '' if v == ",," else v for k, v in row.items() }                                        # REMOVE DOUBLE COMMAS
-            row = { k : v.replace('  ', '') if type(v) == str and '  ' in v else v for k, v in row.items() }    # REMOVE DOUBLE SPACES
-            row = { k : v.rstrip() if type(v) == str else v for k, v in row.items() }                           # REMOVE RIGHT WHITE SPACES
+            row = self.sanitize(row)
 
-            media = {}
-            media['RecID'] = row['RecID']
-            media['MediaType'] = self.mediatypes.get(int(row['MediaTypeID']))
-            media['Number'] = "" if row['RenditionNumber'].lower() == "null" else row['RenditionNumber']
+            row['MediaType'] = self.mediatypes.get(row['MediaTypeID'])
+            if 'RenditionNumber' in row:
+                row['Number'] = row['RenditionNumber'] 
+                number = row['Number']
+                row['ID'] = row['RenditionNumber']
+                
+                row['AllNumbers'] = list(set([number, number[number.find('_')+1:], "".join(number.split()), "".join(number.split('_'))]))
             
-            number = media['Number']
-            media['AllNumbers'] = list(set([number, number[number.find('_')+1:], "".join(number.split()), "".join(number.split('_'))]))
+            if 'MediaView' in row and 'PublicCaption' in row:
+                subjects = ": ".join([row['MediaView'], row['PublicCaption']])
+                row['Subjects'] = subjects
+                row['DisplayText'] = subjects
             
-            if row['Description'] is not None: media['Description'] = "" if row['Description'].lower() == "null" else row['Description']
-            if row['PublicCaption'] is not None or row['MediaView'] is not None: 
-                mediaview = "" if row['MediaView'].lower() == "null" else row['MediaView']
-                caption = "" if row['PublicCaption'].lower() == "null" else row['PublicCaption']
-                subjects = ": ".join([mediaview, caption])
-                media['Mediaview'] = mediaview
-                media['Subjects'] = subjects
-                media['DisplayText'] = subjects
+            if 'DateOfCapture' in row: 
+                row['Date'] = row['DateOfCapture']
             
-            if row['Remarks'] is not None: media['Remarks'] = "" if row['Remarks'].lower() == "null" else row['Remarks']
-            if row['DateOfCapture'] is not None: media['Date'] = "" if row['DateOfCapture'].lower() == "null" else row['DateOfCapture']
-            if row['Department'] is not None: media['Department'] = "" if row['Department'].lower() == "null" else row['Department']
-            if row['ProblemsQuestions'] is not None: media['ProblemsQuestions'] = "" if row['ProblemsQuestions'].lower() == "null" else row['ProblemsQuestions']
-            
-            media['Roles'] = []
+            row['Roles'] = []
 
-            # drs_id = "" if str(row['ArchIDNum']).lower() == "null" else str(row['ArchIDNum'])
+            if 'Department' in row:
+                row['Credit'] = row['Department']
 
-            # thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
-            # if not thumbnail_url and drs_id: thumbnail_url = self.thumbnail_url(drs_id)
+            row['PrimaryDisplay'] = {}
 
-            # if thumbnail_url:
-            #     self.thumbnail_urls.append({ 'drs_id' : drs_id, 'url' : thumbnail_url })
+            if 'ArchIDNum' in row:
+                row['PrimaryDisplay']['DRS_ID'] = row['ArchIDNum']
+                thumbnail_url = self.thumbnail_url(row['ArchIDNum'])
+            else:
+                if 'ThumbPathName' in row and 'ThumbFileName' in row:
+                    thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
 
-            drs_id = row['ArchIDNum']
-
-            if 'ConstituentTypeID' in row:  # NOT USED?
-                thumbnail_id = f'{self.constituenttypes.get(int(row["ConstituentTypeID"]))}-{row["RecID"]}' # NOT USED?
-            if 'ClassificationID' in row: # NOT USED?
-                thumbnail_id = f'{self.classifications.get(int(row["ClassificationID"]))}-{row["RecID"]}'
             if 'MediaTypeID' in row: 
-                thumbnail_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'  # NOT USED?
-
-            if drs_id:
-                thumbnail_url = self.thumbnail_url(drs_id)
-
-            if drs_id.lower() == "null" or not drs_id:
-                thumbnail_url = self.get_media_url(row['ThumbPathName'], row['ThumbFileName'])
+                thumbnail_id = f'{self.mediatypes.get(row["MediaTypeID"])}-{row["RecID"]}'  # NOT USED?
 
             if len(thumbnail_url) and thumbnail_id not in self.thumbnail_urls:
                 self.thumbnail_urls[thumbnail_id] = { 'Thumbnail_ID' : thumbnail_id, 'url' : thumbnail_url }
 
-            media['DRS_ID'] = drs_id
-            media['PrimaryDisplay'] = {
-                'MediaMasterID' : row['RecID'],
-                'Thumbnail' : thumbnail_url,
-                'Main' : self.get_media_url(row['MainPathName'], row['MainFileName']),
-                'DRS_ID' : drs_id,
-                'HasManifest' : False if drs_id == "" else True
-            }
+            row['PrimaryDisplay']['MediaMasterID'] = row['RecID']
+            row['PrimaryDisplay']['Thumbnail'] = thumbnail_url
+            if 'MainPathName' in row and 'MainFileName' in row:
+                row['PrimaryDisplay']['Main'] = self.get_media_url(row['MainPathName'], row['MainFileName'])
 
-            media = { k : int(v) if type(v) is str and v.isdigit() else v for k, v in media.items() }  # NON-DIGITS TO DIGITS
-            media = { k : None if v == "NULL" else v for k, v in media.items() }                       # NULL VALUES TO NONE
-            media['ES_index'] = media['MediaType'].lower()
+            row['ES_index'] = '3dmodels' if '3d' in row['MediaType'].lower() else row['MediaType'].lower()
 
-            self.records[str(row["RecID"])] = media
+            self.records[row["RecID"]] = row
 
         return self
 

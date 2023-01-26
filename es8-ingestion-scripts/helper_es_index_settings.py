@@ -9,30 +9,40 @@ from videos.txt, no videos relevant to G 7000 X may show up in the search result
 """
 
 ANALYZERS = {
-    "3dmodels" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+    "3d model" : {
+        "settings" : {
+            "analysis" : {
+                "filter" : {},
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/3dmodels.txt"
+                    }
                 }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/3dmodels.txt"
+            }
+        },
+        "mappings" : {
+            "properties" : {
+                "RelatedItems" : {
+                    "type" : "nested"
                 }
             }
         }
@@ -374,6 +384,13 @@ ANALYZERS = {
         }
     },
     "publisheddocuments" : {
+        "mappings" : {
+            "properties" : {
+                "RelatedItems" : {
+                    "type" : "nested"
+                }
+            }
+        },
         "analysis" : {
             "analyzer" : {
                 "synonym_keyword": {
@@ -402,6 +419,13 @@ ANALYZERS = {
         }
     },
     "sites" : {
+        "mappings" : {
+            "properties" : {
+                "RelatedItems" : {
+                    "type" : "nested"
+                }
+            }
+        },
         "analysis" : {
             "analyzer" : {
                 "synonym_keyword": {
@@ -457,7 +481,7 @@ ANALYZERS = {
             }
         }
     },
-    "videos" : {
+    "video" : {
         "analysis" : {
             "analyzer" : {
                 "synonym_keyword": {
@@ -483,6 +507,42 @@ ANALYZERS = {
                     "synonyms_path": "analysis/videos.txt"
                 }
             }
+        }
+    },
+    "image" : {
+        "analysis" : {
+            "analyzer" : {
+                "synonym_keyword": {
+                    "tokenizer": "keyword",
+                    "filter": [
+                        "asciifolding",
+                        "lowercase",
+                        "synonym"
+                    ]
+                },
+                "synonym_pattern": {
+                    "tokenizer": "pattern",
+                    "filter": [
+                        "asciifolding",
+                        "lowercase",
+                        "synonym"
+                    ]
+                }
+            },
+            "filter": {
+                "synonym": {
+                    "type": "synonym",
+                    "synonyms_path": "analysis/image.txt"
+                }
+            }
+        }
+    }
+}
+
+MAPPINGS = {
+    "properties" : {
+        "RelatedItems" : {
+            "type" : "nested"
         }
     }
 }

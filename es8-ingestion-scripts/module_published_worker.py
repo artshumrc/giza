@@ -40,12 +40,9 @@ class Published_Worker(Base):
         # CONVERT ROWS TO DICTS; COL VALUES: RecID, Number
         new_rows = [{ y : row[self.cols.index(y)] for y in self.cols } for row in self.rows ]
 
-        for row in new_rows:            
-            row = { k : int(v) if v.isdigit() else v for k, v in row.items() }                                                      # NON-DIGITS TO DIGITS
-            row = { k : None if v == "NULL" else v for k, v in row.items() }                                                        # NULL VALUES TO NONE
-            row = { k : '' if v == ",," else v for k, v in row.items() }                                                            # REMOVE DOUBLE COMMAS
-            row = { k : v.replace('  ', '') if type(v) == str and '  ' in v else v for k, v in row.items() }                        # REMOVE DOUBLE SPACES
-            row = { k : v.rstrip() if type(v) == str else v for k, v in row.items() }                                               # REMOVE RIGHT WHITE SPACES
+        for row in new_rows:
+            row = self.sanitize(row)
+
             row = { k : v.title() if type(v) == str and v.isupper() and match(r'\A[\w-]+\Z', v) else v for k, v in row.items() } # Title single words
 
             clean = compile('</?font.*?>', IGNORECASE)

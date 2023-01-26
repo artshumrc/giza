@@ -4,6 +4,8 @@ from cursor_FSS import file_open
 from cursor_TMS import TMS
 from sql import DRS
 
+drs_metadata = {}
+
 class IIIF_Worker(Base):
     """
     Sub-class of Base for the IIIF base setup
@@ -21,14 +23,16 @@ class IIIF_Worker(Base):
         self.cols = cols
         self.data = data
 
-        try:
-            self.drs_metadata = file_open('tables', 'drs', 'iiif')
-        except:
-            raise "The IIIF module could not access DRS data from file"
+        # try:
+        #     self.drs_metadata = check_drs()
+        # except:
+        #     raise "The IIIF module could not access DRS data from file"
 
     def build_iiif(self) -> Base:
         """
-        Constructs a base manifest record for photo records
+        Constructs a base manifest record for photo records.
+
+        NOTE: RecID is the MediaMasterID in TMS
 
         Returns
         -------
@@ -39,53 +43,18 @@ class IIIF_Worker(Base):
       
             # CONVERT ROWS TO DICTS
             # EXCLUDE NON-PHOTO RECORDS BY EQUALING MEDIATYPEID TO 1
-            new_rows = [{ y : row[self.cols.index(y)] for y in self.cols } for row in self.rows if int(row[self.cols.index('MediaTypeID')]) == 1]
+            # new_rows = [{ y : row[self.cols.index(y)] for y in self.cols } for row in self.rows if int(row[self.cols.index('MediaTypeID')]) == 1]
+
+            new_rows = [{ y : row[self.cols.index(y)] for y in self.cols } for row in self.rows ]
 
             for row in new_rows:
 
-                # description = "" if row['Description'].lower() == "null" else row['Description']
-                # mediaview = "" if row['MediaView'].lower() == "null" else row['MediaView']
-                # caption = "" if row['PublicCaption'].lower() == "null" else row['PublicCaption']
-                # subjects = ": ".join([mediaview, caption])
-                drs_id = "" if row['ArchIDNum'].lower() == "null" else row['ArchIDNum']
-                # number = "" if row['RenditionNumber'].lower() == "null" else row['RenditionNumber']
-                # department = "" if row['Department'].lower() == "null" else row['Department']
-                # date = "" if row['DateOfCapture'].lower() == "null" else row['DateOfCapture']
-                # problemsquestions = "" if row['ProblemsQuestions'].lower() == "null" else row['ProblemsQuestions']
-                
-                manifest_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'
-                # # manifest_id = f'{"".join([x.title() for x in row["MediaView"].split(" ")])}-{row["RecID"]}'
+                row = self.sanitize(row)
 
-                # metadata = []
-                # if number: metadata.append({'label' : 'ID', 'value' : number})
-                # if department: metadata.append({'label' : 'Department', 'value' : department})
-                # if subjects: metadata.append({'label' : 'Subjects', 'value' : subjects})
-                # if date: metadata.append({'label' : 'Date', 'value' : date})
-                # if problemsquestions: metadata.append({'label' : 'Problems/Questions', 'value' : problemsquestions})
-                # if description == "": description = caption
-
-                # manifest_ob = {
-                #     "Manifest_ID": manifest_id,
-                #     "DRS_ID": drs_id,
-                #     "description": description,
-                #     "label": mediaview,
-                #     "metadata": metadata
-                # }
-
-                manifest_ob = self.build_manifest(row)
-
-                # CHECK TO UPDATE EXISTING MANIFESTS FIRST
-                if manifest_id in self.relations and self.relations[manifest_id]['manifest'] is not None:
-                    resource = self.relations[manifest_id]['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']
-                    if drs_id in resource['@id']:
-                        manifest_ob['resource'] = resource
+                manifest_id = f'{self.mediatypes.get(row["MediaTypeID"])}-{row["RecID"]}'
 
                 # ADD THE NEW MANIFEST TO THE MANIFEST DICTIONARY ON THE CLASS OBJECT
-                self.relations[manifest_id] = { 
-                    "RecID" : manifest_id,
-                    "ES_index" : self.mediatypes.get(int(row["MediaTypeID"])),
-                    "manifest": self.generate_iiif_manifest(manifest_ob), "ES_index" : "iiif"
-                }
+                self.relations[manifest_id] = new_manifest(manifest_id, row)
 
             return self
 
@@ -123,206 +92,7 @@ class IIIF_Worker(Base):
 
         return self.records, self.relations, self.thumbnail_urls, { 'iiif_worker_res' : photographers_result }
 
-    def build_manifest(self, row):
-        # if 'Description' in row:
-            # if row['Description'].lower() == "null":
-                # ""
-            # else:
-                # row['Description']
-        # else ""
-        description = "" if 'Description' not in row else "" if row['Description'].lower() == "null" else row['Description']
-        # description = "" if 'Description' in row and row['Description'].lower() == "null" else row['Description']
-        mediaview = "" if 'MediaView' in row and row['MediaView'].lower() == "null" else row['MediaView']
-        caption = "" if 'PublicCaption' in row and row['PublicCaption'].lower() == "null" else row['PublicCaption']
-        subjects = ": ".join([mediaview, caption])
-        drs_id = "" if 'ArchIDNum' in row and  row['ArchIDNum'].lower() == "null" else row['ArchIDNum']
-        number = "" if 'RenditionNumber' in row and  row['RenditionNumber'].lower() == "null" else row['RenditionNumber']
-        # department = "" if 'Department' in row and  row['Department'].lower() == "null" else row['Department']
-        department = "" if 'Department' not in row else "" if row['Department'].lower() == "null" else row['Department']
-        # date = "" if 'DateOfCapture' in row and  row['DateOfCapture'].lower() == "null" else row['DateOfCapture']
-        date = "" if 'DateOfCapture' not in row else "" if row['DateOfCapture'].lower() == "null" else row['DateOfCapture']
-        problemsquestions = "" if 'ProblemsQuestions' not in row else "" if row['ProblemsQuestions'].lower() == "null" else row['ProblemsQuestions']
-        # problemsquestions = "" if 'ProblemsQuestions' in row and  row['ProblemsQuestions'].lower() == "null" else row['ProblemsQuestions']
-        
-        manifest_id = f'{self.mediatypes.get(int(row["MediaTypeID"]))}-{row["RecID"]}'
-        # manifest_id = f'{"".join([x.title() for x in row["MediaView"].split(" ")])}-{row["RecID"]}'
-
-        metadata = []
-        if number: metadata.append({'label' : 'ID', 'value' : number})
-        if department: metadata.append({'label' : 'Department', 'value' : department})
-        if subjects: metadata.append({'label' : 'Subjects', 'value' : subjects})
-        if date: metadata.append({'label' : 'Date', 'value' : date})
-        if problemsquestions: metadata.append({'label' : 'Problems/Questions', 'value' : problemsquestions})
-        if description == "": description = caption
-
-        manifest_ob = {
-            "Manifest_ID": manifest_id,
-            "DRS_ID": drs_id,
-            "description": description,
-            "label": mediaview,
-            "metadata": metadata
-        }
-
-        return manifest_ob
-
-    def drs_exists(self, drs_id):
-        return True if drs_id in self.drs_metadata else False
-
-    def generate_iiif_manifest(self, data:dict) -> Union[dict,None]:
-        """
-        Compiles a JSON representation of a IIIF manifest
-
-        Parameters
-        ----------
-        - data (dict) : 
-
-        Returns
-        -------
-        - manifest (dict) : the start of a IIIF manifest
-        #### OR
-        - None
-        """
-
-        try:
-            if self.drs_exists(data['DRS_ID']):
-                manifest = self.__build_base_manifest(data['Manifest_ID'], data)
-                manifest["sequences"] = self.__build_manifest_sequences(data['Manifest_ID'])
-                manifest["sequences"][0]["canvases"] = [self.__build_manifest_canvas(data['Manifest_ID'], data['DRS_ID'], 0, data['resource'] if 'resource' in data else None, None, None)]
-                return manifest
-            else:
-                return None
-        except Exception as e:
-            raise e
-
-    def __build_base_manifest(self, manifest_id:str, data:dict) -> dict:
-        """
-        Constructs the base for a IIIF manifest. Subsequent methods add to this method's result.
-
-        Parameters
-        ----------
-        - manifest_id (str) : the identifier for the manifest
-        - data (dict) : parameters for description and label
-
-        Returns
-        -------
-        - ob (dict) : the base for a IIIF manifest
-        """
-
-        try:
-            ob = {
-                "description": data['description'],
-                "@context": "https://iiif.io/api/presentation/2/context.json",
-                "@id": manifest_id,
-                "label": data['label'],
-                "@type": "sc:Manifest"
-            }
-            
-            if 'metadata' in data: ob['metadata'] = data['metadata']
-            
-            return ob
-        except Exception as e:
-            raise e
-
-    def __build_manifest_sequences(self, manifest_id:str) -> list:
-        """
-        Constructs a sequence list for a IIIF manifest
-
-        Parameters
-        ----------
-        - manifest_id (str) : the identifier for the manifest
-
-        Returns
-        -------
-        - list : a sequence list
-        """
-
-        try:
-            return [
-                {
-                    "label": "Default order",
-                    "@type": "sc:Sequence",
-                    "@id": manifest_id
-                }
-            ]
-        except Exception as e:
-            raise e
-
-    def __build_manifest_canvas(self, manifest_id:str, drs_id:str, idx:int, resource:dict, label:str, metadata:list) -> dict:
-        """
-        Constructs a canvas for a manifest
-
-        Parameters
-        ----------
-        - manifest_id (str) : the identifier for the manifest
-        - drs_id (str) : the identifier in drs
-        - idx (int) : a sequence number
-        - resource : a manifest generated for the provided drs_id 
-        - label : a label to go with this canvas
-        - metadata : metadata
-
-        Returns
-        -------
-        - dict : canvas
-        """
-
-        try:
-            if resource is None: resource = self.__build_resource(drs_id)
-
-            canvas = {
-                "@id": f'{manifest_id}/canvas/{idx}',
-                "label": label if label else str(idx+1),
-                "@type": "sc:Canvas",
-                "width": resource['width'],
-                "height": resource['height'],
-                "images": [
-                    {
-                        "on": f'{manifest_id}/canvas/{idx}',
-                        "motivation": "sc:painting",
-                        "@type": "oa:Annotation",
-                        "@id": f'{manifest_id}/annotation/canvas/{idx}',
-                        "resource": resource
-                    }
-                ]
-            }
-
-            if metadata: 
-                canvas['metadata'] = metadata
-
-            return canvas
-        except Exception as e:
-            raise e
-
-    def __build_resource(self, drs_id) -> dict:
-        """
-        Builds a manifest for the provided drs_id
-
-        Parameters
-        ----------
-        - drs_id (str) : the identifier in drs
-
-        Returns
-        -------
-        - dict : manifest resource
-        """
-        
-        try:
-        
-            return {
-                "width": self.drs_metadata[drs_id]['width'],
-                "@id": f'https://ids.lib.harvard.edu/ids/iiif/{drs_id}/full/full/0/default.jpg',
-                "@type": "dctypes:Image",
-                "height": self.drs_metadata[drs_id]['height'],
-                "service": {
-                    "@context": "https://iiif.io/api/presentation/2/context.json",
-                    "@id": f'https://ids.lib.harvard.edu/ids/iiif/{drs_id}',
-                    "profile": "http://iiif.io/api/image/2/level1.json"
-                }
-            }
-        
-        except Exception as e:
-            raise e
-
-def check_drs(tms:TMS) -> Union[list, dict]:
+def check_drs(tms:TMS=None) -> Union[list, dict]:
     """
     Fetches all ArchIDNums from TMS and constructs the urls required to download DRS data.
 
@@ -337,17 +107,337 @@ def check_drs(tms:TMS) -> Union[list, dict]:
     - list : list of dictionaries with ArchIDNums and corresponding urls linked to DRS to generate drs metadata from
     """
     try:
-        # RETURNING PROPER DRS_METADATA FOUND ON DISK
-        drs_metadata = file_open('tables', 'drs', 'iiif')
-        if drs_metadata:
+        # RETURNING DRS_METADATA FOUND ON DISK
+        global drs_metadata
+        
+        if not len(drs_metadata): drs_metadata = file_open('tables', 'drs', 'iiif')
+        
+        if len(drs_metadata):
+            if any([x for x in list(drs_metadata.keys()) if type(x) == str]):
+                drs_metadata = { int(k) : v for k, v in drs_metadata.items() }
             return drs_metadata
         else:
             try:
-                
-                # DOWNLOAD DRS DATA FROM GIZACARDTMS
-                ArchIDNums = tms.fetch(DRS.pop(), 'DRS')
-                return [{ 'id' : row[0], 'url' : f'https://ids.lib.harvard.edu/ids/iiif/{row[0]}/info.json' } for row in ArchIDNums[0] if row[0].lower() != 'null']
+
+                # ATTEMPT TO DOWNLOAD DRS DATA FROM GIZACARDTMS
+                if tms is not None:
+                    ArchIDNums = tms.fetch(DRS.pop(), 'DRS')
+                    return [{ 'id' : row[0], 'url' : f'https://ids.lib.harvard.edu/ids/iiif/{row[0]}/info.json' } for row in ArchIDNums[0] if row[0].lower() != 'null']
+                else:
+                    return {}
             except:
                 raise
     except Exception as e:
         raise e
+
+def new_manifest(manifest_id, row):
+    return { 
+        "RecID" : manifest_id,
+        "manifest": build_manifest(manifest_id, row),
+        "ES_index" : "iiif"
+    }
+
+def build_manifest(manifest_id:str, rec:dict) -> dict:
+    manifest, metadata = {}, []
+
+    metadata = add_metadata(rec)
+
+    if 'MediaView' in manifest and 'PublicCaption' in manifest:
+        subjects = ": ".join([manifest['MediaView'], manifest['PublicCaption']])
+        metadata.append({'label' : 'Subjects', 'value' : subjects})
+        manifest['label'] = subjects                
+
+    if 'ArchIDNum' in rec: manifest['DRS_ID'] = rec['ArchIDNum']
+    if 'Description' in rec: 
+        manifest['description'] = rec['Description']
+    else:
+        if 'PublicCaption' in rec: 
+            manifest['Description'] = rec['PublicCaption']
+
+    manifest['metadata'] = metadata
+
+    return generate_iiif_manifest(manifest_id, manifest)
+
+def generate_iiif_manifest(manifest_id:str, rec:dict) -> Union[dict, None]:
+    """
+    Compiles a JSON representation of a IIIF manifest
+
+    Parameters
+    ----------
+    - data (dict) : 
+
+    Returns
+    -------
+    - manifest (dict) : the start of a IIIF manifest
+    #### OR
+    - None
+    """
+
+    try:
+        if drs_exists(rec['DRS_ID']):
+            
+            manifest = build_base_manifest(manifest_id, rec)
+            manifest["sequences"] = build_manifest_sequences(manifest_id)
+            manifest["sequences"][0]["canvases"] = [
+                build_manifest_canvas(
+                    manifest_id, 
+                    rec['DRS_ID'], 
+                    0, 
+                    manifest['resource'] if 'resource' in manifest else None, 
+                    rec['Description'] if 'Description' in rec else None,
+                    manifest['metadata'] if 'metadata' in manifest else None
+                )
+            ]
+
+            return manifest
+        else:
+            return None
+    except Exception as e:
+        raise e
+
+def drs_exists(drs_id):
+    return True if drs_id in drs_metadata else False
+
+def build_base_manifest(manifest_id:str, manifest:dict) -> dict:
+    """
+    Constructs the base for a IIIF manifest. Subsequent methods add to this method's result.
+
+    Parameters
+    ----------
+    - manifest_id (str) : the identifier for the manifest
+    - manifest (dict) : parameters for description and label
+
+    Returns
+    -------
+    - ob (dict) : the base for a IIIF manifest
+    """
+
+    try:
+        base_manifest = {
+            "@context": "https://iiif.io/api/presentation/2/context.json",
+            "@id": manifest_id,
+            "@type": "sc:Manifest"
+        }
+
+        if 'description' in manifest: base_manifest['description'] = manifest['description']
+        if 'label' in manifest: base_manifest['label'] = manifest['label']
+        if 'metadata' in manifest: base_manifest['metadata'] = manifest['metadata']
+        
+        return base_manifest
+    except Exception as e:
+        raise e
+
+def build_manifest_sequences(manifest_id:str) -> list:
+    """
+    Constructs a sequence list for a IIIF manifest
+
+    Parameters
+    ----------
+    - manifest_id (str) : the identifier for the manifest
+
+    Returns
+    -------
+    - list : a sequence list
+    """
+
+    try:
+        return [
+            {
+                "label": "Default order",
+                "@type": "sc:Sequence",
+                "@id": manifest_id
+            }
+        ]
+    except Exception as e:
+        raise e
+
+def build_manifest_canvas(manifest_id:str, drs_id:int, idx:int, resource:dict, label:str, metadata:list) -> dict:
+    """
+    Constructs a canvas for a manifest
+
+    Parameters
+    ----------
+    - manifest_id (str) : the identifier for the manifest
+    - drs_id (str) : the identifier in drs
+    - idx (int) : a sequence number
+    - resource : a manifest generated for the provided drs_id 
+    - label : a label to go with this canvas
+    - metadata : metadata
+
+    Returns
+    -------
+    - dict : canvas
+    """
+
+    try:
+        resource = build_resource(drs_id)
+
+        canvas = {
+            "@id": f'{manifest_id}/canvas/{idx}',
+            "label": label if label else str(idx+1),
+            "@type": "sc:Canvas",
+            "width": resource['width'],
+            "height": resource['height'],
+            "images": [
+                {
+                    "on": f'{manifest_id}/canvas/{idx}',
+                    "motivation": "sc:painting",
+                    "@type": "oa:Annotation",
+                    "@id": f'{manifest_id}/annotation/canvas/{idx}',
+                    "resource": resource
+                }
+            ]
+        }
+
+        if metadata: 
+            canvas['metadata'] = metadata
+
+        return canvas
+    except Exception as e:
+        raise e
+
+def build_resource(drs_id:int) -> dict:
+    """
+    Builds a manifest for the provided drs_id
+
+    Parameters
+    ----------
+    - drs_id (str) : the identifier in drs
+
+    Returns
+    -------
+    - dict : manifest resource
+    """
+    
+    try:
+    
+        return {
+            "width": drs_metadata[drs_id]['width'],
+            "@id": f'https://ids.lib.harvard.edu/ids/iiif/{drs_id}/full/full/0/default.jpg',
+            "@type": "dctypes:Image",
+            "height": drs_metadata[drs_id]['height'],
+            "service": {
+                "@context": "https://iiif.io/api/presentation/2/context.json",
+                "@id": f'https://ids.lib.harvard.edu/ids/iiif/{drs_id}',
+                "profile": "http://iiif.io/api/image/2/level1.json"
+            }
+        }
+    
+    except Exception as e:
+        raise e
+
+def add_manifest(rec, row, manifest, idx):
+    try:
+        if 'Description' in row:
+            description = row['Description']
+        elif 'PublicCaption' in row:
+            description = row['PublicCaption']
+        elif 'MediaView' in row:
+            description = row['MediaView']
+        else:
+            description = "[No title]"
+
+
+        manifest['manifest']['sequences'][0]['canvases'].append(
+            build_manifest_canvas(
+                manifest['RecID'], 
+                row['ArchIDNum'], 
+                idx, 
+                manifest['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource'], 
+                description, 
+                add_metadata(rec)
+            )
+        )
+
+        if bool(row['PrimaryDisplay']):
+            if str(row['ArchIDNum']) in manifest['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']["@id"]:
+                manifest['manifest']['sequences'][0]['startCanvas'] = manifest['manifest']['sequences'][0]['canvases'][0]['images'][0]['resource']["@id"]
+
+        return manifest
+    except Exception as e:
+        raise e
+
+def add_metadata(rec:dict):
+    """
+    Adds metadata to manifest based on available data in record
+
+    Parameters
+    ----------
+    - rec (dict) : dictionary of record that provides data to draw from
+
+    Returns
+    -------
+    - metadata (list) : metadata to be added to the manifest
+    """
+
+    metadata = []
+
+    # CAST LONG/INT TO STR TO PREVENT ES MAPPER INDEX ERROR LATER ON
+    rec = { k : str(v) if type(v) == int else v for k, v in rec.items() }
+
+    if 'RecID' in rec and rec['RecID']: metadata.append({ 'Label' : 'RecID', 'Value' : rec['RecID' ]})
+    if 'SiteType' in rec and 'SiteType' in rec['SiteType']: metadata.append({ 'Label' : 'Site Type', 'Value' : rec['SiteType']['SiteType'] })
+    if 'RenditionNumber' in rec: metadata.append({'label' : 'Rendition number', 'value' : rec['RenditionNumber'] })
+    if 'Shafts' in rec and rec['Shafts']: metadata.append({ 'Label' : 'Shafts', 'Value' : rec['Shafts'] })
+    if 'Number' in rec and rec['Number']: metadata.append({ 'Label' : 'Number', 'Value' : rec['Number'] })
+    if 'Department' in rec and rec['Department']: metadata.append({ 'Label' : 'Department', 'Value' : rec['Department'] })
+    if 'ClassificationText' in rec and rec['ClassificationText']: metadata.append({ 'Label' : 'Classification', 'Value' : rec['ClassificationText'] })
+    if 'Provenance' in rec and rec['Provenance']: metadata.append({ 'Label' : 'Findspot', 'Value' : rec['Provenance'] })
+    if 'Medium' in rec and rec['Medium']: metadata.append({ 'Label' : 'Material', 'Value' : rec['Medium'] })
+    if 'Dimensions' in rec and rec['Dimensions']: metadata.append({ 'Label' : 'Dimensions', 'Value' : rec['Dimensions'] })
+    if 'Creditline' in rec and rec['CreditLine']: metadata.append({ 'Label' : 'Credit Line', 'Value' : rec['CreditLine'] })
+    if 'Notes' in rec and rec['Notes']: metadata.append({ 'Label' : 'Notes', 'Value' : rec['Notes'] })
+    if 'ProblemsQuestions' in rec and rec['ProblemsQuestions']: metadata.append({ 'Label' : 'Problems/Questions', 'Value' : rec['ProblemsQuestions'] })
+    if 'Subjects' in rec and rec['Subjects']: metadata.append({ 'Label' : 'Subjects', 'Value' : rec['Subjects'] })
+    if 'ObjectOwnerDetails' in rec and rec['ObjectOwnerDetails']: metadata.append({ 'Label' : 'Object Ownership Information', 'Value' : rec['ObjectOwnerDetails'] })
+    if 'ConstituentType' in rec and rec['ConstituentType']: metadata.append({ 'Label' : 'Type', 'Value' : rec['ConstituentType'] })
+    if 'Gender' in rec and rec['Gender']: metadata.append({ 'Label' : 'Gender', 'Value' : rec['Gender'] })
+    if 'Institution' in rec and rec['Institution']: metadata.append({ 'Label' : 'Institution', 'Value' : rec['Institution'] })
+    if 'Remarks' in rec and rec['Remarks']: metadata.append({ 'Label' : 'Remarks', 'Value' : rec['Remarks'] })
+    if 'Roles' in rec and rec['Roles']: metadata = assign_roles(rec)
+    if 'DateOfCapture' in rec: metadata.append({'label' : 'Date', 'value' : rec['DateOfCapture'] })
+    if 'Date' in rec and rec['Date']: metadata.append({ 'Label' : 'Date', 'Value' : rec['Date'] })
+    if 'DisplayDate' in rec and rec['DisplayDate']: metadata.append({ 'Label' : 'Nationality and Dates', 'Value' : rec['DisplayDate'] })
+    if 'EntryDate' in rec and rec['EntryDate']: metadata.append({ 'Label' : 'Date of Register Entry', 'Value' : rec['EntryDate'] })
+    if 'Period' in rec and rec['Period']: metadata.append({ 'Label' : 'Period', 'Value' : rec['Period'] })
+    if 'SiteDates' in rec and rec['SiteDates']:
+        dates = []
+        for sitedate in rec['SiteDates']:
+            dates.append(sitedate['Date'])
+        metadata.append({ 'Label' : sitedate['Type'], 'Value' : dates })
+    if 'AlternativeNames' in rec and rec['AlternativeNames']: 
+        names = []
+        for name in rec['AlternativeNames']:
+            names.append(f'{name["Type"]}: {name["Name"]}')
+        metadata.append({'Label' : 'Also known as', 'Value' : names })
+    if 'AlternativeNumbers' in rec:
+        numbers = []
+        note = ''
+        for number in rec['AlternativeNumbers']:
+            numbers.append(number['Description'])
+            note = number["Note"]
+        metadata.append({'Label' : note, 'Value' : numbers })
+
+    return metadata
+
+def assign_roles(rec:dict):
+    """
+    Adds roles of individuals (e.g. Excavator, Photographer etc.)
+
+    Parameters
+    ----------
+    - rec (dict) : the dictionary that provides values to draw from
+
+    Returns
+    -------
+    - metadata (list) : metadata to be added to the record
+    """
+    roles = []
+    for role in rec['Roles']:
+        value = []
+        for category in rec['RelatedItems']:
+            for item in rec['RelatedItems'][category]:
+                if 'Role' in item and item['Role'] == role:
+                    value.append(f'{item["DisplayText"]}, {item["DisplayDate"]}' if 'DisplayDate' in item else item['DisplayText'])
+        roles.append({ 'Label' : role, 'Value' : value })
+    return roles

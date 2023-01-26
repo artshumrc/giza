@@ -143,8 +143,10 @@ class ES:
         try:
             
             indices = list(set([v['ES_index'] for v in data.values()]))
+            print(f"es.save() - {indices}")
 
             for index in indices:
+                # TODO is this the right behavior? Delete and recreate the index?
                 self.del_index(index)
                 self.add_index(index) # THIS CHANGES SETTINGS OF THE NEW INDEX AND NEEDS TO BE TESTED
 
@@ -158,7 +160,7 @@ class ES:
 
             try:
 
-                for ok, result in streaming_bulk(self.es, data_generator(data), chunk_size=5000, request_timeout=60, refresh='wait_for'):
+                for ok, result in streaming_bulk(self.es, data_generator(data), chunk_size=500, request_timeout=60, refresh='wait_for'):
                     if ok is not True:
                         print(str(result))
                     else:
