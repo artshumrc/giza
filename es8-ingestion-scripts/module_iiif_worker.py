@@ -110,13 +110,15 @@ def check_drs(tms:TMS=None) -> Union[list, dict]:
         # RETURNING DRS_METADATA FOUND ON DISK
         global drs_metadata
         
-        if not len(drs_metadata): drs_metadata = file_open('tables', 'drs', 'iiif')
+        if not len(drs_metadata):
+            drs_metadata = file_open('tables', 'drs', 'iiif') # This can be a boolean or a dict
         
-        if len(drs_metadata):
+        if drs_metadata:
             if any([x for x in list(drs_metadata.keys()) if type(x) == str]):
                 drs_metadata = { int(k) : v for k, v in drs_metadata.items() }
             return drs_metadata
         else:
+            # File for drs_metadata not found, not openable, empty, or doesn't exist
             try:
 
                 # ATTEMPT TO DOWNLOAD DRS DATA FROM GIZACARDTMS
