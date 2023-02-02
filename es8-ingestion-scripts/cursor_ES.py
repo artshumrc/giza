@@ -104,7 +104,17 @@ class ES:
         -------
         - ObjectApiResponse : response from ElasticSearch
         """
-        return self.es.indices.create(index=index, settings=ANALYZERS[index])
+        if 'mappings' in ANALYZERS[index].keys():
+            return self.es.indices.create(
+                index=index,
+                settings=ANALYZERS[index]['settings'],
+                mappings=ANALYZERS[index]['mappings']
+            )
+        else:
+            return self.es.indices.create(
+                index=index,
+                settings=ANALYZERS[index]['settings'],
+            )
 
     def add_doc(self, index:str, doc:dict) -> ObjectApiResponse:
         """

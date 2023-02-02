@@ -10,6 +10,13 @@ from videos.txt, no videos relevant to G 7000 X may show up in the search result
 
 ANALYZERS = {
     "3d model" : {
+        "mappings" : {
+            "properties" : {
+                "RelatedItems" : {
+                    "type" : "nested"
+                }
+            }
+        },
         "settings" : {
             "analysis" : {
                 "filter" : {},
@@ -38,347 +45,364 @@ ANALYZERS = {
                     }
                 }
             }
-        },
-        "mappings" : {
-            "properties" : {
-                "RelatedItems" : {
-                    "type" : "nested"
-                }
-            }
         }
     },
     "ancientpeople" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/ancientpeople.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/ancientpeople.txt"
+                    }
                 }
             }
         }
     },
     "animals" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/animals.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/animals.txt"
+                    }
                 }
             }
         }
     },
     "diarypages" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/diarypages.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/diarypages.txt"
+                    }
                 }
             }
         }
     },
     "drawings" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/drawings.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/drawings.txt"
+                    }
                 }
             }
         }
     },
     "groups" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/groups.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/groups.txt"
+                    }
                 }
             }
         }
     },
     "iiif" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/iiif.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/iiif.txt"
+                    }
                 }
             }
         }
     },
     "institutions" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/institutions.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/institutions.txt"
+                    }
                 }
             }
         }
     },
     "library" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/library.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/library.txt"
+                    }
                 }
             }
         }
     },
     "mapsandplans" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/mapsandplans.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/mapsandplans.txt"
+                    }
                 }
             }
         }
     },
     "modernpeople" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/modernpeople.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/modernpeople.txt"
+                    }
                 }
             }
         }
     },
     "objects" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/objects.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/objects.txt"
+                    }
                 }
             }
         }
     },
     "photos" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/photos.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/photos.txt"
+                    }
                 }
             }
         }
@@ -391,29 +415,31 @@ ANALYZERS = {
                 }
             }
         },
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/publisheddocuments.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/publisheddocuments.txt"
+                    }
                 }
             }
         }
@@ -426,113 +452,121 @@ ANALYZERS = {
                 }
             }
         },
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/sites.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/sites.txt"
+                    }
                 }
             }
         }
     },
     "unpublisheddocuments" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/unpublisheddocuments.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/unpublisheddocuments.txt"
+                    }
                 }
             }
         }
     },
     "video" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/videos.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/videos.txt"
+                    }
                 }
             }
         }
     },
     "image" : {
-        "analysis" : {
-            "analyzer" : {
-                "synonym_keyword": {
-                    "tokenizer": "keyword",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
+        "settings" : {
+            "analysis" : {
+                "analyzer" : {
+                    "synonym_keyword": {
+                        "tokenizer": "keyword",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    },
+                    "synonym_pattern": {
+                        "tokenizer": "pattern",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "synonym"
+                        ]
+                    }
                 },
-                "synonym_pattern": {
-                    "tokenizer": "pattern",
-                    "filter": [
-                        "asciifolding",
-                        "lowercase",
-                        "synonym"
-                    ]
-                }
-            },
-            "filter": {
-                "synonym": {
-                    "type": "synonym",
-                    "synonyms_path": "analysis/image.txt"
+                "filter": {
+                    "synonym": {
+                        "type": "synonym",
+                        "synonyms_path": "analysis/image.txt"
+                    }
                 }
             }
         }
