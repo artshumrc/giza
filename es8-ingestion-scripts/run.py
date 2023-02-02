@@ -1,6 +1,7 @@
 from argparse import ArgumentParser, ArgumentTypeError
 from cursor import Cursor
 from module import Module
+import logging
 
 # DEFAULT MODULES IN A LIST
 ALLOWED_MODULES = ['iiif', 'met', 'sites', 'objects', 'constituents', 'published', 'media']
@@ -37,6 +38,13 @@ def str2bool(v):
     else: raise ArgumentTypeError('Boolean value expected.')
 
 def main():
+
+	logging.basicConfig(level=logging.DEBUG)
+	logger = logging.getLogger(__name__)
+	logging.getLogger("requests").setLevel(logging.WARNING)
+	logging.getLogger("urllib3").setLevel(logging.WARNING)
+	logging.getLogger('elasticsearch').setLevel(logging.WARNING)
+
 	try:
 		parser = ArgumentParser(description='Run all TMS data ingest scripts')
 
@@ -54,6 +62,7 @@ def main():
 
 		args = parser.parse_args()
 
+		# TODO is this working correctly? let me do just `sites` which it shouldn't unless it's also running iiif and mets under the hood?
 		if any([module for module in MODULES if module not in ALLOWED_MODULES]) or any([module for module in REQUIRED_MODULES if module not in MODULES]):
 			raise Exception('Incorrect module configuration')
 
@@ -66,7 +75,7 @@ def main():
 			Module(MODULES, module, cursor, drs=args.drs, memory=args.memory, push=args.push, tables=args.tables, store=args.store, thumbnails=args.thumbnails, thumbnails_refresh=args.thumbnails_refresh, refresh=args.refresh, compile=args.compile, es=args.es) if module in ALLOWED_MODULES else print(f'>>> UNKNOWN MODULE: "{module}"')
 	except Exception as e:
 		print("There is a problem running this program.")
-		print(e)
+		logger.exception(e)
 
 if __name__ == "__main__":
    main()

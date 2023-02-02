@@ -2,6 +2,7 @@ from datetime import datetime
 from cursor_FSS import file_save
 import pytz
 
+# TODO get rid of this, why reimplement logging
 class Logger:
     
     def __init__(self, module_type):
