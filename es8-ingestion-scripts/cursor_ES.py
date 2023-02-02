@@ -40,7 +40,8 @@ class ES:
         self.es = Elasticsearch(
             env('ELASTICSEARCH_URL'),
             ca_certs=env('ELASTICSEARCH_CERT'),
-            basic_auth=(env('ELASTICSEARCH_USER'), env('ELASTIC_PASSWORD'))
+            basic_auth=(env('ELASTICSEARCH_USER'), env('ELASTIC_PASSWORD')),
+            request_timeout=120, # was timing out on index creation at default 10s and 30s; worked at 60s for index creation but bulk failed
         )
 
     def check_connection(self):
@@ -144,6 +145,12 @@ class ES:
             
             indices = list(set([v['ES_index'] for v in data.values()]))
             print(f"es.save() - {indices}")
+            # TODO why is this being run twice?
+            # 2023-02-01 15:51:29.509783-05:00: >>> WRITING 73125 IIIF DOCUMENTS TO ELASTICSEARCH
+            # es.save() - ['iiif']
+            # 2023-02-01 16:03:02.467730-05:00: >>> WRITING 73125 IIIF DOCUMENTS TO ELASTICSEARCH
+            # es.save() - ['iiif']
+            # 2023-02-01 16:05:07.849455-05:00: >>> WRITTEN DOCS: 7719 ...
 
             for index in indices:
                 # TODO is this the right behavior? Delete and recreate the index?
@@ -159,8 +166,7 @@ class ES:
                         }
 
             try:
-
-                for ok, result in streaming_bulk(self.es, data_generator(data), chunk_size=500, request_timeout=60, refresh='wait_for'):
+                for ok, result in streaming_bulk(self.es, data_generator(data), chunk_size=500, request_timeout=120, refresh='wait_for'):
                     if ok is not True:
                         print(str(result))
                     else:
