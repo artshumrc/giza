@@ -167,18 +167,26 @@ class ES:
                 self.del_index(index)
                 self.add_index(index) # THIS CHANGES SETTINGS OF THE NEW INDEX AND NEEDS TO BE TESTED
 
-                def data_generator(data):
-                    for v in data.values():
-                        yield {
-                            "_index" : v['ES_index'],
-                            "_id" : f'{v["ES_index"]}-{v["RecID"]}',
-                            "doc" : v
-                        }
+            def data_generator(data):
+                for v in data.values():
+                    yield {
+                        "_index" : v['ES_index'],
+                        "_id" : f'{v["ES_index"]}-{v["RecID"]}',
+                        "doc" : v
+                    }
+            # TODO: why is data_generator() defined in the above for loop when it's not used until after index creation?
+            # This would mean that whatever the last index in indices is, is the one used below? No control over which data_generator() is used?
+            # Trying to move it out of the index loop
+            # Occasionally there can be no indices which causes a problem:
+            # 2023-02-06 13:38:38.209875-05:00: >>> WRITING 0 IIIF DOCUMENTS TO ELASTICSEARCH
+            # es.save() - []
+            # 2023-02-06 13:38:38.210896-05:00: !!! module.save() ERROR: local variable 'data_generator' referenced before assignment - sites
 
             try:
                 for ok, result in streaming_bulk(self.es, data_generator(data), chunk_size=500, request_timeout=120, refresh='wait_for'):
                     if ok is not True:
                         print(str(result))
+                        # TODO raise error
                     else:
                         yield result
             except BulkIndexError as e:
