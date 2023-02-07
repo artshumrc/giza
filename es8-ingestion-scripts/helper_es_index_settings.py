@@ -9,7 +9,7 @@ from videos.txt, no videos relevant to G 7000 X may show up in the search result
 """
 
 ANALYZERS = {
-    "3d model" : {
+    "3dmodels" : {
         "mappings" : {
             "properties" : {
                 "RelatedItems" : {

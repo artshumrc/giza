@@ -545,7 +545,7 @@ class Worker(Base):
 
                 classification = CLASSIFICATIONS[row['ClassificationID']] if 'ClassificationID' in row else doc_type.title()
 
-                if not (classification == '3Dmodels' and media_type == '3Dmodels'):
+                if not (classification == '3Dmodels' and media_type == '3D Model'):
                     relatedItem = {
                         'RecID': row['RecID']
                     }
