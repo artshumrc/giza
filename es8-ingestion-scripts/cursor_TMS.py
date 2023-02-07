@@ -6,7 +6,7 @@ from requests import Session
 from requests.adapters import HTTPAdapter
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, Future, as_completed, wait
 from cursor_FSS import file_open, file_save
-from helper_logger import Logger
+import logging
 from sql import SQL
 import environ
 
@@ -42,7 +42,7 @@ class TMS:
         self.valid = False
         self.driver = None
 
-        self.logger = Logger('tms')
+        self.logger = logging.getLogger('__name__')
 
         env = environ.Env(
             TMS_DATABASES=(list),
@@ -61,22 +61,23 @@ class TMS:
         try:            
             for database in self.tms_databases:
                 try:
-                    self.driver = pyodbc.connect(f'DSN={self.tms_dsn};UID={self.tms_user};PWD={self.tms_password};DATABASE={database};')                   
+                    self.driver = pyodbc.connect(f'DSN={self.tms_dsn};UID={self.tms_user};PWD={self.tms_password};DATABASE={database};')
+                    self.logger.info("Connected to TMS with pyodbc")                   
                 except Exception as e:
-                    self.logger.log("Failed to connect to TMS with pyodbc")
-                    self.logger.log(e)
+                    self.logger.error("Failed to connect to TMS with pyodbc")
+                    self.logger.error(e)
                     try:
                         self.driver = pymssql.connect(self.tms_dsn, self.tms_user, self.tms_password, database)
+                        self.logger.info("Connected to TMS with pymssql")
                     except Exception as e:
-                        self.logger.log("Failed to connect to TMS with pymssql")
-                        self.logger.log(e)
+                        self.logger.error("Failed to connect to TMS with pymssql")
+                        self.logger.error(e)
                         return False
                 if self.driver:
-                    self.logger.log("CHECK DRIVER SUCCESSFUL")
-                    self.logger.log(self.driver)
+                    self.logger.info("CHECK DRIVER SUCCESSFUL")
                     return True
         except:
-            self.logger.log("CHECK DRIVER FAILED")
+            self.logger.error("CHECK DRIVER FAILED")
             return False
 
     def fetch(self, statement:str, query:str):
@@ -93,7 +94,7 @@ class TMS:
         - tuple (list, list): rows, columns
         """
         try:
-            self.logger.log(f'>>> DOWNLOADING SQL-QUERY "{query.upper()}"')
+            self.logger.info(f'>>> DOWNLOADING SQL-QUERY "{query.upper()}"')
             cursor = self.driver.cursor()
             cursor.execute(statement)
             data = cursor.fetchall()

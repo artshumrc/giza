@@ -1,4 +1,7 @@
-from helper_logger import Logger
+import logging
+from datetime import datetime
+import pytz
+from tqdm import tqdm
 
 from cursor_FSS import file_open, file_del, file_save, get_thumbnails, save_thumbnails
 from cursor_TMS import get_drs_metadata
@@ -47,7 +50,7 @@ class Module(object):
         - compile (bool) : force compilation with local JSON tables
         - es (bool) : force push to ElasticSearch
         """
-        self.logger = Logger(module_type)
+        self.logger = logging.getLogger(__name__)
 
         self.modules = modules
         self.module_type = module_type
@@ -72,10 +75,10 @@ class Module(object):
         self.thumbnail_urls = {}
         self.counter = 1
 
-        self.logger.log(f'*** STARTING {module_type.upper()} MODULE ***', module_type)
+        self.logger.info(f'*** STARTING {module_type.upper()} MODULE ***')
 
         if self.memory:
-            self.logger.log(f'>>> PROCESSING IN MEMORY ', module_type)
+            self.logger.info(f'>>> PROCESSING IN MEMORY ')
 
         overall_progress[module_type] = {}
 
@@ -115,6 +118,10 @@ class Module(object):
             return
         except:
             raise
+    
+    def save_log(self, results, module):
+        for filename, data in results.items():
+            file_save('logs', filename, data, module)
 
     def check_drs(self):
         """
@@ -124,7 +131,7 @@ class Module(object):
         drs_metadata = check_drs(self.cursor.tms)
 
         if type(drs_metadata) is list:
-            self.logger.log('>>> DOWNLOADING IIIF METADATA FROM DRS (THIS CAN TAKE A GOOD TEN MINUTES)', self.module_type)
+            self.logger.info('>>> DOWNLOADING IIIF METADATA FROM DRS (THIS CAN TAKE A GOOD TEN MINUTES)')
             file_save('tables', 'drs', get_drs_metadata(drs_metadata), 'iiif')
 
     def check_records(self):
@@ -139,23 +146,25 @@ class Module(object):
             # TRY REFRESH OF LOCAL JSON TABLES
             if self.refresh:
                 first_record, data = self.cursor.tms.tables(module=self.module_type, tables=self.tables)
-                self.compiled_data, self.relations, self.thumbnail_urls, log_results = self.process(first_record, data)
-                self.logger.log(f'>>> LOGGING RESULTS', self.module_type, results=log_results)
+                self.compiled_data, self.relations, self.thumbnail_urls, results = self.process(first_record, data)
+                self.logger.info(f'>>> LOGGING RESULTS')
+                self.save_log(results, self.module_type)
 
-            self.logger.log(f'>>> CHECKING "{self.module_type.upper()}" COMPILATIONS', self.module_type)
+            self.logger.info(f'>>> CHECKING "{self.module_type.upper()}" COMPILATIONS')
 
             if file_open('compiled', self.module_type, self.module_type, False) and file_open('compiled', 'relations', self.module_type, False):
-                self.logger.log(f'>>> USING "{self.module_type.upper()}" COMPILATIONS FROM FILE', self.module_type)
+                self.logger.info(f'>>> USING "{self.module_type.upper()}" COMPILATIONS FROM FILE')
                 self.compiled_data = file_open('compiled', self.module_type, self.module_type, True)
                 self.relations = file_open('compiled', 'relations', self.module_type, True)
-                self.logger.log(f'>>> "{self.module_type.upper()}" COMPILATIONS CONFIRMED', self.module_type)
+                self.logger.info(f'>>> "{self.module_type.upper()}" COMPILATIONS CONFIRMED')
             else:
-                self.logger.log(f'>>> NO EXISTING "{self.module_type.upper()}" COMPILATIONS FOUND', self.module_type)
+                self.logger.info(f'>>> NO EXISTING "{self.module_type.upper()}" COMPILATIONS FOUND')
 
                 # USE TABLES TO BUILD NEW COMPILATIONS
                 first_record, data = self.cursor.tms.tables(module=self.module_type, tables=self.tables)
                 self.compiled_data, self.relations, self.thumbnail_urls, log_results = self.process(first_record, data)
-                self.logger.log(f'>>> LOGGING RESULTS', self.module_type, results=log_results)
+                self.logger.info(f'>>> LOGGING RESULTS')
+                self.save_log(log_results, self.module_type)
 
             if 'iiif' in self.module_type or 'met' in self.module_type: self.compiled_data = self.relations
 
@@ -173,7 +182,12 @@ class Module(object):
                 # THE GOAL IS TO SKIP DOWNLOADING THUMBNAILS ALREADY IN SELF.FILES
 
                 # CHECK URLS AGAINST THOSE ALREADY IN THE STATIC FOLDER
-                if not self.thumbnails_refresh and len(self.files):
+                # TODO this is not being reached - len(self.files) is 0
+                # self.files is being populated by get_thumbnails() but apparently this isn't working
+                # if not self.thumbnails_refresh and len(self.files):
+                if not self.thumbnails_refresh and len(self.files): # trying not len(self.files)??
+                    # not len(self.files) created static/images/thumbnails/thumbnails.json, now trying with len(self.files)
+                    # This seems to have worked, we moved past Sites to Objects module
                     
                     # GET ALL THUMBNAIL IDS FOR THIS MODULE
                     thumbnail_ids = [drs_id['Thumbnail_ID'] for drs_id in thumbnail_urls]
@@ -197,16 +211,17 @@ class Module(object):
 
                 # DOWNLOAD LEFTOVERS
                 if len(thumbnail_urls) > 0:
-                    self.logger.log(f'>>> DOWNLOADING {len(thumbnail_urls)} NEW THUMBNAILS FOR "{self.module_type.upper()}"', self.module_type)
+                    self.logger.info(f'>>> DOWNLOADING {len(thumbnail_urls)} NEW THUMBNAILS FOR "{self.module_type.upper()}"')
                     res, error = download_thumbnails(thumbnail_urls)
 
                     # 'base64' : f'data:{request.FILES["Thumbnail"].content_type};base64,{base64.b64encode(buffer.getvalue()).decode("utf-8")}'
 
-                    self.logger.log(f'>>> {len(error)} ERRORS DOWNLOADING THUMBNAILS FOR "{self.module_type.upper()}"', self.module_type)
+                    self.logger.info(f'>>> {len(error)} ERRORS DOWNLOADING THUMBNAILS FOR "{self.module_type.upper()}"')
 
                     # UPDATE THE LOG ON DISK
-                    # TODO: Throws an error on first run:
+                    # TODO: Throws an error on first run (at least first two runs?)
                     # There is a problem running this program. local variable 'thumbnail_ids' referenced before assignment
+                    # Still exists after merge with Martin's latest code
                     save_thumbnails(self.module_type, thumbnail_ids)
 
                     # SUBTRACT ALL DOWNLOADS FROM SELF.FILES
@@ -216,14 +231,14 @@ class Module(object):
                     # file_save(f'static/images/thumbnails', 'thumbnails', self.files)
 
                 else:
-                    self.logger.log(f'>>> NO NEW THUMBNAILS FOR MODULE "{self.module_type.upper()}"', self.module_type)
+                    self.logger.info(f'>>> NO NEW THUMBNAILS FOR MODULE "{self.module_type.upper()}"')
 
             # BULK UPDATE MANIFESTS (EXCEPT IIIF, MET, PUBLISHED AND MEDIA)
             # if self.module_type not in ['iiif', 'met', 'published', 'media']: self.add_manifests()
 
             # BULK WRITE COMPILATIONS TO FILE (COSTLY OPERATION)
             if self.store:
-                self.logger.log(f'>>> WRITING "{self.module_type.upper()}" COMPILATIONS TO DISK', self.module_type)
+                self.logger.info(f'>>> WRITING "{self.module_type.upper()}" COMPILATIONS TO DISK')
                 file_save('compiled', self.module_type, self.compiled_data, self.module_type)
                 file_save('compiled', 'relations', self.relations, self.module_type)
 
@@ -245,7 +260,7 @@ class Module(object):
                         self.write(self.module_type, { 'compilation' : self.compiled_data })
                         self.write('iiif', { 'compilation' : self.relations })
 
-            self.logger.log(f'*** {self.module_type.upper()} MODULE FINISHED ***', self.module_type)
+            self.logger.info(f'*** {self.module_type.upper()} MODULE FINISHED ***')
 
         except:
             raise
@@ -337,12 +352,13 @@ class Module(object):
     def write(self, module, data):
         self.save(module, data['compilation'])
         if module == 'published':
-            self.logger.log(f'>>> DEVELOPING LIBRARY', self.module_type)
+            self.logger.info(f'>>> DEVELOPING LIBRARY')
             results = 0
-            for res in self.cursor.es.build_library():
+            for res in tqdm(self.cursor.es.build_library(), desc=">>> WRITTEN DOCS (write())"):
                 if res:
                     results = results + 1
-                    self.logger.log(f'>>> WRITTEN DOCS: {results}', 'library', end=True)
+                    self.logger.info(f'>>> ALL DONE (TOTAL RUNTIME: need to handle)')
+                    # TODO handle "end" parameter in logger / time elapsed
 
     def process(self, first_record:list, data:list):
         """
@@ -367,7 +383,7 @@ class Module(object):
         """
 
         try:
-            self.logger.log(f'>>> PREPARING "{self.module_type.upper()}" RECORDS FOR NEW BUILD', self.module_type)
+            self.logger.info(f'>>> PREPARING "{self.module_type.upper()}" RECORDS FOR NEW BUILD')
 
             if 'iiif' in first_record['key']: worker = IIIF_Worker(first_record['rows'], first_record['cols'], data).build_iiif()
             if 'met' in first_record['key']: worker = MET_Worker(first_record['rows'], first_record['cols'], data).build_MET()           
@@ -534,12 +550,14 @@ class Module(object):
 
     def save(self, module:str, data:dict):
         try:
-            self.logger.log(f'>>> WRITING {len(data)} {module.upper()} DOCUMENTS TO ELASTICSEARCH', self.module_type)
+            # self.logger.log(f'>>> WRITING {len(data)} {module.upper()} DOCUMENTS TO ELASTICSEARCH', self.module_type)
+            self.logger.info(f'>>> WRITING {len(data)} {module.upper()} DOCUMENTS TO ELASTICSEARCH')
             results = 0
-            for res in self.cursor.es.save(data):
+            for res in tqdm(self.cursor.es.save(data), desc=">>> WRITTEN DOCS: ", total=len(data)):
                 if res:
                     results = results + 1
-                    self.logger.log(f'>>> WRITTEN DOCS: {results}', self.module_type, end=True)
+                    # TODO handle logger end
         except Exception as e:
-            self.logger.log(f'!!! module.save() ERROR: {e} - {self.module_type}', self.module_type)
+            self.logger.exception(f'!!! module.save() ERROR: {e} - {self.module_type}')
             raise e
+   

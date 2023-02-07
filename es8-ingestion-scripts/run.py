@@ -2,6 +2,8 @@ from argparse import ArgumentParser, ArgumentTypeError
 from cursor import Cursor
 from module import Module
 import logging
+import pytz
+from datetime import datetime
 
 # DEFAULT MODULES IN A LIST
 ALLOWED_MODULES = ['iiif', 'met', 'sites', 'objects', 'constituents', 'published', 'media']
@@ -38,13 +40,6 @@ def str2bool(v):
     else: raise ArgumentTypeError('Boolean value expected.')
 
 def main():
-
-	logging.basicConfig(level=logging.DEBUG)
-	logger = logging.getLogger(__name__)
-	logging.getLogger("requests").setLevel(logging.WARNING)
-	logging.getLogger("urllib3").setLevel(logging.WARNING)
-	logging.getLogger('elasticsearch').setLevel(logging.WARNING)
-
 	try:
 		parser = ArgumentParser(description='Run all TMS data ingest scripts')
 
@@ -59,8 +54,33 @@ def main():
 		parser.add_argument('-tr', '--thumbnails_refresh', type=str2bool, help='Refresh all thumbnails in the filesystem. This is a long operation!', required=False, default=False)
 		parser.add_argument('-c','--compile', type=str2bool, help='Compile JSON files using local tables (if available)', required=False, default=True)
 		parser.add_argument('-s', '--store', type=str2bool, help='Store a copy of the compiled files on disk', required=False, default=False)
+		parser.add_argument('-log', '--log_level', type=str, help='Set the log level', required=False, default='INFO')
 
 		args = parser.parse_args()
+
+		# Logging setup
+		# valid_log_levels = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
+		numeric_level = getattr(logging, args.log_level.upper(), None)
+		if not isinstance(numeric_level, int):
+			raise ValueError('Invalid log level: %s' % args.log_level)
+		# TODO configure logging to write to a file
+		logging.basicConfig(
+			level=args.log_level.upper(),
+			datefmt='%Y-%m-%d %H:%M:%S',
+			format='%(asctime)s %(levelname)s %(name)s - %(funcName)s: %(message)s',
+			encoding='utf-8'
+		)
+		if(args.log_level.upper() != 'DEBUG'):
+			logging.getLogger("requests").setLevel(logging.WARNING)
+			logging.getLogger("urllib3").setLevel(logging.WARNING)
+			logging.getLogger('elasticsearch').setLevel(logging.WARNING)
+			logging.getLogger('elastic_transport').setLevel(logging.WARNING)
+
+		logger = logging.getLogger(__name__)
+		logger.info(f'Log level set to {args.log_level.upper()}')
+		tz = pytz.timezone('US/Eastern')
+		time_start = datetime.now(tz)
+
 
 		# TODO is this working correctly? let me do just `sites` which it shouldn't unless it's also running iiif and mets under the hood?
 		if any([module for module in MODULES if module not in ALLOWED_MODULES]) or any([module for module in REQUIRED_MODULES if module not in MODULES]):
