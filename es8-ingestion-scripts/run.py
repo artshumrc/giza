@@ -4,6 +4,8 @@ from module import Module
 import logging
 import pytz
 from datetime import datetime
+import environ
+from os import cpu_count
 
 # DEFAULT MODULES IN A LIST
 ALLOWED_MODULES = ['iiif', 'met', 'sites', 'objects', 'constituents', 'published', 'media']
@@ -41,6 +43,10 @@ def str2bool(v):
 
 def main():
 	try:
+		env = environ.Env()
+		environ.Env.read_env()
+		cpu_workers = env('CPU_WORKERS', default=int((cpu_count()/2)-1))
+
 		parser = ArgumentParser(description='Run all TMS data ingest scripts')
 
 		parser.add_argument('-m', '--modules', nargs="+", help='A list of modules to run: iiif, met, sites, objects, constituents, published and media', default=MODULES)
@@ -55,6 +61,7 @@ def main():
 		parser.add_argument('-c','--compile', type=str2bool, help='Compile JSON files using local tables (if available)', required=False, default=True)
 		parser.add_argument('-s', '--store', type=str2bool, help='Store a copy of the compiled files on disk', required=False, default=False)
 		parser.add_argument('-log', '--log_level', type=str, help='Set the log level', required=False, default='INFO')
+		parser.add_argument('-cpus', '--cpus', type=int, help='Set the number of CPUs to use', required=False, default=cpu_workers)
 
 		args = parser.parse_args()
 
@@ -92,7 +99,7 @@ def main():
 		cursor.check_tms_connection()
 
 		for module in args.modules:
-			Module(MODULES, module, cursor, drs=args.drs, memory=args.memory, push=args.push, tables=args.tables, store=args.store, thumbnails=args.thumbnails, thumbnails_refresh=args.thumbnails_refresh, refresh=args.refresh, compile=args.compile, es=args.es) if module in ALLOWED_MODULES else print(f'>>> UNKNOWN MODULE: "{module}"')
+			Module(MODULES, module, cursor, drs=args.drs, memory=args.memory, push=args.push, tables=args.tables, store=args.store, thumbnails=args.thumbnails, thumbnails_refresh=args.thumbnails_refresh, refresh=args.refresh, compile=args.compile, es=args.es, cpu_workers=args.cpus) if module in ALLOWED_MODULES else print(f'>>> UNKNOWN MODULE: "{module}"')
 	except Exception as e:
 		print("There is a problem running this program.")
 		logger.exception(e)

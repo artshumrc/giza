@@ -1,4 +1,3 @@
-from os import cpu_count
 from concurrent.futures import ThreadPoolExecutor, wait
 from re import sub
 from base import Base
@@ -14,12 +13,13 @@ class Sites_Worker(Base):
     - dates (rows) -> dict : the result of the operation
     - altnums (rows) -> dict : the result of the operation
     """
-    def __init__(self, rows, cols, data=None):
+    def __init__(self, rows, cols, data=None, cpu_workers:int=2):
         super().__init__('sites')
 
         self.rows = rows
         self.cols = cols
         self.data = data
+        self.cpu_workers = cpu_workers
 
     def build_sites(self):
         """
@@ -74,7 +74,7 @@ class Sites_Worker(Base):
         - dict : processing results
         """
 
-        with ThreadPoolExecutor(int((cpu_count()/2)-1)) as executor:
+        with ThreadPoolExecutor(self.cpu_workers) as executor:
             for rows in self.data:
 
                 # COMBINE ROWS AND COLS TO SINGLE DICTIONARY

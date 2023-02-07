@@ -33,8 +33,9 @@ class Base:
 
     """
 
-    def __init__(self, module_type=None):
+    def __init__(self, module_type=None, cpu_workers:int=int((cpu_count()/2)-1)):
         self.module_type = module_type
+        self.cpu_workers = cpu_workers
 
         self.dc = Date_Conversion(module_type)
 
@@ -148,8 +149,7 @@ class Base:
         met = overall_progress['met']['compilation'] if len(overall_progress['met']['compilation']) else file_open('compiled', 'relations', 'met', True)
 
         # TO PREVENT RACE CONDITIONS EACH INDIVIDUAL RECORD IS UPDATED IN ITS OWN THREAD
-        with ThreadPoolExecutor(int((cpu_count()/2)-1)) as executor:
-        # with ThreadPoolExecutor(1) as executor:
+        with ThreadPoolExecutor(self.cpu_workers) as executor:
             for row in sorted_by_mmid.values():
                 future = executor.submit(Worker, self.records[row[0]['RecID']], doc_type, row, manifests, met)
                 future.add_done_callback(progress_indicator)
@@ -465,11 +465,10 @@ class Worker(Base):
     Parameters
     ----------
     - rec (dict) : the record that is being updated
-    - rec_type (str) : the category of record that is being updated
+    - doc_type (str) : the category of record that is being updated
     - new_rows (list) : the records associated with this particular record
     - manifests (dict) : the manifests as assembled so far by the program
     - met (dict) : MET data constructed separately
-    - drs_metadata (dict) : metadata acquired from DRS for updating the records and manifests
     """
 
     def __init__(self, rec:dict, doc_type:str, new_rows:list, manifests:dict=None, met:dict=None):

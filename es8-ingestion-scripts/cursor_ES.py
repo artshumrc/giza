@@ -36,12 +36,14 @@ class ES:
         """
         env = environ.Env()
         environ.Env.read_env()
+        self.chunk_size = env('ES_CHUNK_SIZE', default=500)
+        self.request_timeout = env('ES_REQUEST_TIMEOUT', default=120)
 
         self.es = Elasticsearch(
             env('ELASTICSEARCH_URL'),
             ca_certs=env('ELASTICSEARCH_CERT'),
             basic_auth=(env('ELASTICSEARCH_USER'), env('ELASTIC_PASSWORD')),
-            request_timeout=120, # was timing out on index creation at default 10s and 30s; worked at 60s for index creation but bulk failed
+            request_timeout=self.request_timeout,
         )
 
     def check_connection(self):
@@ -133,7 +135,7 @@ class ES:
 
     def save(self, data:dict) -> dict:
         """
-        Generator function that batch processes data for writing to ElasticSearch in batches of 250.
+        Generator function that batch processes data for writing to ElasticSearch in batches.
 
         NOTE:   Connection time-out may occur if chunk_size is set too high and/or request_timeout too low. 
                 If the process stalls this will inadvertently interrupt the insertion process. In that case, 
@@ -183,7 +185,7 @@ class ES:
             # 2023-02-06 13:38:38.210896-05:00: !!! module.save() ERROR: local variable 'data_generator' referenced before assignment - sites
 
             try:
-                for ok, result in streaming_bulk(self.es, data_generator(data), chunk_size=500, request_timeout=120, refresh='wait_for'):
+                for ok, result in streaming_bulk(self.es, data_generator(data), chunk_size=self.chunk_size, request_timeout=self.request_timeout, refresh='wait_for'):
                     if ok is not True:
                         print(str(result))
                         # TODO raise error

@@ -1,4 +1,3 @@
-from os import cpu_count
 from concurrent.futures import ThreadPoolExecutor, wait
 from operator import itemgetter
 from re import sub, compile, match, IGNORECASE
@@ -17,12 +16,13 @@ class Published_Worker(Base):
     - media(rows=list) -> dict : adds a primary display to the record
     - constituents(rows=list) -> dict : updates and adds constituents to items in the RelatedItems property
     """
-    def __init__(self, rows, cols, data=None):
+    def __init__(self, rows, cols, data=None, cpu_workers:int=2):
         super().__init__('published')
         
         self.rows = rows
         self.cols = cols
         self.data = data
+        self.cpu_workers = cpu_workers
 
     def build_published(self):
         """
@@ -72,7 +72,7 @@ class Published_Worker(Base):
         - self.relations (dict) : data relevant to manifest generation derived from the published records
         - dict : processing results
         """
-        with ThreadPoolExecutor(int((cpu_count()/2)-1)) as executor:
+        with ThreadPoolExecutor(self.cpu_workers) as executor:
             for rows in self.data:
 
                 # CONVERT ROWS TO DICTS

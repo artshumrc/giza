@@ -206,8 +206,9 @@ def get_drs_metadata(urls:list):
     - dict : dictionary with drs id and nested dictionary with width and height properties.
     """
 
-    # workers = int((cpu_count()/2)-1)
-    workers = cpu_count()
+    env = environ.Env()
+    environ.Env.read_env()
+    workers = env('CPU_WORKERS', default=int((cpu_count()/2)-1))
     batch_size = ceil(len(urls)/workers)
     batch_results, futures = [], []
 

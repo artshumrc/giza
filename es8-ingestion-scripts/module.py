@@ -1,3 +1,4 @@
+# from helper_logger import Logger
 import logging
 from datetime import datetime
 import pytz
@@ -39,7 +40,7 @@ class Module(object):
     - add_manifests() : generate manifests for each document type
     - save() : save compiled data to ElasticSearch
     """
-    def __init__(self, modules, module_type, cursor, drs, memory, push, tables, store, thumbnails, thumbnails_refresh, refresh, compile, es):
+    def __init__(self, modules, module_type, cursor, drs, memory, push, tables, store, thumbnails, thumbnails_refresh, refresh, compile, es, cpu_workers):
         """
         Parameters
         ----------
@@ -50,6 +51,7 @@ class Module(object):
         - compile (bool) : force compilation with local JSON tables
         - es (bool) : force push to ElasticSearch
         """
+        # self.logger = Logger(module_type)
         self.logger = logging.getLogger(__name__)
 
         self.modules = modules
@@ -74,10 +76,13 @@ class Module(object):
         self.relations = []
         self.thumbnail_urls = {}
         self.counter = 1
+        self.cpu_workers = cpu_workers
 
+        # self.logger.log(f'*** STARTING {module_type.upper()} MODULE ***', module_type)
         self.logger.info(f'*** STARTING {module_type.upper()} MODULE ***')
 
         if self.memory:
+            # self.logger.log(f'>>> PROCESSING IN MEMORY ', module_type)
             self.logger.info(f'>>> PROCESSING IN MEMORY ')
 
         overall_progress[module_type] = {}
@@ -131,6 +136,7 @@ class Module(object):
         drs_metadata = check_drs(self.cursor.tms)
 
         if type(drs_metadata) is list:
+            # self.logger.log('>>> DOWNLOADING IIIF METADATA FROM DRS (THIS CAN TAKE A GOOD TEN MINUTES)', self.module_type)
             self.logger.info('>>> DOWNLOADING IIIF METADATA FROM DRS (THIS CAN TAKE A GOOD TEN MINUTES)')
             file_save('tables', 'drs', get_drs_metadata(drs_metadata), 'iiif')
 
@@ -147,22 +153,28 @@ class Module(object):
             if self.refresh:
                 first_record, data = self.cursor.tms.tables(module=self.module_type, tables=self.tables)
                 self.compiled_data, self.relations, self.thumbnail_urls, results = self.process(first_record, data)
+                # self.logger.log(f'>>> LOGGING RESULTS', self.module_type, results=log_results)
                 self.logger.info(f'>>> LOGGING RESULTS')
                 self.save_log(results, self.module_type)
 
+            # self.logger.log(f'>>> CHECKING "{self.module_type.upper()}" COMPILATIONS', self.module_type)
             self.logger.info(f'>>> CHECKING "{self.module_type.upper()}" COMPILATIONS')
 
             if file_open('compiled', self.module_type, self.module_type, False) and file_open('compiled', 'relations', self.module_type, False):
+                # self.logger.log(f'>>> USING "{self.module_type.upper()}" COMPILATIONS FROM FILE', self.module_type)
                 self.logger.info(f'>>> USING "{self.module_type.upper()}" COMPILATIONS FROM FILE')
                 self.compiled_data = file_open('compiled', self.module_type, self.module_type, True)
                 self.relations = file_open('compiled', 'relations', self.module_type, True)
+                # self.logger.log(f'>>> "{self.module_type.upper()}" COMPILATIONS CONFIRMED', self.module_type)
                 self.logger.info(f'>>> "{self.module_type.upper()}" COMPILATIONS CONFIRMED')
             else:
+                # self.logger.log(f'>>> NO EXISTING "{self.module_type.upper()}" COMPILATIONS FOUND', self.module_type)
                 self.logger.info(f'>>> NO EXISTING "{self.module_type.upper()}" COMPILATIONS FOUND')
 
                 # USE TABLES TO BUILD NEW COMPILATIONS
                 first_record, data = self.cursor.tms.tables(module=self.module_type, tables=self.tables)
                 self.compiled_data, self.relations, self.thumbnail_urls, log_results = self.process(first_record, data)
+                # self.logger.log(f'>>> LOGGING RESULTS', self.module_type, results=log_results)
                 self.logger.info(f'>>> LOGGING RESULTS')
                 self.save_log(log_results, self.module_type)
 
@@ -211,11 +223,13 @@ class Module(object):
 
                 # DOWNLOAD LEFTOVERS
                 if len(thumbnail_urls) > 0:
+                    # self.logger.log(f'>>> DOWNLOADING {len(thumbnail_urls)} NEW THUMBNAILS FOR "{self.module_type.upper()}"', self.module_type)
                     self.logger.info(f'>>> DOWNLOADING {len(thumbnail_urls)} NEW THUMBNAILS FOR "{self.module_type.upper()}"')
                     res, error = download_thumbnails(thumbnail_urls)
 
                     # 'base64' : f'data:{request.FILES["Thumbnail"].content_type};base64,{base64.b64encode(buffer.getvalue()).decode("utf-8")}'
 
+                    # self.logger.log(f'>>> {len(error)} ERRORS DOWNLOADING THUMBNAILS FOR "{self.module_type.upper()}"', self.module_type)
                     self.logger.info(f'>>> {len(error)} ERRORS DOWNLOADING THUMBNAILS FOR "{self.module_type.upper()}"')
 
                     # UPDATE THE LOG ON DISK
@@ -231,6 +245,7 @@ class Module(object):
                     # file_save(f'static/images/thumbnails', 'thumbnails', self.files)
 
                 else:
+                    # self.logger.log(f'>>> NO NEW THUMBNAILS FOR MODULE "{self.module_type.upper()}"', self.module_type)
                     self.logger.info(f'>>> NO NEW THUMBNAILS FOR MODULE "{self.module_type.upper()}"')
 
             # BULK UPDATE MANIFESTS (EXCEPT IIIF, MET, PUBLISHED AND MEDIA)
@@ -238,6 +253,7 @@ class Module(object):
 
             # BULK WRITE COMPILATIONS TO FILE (COSTLY OPERATION)
             if self.store:
+                # self.logger.log(f'>>> WRITING "{self.module_type.upper()}" COMPILATIONS TO DISK', self.module_type)
                 self.logger.info(f'>>> WRITING "{self.module_type.upper()}" COMPILATIONS TO DISK')
                 file_save('compiled', self.module_type, self.compiled_data, self.module_type)
                 file_save('compiled', 'relations', self.relations, self.module_type)
@@ -260,6 +276,7 @@ class Module(object):
                         self.write(self.module_type, { 'compilation' : self.compiled_data })
                         self.write('iiif', { 'compilation' : self.relations })
 
+            # self.logger.log(f'*** {self.module_type.upper()} MODULE FINISHED ***', self.module_type)
             self.logger.info(f'*** {self.module_type.upper()} MODULE FINISHED ***')
 
         except:
@@ -352,13 +369,18 @@ class Module(object):
     def write(self, module, data):
         self.save(module, data['compilation'])
         if module == 'published':
+            # self.logger.log(f'>>> DEVELOPING LIBRARY', self.module_type)
             self.logger.info(f'>>> DEVELOPING LIBRARY')
             results = 0
             for res in tqdm(self.cursor.es.build_library(), desc=">>> WRITTEN DOCS (write())"):
                 if res:
                     results = results + 1
+                    # self.logger.log(f'>>> WRITTEN DOCS: {results}', 'library', end=True)
+                    # print(f'>>> WRITTEN DOCS: {results}', end="\r", flush=True) # Progress bar
+                    # self.logger.info(f'>>> WRITTEN DOCS: {results}')
+                    # self.logger.log(f'>>> ALL DONE (TOTAL RUNTIME {datetime.now(self.tz)-self.time_start})')
                     self.logger.info(f'>>> ALL DONE (TOTAL RUNTIME: need to handle)')
-                    # TODO handle "end" parameter in logger / time elapsed
+                    # TODO handle "end" parameter in logger
 
     def process(self, first_record:list, data:list):
         """
@@ -383,15 +405,16 @@ class Module(object):
         """
 
         try:
+            # self.logger.log(f'>>> PREPARING "{self.module_type.upper()}" RECORDS FOR NEW BUILD', self.module_type)
             self.logger.info(f'>>> PREPARING "{self.module_type.upper()}" RECORDS FOR NEW BUILD')
 
             if 'iiif' in first_record['key']: worker = IIIF_Worker(first_record['rows'], first_record['cols'], data).build_iiif()
             if 'met' in first_record['key']: worker = MET_Worker(first_record['rows'], first_record['cols'], data).build_MET()           
-            if 'sites' in first_record['key']: worker = Sites_Worker(first_record['rows'], first_record['cols'], data).build_sites()
-            if 'objects' in first_record['key']: worker = Objects_Worker(first_record['rows'], first_record['cols'], data).build_objects()
-            if 'constituents' in first_record['key']: worker = Constituents_Worker(first_record['rows'], first_record['cols'], data).build_constituents()
-            if 'published' in first_record['key']: worker = Published_Worker(first_record['rows'], first_record['cols'], data).build_published()
-            if 'media' in first_record['key']: worker = Media_Worker(first_record['rows'], first_record['cols'], data).build_media()
+            if 'sites' in first_record['key']: worker = Sites_Worker(first_record['rows'], first_record['cols'], data, cpu_workers=self.cpu_workers).build_sites()
+            if 'objects' in first_record['key']: worker = Objects_Worker(first_record['rows'], first_record['cols'], data, cpu_workers=self.cpu_workers).build_objects()
+            if 'constituents' in first_record['key']: worker = Constituents_Worker(first_record['rows'], first_record['cols'], data, cpu_workers=self.cpu_workers).build_constituents()
+            if 'published' in first_record['key']: worker = Published_Worker(first_record['rows'], first_record['cols'], data, cpu_workers=self.cpu_workers).build_published()
+            if 'media' in first_record['key']: worker = Media_Worker(first_record['rows'], first_record['cols'], data, cpu_workers=self.cpu_workers).build_media()
             return worker.start()
 
         except Exception as e:
@@ -556,8 +579,55 @@ class Module(object):
             for res in tqdm(self.cursor.es.save(data), desc=">>> WRITTEN DOCS: ", total=len(data)):
                 if res:
                     results = results + 1
-                    # TODO handle logger end
+                    # self.logger.log(f'>>> WRITTEN DOCS: {results}', self.module_type, end=True)
+                    # self.logger.info(f'>>> WRITTEN DOCS: {results}')
+                    # TODO handle logger end parameter
         except Exception as e:
             self.logger.exception(f'!!! module.save() ERROR: {e} - {self.module_type}')
+            # self.logger.log(f'!!! module.save() ERROR: {e} - {self.module_type}', self.module_type)
             raise e
-   
+    # 4 Jan getting this error:
+    # 2023-01-04 17:34:13.812404: >>> WRITING 167205 IIIF DOCUMENTS TO ELASTICSEARCH
+    # 2023-01-04 18:14:25.673342: >>> WRITING 3998 SITES DOCUMENTS TO ELASTICSEARCH
+    # There is a problem running this program.
+    # ApiError(
+    #   429,
+    #   'es_rejected_execution_exception',
+    #   'rejected execution of coordinating operation [coordinating_and_primary_bytes=0, replica_bytes=0, all_bytes=0, coordinating_operation_bytes=90202679, max_coordinating_and_primary_bytes=53687091]'
+    # )
+
+    # Try to reduce the batch size? https://stackoverflow.com/questions/49873853/elasticsearch-es-rejected-execution-exception
+
+    # 2023-01-04 21:08:00.617167: >>> WRITING 84818 MEDIA DOCUMENTS TO ELASTICSEARCH
+    # There is a problem running this program.
+    # 'image'
+
+    # Seems like this tries to rewrite all the documents each time?
+
+    # Indices seem to be missing library, photos, videos (from helper_es_index_settings.py)
+    # Where are those created?
+    
+    # Why are the 167205 IIIF writes being batched in 73125, 73125, ??20955?
+    # Is this happening twice? It looks like only the number of records in the second batch of 73125 exist in the index when I look at it ...
+    # 2023-01-06 13:28:23.060034: >>> WRITING 73125 IIIF DOCUMENTS TO ELASTICSEARCH
+    # es.save()
+    # ['iiif']
+    # 2023-01-06 13:37:42.535743: >>> WRITING 73125 IIIF DOCUMENTS TO ELASTICSEARCH
+    # es.save()
+    # ['iiif']
+    # 2023-01-06 13:48:47.220188: >>> WRITTEN DOCS: 46000
+
+    # health status index                uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+    # yellow open   iiif                 49NXgu9tSOmzfktUU1_ibA   1   1      46000            0     21.9mb         21.9mb
+
+    # python3 run.py --push False : fails on sites
+    # python3 run.py --push True : fails on media
+    # python3 run.py --push True --modules media : fails, error is 'image', self.module_type is 'media', indices are ['image', '3d model', 'video']
+    # modules sites and modules and modules objects both fail - prints this:
+        # 'iiif'
+        # There is a problem running this program.
+        # 'iiif'
+    # looks like iiif and met are required
+    # --modules iiif or met --push True : seems to not actually save? had 73125 for iiif index but didn't go through the "writing steps"
+    # --modules iiif --push False : is going through the writing steps ... again, wrote 73125 then seems to be doing it again? But ended up with 73125?
+

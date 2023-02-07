@@ -1,4 +1,3 @@
-from os import cpu_count
 from concurrent.futures import ThreadPoolExecutor, wait
 from operator import itemgetter
 from base import Base
@@ -18,12 +17,13 @@ class Objects_Worker(Base):
     - flexfields(rows=list) -> dict : updates flexfields in the object records
     - unpublished(rows=list) -> dict : updates unpublished documents in the object's RelatedItems property
     """
-    def __init__(self, rows, cols, data=None):
+    def __init__(self, rows, cols, data=None, cpu_workers:int=2):
         super().__init__('objects')
 
         self.rows = rows
         self.cols = cols
         self.data = data
+        self.cpu_workers = cpu_workers
 
     def build_objects(self):
         """
@@ -119,7 +119,7 @@ class Objects_Worker(Base):
         - self.thumbnail_urls (dict) : data relevant to thumbnail downloading
         - dict : processing results
         """
-        with ThreadPoolExecutor(int((cpu_count()/2)-1)) as executor:
+        with ThreadPoolExecutor(self.cpu_workers) as executor:
             for rows in self.data:
 
                 # COMBINE ROWS AND COLS TO SINGLE DICTIONARY

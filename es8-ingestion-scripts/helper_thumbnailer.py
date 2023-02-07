@@ -6,6 +6,7 @@ from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_compl
 from requests.adapters import HTTPAdapter
 from requests import Session
 from PIL import Image
+import environ
 
 THREAD_POOL = 32
 
@@ -25,7 +26,9 @@ def download_thumbnails(urls:list):
     - dict : dictionary with drs id and nested dictionary with width and height properties.
     """
 
-    workers = int((cpu_count()/2)-1)
+    env = environ.Env()
+    environ.Env.read_env()
+    workers = env('CPU_WORKERS', default=int((cpu_count()/2)-1))
     batch_size = ceil(len(urls)/workers)
     batch_results, futures = [], []
     dir = f'static/images/thumbnails'

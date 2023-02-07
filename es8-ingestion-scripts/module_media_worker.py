@@ -1,4 +1,3 @@
-from os import cpu_count
 from concurrent.futures import ThreadPoolExecutor, wait
 from base import Base
 
@@ -13,12 +12,13 @@ class Media_Worker(Base):
     - build_media() -> Media_Worker : builds the basic object JSON record
     - start() -> dict, dict : the start method of the Media_Worker module
     """
-    def __init__(self, rows, cols, data=None):
+    def __init__(self, rows, cols, data=None, cpu_workers:int=2):
         super().__init__('media')
         
         self.rows = rows
         self.cols = cols
         self.data = data
+        self.cpu_workers = cpu_workers
 
     def build_media(self):
         """
@@ -104,7 +104,7 @@ class Media_Worker(Base):
         - self.relations (dict) : data relevant to manifest generation derived from the published records
         - dict : processing results
         """
-        with ThreadPoolExecutor(int((cpu_count()/2)-1)) as executor:
+        with ThreadPoolExecutor(self.cpu_workers) as executor:
             for rows in self.data:
 
                 # CONVERT ROWS TO DICTS; COL VALUES: RecID, MediaTypeID, Role, DisplayName, DisplayDate
