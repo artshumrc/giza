@@ -478,8 +478,10 @@ class Worker(Base):
         from module_iiif_worker import new_manifest
         from module_iiif_worker import add_manifest
 
-        global drs_metadata
-        if not len(drs_metadata):
+        global drs_metadata # TODO fix: this errors - "name 'drs_metadata' is not defined"
+        # # When commented out above: local variable 'drs_metadata' referenced before assignment
+        # if not len(drs_metadata):
+        if not drs_metadata:
             drs_metadata = check_drs()
 
         self.rec = rec
