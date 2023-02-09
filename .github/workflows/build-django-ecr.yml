@@ -11,7 +11,7 @@ on:
   
 env:
   AWS_REGION: us-east-1
-  
+
 jobs:
   
   build:
@@ -50,7 +50,7 @@ jobs:
         ECR_REPOSITORY: giza/django
         IMAGE_TAG: latest
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f docker/Dockerfile.ingest .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f docker/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
     
     - name: Slack Deploy Status Notification
