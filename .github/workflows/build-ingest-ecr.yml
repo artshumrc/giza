@@ -3,10 +3,14 @@ name: Build and push Giza Elasticsearch ingest image to ECR
 on:
   push:
     branches:
-      - dockerize
-      # TODO change to develop and master
+    - dockerize
+    # TODO change to develop and master
     paths:
-      - "es8-ingestion-scripts/**"
+    - es8-ingestion-scripts
+  workflow_dispatch:
+  
+env:
+  AWS_REGION: us-east-1
 
 jobs:
   

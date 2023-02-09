@@ -3,11 +3,15 @@ name: Build and push Django Giza image to ECR
 on:
   push:
     branches:
-      - dockerize
-      # TODO change to develop and master
-    paths:
-      - "!es8-ingestion-scripts/**"
-
+    - dockerize
+    # TODO change to develop and master
+    paths-ignore:
+    - "es8-ingestion-scripts/**"
+  workflow_dispatch:
+  
+env:
+  AWS_REGION: us-east-1
+  
 jobs:
   
   build:
