@@ -1,0 +1,34 @@
+FROM python:3.10-slim-buster
+
+# Setup
+RUN apt-get update --fix-missing && apt-get -y install \
+    cron \
+    unixodbc unixodbc-dev freetds-dev freetds-bin tdsodbc \
+    gcc g++ libssl-dev \
+    python3-dev python3-pip \
+    libxml2-dev libxslt1-dev zlib1g-dev libffi-dev \
+    curl nano
+
+# Microsoft ODBC: https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver15
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+# Debian 11
+RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
+
+# Python requirements
+WORKDIR /ingest
+COPY es8-ingestion-scripts/ /ingest/
+# .env not copied (not on Github to copy as it's a security risk), this must be created manually on the server
+RUN pip install -r requirements.txt
+
+# Database config
+COPY es8-ingestion-scripts/odbc.ini /etc/odbc.ini
+COPY es8-ingestion-scripts/freetds.conf /etc/freetds.conf
+
+# Setup cron
+RUN chmod +x /ingest/run.py
+# Run once daily at 2am
+RUN crontab -l | { cat; echo "0 2 * * * python3 /ingest/run.py"; } | crontab -
+# Logging?
+CMD cron -f

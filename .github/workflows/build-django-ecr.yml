@@ -1,0 +1,60 @@
+name: Build and push Django Giza image to ECR
+
+on:
+  push:
+    branches:
+      - dockerize
+      # TODO change to develop and master
+    paths:
+      - "!es8-ingestion-scripts/**"
+
+jobs:
+  
+  build:
+    
+    name: Build and Push Image
+    runs-on: ubuntu-latest
+   
+    steps:
+
+    - name: Slack Deploy Kickoff Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_USERNAME: github_actions_notification
+        SLACK_TITLE: Giza Django ECR build started
+        SLACK_FOOTER: Triggered from Github Actions deploy
+        SLACK_COLOR: #FDDA0D
+
+    - name: Check out code
+      uses: actions/checkout@v3
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16 # Node 12 is deprecated, using this tag until v2 is released. See: https://github.com/aws-actions/configure-aws-credentials/issues/489
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: giza/django
+        IMAGE_TAG: latest
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f docker/Dockerfile.ingest .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    
+    - name: Slack Deploy Status Notification
+      if: always()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_USERNAME: github_actions_notification
+        SLACK_TITLE: Giza Django ECR Build and Push - ${{ steps.copilot_build.outcome }}
+        SLACK_FOOTER: Triggered from Github Actions deploy
+        SLACK_COLOR: ${{ job.status }}
