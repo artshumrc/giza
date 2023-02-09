@@ -10,3 +10,5 @@ lib
 env
 .env
 es8-ingestion-scripts/credentials_default.py
+es8-ingestion-scripts/odbc.ini
+es8-ingestion-scripts/freetds.conf

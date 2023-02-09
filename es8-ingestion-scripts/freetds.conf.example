@@ -1,4 +1,4 @@
 [giza]
-    host = 10.242.106.82
+    host = XX.XXX.XXX.XX
     port = 1433
     tds version = 7.2

@@ -4,5 +4,5 @@ Description = ODBC connection via FreeTDS
 Trace = No
 Servername = giza
 Database = gizacardtms
-UID = 'RC\ccrawford'
-PWD = '5jl$l5tdKX6JR^r'
+UID = 'RC\username_here'
+PWD = 'password_here'
