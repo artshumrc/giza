@@ -1,0 +1,5 @@
+services:
+  django:
+    image: ${GIZA_DJANGO_REGISTRY}:latest
+  elastic-ingest:
+    image: ${ES_INGEST_REGISTRY}:latest
