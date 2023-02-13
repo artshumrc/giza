@@ -110,7 +110,8 @@ def check_drs(tms:TMS=None) -> Union[list, dict]:
         # RETURNING DRS_METADATA FOUND ON DISK
         global drs_metadata
         
-        if not len(drs_metadata):
+        # if not len(drs_metadata):
+        if not drs_metadata:
             drs_metadata = file_open('tables', 'drs', 'iiif') # This can be a boolean or a dict
         
         if drs_metadata:
