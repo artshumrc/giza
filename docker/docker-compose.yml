@@ -98,6 +98,7 @@ services:
       - ../es8-ingestion-scripts:/usr/share/elasticsearch/giza_ingest
       - ../es8-ingestion-scripts/analysis:/usr/share/elasticsearch/config/analysis
     ports:
+      # HOST_POST:CONTAINER_PORT
       - ${ES_PORT}:9200
     environment:
       - node.name=es01

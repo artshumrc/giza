@@ -40,7 +40,7 @@ class ES:
         self.request_timeout = env('ES_REQUEST_TIMEOUT', default=120)
 
         self.es = Elasticsearch(
-            env('ELASTICSEARCH_URL'),
+            env('ELASTICSEARCH_CONTAINER_URL'),
             ca_certs=env('ELASTICSEARCH_CERT'),
             basic_auth=(env('ELASTICSEARCH_USER'), env('ELASTIC_PASSWORD')),
             request_timeout=self.request_timeout,
