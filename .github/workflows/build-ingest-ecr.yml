@@ -8,6 +8,7 @@ on:
     paths:
     - "es8-ingestion-scripts/**"
     - ".github/workflows/build-ingest-ecr.yml"
+    - "docker/Dockerfile.ingest"
   workflow_dispatch:
   
 env:
