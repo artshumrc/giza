@@ -22,9 +22,7 @@ COPY es8-ingestion-scripts/ /ingest/
 # .env not copied (not on Github to copy as it's a security risk), this must be created manually on the server
 RUN pip install -r requirements.txt
 
-# Database config
-COPY es8-ingestion-scripts/odbc.ini /etc/odbc.ini
-COPY es8-ingestion-scripts/freetds.conf /etc/freetds.conf
+# Database config: odbc.ini and freetds.conf must be mounted manually on the server as they are not copied in the prod image build
 
 # Setup cron
 RUN chmod +x /ingest/run.py
