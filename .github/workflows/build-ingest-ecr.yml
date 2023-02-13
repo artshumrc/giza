@@ -6,7 +6,8 @@ on:
     - dockerize
     # TODO change to develop and master
     paths:
-    - es8-ingestion-scripts
+    - "es8-ingestion-scripts/**"
+    - ".github/workflows/build-ingest-ecr.yml"
   workflow_dispatch:
   
 env:
