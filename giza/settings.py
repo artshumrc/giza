@@ -106,7 +106,7 @@ SEARCH_BACKENDS = {
     'default': {
         'BACKEND': 'elasticsearch',
         'URLS': [
-            env('ELASTICSEARCH_URL', default='http://localhost:9200')
+            env('ELASTICSEARCH_CONTAINER_URL', default='http://localhost:9200')
         ],
         'INDEX': 'giza',
         'TIMEOUT': 5,
@@ -114,7 +114,7 @@ SEARCH_BACKENDS = {
     'iiif': {
         'BACKEND': 'elasticsearch',
         'URLS': [
-            env('ELASTICSEARCH_URL', default='http://localhost:9200')
+            env('ELASTICSEARCH_CONTAINER_URL', default='http://localhost:9200')
         ],
         'INDEX': 'iiif',
         'TIMEOUT': 5,
@@ -181,4 +181,4 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'http_static')
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'

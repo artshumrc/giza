@@ -5,9 +5,11 @@ from django.conf import settings
 # Django 3:
 from urllib.parse import urlparse
 
-
 from elasticsearch import Elasticsearch
 # from elasticsearch.helpers import scan
+import environ
+env = environ.Env()
+environ.Env.read_env()
 
 ES_BACKEND = getattr(settings, 'SEARCH_BACKENDS').get('default')
 
@@ -32,17 +34,15 @@ if ES_HOSTS is None:
             'port': port,
             'url_prefix': parsed_url.path,
             'use_ssl': use_ssl,
-            'http_auth': http_auth,
         })
 
 ES_INDEX = ES_BACKEND.pop('INDEX', 'giza')
 ES_TIMEOUT = ES_BACKEND.pop('TIMEOUT', 5)
 
-# TODO: THESE VARIABLES SHOULD COME FROM A SAFE PLACE
-ES_HOSTS = f'https://localhost:443'
-ES_CERT = 'D:\elasticsearch-8.1.2\config\certs\http_ca.crt'
-ES_USER = 'elastic'
-ES_PASSWORD = '0xlEM4BduYCAHCE3XaKH'
+# TODO: refactor and move all config to settings.py
+ES_CERT = env('ELASTICSEARCH_CERT')
+ES_USER = env('ELASTICSEARCH_USER')
+ES_PASSWORD = env('ELASTIC_PASSWORD')
 
 es = Elasticsearch(hosts=ES_HOSTS, ca_certs=ES_CERT, basic_auth=(ES_USER, ES_PASSWORD), request_timeout=30)
 es.transport.max_retries=10
