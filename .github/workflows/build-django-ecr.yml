@@ -68,6 +68,9 @@ jobs:
     name: Deploy Giza via webhook
     runs-on: ubuntu-latest
     needs: [build]
+    environment:
+      name: dev
+      url: http://giza-web3.rc.fas.harvard.edu
 
     steps:
       - name: Trigger giza-deploy webhook
