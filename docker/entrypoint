@@ -3,7 +3,7 @@
 set -o errexit
 set -o pipefail
 
-until python3 /app/setup/postgres_ready.py; do
+until python3 /app/docker/postgres_ready.py; do
   >&2 echo "Waiting for PostgreSQL to become available..."
   sleep 1
 done
@@ -23,46 +23,18 @@ fi
 #   python3 manage.py initialise_superuser --user "$DJANGO_ADMIN" --email "$DJANGO_ADMIN_EMAIL" --password "$DJANGO_ADMIN_PASSWORD"
 # fi
 
-# if [[ ($LOAD) && ("$LOAD" = "True") ]]; then
-#   echo "Beginning the data ingest"
-#   python3 manage.py ingest --type All
-#   echo "Ended the data ingest"
-# fi
-
 # if [[ ($SCHEDULE_REINDEX) && ("$SCHEDULE_REINDEX" = "True") ]]; then
 #   echo "Scheduling regular reindex"
 #   python3 manage.py reindex --schedule=True
 # fi
 
-# if [[ ($LOAD_FOR_TESTS) && ("$LOAD_FOR_TESTS" = "True") ]]; then
-#   echo "Beginning the data ingest"
-#   python3 manage.py ingest --type All
-#   echo "Indexing"
-#   python3 manage.py reindex
-# fi
-
-# if [[ ($TRANSLATE) && ("$TRANSLATE" = "True" ) ]]; then
-#   python3 manage.py makemessages --all
-#   python3 manage.py compilemessages
-# fi
-
-# Trying to run Nginx as separate container
-# If using base Dockerfile which installs Nginx in the Django container, then set this flag to true
-# if [[ ($USE_NGINX) && ("$USE_NGINX" = "True" ) ]]; then
-#   nginx
-# fi
-
-nginx
-
-# Switching the WSGI host to Waitress, which seems faster, and more robust than Gunicorn for long running jobs when
-# sitting behind Nginx.
-if [[ (-z "$LOADER") || ("$LOADER" = "False")]]; then
-#   running into "Unknown command: 'waitress'" error
-#   if [[ ($WAITRESS) && ("$WAITRESS" = "True") ]]; then
-#     echo "Bringing up waitress on port 5000 as wsgi host"
-#     python3 /app/manage.py waitress --port=5000 --threads=16
-#   else
-#     python3 /app/manage.py runserver 5000
-#   fi
-    gunicorn --bind :5000 --workers 3 --threads 16 --timeout 0 giza.wsgi:application
+# Use nginx + Gunicorn or Django's built-in server
+if [[ ($TEST_SERVER) && ("$TEST_SERVER" = "True" ) ]]; then
+  echo "Starting Django's built-in server"
+  python3 /app/manage.py runserver 0.0.0.0:8000
+else
+  echo "Starting nginx which proxies to :8000"
+  nginx
+  echo "Bringing up gunicorn on :5000 as wsgi host"
+  gunicorn --bind :5000 --workers 3 --threads 16 --timeout 0 giza.wsgi:application
 fi

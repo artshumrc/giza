@@ -3,6 +3,6 @@ services:
     image: ${GIZA_DJANGO_REGISTRY}:latest
     ports:
     # HOST_PORT:CONTAINER_PORT - trying to bind to 8080 on host instead
-    - "8080:8000"
+    - "8000:8000"
   elastic-ingest:
     image: ${ES_INGEST_REGISTRY}:latest

@@ -15,35 +15,20 @@ RUN mkdir -p /var/log/nginx && \
     ln -sf /dev/stdout /var/log/nginx/error.log
 
 # Use dev NGINX config
+# Nginx and Gunicorn are used if TEST_SERVER=False or is not set 
 COPY nginx/nginx.dev.conf /etc/nginx/nginx.conf
 
 # Python requirements
 COPY requirements.txt /app
 RUN pip install -r requirements.txt
 
-# App files, including built frontend from static stage (actually no because this uses static)
-COPY giza /app/giza
-COPY tms /app/tms
-COPY search /app/search
-COPY utils /app/utils
-COPY static /app/static
-COPY templates /app/templates
-COPY manage.py /app/manage.py
-
-# Setup
-RUN mkdir /app/setup
-WORKDIR /app/setup
-COPY docker/postgres_ready.py /app/setup
-RUN sed -i 's/\r$//g' postgres_ready.py
-RUN chmod +x postgres_ready.py
-COPY docker/entrypoint /app/setup
-RUN sed -i 's/\r$//g' entrypoint
-RUN chmod +x entrypoint
-
 ENV PYTHONUNBUFFERED 1
 ENV MIGRATE 0
 
 EXPOSE 8000 5000
 
-WORKDIR /app
-CMD setup/entrypoint
+# volume is being mounted for Docker Compose but still need the entrypoint available and executable here
+COPY docker/entrypoint /app/docker/entrypoint
+RUN sed -i 's/\r$//g' /app/docker/entrypoint
+RUN chmod +x /app/docker/entrypoint
+CMD /app/docker/entrypoint
