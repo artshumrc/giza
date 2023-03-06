@@ -2,7 +2,7 @@
     {
       "id": "giza-deploy",
       "execute-command": "/home/giza/giza-dockerized/giza/docker/redeploy.sh",
-      "command-working-directory": "/home/giza/giza-dockerized/giza",
+      "command-working-directory": "/home/giza/giza-dockerized/giza/docker",
       "trigger-rule": {
         "and": [
           {
