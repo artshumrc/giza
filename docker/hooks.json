@@ -1,0 +1,31 @@
+[
+    {
+      "id": "giza-deploy",
+      "execute-command": "/home/giza/giza-dockerized/giza/docker/redeploy.sh",
+      "command-working-directory": "/home/giza/giza-dockerized/giza",
+      "trigger-rule": {
+        "and": [
+          {
+            "match": {
+              "type": "payload-hash-sha1",
+              "secret": "{{ getenv 'GITHUB_SECRET' | js }}",
+              "parameter": {
+                "source": "header",
+                "name": "X-Hub-Signature"
+              }
+            }
+          },
+          {
+            "match": {
+              "type": "value",
+              "value": "refs/heads/dockerize",
+              "parameter": {
+                "source": "payload",
+                "name": "ref"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]

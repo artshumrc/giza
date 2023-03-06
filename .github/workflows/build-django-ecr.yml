@@ -63,3 +63,15 @@ jobs:
         SLACK_TITLE: Giza Django ECR Build and Push - ${{ steps.copilot_build.outcome }}
         SLACK_FOOTER: Triggered from Github Actions deploy
         SLACK_COLOR: ${{ job.status }}
+
+  deploy:
+    name: Deploy Giza via webhook
+    runs-on: ubuntu-latest
+    needs: [build]
+
+    steps:
+      - name: Trigger giza-deploy webhook
+        uses: distributhor/workflow-webhook@v2
+        env:
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
