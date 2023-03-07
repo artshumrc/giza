@@ -30,20 +30,15 @@ COPY static /app/static
 COPY templates /app/templates
 COPY manage.py /app/manage.py
 
-# Setup
-RUN mkdir /app/setup
-WORKDIR /app/setup
-COPY docker/postgres_ready.py /app/setup
-RUN sed -i 's/\r$//g' postgres_ready.py
-RUN chmod +x postgres_ready.py
-COPY docker/entrypoint /app/setup
-RUN sed -i 's/\r$//g' entrypoint
-RUN chmod +x entrypoint
+COPY docker /app/docker
+RUN sed -i 's/\r$//g' /app/docker/postgres_ready.py
+RUN chmod +x /app/docker/postgres_ready.py
+RUN sed -i 's/\r$//g' /app/docker/entrypoint
+RUN chmod +x /app/docker/entrypoint
 
 ENV PYTHONUNBUFFERED 1
 ENV MIGRATE 0
 
 EXPOSE 8000 5000
 
-WORKDIR /app
-CMD setup/entrypoint
+CMD /app/docker/entrypoint
