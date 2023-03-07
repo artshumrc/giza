@@ -6,10 +6,6 @@
 # This gets logged in /var/log/webhook/giza-deploy/giza-deploy.sh to mark the start of the script
 # timestamps already provided by webhook
 echo "################ Redeploying giza app ################"
-
-# See entire payload so we can differentiate between different events, e.g. push vs Github Actions
-echo $payload
-
 echo "Pulling latest docker images"
 DOCKER_REGISTRY="407196791491.dkr.ecr.us-east-1.amazonaws.com"
 AWS_PROFILE=fasrc_cd aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $DOCKER_REGISTRY
