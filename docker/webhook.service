@@ -1,0 +1,22 @@
+[Unit]
+Description=Webhook service - Update Giza Dockerized App
+ConditionPathExists=/home/giza/go/bin/webhook
+After=network.target
+
+[Service]
+Type=simple
+User=giza
+Group=giza
+
+# restart on failure but wait 10 seconds
+Restart=on-failure
+RestartSec=10
+
+WorkingDirectory=/home/giza
+ExecStart=/usr/local/bin/start_webhook.sh
+
+# if restarted on failure, only allow for 5 more restarts and give up afterwards
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
