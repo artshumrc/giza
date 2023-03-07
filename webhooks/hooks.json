@@ -3,6 +3,25 @@
       "id": "giza-deploy",
       "execute-command": "/home/giza/giza-dockerized/giza/docker/redeploy.sh",
       "command-working-directory": "/home/giza/giza-dockerized/giza/docker",
+      "pass-arguments-to-command":
+      [
+        {
+          "source": "payload",
+          "name": "head_commit.id"
+        },
+        {
+          "source": "payload",
+          "name": "pusher.name"
+        },
+        {
+          "source": "payload",
+          "name": "pusher.email"
+        },
+        {
+          "source": "entire-payload",
+          "name": "payload"
+        }
+      ],
       "trigger-rule": {
         "and": [
           {
@@ -24,6 +43,30 @@
                 "name": "ref"
               }
             }
+          },
+          {
+            "or": [
+              {
+                "match": {
+                  "type": "value",
+                  "value": "Build and push Django Giza image to ECR",
+                  "parameter": {
+                    "source": "payload",
+                    "name": "workflow"
+                  }
+                }
+              },
+              {
+                "match": {
+                  "type": "value",
+                  "value": "Build and push Giza Elasticsearch ingest image to ECR",
+                  "parameter": {
+                    "source": "payload",
+                    "name": "workflow"
+                  }
+                }
+              }
+            ]
           }
         ]
       }
