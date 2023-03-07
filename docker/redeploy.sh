@@ -20,8 +20,9 @@ docker pull $DOCKER_REGISTRY/giza/ingest:latest
 echo  "Pulling latest code from git"
 git pull
 
-echo "Stopping and removing old containers"
-docker compose -f docker-compose.yml -f docker-compose-production.yml run --rm django python3 manage.py migrate 
+echo "Stopping old containers and running new ones"
+docker compose -f docker-compose.yml -f docker-compose-production.yml run --rm django python3 manage.py migrate
+docker compose stop
 docker compose -f docker-compose.yml -f docker-compose-production.yml up -d
 
 echo "################ Finished redeploying giza app ################"
