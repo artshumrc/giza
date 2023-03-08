@@ -6,18 +6,6 @@
       "pass-arguments-to-command":
       [
         {
-          "source": "payload",
-          "name": "head_commit.id"
-        },
-        {
-          "source": "payload",
-          "name": "pusher.name"
-        },
-        {
-          "source": "payload",
-          "name": "pusher.email"
-        },
-        {
           "source": "entire-payload",
           "name": "payload"
         }
