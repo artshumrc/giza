@@ -7,7 +7,7 @@
       [
         {
           "source": "entire-payload",
-          "name": "payload"
+          "envname": "payload"
         }
       ],
       "trigger-rule": {
