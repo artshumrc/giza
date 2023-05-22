@@ -6,5 +6,5 @@ pyodbc==4.0.30
 pytz==2019.1
 sqlparse==0.3.0
 urllib3==1.25.8
-requests==2.22.0
+requests==2.31.0
 django-webpack-loader==0.7.0
