@@ -1,15 +1,19 @@
-$(document).foundation();
+$(document).foundation()
 
 // Smooth scroll for in-page anchors
 // Src: https://css-tricks.com/snippets/jquery/smooth-scrolling/
 
-$(function() {
+$(document).ready(() => {
+
+  // SHOW DEFAULT ADVANCED SEARCH OPTION
+  selected_option = $('input[name="category"]:checked').attr('data-for-id')
+  if (!$($('#'+selected_option)).is(':visible')) showHideMenu($('#'+selected_option).attr('id'))
 
   // Variable set to accommodate fixed-top navbar.
   // Un-comment the appropriate value below.
-  var topOffset;
+  let topOffset = 99
   //topOffset = 70; // Normal, no extra banner
-  topOffset = 99; // With extra under-construction banner
+  // topOffset = 99; // With extra under-construction banner
 
   /**
    *
@@ -31,67 +35,82 @@ $(function() {
 
 
   // toggle the signup/login forms in the auth modal
-  $(".login-toggle").on("click", function() {
-    $(".modal .login-form").hide();
-    $(".modal .signup-form").show();
-  });
-  $(".signup-toggle").on("click", function() {
-    $(".modal .login-form").show();
-    $(".modal .signup-form").hide();
-  });
+  $(".login-toggle").on("click", () => {
+    $(".modal .login-form").hide()
+    $(".modal .signup-form").show()
+  })
+
+  $(".signup-toggle").on("click", () => {
+    $(".modal .login-form").show()
+    $(".modal .signup-form").hide()
+  })
 
   // Start 3D environment
-  $(".giza3dEmbedToggle").on("click", function() {
-    $(".giza3dEmbedToggle").hide();
-    $(".giza3dEmbed").show();
-  });
-});
+  $(".giza3dEmbedToggle").click(() => {
+    $(".giza3dEmbedToggle").hide()
+    $(".giza3dEmbed").show()
+  })
+})
+
+// ADVANCED SEARCH: SHOW/HIDE SECTIONS FOR SEARCHING IN CATEGORIES
+$('fieldset#category-radio-selector input').click(e => showHideMenu(e))
+
+// FUNCTION TO SHOW/HIDE SECTIONS FOR THE MENU
+showHideMenu = e => {
+  if (e != undefined) {
+    // RETAIN REFERENCE FOR CURRENT CATEGORY
+    selected_option = $('input[name="category"]:checked').val()
+    
+    $('#advanced-search-form').trigger("reset") // RESET THE SEARCH FORM WHEN CHANGING SEARCH OPTION
+    $('.category-section').hide()               // HIDE THE SECTIONS
+   
+    // DETERMINE TARGET SECTION
+    target = e.type == "click" ? $(e.currentTarget).attr('data-for-id') : e
+    
+    // SHOW RELEVANT ITEMS
+    $('#'+selected_option).prop('checked', true)
+    $('#'+target).show()                        // SHOW RELEVANT SECTION ONLY
+  }
+}
 
 // Accordion menu toggletext
 
-$('[data-accordion-menu]').on('down.zf.accordionMenu', function() {
-  var toggleItem = $(this).find('.accordion-toggletext');
-  var openText = toggleItem.attr('data-open-text');
-  toggleItem.text(openText);
-}).on('up.zf.accordionMenu', function() {
-  var toggleItem = $(this).find('.accordion-toggletext');
-  var closedText = toggleItem.attr('data-closed-text');
-  toggleItem.text(closedText);
-});
+$('[data-accordion-menu]')
+
+.on('down.zf.accordionMenu', () => {
+  let toggleItem = $(this).find('.accordion-toggletext')
+  toggleItem.text(toggleItem.attr('data-open-text'))
+})
+
+.on('up.zf.accordionMenu', () => {
+  let toggleItem = $(this).find('.accordion-toggletext')
+  toggleItem.text(toggleItem.attr('data-closed-text'))
+})
 
 // Top bar Search dropdown behavior
 
-$('#search-dropdown').on('show.zf.dropdown', function() {
-  $('[data-toggle="search-dropdown"]').addClass('is-active');
-  setTimeout(function() {
-    $('#inputSimpleSearch').focus();
-  }, 250);
-}).on('hide.zf.dropdown', function() {
-  var trigger = $('[data-toggle="search-dropdown"]');
-  trigger.removeClass('is-active');
-  setTimeout(function() {
-    trigger.blur();
-  }, 250);
-});
+$('#search-dropdown').on('show.zf.dropdown', () => {
+  
+  $('[data-toggle="search-dropdown"]').addClass('is-active')
+  
+  setTimeout(() => { $('#inputSimpleSearch').focus() }, 250)
+})
+
+.on('hide.zf.dropdown', () => {
+  let trigger = $('[data-toggle="search-dropdown"]')
+  trigger.removeClass('is-active')
+  setTimeout(() => { trigger.blur() }, 250)
+})
 
 // Dynamically adjust right-column margin on feature full view
 
-var fnAdjustRightColMargin = function() {
-  var menu = $('#jumpmenu');
-  var col = $('.header-full.mode-full .content-col-secondary');
-  var offset = Foundation.Box.GetDimensions(menu)['height'];
-  offset = (offset + 50);
-  col.css('margin-top', offset);
+fnAdjustRightColMargin = () => {
+  let offset = Foundation.Box.GetDimensions($('#jumpmenu'))['height']
+  offset = (offset + 50)
+  $('.header-full.mode-full .content-col-secondary').css('margin-top', offset)
 }
 
 // Only run this function on ready if #jumpmenu is present
 if ($('#jumpmenu').length) {
-  fnAdjustRightColMargin();
+  fnAdjustRightColMargin()
 }
-
-// on Advanced Search page, switch between search fields for different categories
-$('fieldset#category-radio-selector input').click(function() {
-  $('.category-section').hide();
-  var section_id = $(this).attr('data-for-id');
-  $('#'+section_id).show();
-});

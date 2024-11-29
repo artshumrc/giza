@@ -1,18 +1,39 @@
+from typing import ValuesView
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
+import copy, re, operator, json, inspect
+import numpy as np
+
+from dateutil.parser import parse
+from dateutil.parser import parser
+from datetime import *
 
 from utils.elastic_backend import es, ES_INDEX
 from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGORY
 
 RESULTS_SIZE = 20
 
+REGEXP = '[-@_!#$%^&*()<>?/\|}{~:,]'
+
+MONTHS = [
+    'january',
+    'february',
+    'march',
+    'april',
+    'may',
+    'june',
+    'july',
+    'august',
+    'september',
+    'october',
+    'november',
+    'december'
+]
+
 def search(request):
 	return render(request, 'pages/search.html')
-
-def search_legacy(request):
-	return render(request, 'search/search.html')
 
 # get all pubdocs with pdfs for Digital Giza Library
 def library(request):
@@ -106,167 +127,200 @@ def videos(request):
 		'results' : hits
 	})
 
+# SEARCH FUNCTION
+# This function processes the request by first extracting the search category/categories and then 
+# INPUT: HEADER REQUEST OBJECT
 def results(request):
-	search_term = request.GET.get('q', '')
-	sort = request.GET.get('sort', '_score')
-	current_category = request.GET.get('category', '')
-	current_subfacets = {}
-	fields = {}
-	if current_category:
-		# check if there are subfacets for the currently selected category
-		subcats = request.GET.getlist(current_category+'_facet', [])
-		if subcats: current_subfacets[current_category] = {}
-		for sc in subcats:
-			parts = sc.split('_')
-			subfacet = parts[0]
-			term = parts[1]
-			if subfacet not in current_subfacets[current_category]:
-				current_subfacets[current_category][subfacet] = []
-			current_subfacets[current_category][subfacet].append(term)
 
-		# check if we have a field-specific search
-		for key in request.GET:
-			if key.startswith(current_category) and not key.endswith('_facet'):
-				field_value = request.GET.get(key, '')
-				parts = key.split('_')
-				field = parts[1]
-				fields[field] = field_value
+	#########################
+	#	BASE PARAMS			#
+	#########################
 
+	# COMPUTE INDEX FOR BEGINNING OF ES SEARCH RESULTS
 	page = int(request.GET.get('page', 1))
-	results_from = 0
-	# calculate elasticsearch's from, using the page value
 	results_from = (page - 1) * RESULTS_SIZE
+	
+	# VALUES PASSED TO TEMPLATE AT THE END
+	all_categories, sub_facets, total = {}, {}, 0	# CATEGORIES, FACETS AND TOTAL NUMBER OF HITS
+	has_next, has_previous = False, False			# IF SEARCH RESULTS IN PREV OR NEXT PAGES (DEFAULT FALSE)
+	previous_page_number, next_page_number = 0, 0	# NUMBER OF PREV OR NEXT PAGES
+	num_pages, num_pages_range = 0, []				# NUMEBR OF PAGES TOTAL, RANGE OF PAGES
+	category, all_categories['types'], search_params, search_terms, fields, subfacet_strings = "", [], [], {}, {}, []
 
-	# check if user is trying to search by specific item number
-	number_query = False
-	number = None
-	parts = search_term.split(':')
-	categorystring = ""
-	if len(parts) == 2:
-		categorystring = parts[0]
-		number = parts[1]
-		number_query = True
+	current_subfacets, fields, hits, results_from, search_results = {}, {}, [], 0, None
 
-	# values being passed to template
-	hits = []
-	all_categories = {}
-	sub_facets = {}
-	has_next = False
-	has_previous = False
-	previous_page_number = 0
-	next_page_number = 0
-	num_pages_range = []
-	num_pages = 0
-	total = 0
+	# COPY REQUEST PARAMETERS IN DICTIONARY
+	items = { k.replace('amp;', '') : v for k, v in request.GET.items()}
+	facetList = { k.replace('amp;', '') : v for k, v in request.GET.lists() for k in items.keys() if 'facet' in k }
+	items.update({ k : v for k, v in facetList.items() if 'facet' in k })
 
-	if number_query:
-		# user is searching for an exact item using its number
-		# such as 'objects:HUMFA_27-5-1'
-		search_results = es.search(index=ES_INDEX, doc_type=categorystring, body={
-		  "query": {
-			"match": {
-				"allnumbers": number
-			}
-		  }
-		})
-		results_total = search_results['hits']['total']
-		# user entered a number that only has one result for the given type, redirect to that page
-		if results_total == 1:
-			source = search_results['hits']['hits'][0].get('_source')
-			return HttpResponseRedirect(reverse('get_type_html', args=(categorystring, source.get('id'), 'full')))
-		#elif results_total == 0 and type == 'sites':
-		else:
-			# we have 0 or more than 1 result, treat it as a normal search result
-			# this shouldn't happen, since we are doing a termed search on number
-			# it expects an exact match
-			for hit in search_results['hits']['hits']:
-				hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
+	#########################
+	#	SIMPLE SEARCH		#
+	#########################
+
+	# GET SEARCH TERMS FROM SIMPLE SEARCH BOX (SINGLE STRING)
+	search_term = request.GET.get('q', '')
+
+	# USER DID NOT PROVIDE A SEARCH QUERY
+	if search_term == '' and 'category' not in items and len(items) == 0:
+		search_results = es.search(index=ES_INDEX, body={"query" : { "match_all" : { } } })
+	
+	# USER PROVIDED A SEARCH QUERY WITH COLON AND MAY BE LOOKING FOR A SPECIFIC OBJECT (E.G.: 'objects:HUMFA_27-5-1')
+	elif ':' in search_term:
+		parts = search_term.split(':')
+		if len(parts) > 1 and parts[0] in CATEGORIES:
+			search_results = es.search(index=ES_INDEX, doc_type=parts[0], body={"query" : { "match" : { "allnumbers" : { parts[1] } } } })
+			
+			# ONE RESULT WILL IMMEDIATELY DIRECT TO RESULT PAGE
+			if search_results['hits']['total'] == 1:
+				return HttpResponseRedirect(reverse('get_type_html', args=(parts[0], search_results['hits']['hits'][0].get('_source').get('id'), 'full')))
+			else:
+				print(f'Unique number search at {inspect.getframeinfo(inspect.currentframe()).lineno} resulted in more than one record')
+				# STOP-MEASURE: RETURN ALL OR NO RESULTS
+				for hit in search_results['hits']['hits']:
+					hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
+
+	#########################
+	#	ADVANCED SEARCH		#
+	#########################
+
+	# USER DID AN ADVANCED SEARCH
 	else:
-		# this is a normal search
-		base_query = build_es_query(search_term, fields)
-		bool_filter = build_bool(current_category, current_subfacets, '')
-		subfacet_aggs = build_subfacet_aggs(current_category, current_subfacets, bool_filter)
 
-		body_query = {
-			"size" : 0,
-			"query" : base_query,
-			"aggregations" : subfacet_aggs,
-			"post_filter" : {
-				"bool" : bool_filter
-			},
-			"sort" : sort
-		}
-		facets_for_category = es.search(index=ES_INDEX, body=body_query)
+		# GET CATEGORY IF ADVANCED SEARCH
+		category = items['category'] if 'category' in items else ""
+		category = list({ k.split('_')[0] for k in items.keys() if k.split('_')[0] is not 'q' }) if category == "" else category
+		category = category[0] if type(category) is not str and len(category) > 0 else category
+		# category = "" if len(category) == 0 else category
+		# SEARCH CATEGORY IS SPECIFIED
+		if category:
+			
+			# EXTRACT ALL RELATED SEARCH FIELD DATA
+			fields = { k.split('_', -1)[1] : v for k, v in items.items() if k.startswith(category) and not k.endswith('_facet')}
+			print(fields)
 
-		facet_names = []
-		if current_subfacets:
-			for facet_name in list(current_subfacets[current_category].keys()):
-				facet_names.append(facet_name)
-		rec = recurse_aggs('', facets_for_category, [], facet_names)
-		sub_facets[current_category] = rec
+			# CHECK IF USER IS SEARCHING FOR DATE OR DATE RANGE
+			newFields = copy.deepcopy(fields)
+			for (key, value) in fields.items():
+				if 'date' in key and value is not '': 
+					res = chkDate(value)
+					if res[0]:
+						newFields[f'{key}_ms'] = {}
+						newFields[f'{key}_ms'] = [str(x[1]) for x in res[1]]
+			fields = newFields
 
-		search_results = es.search(index=ES_INDEX, body={
-			"from": results_from,
-			"size": RESULTS_SIZE,
-			"query": base_query,
-			"aggregations": {
-				"aggregation": {
-					"terms": {
-						"field": "_type",
-						"exclude": "library", # ignore special type, library, which is used for the Digital Giza Library page
-						"size" : 50 # make sure to get all categories (rather than just 10)
-					}
+			# EXTRACT ALL SEARCH TERMS FROM PREVIOUS SEARCH (IF ANY) -- Q: WHERE AND WHEN TO USE THESE? IS LIKE FIELDS, BUT NEEDS CATEGORY APPENDED?
+			search_terms['category'] = items['category'] if 'category' in items and items['category'] is not '' else category
+			search_terms['fields'] = { k : v for k, v in fields.items() if v is not '' }
+			search_terms['facets'] = { k.split('_')[1] : v for k, v in items.items() if '_facet' in k }
+			
+			# EXTRACT ALL RELATED SUBFACETS
+			facets = {k : v for k, v in items.items() if '_facet' in k}
+			
+			# IF FACETS FOUND IN SEARCH QUERY
+			if facets: 
+				current_subfacets[category] = {}
+				# facets = [facets] if isinstance(facets, str) else facets # CONVERT TO LIST IF ONLY ONE STRING IS PASSED IN
+
+				# # PROCESS SUB-CATEGORIES
+				for facetvalue in facets.values():
+					for value in facetvalue:
+						k, v = value.split('_')
+						if k not in current_subfacets[category]:
+							current_subfacets[category][k] = []
+						current_subfacets[category][k].append(v)
+	
+
+		# POPULATE CATEGORY AND FIELDS IF NOT PRESENT IN QUERY YET
+		# category = [k.split('_')[0] for k in items.keys() if l.split('_')[0] is not 'q'][0] if category == '' else category
+		# fields = { k.split('_')[1] : v for k, v in items.items() } if len(fields) == 0 and len(items) != 0 else fields
+
+	#########################
+	#	PROCESS SEARCH Q	#
+	#########################
+	base_query = build_es_query(search_term, fields) 													# BUILD NORMAL BASE JSON QUERY
+	bool_filter = build_bool(category if category else "", current_subfacets, '') 						# BUILD BOOLEAN FILTERS
+	subfacet_aggs = build_subfacet_aggs(category if category else "", current_subfacets, bool_filter)	# AGGREGATE RELATED FACETS
+
+	# THE QUERY SEND TO ELASTICSEARCH TO FIND ALL RELATED ITEMS
+	facets_for_category = es.search(index=ES_INDEX, body=body_query(base_query, subfacet_aggs, bool_filter, request.GET.get('sort', '_score')))
+
+	facet_names = []
+	if current_subfacets:
+		for facet_name in list(current_subfacets[category].keys()):
+			facet_names.append(facet_name)
+	rec = recurse_aggs('', facets_for_category, [], facet_names)
+	sub_facets[category if 'category' in items else ""] = rec
+
+	# THE QUERY SEND TO ELASTICSEARCH TO FIND ITEMS TO SHOW?
+	search_results = es.search(index=ES_INDEX, body={
+		"from": results_from,
+		"size": RESULTS_SIZE,
+		"query": base_query,
+		"aggregations": {
+			"aggregation": {
+				"terms": {
+					"field": "_type",
+					"exclude": "library", # ignore special type, library, which is used for the Digital Giza Library page
+					"size" : 50 # make sure to get all categories (rather than just 10)
 				}
-			},
-			"post_filter" : {
-				"bool" : bool_filter
-			},
-			"sort" : sort
-		})
-		all_categories['types'] = []
-		for count in search_results['aggregations']['aggregation']['buckets']:
-			all_categories['types'].append({
-				'key' : count['key'],
-				'doc_count' : count['doc_count'],
-				'display_text' : CATEGORIES[count['key']]
-				})
-		for hit in search_results['hits']['hits']:
-			hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
+			}
+		},
+		"post_filter" : {
+			"bool" : bool_filter
+		},
+		"sort" : request.GET.get('sort', '_score')
+	})
 
-		total = search_results['hits']['total']
+	# ITERATING OVER AGGREGATED RESULTS TO CATEGORIZE THEM
+	for count in search_results['aggregations']['aggregation']['buckets']:
+		all_categories['types'].append({
+			'key' : count['key'],
+			'doc_count' : count['doc_count'],
+			'display_text' : CATEGORIES[count['key']]
+			})
 
-		num_pages = (total // RESULTS_SIZE) + (total % RESULTS_SIZE > 0)
-		if num_pages > 0:
-			num_pages_range = create_page_ranges(page, num_pages)
+	for hit in search_results['hits']['hits']:
+		hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
 
-		if page > 1:
-			has_previous = True
-			previous_page_number = page - 1
-		if page < num_pages:
-			has_next = True
-			next_page_number = page + 1
+	total = search_results['hits']['total']
+
+	# CALCULATE NUMBER OF PAGES REQUIRED
+	num_pages = (total // RESULTS_SIZE) + (total % RESULTS_SIZE > 0)
+	if num_pages > 0:
+		num_pages_range = create_page_ranges(page, num_pages)
+
+	if page > 1:
+		has_previous = True
+		previous_page_number = page - 1
+	if page < num_pages:
+		has_next = True
+		next_page_number = page + 1
 
 	# combine the current_subfacets into strings for quick comparison in template
 	subfacet_strings = []
-	if current_category and current_category in current_subfacets:
-		for facet_name, facet_values in list(current_subfacets[current_category].items()):
+	if category and category in current_subfacets:
+		for facet_name, facet_values in list(current_subfacets[category].items()):
 			for value in facet_values:
-				subfacet_strings.append("%s_%s_%s" % (current_category, facet_name, value))
+				subfacet_strings.append(f'{category}_{facet_name}_{value}')
 
+	# PREPARE THE SEARCH TERMS TO SEND BACK TO THE USER FOR THE FACETS BOX
 	search_params = []
 	if search_term:
 		search_params.append(('q', 'Keyword', search_term))
-	if current_category:
+	if category:
 		for k, v in list(fields.items()):
-			if v:
-				search_params.append((current_category+'_'+k, FIELDS_PER_CATEGORY[current_category][k], v))
+			if v and '_ms' not in k:
+				search_params.append((category+'_'+k, FIELDS_PER_CATEGORY[category][k], v))
 
 	return render(request, 'pages/searchresults.html', {
 		'search_params' : search_params,
+		'search_terms': search_terms,
+		'fields' : fields,
 		'hits' : hits,
 		'all_categories' : all_categories,
 		'CATEGORIES' : CATEGORIES,
-		'sub_facets' : sub_facets,
+		'sub_facets' : sub_facets, # ALL RELATED MATERIALS
 		'current_subfacets' : current_subfacets,
 		'subfacet_strings' : subfacet_strings,
 		'total' : total,
@@ -276,184 +330,34 @@ def results(request):
 		'next_page_number' : next_page_number,
 		'num_pages_range' : num_pages_range,
 		'num_pages' : num_pages,
-		'current_page' : str(page),
-		'current_category' : current_category
+		'current_category' : category,
+		'current_page' : str(page)
 	})
 
-def results_legacy(request):
-	search_term = request.GET.get('q', '')
-	sort = request.GET.get('sort', '_score')
-	current_category = request.GET.get('category', '')
-	current_subfacets = {}
-	fields = {}
-	if current_category:
-		# check if there are subfacets for the currently selected category
-		subcats = request.GET.getlist(current_category+'_facet', [])
-		if subcats: current_subfacets[current_category] = {}
-		for sc in subcats:
-			parts = sc.split('_')
-			subfacet = parts[0]
-			term = parts[1]
-			if subfacet not in current_subfacets[current_category]:
-				current_subfacets[current_category][subfacet] = []
-			current_subfacets[current_category][subfacet].append(term)
-
-		# check if we have a field-specific search
-		for key in request.GET:
-			if key.startswith(current_category) and not key.endswith('_facet'):
-				field_value = request.GET.get(key, '')
-				parts = key.split('_')
-				field = parts[1]
-				fields[field] = field_value
-
-	page = int(request.GET.get('page', 1))
-	results_from = 0
-	# calculate elasticsearch's from, using the page value
-	results_from = (page - 1) * RESULTS_SIZE
-
-	# check if user is trying to search by specific item number
-	number_query = False
-	number = None
-	parts = search_term.split(':')
-	categorystring = ""
-	if len(parts) == 2:
-		categorystring = parts[0]
-		number = parts[1]
-		number_query = True
-
-	# values being passed to template
-	hits = []
-	all_categories = {}
-	sub_facets = {}
-	has_next = False
-	has_previous = False
-	previous_page_number = 0
-	next_page_number = 0
-	num_pages_range = []
-	num_pages = 0
-	total = 0
-
-	if number_query:
-		# user is searching for an exact item using its number
-		# such as 'objects:HUMFA_27-5-1'
-		search_results = es.search(index=ES_INDEX, doc_type=categorystring, body={
-		  "query": {
-			"match": {
-				"allnumbers": number
-			}
-		  }
-		})
-		results_total = search_results['hits']['total']
-		# user entered a number that only has one result for the given type, redirect to that page
-		if results_total == 1:
-			source = search_results['hits']['hits'][0].get('_source')
-			return HttpResponseRedirect(reverse('get_type_html', args=(categorystring, source.get('id'), 'full')))
-		#elif results_total == 0 and type == 'sites':
-		else:
-			# we have 0 or more than 1 result, treat it as a normal search result
-			# this shouldn't happen, since we are doing a termed search on number
-			# it expects an exact match
-			for hit in search_results['hits']['hits']:
-				hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
+def build_query(operator, field, term):
+	if "match_all" in operator:
+		q = { operator : {}}
 	else:
-		# this is a normal search
-		base_query = build_es_query(search_term, fields)
-		bool_filter = build_bool(current_category, current_subfacets, '')
-		subfacet_aggs = build_subfacet_aggs(current_category, current_subfacets, bool_filter)
-
-		body_query = {
-			"size" : 0,
-			"query" : base_query,
-			"aggregations" : subfacet_aggs,
-			"post_filter" : {
-				"bool" : bool_filter
-			},
-			"sort" : sort
-		}
-		facets_for_category = es.search(index=ES_INDEX, body=body_query)
-
-		facet_names = []
-		if current_subfacets:
-			for facet_name in list(current_subfacets[current_category].keys()):
-				facet_names.append(facet_name)
-		rec = recurse_aggs('', facets_for_category, [], facet_names)
-		sub_facets[current_category] = rec
-
-		search_results = es.search(index=ES_INDEX, body={
-			"from": results_from,
-			"size": RESULTS_SIZE,
-			"query": base_query,
-			"aggregations": {
-				"aggregation": {
-					"terms": {
-						"field": "_type",
-						"exclude": "library", # ignore special type, library, which is used for the Digital Giza Library page
-						"size" : 50 # make sure to get all categories (rather than just 10)
-					}
+		q = { 
+				operator: { 
+					field : term 
+					} 
 				}
-			},
-			"post_filter" : {
-				"bool" : bool_filter
-			},
-			"sort" : sort
-		})
-		all_categories['types'] = []
-		for count in search_results['aggregations']['aggregation']['buckets']:
-			all_categories['types'].append({
-				'key' : count['key'],
-				'doc_count' : count['doc_count'],
-				'display_text' : CATEGORIES[count['key']]
-				})
-		for hit in search_results['hits']['hits']:
-			hits.append({'id' : hit.get('_id'), 'type' : hit.get('_type'), 'source' : hit.get('_source')})
+	return  q
 
-		total = search_results['hits']['total']
+def body_query(base_query, subfacet_aggs, bool_filter, sort):
+	q = {
+		"size" : 0,
+		"query" : base_query,
+		"aggregations" : subfacet_aggs,
+		"post_filter" : {
+			"bool" : bool_filter
+		},
+		"sort" : sort
+	}
+	return q
 
-		num_pages = (total // RESULTS_SIZE) + (total % RESULTS_SIZE > 0)
-		if num_pages > 0:
-			num_pages_range = create_page_ranges(page, num_pages)
-
-		if page > 1:
-			has_previous = True
-			previous_page_number = page - 1
-		if page < num_pages:
-			has_next = True
-			next_page_number = page + 1
-
-	# combine the current_subfacets into strings for quick comparison in template
-	subfacet_strings = []
-	if current_category and current_category in current_subfacets:
-		for facet_name, facet_values in list(current_subfacets[current_category].items()):
-			for value in facet_values:
-				subfacet_strings.append("%s_%s_%s" % (current_category, facet_name, value))
-
-	search_params = []
-	if search_term:
-		search_params.append(('q', 'Keyword', search_term))
-	if current_category:
-		for k, v in list(fields.items()):
-			if v:
-				search_params.append((current_category+'_'+k, FIELDS_PER_CATEGORY[current_category][k], v))
-
-	return render(request, 'search/results.html', {
-		'search_params' : search_params,
-		'hits' : hits,
-		'all_categories' : all_categories,
-		'CATEGORIES' : CATEGORIES,
-		'sub_facets' : sub_facets,
-		'current_subfacets' : current_subfacets,
-		'subfacet_strings' : subfacet_strings,
-		'total' : total,
-		'has_previous' : has_previous,
-		'previous_page_number' : previous_page_number,
-		'has_next' : has_next,
-		'next_page_number' : next_page_number,
-		'num_pages_range' : num_pages_range,
-		'num_pages' : num_pages,
-		'current_page' : str(page),
-		'current_category' : current_category
-	})
-
+# THIS METHOD AGGREGATES ALL SEARCH RESULTS INTO THE CATEGORIES FOR VIEWING ON THE CLIENT SIDE
 def recurse_aggs(agg_name, facets, sub_facets, facet_names):
 	if type(facets) != type(dict()):
 		return sub_facets
@@ -481,6 +385,7 @@ def recurse_aggs(agg_name, facets, sub_facets, facet_names):
 			recurse_aggs(agg_name, value, sub_facets, facet_names)
 		return sub_facets
 
+# THIS METHOD BUILDS THE SUBFACETS AND RETURNS ALL AGGREGATED SUBFACETS
 def build_subfacet_aggs(current_category, current_subfacets, bool_filter):
 	if not current_category:
 		return {}
@@ -488,9 +393,9 @@ def build_subfacet_aggs(current_category, current_subfacets, bool_filter):
 		return { name : term_agg for name, term_agg in list(FACETS_PER_CATEGORY[current_category].items()) }
 
 	aggregations = {}
-	aggs_for_selected = {}
+	# aggs_for_selected = {}
 	aggs_for_unselected = {}
-	should = []
+	# should = []
 	# aggregations for a facet that has been selected by the user will only be affected by other selected facets
 	for name, term_agg in list(FACETS_PER_CATEGORY[current_category].items()):
 		if name in current_subfacets[current_category]:
@@ -519,6 +424,7 @@ def build_subfacet_aggs(current_category, current_subfacets, bool_filter):
 
 	return aggregations
 
+# THIS METHOD BUILDS A BOOL FILTER
 def build_bool(current_category, current_subfacets, facet_name_ignore):
 	# strucure should be at the top level a must bool
 	# each facet type is a should bool with all selected values in the array
@@ -557,52 +463,37 @@ def build_bool(current_category, current_subfacets, facet_name_ignore):
 	}
 	return bool_filter
 
+# THIS METHOD BUILDS THE ELASTIC SEARCH BASE QUERY
+# INPUT: 
+# 	- SEARCH_TERM: STRING
+# 	- FIELDS: DICT WITH FIELDS FROM ADVANCED SEARCH
+# OUTPUT: dict WITH QUERY
 def build_es_query(search_term, fields):
+	q, should, must = {}, [], []
+	q['bool'] = {}
+
+	# IF SEARCH_TERM IS PROVIDED, CONSTRUCT SHOULD-QUERY
+	if search_term:
+		should.append({ "match" : { "_all" : { "query" : search_term } } })
+		q['bool'] = { "should" : should }
+
+	# IF FIELDS ARE PROVIDED, CONSTRUCT A MUST-QUERY
 	if fields:
-		must = []
-		for k,v in list(fields.items()):
-			if v:
-				must.append({
-					"match" : {
-						k : {
-							"query" : v,
-							"operator" : "and",
-						}
-					}
-				})
-		q = {
-			"bool" : {
-				"must" : must
-			}
-		}
-	elif search_term == '':
-		q = {
-			"match_all" : {}
-		}
-	else:
-		q = {
-			"bool" : {
-			 "should" : [
-				{
-				   "match" : {
-					  "displaytext" : {
-						 "query" : search_term,
-						 "operator" : "and",
-						 "boost" : 2,
-					  }
-				   }
-				},
-				{
-					"match" : {
-					   "_all" : {
-						"query" : search_term,
-						"operator" : "and",
-					   }
-					}
-				}
-			 ]
-		  }
-		}
+		for k, v in list(fields.items()):
+
+			# RANGE MATCH BY MS
+			if v and 'date' in k and '_ms' in k:
+				must.append({ "match" : { k : int(float(v[0])) } }) if len(v) == 1 else must.append({ "range" : { k : { "gte" : int(float(v[0])), "lte" : int(float(v[1])) } } })
+			
+			# APPEND ANYTHING ELSE
+			if v and 'date' not in k:
+				must.append({ "match" : { k : { "query" : v } } })
+		q['bool'] = { "must" : must }
+
+	# IF NO SEARCH TERM OR FIELDS ARE PROVIDED RETURN EVERYTHING IN DATABASE
+	if search_term == '' and len(fields) == 0:
+		q = { "match_all" : {}}
+
 	return q
 
 def find_key(key, value):
@@ -655,3 +546,132 @@ def create_page_ranges(page, num_pages):
 		num_pages_range.append(str(num_pages))
 
 	return num_pages_range
+
+# THIS METHOD CHECKS A LIST OF STRINGS FOR AMERICAN AND EUROPEAN DATE PATTERNS, REMOVES THE VALUES FROM THE LIST AND CONVERTS THEM TO MILLISECONDS
+# INPUTS: A LIST OF STRING VALUES
+# OUTPUTS: TUPLE WITH REMAINDER OF THE LIST WITHOUT PROPER DATE VALUES AND LIST WITH CONVERTED DATE VALUES
+def chkDatePattern(values):
+    dates = {}
+    for idx, value in enumerate(values):
+        
+        try:
+            # CONVERT TO MONTH NUMBER IF VALUE IS A MONTH
+            if value.lower() in MONTHS:
+
+                addedDates = []
+                pos = 0
+               
+                def recurseArray(dateRange, pos):
+
+                    if pos == len(dateRange):
+                        pos -= 1
+                    
+                    if len(dateRange) == 0:
+                        return addedDates
+
+                    # CHECK NEXT VALUE
+                    if dateRange[pos] is not '' and any(char.isdigit() for char in dateRange[pos]) and len(dateRange[pos]) <= 2 and int(dateRange[pos]) <= 31:
+                        addedDates.append(dateRange[pos])
+                        dateRange.pop(pos)
+                        return recurseArray(dateRange, pos)
+                    else:
+                        dateRange.pop(pos)
+                        return recurseArray(dateRange, pos)
+                
+                # CHECK IF ADJACENT VALUES FORM A COHERENT DATE
+                dateRange = values[idx-3:idx+3]
+                pos = dateRange.index(value) # POSITION OF VALUE TO BE CHECKED
+                dateRange = [re.sub("[^-/0-9]", "", x) for x in dateRange] # CLEAN ARRAY VALUES
+                year = "".join([x for x in dateRange if all(char.isdigit() for char in x) and len(x) == 4])
+                
+                if year:
+                    dateRange.pop(dateRange.index(year))                    
+                else:
+                    # ASSUME YEAR BASED ON MOST COMMMON OCCURENCE IN CURRENT CONSTRUCTED DATES
+                    year = "".join(max(set([k.split('/')[2] for k in dates.keys()]), key=[k.split('/')[2] for k in dates.keys()].count))
+                
+                month = MONTHS.index(value.lower())+1
+
+                day = ""
+                
+                dayOptions = recurseArray(dateRange, pos)
+
+                if len(dayOptions) == 0:
+                    day = "01" # DEFAULT VALUE TO MAKE SEARCH WORK AND PROVIDE WIDEST RANGE
+                elif len(dayOptions) == 1:
+                    day = "".join(dayOptions)
+                else:
+                    print('multiple day options possible--have not yet come across a case like this, but have not extensively checked')
+                    # if ()
+                    # # WHICH OF THE DAY OPTIONS IS MOST REASONABLE?
+                    # for dayOption in dayOptions:
+                    #     distances = {}
+                    #     string, ms = convertToMS(f'{dayOption}{month}{year}')
+                    #     for date_ms in dates.values():
+                    #         distances[string] = abs(ms - date_ms)
+
+                    #     # GET LOWEST DISTANCE DIFFERENCE FROM DICT
+                    #     lowest = min(distances, key=distances.get)
+
+
+                value = f'{month}/{day}/{year}'
+
+                string, ms = convertToMS(value)
+
+                if string not in dates and ms < -870091200:
+                    dates[string] = ms
+
+            value = re.sub("[^-/0-9]", "", value)  # STRIP THE STRING OF ORDINALS
+
+
+            if any(char.isdigit() for char in value) and len(value) <= 10:
+                values[idx] = value
+                splitVal = value.split('-') if '-' in value else (value.split('/') if '/' in value else [0,0,0])
+                if '-' in value or '/' in value:
+                    if len(splitVal) == 3 and len(splitVal[2]) is 4 and int(splitVal[2]) > 1900 < 2000 and (
+                    (int(splitVal[0]) <= 12 and int(splitVal[1]) <= 31) or 
+                    (int(splitVal[0]) <= 31 and int(splitVal[1]) <= 12) or
+                    (int(splitVal[1]) <= 12 and int(splitVal[2]) <= 31) or
+                    (int(splitVal[1]) <= 31 and int(splitVal[2]) <= 12)) and (
+                        (int(splitVal[0]) < 2000 > 1890) or
+                        (int(splitVal[1]) < 2000 > 1890) or
+                        (int(splitVal[2]) < 2000 > 1890)
+                    ):
+                        if '-' in value:
+                            value = value.split('-')
+                            val = copy.deepcopy(value)
+                            value[0] = val[1]
+                            value[1] = val[0]
+                            value = '/'.join(value)
+                        
+                        string, ms = convertToMS(value)
+                        if ms < -870091200:
+                            dates[string] = ms
+        except:
+            print(f'There was an error with {idx} in "values"')
+    return dates
+
+# THIS METHOD INTERPRETS A VERBAL DESCRIPTION OF A DATE PATTERN, MATCHING MONTH NAMES AGAINST A GLOBAL LIST
+# INPUTS: A STRING
+# OUTPUTS: TUPLE WITH BOOLEAN FOR SUCCESS AND LIST OF DICTS WITH DATES (KEYS) AND MILLISECONDS (VALUES) SORTED FROM EARLY TO LATE
+def chkDate(value):
+    try:
+        value = str(value) # CHECK IF THE INPUT IS A STRING
+        value = value.split(' ') # SPLIT ON SPACE
+
+        # ITERATE OVER VALUES IN STRING LIST
+        if len(value) > 0:
+            dates = chkDatePattern(value)
+
+        sorted_dates = sorted(dates.items(), key=operator.itemgetter(1))
+        return (True, sorted_dates)
+    except:
+        return (False, "There was an error parsing the date string")
+
+def convertToMS(value):
+    splitVal = value.split('/')
+    splitVal = [f'0{x}' if len(x) < 2 and int(x) <= 9 else x for x in splitVal]
+
+    if len(splitVal) == 3 and len(splitVal[0]) <= 2 and len(splitVal[1]) <= 2 and len(splitVal[2]) <= 4:
+        t = (parser().parse(value)-datetime(1970,1,1)).total_seconds()
+        return "/".join(splitVal), t
