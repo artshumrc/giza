@@ -12,7 +12,7 @@
 {% block 'content' %}
   <div class="auth-layout ">
     <div class="auth-form signup-form">
-      <span class="title">Sign up for My Giza <span class="separator">|</span> <a href="/login" >Log in</a></span>
+      <!-- <span class="title">Sign up for My Giza <span class="separator">|</span> <a href="/login" >Log in</a></span> -->
       <br>
       <br>
       <!--
@@ -24,9 +24,9 @@
         <a href="/login/">Try logging in.</a><br/>
       {% elif registered %}
         <strong>You've already got an account with this email address!</strong>
-        <a href="/login/">Try logging in.</a><br/>
+        <!-- <a href="/login/">Try logging in.</a><br/> -->
       {% else %}
-        <form id="login_form" method="post" action="{% url 'sign_up' %}" enctype="multipart/form-data">
+        <form id="login_form" method="post" action="{# url 'sign_up' #}" enctype="multipart/form-data">
           {% csrf_token %}
           {% if messages %}
           <ul class="messages">

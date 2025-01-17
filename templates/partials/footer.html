@@ -55,8 +55,8 @@
             <!--li><a href="/mygiza-saved-searches/">My Saved Searches</a></li-->
             <li><a href="{% url 'collections' %}">Browse Collections</a></li>
             {% if not user.is_authenticated %}
-              <!-- <li><a href="{% url 'login' %}">Log In</a></li>
-              <li><a href="{% url 'sign_up' %}">Create a MyGiza Account</a></li> -->
+              <!-- <li><a href="{# url 'login' #}">Log In</a></li>
+              <li><a href="{# url 'sign_up' #}">Create a MyGiza Account</a></li> -->
             {% endif %}
           </ul>
         </div>
