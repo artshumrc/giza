@@ -50,9 +50,10 @@ urlpatterns = [
     # auth
 	# TODO for password change/reset, implement django accounts auth
     # path('accounts/', include('django.contrib.auth.urls')),
-    url('sign-up/', views.sign_up, name='sign_up'),
-    url('login/', views.user_login, name='login'),
-    url('logout/', views.user_logout, name='logout'),
+	### 2025/1/17: There is a lot of spam in the MyGiza user accounts.  Disabiling login and signup
+    # url('sign-up/', views.sign_up, name='sign_up'),
+    # url('login/', views.user_login, name='login'),
+    # url('logout/', views.user_logout, name='logout'),
 
 	path('manifests/<slug:id>/', tms_views.get_manifest, name="iiif-manifest"),
 	path('manifests/<slug:id>/sequence/0', tms_views.get_sequence, name="iiif-manifest-sequence"),

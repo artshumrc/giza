@@ -49,15 +49,15 @@
           <h6><a class="heading-link" href="{% url 'mygiza' %}">My Giza</a></h6>
           <ul class="footer-menu-list">
 
-            {% if user.is_authenticated %}
+            <!-- {% if user.is_authenticated %}
               <li><a href="{% url 'collections_user' %}">My Collections</a></li>
-            {% endif %}
+            {% endif %} -->
             <!--li><a href="/mygiza-saved-searches/">My Saved Searches</a></li-->
             <li><a href="{% url 'collections' %}">Browse Collections</a></li>
-            {% if not user.is_authenticated %}
+            <!-- {% if not user.is_authenticated %}
               <li><a href="{% url 'login' %}">Log In</a></li>
               <li><a href="{% url 'sign_up' %}">Create a MyGiza Account</a></li>
-            {% endif %}
+            {% endif %} -->
           </ul>
         </div>
 
