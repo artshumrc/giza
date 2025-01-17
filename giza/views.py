@@ -352,7 +352,7 @@ def collection(request, slug):
 
     search_results = es.search(index=ES_INDEX, body={
         "from": results_from,
-        "size": 10000, 
+        "size": 10000,
         "query": query,
         "aggregations": {
             "aggregation": {
@@ -450,52 +450,53 @@ def collections_create(request):
 
 def collections_edit(request, slug):
 
-    # create a collection
-    if request.method == 'POST':
-        collection_form = CollectionForm(data=request.POST)
-
-        # save user
-        if collection_form.is_valid():
-            # create user
-            collection = collection_form.save()
-            collection.save()
-
-            return redirect('/collections/{}'.format(collection.slug))
-
-        else:
-            messages.error(request, "Error creating collection.")
-
-    # show collection form
-    else:
-        collection = get_object_or_404(Collection, slug=slug)
-        collection_form = CollectionForm(collection)
-
-        # user does not own this collection, redirect to collections page
-        if not request.user in collection.owners.all():
-            return redirect('/collections/')
-
-        # handle adding new item id and type to collection
-        if request.GET.get('add_item_id') and request.GET.get('add_item_type'):
-            elasticsearch_item = ElasticsearchItem(
-                    es_id=request.GET.get('add_item_id'),
-                    type=request.GET.get('add_item_type'),
-                    collection=collection
-                )
-            elasticsearch_item.save()
-            return redirect('/collections/{}'.format(collection.slug))
-
-        elif request.GET.get('remove_item_id') and request.GET.get('remove_item_type'):
-            elasticsearch_item = ElasticsearchItem.objects.filter(
-                    es_id=request.GET.get('remove_item_id'),
-                    type=request.GET.get('remove_item_type'),
-                    collection=collection
-                )
-            elasticsearch_item.delete()
-            return redirect('/collections/{}'.format(collection.slug))
-
-    return render(request, 'pages/mygiza-collection-edit.html', {
-        'collection_form': collection_form,
-    })
+    # # create a collection
+    # if request.method == 'POST':
+    #     collection_form = CollectionForm(data=request.POST)
+    #
+    #     # save user
+    #     if collection_form.is_valid():
+    #         # create user
+    #         collection = collection_form.save()
+    #         collection.save()
+    #
+    #         return redirect('/collections/{}'.format(collection.slug))
+    #
+    #     else:
+    #         messages.error(request, "Error creating collection.")
+    # 
+    # # show collection form
+    # else:
+    #     collection = get_object_or_404(Collection, slug=slug)
+    #     collection_form = CollectionForm(collection)
+    #
+    #     # user does not own this collection, redirect to collections page
+    #     if not request.user in collection.owners.all():
+    #         return redirect('/collections/')
+    #
+    #     # handle adding new item id and type to collection
+    #     if request.GET.get('add_item_id') and request.GET.get('add_item_type'):
+    #         elasticsearch_item = ElasticsearchItem(
+    #                 es_id=request.GET.get('add_item_id'),
+    #                 type=request.GET.get('add_item_type'),
+    #                 collection=collection
+    #             )
+    #         elasticsearch_item.save()
+    #         return redirect('/collections/{}'.format(collection.slug))
+    #
+    #     elif request.GET.get('remove_item_id') and request.GET.get('remove_item_type'):
+    #         elasticsearch_item = ElasticsearchItem.objects.filter(
+    #                 es_id=request.GET.get('remove_item_id'),
+    #                 type=request.GET.get('remove_item_type'),
+    #                 collection=collection
+    #             )
+    #         elasticsearch_item.delete()
+    #         return redirect('/collections/{}'.format(collection.slug))
+    #
+    # return render(request, 'pages/mygiza-collection-edit.html', {
+    #     'collection_form': collection_form,
+    # })
+    return render(request, '404.html')
 
 def lessons(request):
     lessons = Lesson.objects.all()
