@@ -17,8 +17,17 @@ cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-expo
 [tool.poe.tasks.static-build-production]
 cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-export.tar.gz --django-content-dump static_site/giza-content-dump.json.gz --output dist --base-url http://giza.fas.harvard.edu"
 
+[tool.poe.tasks.static-build-limited]
+cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-export.tar.gz --django-content-dump static_site/giza-content-dump.json.gz --output /tmp/opencode/giza-static-test --base-url http://localhost:8000 --item-limit-per-type 1 --manifest-limit 5"
+
 [tool.poe.tasks.static-pagefind]
 cmd = "npx -y pagefind --site dist"
 
+[tool.poe.tasks.static-pagefind-limited]
+cmd = "npx -y pagefind --site /tmp/opencode/giza-static-test"
+
 [tool.poe.tasks.static-serve]
 cmd = "python -m http.server --directory dist 8000"
+
+[tool.poe.tasks.static-serve-limited]
+cmd = "python -m http.server --directory /tmp/opencode/giza-static-test 8000"
