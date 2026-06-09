@@ -1319,13 +1319,16 @@ def render_related_card(item: dict[str, Any], item_type: str) -> str:
 
 
 def render_pagefind_meta(summary: ItemSummary) -> str:
+    result_image = summary.thumbnail or "/static/images/object1.png"
     values = {
         "title": summary.title,
         "type": type_label(summary.type),
+        "image": result_image,
+        "image_alt": summary.title if result_image else "",
         "thumbnail": summary.thumbnail,
     }
     return "\n".join(
-        f'<meta data-pagefind-meta="{html.escape(key)}" content="{html.escape(value, quote=True)}">'
+        f'<meta data-pagefind-meta="{html.escape(key)}[content]" content="{html.escape(value, quote=True)}">'
         for key, value in values.items()
         if value
     )
