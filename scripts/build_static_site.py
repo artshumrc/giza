@@ -1216,6 +1216,32 @@ class ItemSummary:
     has_pdf: bool
 
 
+@dataclass(frozen=True)
+class StaticTemplatePage:
+    slug: str
+    template: str
+    title: str
+    description: str
+
+
+STATIC_TEMPLATE_PAGES = [
+    StaticTemplatePage("about", "about.html", "About the Giza Project", "About the Giza Project at Harvard University."),
+    StaticTemplatePage("blog", "blog.html", "The Giza Project Blog", "The Giza Project blog."),
+    StaticTemplatePage("contact", "contact.html", "Contact Us", "Contact information for Digital Giza."),
+    StaticTemplatePage("gizacard", "gizacard.html", "The GizaCARD", "The data model behind Digital Giza."),
+    StaticTemplatePage("news", "news.html", "News", "Digital Giza news."),
+    StaticTemplatePage("resources", "resources.html", "Educational Resources", "Educational resources from Digital Giza."),
+    StaticTemplatePage("sampleblog", "sampleblogpost.html", "The Giza Project Blog", "Sample Giza Project blog post."),
+    StaticTemplatePage("donate", "donate.html", "Donate", "Support the Giza Project."),
+    StaticTemplatePage("gizaintro", "gizaintro.html", "Introduction to Giza", "Introduction to the Giza Plateau."),
+    StaticTemplatePage("archaeology", "archaeology.html", "Archaeology at Giza", "Archaeology and excavation history at Giza."),
+    StaticTemplatePage("commontopics", "commontopics.html", "People and Places of Giza", "Common topics about Giza."),
+    StaticTemplatePage("faq", "faq.html", "Frequently Asked Questions", "Glossary and frequently asked questions."),
+    StaticTemplatePage("gizaatschool", "gizaatschool.html", "Giza @ School", "Teaching resources for Giza."),
+    StaticTemplatePage("giza3d", "giza3d.html", "Giza 3D", "Giza 3D resources and model links."),
+]
+
+
 class SafeHTML(HTMLParser):
     """Very small sanitizer for known public content fields."""
 
@@ -1350,7 +1376,7 @@ def main(argv: list[str]) -> int:
     indexes = build_giza_indexes(args.es_archive, giza_member, manifest_ids)
     content = load_content_dump(args.django_content_dump)
 
-    write_core_static_pages(args.output)
+    write_core_static_pages(args.output, repo_root)
     write_search_pages(args.output)
     write_library_page(args.output, indexes["library_sources"], indexes["pubdocs"])
     write_videos_page(args.output, indexes["videos"])
@@ -1538,156 +1564,27 @@ def load_content_dump(content_dump: Path) -> dict[str, Any]:
     }
 
 
-def write_core_static_pages(output: Path) -> None:
+def write_core_static_pages(output: Path, repo_root: Path) -> None:
     pages = {
         "": (
             "Home",
             home_body(),
             "The Digital Giza public catalog, library, lessons, videos, and IIIF viewers.",
         ),
-        "about": (
-            "About the Giza Project",
-            content_page_body(
-                "About the Giza Project",
-                "The Giza Project is an international initiative based at Harvard University that assembles, curates, and presents archaeological records about the Giza Plateau.",
-                [
-                    "Digital Giza brings together archival holdings from museums, universities, and expedition records so that researchers, teachers, students, and the public can explore Giza documentation in one place.",
-                    "The project includes excavation photographs, maps and plans, published and unpublished documents, objects, people, places, videos, and 3D resources.",
-                ],
-            ),
-            "About the Giza Project at Harvard University.",
-        ),
-        "contact": (
-            "Contact",
-            content_page_body(
-                "Contact",
-                "For questions about Digital Giza, contact the Giza Project at Harvard University.",
-                [
-                    'Project information is available from the <a href="https://giza.fas.harvard.edu/">Giza Project</a> and Harvard Arts and Humanities Research Computing.',
-                    'Authors with Giza-related publications available as PDFs are encouraged to contact project staff about the <a href="/library/">Digital Giza Library</a>.',
-                ],
-            ),
-            "Contact information for Digital Giza.",
-        ),
-        "gizacard": (
-            "The GizaCARD",
-            content_page_body(
-                "The GizaCARD",
-                "The Giza Consolidated Archaeological Reference Database organizes Digital Giza records and their relationships.",
-                [
-                    "The database connects monuments, artifacts, documents, photographs, people, institutions, and publications so public pages can expose related materials together.",
-                    'Use <a href="/search/">search</a> or browse item pages to explore the public catalog.',
-                ],
-            ),
-            "The data model behind Digital Giza.",
-        ),
-        "news": (
-            "News",
-            content_page_body(
-                "News",
-                "News and updates from the Giza Project.",
-                [
-                    "For current Harvard project news, consult official Harvard and Giza Project channels.",
-                    'Explore public resources through the <a href="/search/">catalog search</a>, <a href="/library/">library</a>, <a href="/lessons/">lessons</a>, and <a href="/videos/">videos</a>.',
-                ],
-            ),
-            "Digital Giza news.",
-        ),
-        "resources": (
-            "Educational Resources",
-            content_page_body(
-                "Educational Resources",
-                "Digital Giza includes public teaching resources and catalog materials for learning about ancient Giza.",
-                [
-                    'Start with <a href="/gizaatschool/">Giza @ School</a>, <a href="/lessons/">lesson topics</a>, <a href="/videos/">videos</a>, and the <a href="/library/">Digital Giza Library</a>.',
-                ],
-            ),
-            "Educational resources from Digital Giza.",
-        ),
-        "blog": (
-            "Blog",
-            content_page_body(
-                "Blog",
-                "Explore Digital Giza public resources and project materials.",
-                [
-                    'Explore public resources through the <a href="/search/">catalog search</a>, <a href="/library/">library</a>, and <a href="/lessons/">lessons</a>.',
-                ],
-            ),
-            "Digital Giza blog.",
-        ),
-        "donate": (
-            "Donate",
-            content_page_body(
-                "Donate",
-                "Support the Giza Project through Harvard giving.",
-                [
-                    '<a class="button" href="https://community.alumni.harvard.edu/give/34086571">Donate through Harvard</a>',
-                ],
-            ),
-            "Support the Giza Project.",
-        ),
-        "gizaintro": (
-            "Introduction to Giza",
-            content_page_body(
-                "Introduction to Giza",
-                "The Giza Plateau, southwest of modern Cairo, is home to the pyramids of Khufu, Khafre, and Menkaure, the Great Sphinx, and extensive cemeteries and settlements.",
-                [
-                    'Explore the <a href="/sites/1782/full/">Great Pyramid</a>, <a href="/sites/2080/full/">Sphinx</a>, people, monuments, photographs, maps, and documents through the public catalog.',
-                    'Teaching introductions are available in <a href="/lessons/">lesson topics</a> and <a href="/commontopics/">common topics</a>.',
-                ],
-            ),
-            "Introduction to the Giza Plateau.",
-        ),
-        "archaeology": (
-            "Archaeology at Giza",
-            content_page_body(
-                "Archaeology at Giza",
-                "More than a century of archaeological work at Giza produced the photographs, maps, diaries, object records, publications, and research materials preserved in Digital Giza.",
-                [
-                    'Search for archaeologists such as <a href="/search/?q=Reisner">George Andrew Reisner</a>, monuments, expedition records, and excavation media.',
-                    'Browse related <a href="/photos/49329/full/">photographs</a>, <a href="/mapsandplans/5590/full/">maps and plans</a>, and <a href="/diarypages/2448/full/">diary pages</a>.',
-                ],
-            ),
-            "Archaeology and excavation history at Giza.",
-        ),
-        "commontopics": (
-            "Common Topics",
-            content_page_body(
-                "Common Topics",
-                "Common topics provide entry points into major themes for studying Giza.",
-                [
-                    'Continue to <a href="/lessons/">lesson topics</a> for focused introductions, or search the catalog for pyramids, tombs, mastabas, false doors, burial shafts, and daily life.',
-                ],
-            ),
-            "Common topics about Giza.",
-        ),
-        "faq": (
-            "Glossary and FAQs",
-            content_page_body(
-                "Glossary and FAQs",
-                "Digital Giza records use archaeological, historical, and museum terminology.",
-                [
-                    "Use catalog search to locate examples of specific terms, people, monuments, artifacts, or publications.",
-                    'For teaching-oriented explanations, visit <a href="/lessons/">lesson topics</a>.',
-                ],
-            ),
-            "Glossary and frequently asked questions.",
-        ),
-        "gizaatschool": (
-            "Giza @ School",
-            giza_at_school_body(),
-            "Teaching resources for Giza.",
-        ),
-        "giza3d": (
-            "Giza 3D",
-            giza3d_body(),
-            "Giza 3D resources and model links.",
-        ),
     }
+
+    for page in STATIC_TEMPLATE_PAGES:
+        pages[page.slug] = (
+            page.title,
+            render_static_template_page(repo_root, page.template),
+            page.description,
+        )
 
     for slug, (title, body, description) in pages.items():
         path = output / slug / "index.html" if slug else output / "index.html"
         write_text(path, render_page(title, body, description=description))
+
+    write_redirect_page(output / "gizaschool" / "index.html", "/gizaatschool/")
 
 
 def home_body() -> str:
@@ -1765,37 +1662,328 @@ def content_page_body(title: str, lead: str, paragraphs: list[str]) -> str:
     return "\n".join(body)
 
 
-def giza_at_school_body() -> str:
-    return """
-<div class="page-header header-bg-9"><div class="row title"><header class="large-12 columns"><h1>Giza @ School</h1></header></div></div>
-<div class="row"><section class="large-8 columns">
-  <p class="lead text-alt">Teaching resources for learning about ancient Giza and the archaeological record.</p>
-  <div class="static-site-grid">
-    <article class="static-site-card"><h3>Lesson Topics</h3><p>Read public lesson topics from the Digital Giza content dump.</p><p><a class="button" href="/lessons/">View Lessons</a></p></article>
-    <article class="static-site-card"><h3>Video Library</h3><p>Watch public video records from the catalog export.</p><p><a class="button" href="/videos/">View Videos</a></p></article>
-    <article class="static-site-card"><h3>Common Topics</h3><p>Start with common terms and themes.</p><p><a class="button" href="/commontopics/">Common Topics</a></p></article>
-  </div>
-</section></div>
-""".strip()
+def render_static_template_page(repo_root: Path, template_name: str) -> str:
+    if template_name == "giza3d.html":
+        return render_giza3d_static_page(repo_root)
+
+    template_path = repo_root / "templates" / "pages" / template_name
+    source = template_path.read_text(encoding="utf-8")
+    context = parse_template_context(source)
+    blocks = extract_template_blocks(source)
+
+    body_parts = []
+    page_headers = blocks.get("page_headers")
+    if page_headers:
+        body_parts.append(render_static_template_fragment(repo_root, page_headers, context))
+
+    content = blocks.get("main_content") or blocks.get("content")
+    if content:
+        body_parts.append(render_static_template_fragment(repo_root, content, context))
+
+    rendered = "\n".join(part.strip() for part in body_parts if part.strip()).strip()
+    rendered = normalize_static_template_links(rendered)
+    ensure_no_unhandled_template_syntax(template_name, rendered)
+    return rendered
 
 
-def giza3d_body() -> str:
-    links = [
-        ("Giza Plateau", "/3dmodels/71017/full/"),
-        ("Khafre Pyramid", "/3dmodels/71018/full/"),
-        ("Khafre Pyramid Temple", "/3dmodels/71019/full/"),
-        ("Khafre Valley Temple", "/3dmodels/71020/full/"),
-        ("Sphinx", "/3dmodels/71021/full/"),
-        ("Sphinx Temple", "/3dmodels/71023/full/"),
-    ]
-    items = "".join(f'<li><a href="{href}">{html.escape(label)}</a></li>' for label, href in links)
+def parse_template_context(source: str) -> dict[str, str]:
+    context: dict[str, str] = {}
+    set_match = re.search(r"{%\s*set\s*(.*?)%}", source, re.DOTALL)
+    if not set_match:
+        return context
+    for key, value in re.findall(r"(\w+)\s*:\s*\"([^\"]*)\"", set_match.group(1)):
+        context[key] = value
+    return context
+
+
+def extract_template_blocks(source: str) -> dict[str, str]:
+    blocks: dict[str, str] = {}
+    pattern = re.compile(r"{%\s*block\s+'?([\w_]+)'?\s*%}(.*?){%\s*endblock\s*%}", re.DOTALL)
+    for match in pattern.finditer(source):
+        blocks[match.group(1)] = match.group(2)
+    return blocks
+
+
+def render_static_template_fragment(repo_root: Path, source: str, context: dict[str, str] | None = None) -> str:
+    context = context or {}
+    rendered = source
+    rendered = re.sub(r"{%\s*(?:extends|load)\b.*?%}", "", rendered, flags=re.DOTALL)
+
+    include_pattern = re.compile(r"{%\s*include\s+'([^']+)'\s*(?:with\s+(.*?))?\s*%}", re.DOTALL)
+    while True:
+        rendered, count = include_pattern.subn(
+            lambda match: render_static_include(repo_root, match.group(1), parse_template_kwargs(match.group(2)), context),
+            rendered,
+        )
+        if count == 0:
+            break
+
+    rendered = re.sub(r"{%\s*static\s+['\"]([^'\"]+)['\"]\s*%}", r"/static/\1", rendered)
+    rendered = re.sub(r"{%\s*url\s+(.+?)\s*%}", render_static_url_tag, rendered)
+    return rendered
+
+
+def parse_template_kwargs(source: str | None) -> dict[str, Any]:
+    if not source:
+        return {}
+    kwargs: dict[str, Any] = {}
+    pattern = re.compile(r"([\w-]+)\s*=\s*(\"[^\"]*\"|'[^']*'|True|False|true|false|[^\s]+)")
+    for key, raw_value in pattern.findall(source):
+        value: Any = raw_value
+        if (raw_value.startswith("\"") and raw_value.endswith("\"")) or (
+            raw_value.startswith("'") and raw_value.endswith("'")
+        ):
+            value = raw_value[1:-1]
+        elif raw_value in {"True", "true"}:
+            value = True
+        elif raw_value in {"False", "false"}:
+            value = False
+        kwargs[key] = value
+    return kwargs
+
+
+def render_static_include(repo_root: Path, include_name: str, kwargs: dict[str, Any], context: dict[str, str]) -> str:
+    if include_name == "partials/page-header.html":
+        return page_header(kwargs.get("title") or context.get("title") or "", bg=str(kwargs.get("bg") or "1"))
+    if include_name == "partials/page-subheader.html":
+        return render_page_subheader(
+            backlink_url=plain_text(kwargs.get("backlink_url")),
+            backlink_text=plain_text(kwargs.get("backlink_text") or "Back"),
+            content=f'<h2 class="text-medium">{html.escape(context.get("subtitle") or "")}</h2>',
+        )
+    if include_name == "partials/page-subheader--gizaatschool.html":
+        content = extract_template_blocks((repo_root / "templates" / include_name).read_text(encoding="utf-8")).get(
+            "subheader_content", ""
+        )
+        return render_page_subheader(content=render_static_template_fragment(repo_root, content, context))
+    if include_name.startswith("partials/school-hilite-item--"):
+        return render_school_hilite(repo_root, include_name, kwargs, context)
+    if include_name == "partials/feature-block-start.html":
+        return render_feature_block_start(kwargs)
+    if include_name == "partials/feature-block-end.html":
+        return "</div></section>"
+    if include_name == "partials/list-item-resourcelink-start.html":
+        return render_resource_link_start(kwargs)
+    if include_name == "partials/list-item-resourcelink-end.html":
+        return "</p>\n</div>"
+    if include_name == "partials/3d-tours-list.html":
+        return render_static_template_fragment(
+            repo_root,
+            (repo_root / "templates" / include_name).read_text(encoding="utf-8"),
+            context,
+        )
+    raise SystemExit(f"Unhandled static template include: {include_name}")
+
+
+def render_page_subheader(*, content: str, backlink_url: str = "", backlink_text: str = "Back") -> str:
+    backlink = ""
+    if backlink_url:
+        backlink = (
+            '<div class="text-smaller m-x-negqt m-t-neg1 p-y-half">'
+            f'<a class="pointer-back" href="{html.escape(backlink_url, quote=True)}">{html.escape(backlink_text)}</a>'
+            "</div>"
+        )
     return f"""
-<div class="page-header header-bg-6"><div class="row title"><header class="large-12 columns"><h1>Giza 3D</h1></header></div></div>
-<div class="row"><section class="large-8 columns">
-  <p class="lead text-alt">Explore 3D model records and external 3D media connected to the Giza Project.</p>
-  <ul class="static-site-list">{items}</ul>
-</section></div>
+<div class="page-subheader ">
+  <div class="row p-t-1">
+    <div class="large-12 columns">
+      {backlink}
+      <div class="text-heading">
+        {content.strip()}
+      </div>
+    </div>
+  </div>
+</div>
 """.strip()
+
+
+def render_school_hilite(
+    repo_root: Path,
+    include_name: str,
+    kwargs: dict[str, Any],
+    context: dict[str, str],
+) -> str:
+    source = (repo_root / "templates" / include_name).read_text(encoding="utf-8")
+    content = extract_template_blocks(source).get("hilite_content", "")
+    content = render_static_template_fragment(repo_root, content, context)
+    primary = bool(kwargs.get("primary"))
+    link = plain_text(kwargs.get("hilite_link"))
+    title = html.escape(plain_text(kwargs.get("hilite_title")))
+    image_class = html.escape(plain_text(kwargs.get("hilite_img")), quote=True)
+    title_html = f'<a class="heading-link" href="{html.escape(link, quote=True)}">{title}</a>' if link else title
+    footer = ""
+    if link:
+        button_class = "button" if primary else "button secondary"
+        footer = (
+            '<div class="content-hilite-footer">'
+            f'<a class="{button_class}" href="{html.escape(link, quote=True)}">'
+            f'{html.escape(plain_text(kwargs.get("hilite_link_text")))} <i class="icon-angle-right"></i>'
+            "</a></div>"
+        )
+    primary_class = " content-hilite-primary" if primary else ""
+    return f"""
+<div class="content-hilite{primary_class}">
+  <div class="content-hilite-content">
+    <div class="content-hilite-header"><h2 class="text-bold">{title_html}</h2></div>
+    <div class="content-hilite-body">{content.strip()}</div>
+    {footer}
+  </div>
+  <div class="content-hilite-image img-{image_class}"></div>
+</div>
+""".strip()
+
+
+def render_feature_block_start(kwargs: dict[str, Any]) -> str:
+    anchor = html.escape(plain_text(kwargs.get("feature_anchor")), quote=True)
+    block_class = html.escape(plain_text(kwargs.get("feature_block_class")), quote=True)
+    title = plain_text(kwargs.get("feature_title"))
+    heading_class = html.escape(plain_text(kwargs.get("heading_class")), quote=True)
+    header = ""
+    if title:
+        icon = html.escape(plain_text(kwargs.get("feature_icon")), quote=True)
+        counter = plain_text(kwargs.get("feature_counter"))
+        counter_html = f'<span class="badge">{html.escape(counter)}</span>' if counter else ""
+        header = f"""
+  <div class="feature-block__header">
+    <h3 class="feature-block__title {heading_class}">
+      <i class="icon-{icon} icon-padded"></i> {html.escape(title)}
+      <a name="{anchor}"></a>
+      {counter_html}
+    </h3>
+    <button class="toggler" data-toggle="featureBlock_{anchor}"><span class="sr-only">Collapse or Expand</span></button>
+  </div>
+""".rstrip()
+    return f"""
+<section id="featureBlock_{anchor}" class="feature-block {block_class}" data-toggler=".is-collapsed">
+{header}
+  <div class="feature-block__body">
+""".rstrip()
+
+
+def render_resource_link_start(kwargs: dict[str, Any]) -> str:
+    title = html.escape(plain_text(kwargs.get("resource_title")))
+    url = plain_text(kwargs.get("resource_url"))
+    slug = plain_text(kwargs.get("resource_slug"))
+    href = url + (f"/{slug}" if slug else "")
+    if kwargs.get("internal") and not href.startswith("/"):
+        href = f"/{href}"
+    target = "" if kwargs.get("internal") else " target=\"_blank\""
+    return f"""
+<div class="media-object list-item list-item-resourcelink">
+  <h4 class="text-medium"><a{target} href="{html.escape(href, quote=True)}">{title}</a></h4>
+  <p>
+""".rstrip()
+
+
+def render_static_url_tag(match: re.Match[str]) -> str:
+    expression = match.group(1).strip()
+    name_match = re.match(r"['\"]([^'\"]+)['\"]", expression)
+    if not name_match:
+        raise SystemExit(f"Unhandled static URL tag: {match.group(0)}")
+    name = name_match.group(1)
+    rest = expression[name_match.end() :]
+    if name == "explore":
+        slug_match = re.search(r"['\"]([^'\"]+)['\"]", rest)
+        if slug_match:
+            return f"/{slug_match.group(1).strip('/')}/"
+    if name == "get_type_html":
+        kwargs = parse_template_kwargs(rest)
+        item_type = plain_text(kwargs.get("type"))
+        item_id = plain_text(kwargs.get("id"))
+        view = plain_text(kwargs.get("view") or "full")
+        if item_type and item_id:
+            return f"/{item_type}/{item_id}/{view}/"
+    route_map = {
+        "index": "/",
+        "results": "/search-results/",
+        "search": "/search/",
+        "lessons": "/lessons/",
+        "library": "/library/",
+        "videos": "/videos/",
+    }
+    if name in route_map:
+        return route_map[name]
+    raise SystemExit(f"Unhandled static URL tag: {match.group(0)}")
+
+
+def normalize_static_template_links(rendered: str) -> str:
+    replacements = {
+        'href="donate.html"': 'href="/donate/"',
+        'href="sampleblogpost.html"': 'href="/sampleblog/"',
+        'href="/sampleblogpost/"': 'href="/sampleblog/"',
+        'href="/giza3d"': 'href="/giza3d/"',
+    }
+    for old, new in replacements.items():
+        rendered = rendered.replace(old, new)
+    return rendered
+
+
+def ensure_no_unhandled_template_syntax(template_name: str, rendered: str) -> None:
+    marker_match = re.search(r"{%|{{", rendered)
+    if marker_match:
+        start = max(marker_match.start() - 40, 0)
+        end = min(marker_match.end() + 80, len(rendered))
+        raise SystemExit(f"Unhandled template syntax in {template_name}: {rendered[start:end]!r}")
+
+
+def render_giza3d_static_page(repo_root: Path) -> str:
+    tours = render_static_template_fragment(
+        repo_root,
+        (repo_root / "templates" / "partials" / "3d-tours-list.html").read_text(encoding="utf-8"),
+        {},
+    )
+    body = f"""
+{page_header("Giza 3D", bg="1")}
+<div class="row">
+  <div class="large-12 columns">
+    <iframe class="viewerEmbed giza3dEmbed" data-giza3d-iframe src="https://gizamedia.rc.fas.harvard.edu/images/3D/unity/?mode=FreeExplore" frameborder="0" allowfullscreen allow="vr" style="display: none;"></iframe>
+    <div class="viewerEmbed giza3dEmbedToggle" data-giza3d-toggle>
+      <div class="gizaViewer">
+        <div class="viewerCover"></div>
+        <div class="viewerCoverGradient"></div>
+        <button class="viewerStartButton">Start Tour</button>
+      </div>
+    </div>
+    <br>
+    <p>Explore the models and tours; you will find links to other models throughout. Or choose from individual tours below. You may also use the arrow keys and WASD to navigate.</p>
+    <br>
+  </div>
+</div>
+{tours}
+<script>
+(function () {{
+  var params = new URLSearchParams(window.location.search);
+  var iframe = document.querySelector('[data-giza3d-iframe]');
+  var toggle = document.querySelector('[data-giza3d-toggle]');
+  if (!iframe) return;
+
+  if (params.get('mode') === 'matterport' && params.get('m')) {{
+    iframe.className = 'viewerEmbed matterportEmbed';
+    iframe.src = 'https://my.matterport.com/show/?m=' + encodeURIComponent(params.get('m'));
+    iframe.style.display = '';
+    if (toggle) toggle.style.display = 'none';
+    return;
+  }}
+
+  if (params.get('mode') === 'sketchfab' && params.get('id')) {{
+    iframe.className = 'viewerEmbed sketchfabEmbed';
+    iframe.src = 'https://sketchfab.com/models/' + encodeURIComponent(params.get('id')) + '/embed?preload=1&ui_controls=1&ui_infos=1&ui_inspector=1&ui_stop=1&ui_watermark=1&ui_watermark_link=1';
+    iframe.style.display = '';
+    if (toggle) toggle.style.display = 'none';
+    return;
+  }}
+
+  var unityUrl = new URL('https://gizamedia.rc.fas.harvard.edu/images/3D/unity/');
+  unityUrl.searchParams.set('mode', params.get('mode') || 'FreeExplore');
+  ['guidedTourId', 'itemID'].forEach(function (key) {{
+    if (params.get(key)) unityUrl.searchParams.set(key, params.get(key));
+  }});
+  iframe.src = unityUrl.toString();
+}}());
+</script>
+""".strip()
+    ensure_no_unhandled_template_syntax("giza3d.html", body)
+    return body
 
 
 def write_search_pages(output: Path) -> None:
