@@ -21,11 +21,13 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Iterable
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 
 
 EXPECTED_ITEM_COUNT = 158_968
 EXPECTED_MANIFEST_COUNT = 134_580
+IIIF_CACHE_HOST = "iiif-cache.digitalhumanities.fas.harvard.edu"
+IIIF_CACHE_THUMB_URL = f"https://{IIIF_CACHE_HOST}/iiif/thumb?url="
 
 TYPE_LABELS = {
     "3dmodels": "3D Models",
@@ -360,6 +362,8 @@ STATIC_SITE_CSS = """
   line-height: 1.35;
   list-style: none;
   margin: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .static-site-search-results .subheader li {
   display: block;
@@ -486,6 +490,7 @@ STATIC_SITE_JS = """
   var SEARCH_SCOPE_FILTER = 'search_scope';
   var SEARCH_SCOPE_VALUE = 'catalog';
   var DEFAULT_IMAGE = '/static/images/object1.png';
+  var BROWSE_DATA_BASE = '/static/static-site/search-browse';
   var CATEGORY_LABELS = {
     photos: 'Photos',
     objects: 'Objects',
@@ -642,6 +647,38 @@ STATIC_SITE_JS = """
     return Number.isFinite(value) && value > 0 ? value : 1;
   }
 
+  function isBrowseState(state) {
+    return !state.term;
+  }
+
+  function browseSlugForCategory(categoryLabel) {
+    return categoryLabel ? (categorySlugForLabel(categoryLabel) || normalizeCategoryKey(categoryLabel)) : 'all';
+  }
+
+  function browseChunkUrl(categoryLabel, page) {
+    return BROWSE_DATA_BASE + '/' + encodeURIComponent(browseSlugForCategory(categoryLabel)) + '/page-' + String(page) + '.json';
+  }
+
+  async function fetchBrowseChunk(state, page) {
+    var response = await fetch(browseChunkUrl(state.category, page), { headers: { Accept: 'application/json' } });
+    if (!response.ok) {
+      var error = new Error('Browse data could not be loaded.');
+      error.status = response.status;
+      throw error;
+    }
+    return response.json();
+  }
+
+  function dispatchBrowseResults(data) {
+    window.dispatchEvent(new CustomEvent('giza:browse-results', {
+      detail: {
+        active_category: data.active_category || '',
+        category_counts: data.category_counts || {},
+        total: data.total || 0
+      }
+    }));
+  }
+
   function updateUrl(params, path, replace) {
     var query = params.toString();
     var nextPath = path || window.location.pathname || '/search-results/';
@@ -689,48 +726,6 @@ STATIC_SITE_JS = """
     return filters;
   }
 
-  function removeAdvancedParams(params) {
-    ADVANCED_FIELDS.forEach(function (field) {
-      field.names.forEach(function (name) {
-        params.delete(name);
-      });
-    });
-  }
-
-  function syncSimpleSearchUrl(term, filters) {
-    var params = currentParams();
-    var value = String(term || '').trim();
-    params.delete('query');
-    removeAdvancedParams(params);
-    if (value) {
-      params.set('q', value);
-    } else {
-      params.delete('q');
-    }
-    var category = activeCategoryFromFilters(filters);
-    if (category) {
-      params.set('category', categorySlugForLabel(category) || category);
-    } else {
-      params.delete('category');
-    }
-    params.delete('page');
-    updateUrl(params, null, true);
-  }
-
-  function withCatalogFilter(filters) {
-    var merged = {};
-    Object.keys(filters || {}).forEach(function (key) {
-      var values = cloneFilterValue(filters[key]);
-      if (values.length) merged[key] = values;
-    });
-    merged[SEARCH_SCOPE_FILTER] = [SEARCH_SCOPE_VALUE];
-    return merged;
-  }
-
-  function filtersIncludeCatalog(filters) {
-    return cloneFilterValue(filters && filters[SEARCH_SCOPE_FILTER]).indexOf(SEARCH_SCOPE_VALUE) !== -1;
-  }
-
   function activeCategoryFromFilters(filters) {
     return cloneFilterValue(filters && filters.category)[0] || '';
   }
@@ -747,32 +742,16 @@ STATIC_SITE_JS = """
     return String(term || '') + '|' + filterSignature(filters || {});
   }
 
-  function waitForPagefindInstance(instanceName) {
-    return new Promise(function (resolve, reject) {
-      var attempts = 0;
-      function check() {
-        var components = window.PagefindComponents;
-        if (components && typeof components.getInstanceManager === 'function') {
-          resolve(components.getInstanceManager().getInstance(instanceName));
-          return;
-        }
-        attempts += 1;
-        if (attempts > 120) {
-          reject(new Error('Pagefind Component UI did not load.'));
-          return;
-        }
-        window.setTimeout(check, 50);
-      }
-      check();
-    });
-  }
-
   async function directPagefindSearch(term, filters) {
+    var searchTerm = String(term || '').trim();
+    if (!searchTerm) {
+      throw new Error('Empty browse searches use static browse data.');
+    }
     var pagefind = await import('/pagefind/pagefind.js');
     if (typeof pagefind.init === 'function') {
       await pagefind.init();
     }
-    return pagefind.search(term ? term : null, { filters: filters });
+    return pagefind.search(searchTerm, { filters: filters });
   }
 
   function selectedRowsForSidebar(instance) {
@@ -785,7 +764,7 @@ STATIC_SITE_JS = """
     state.rows.forEach(function (row) {
       rows.push({ label: row.label, value: row.value });
     });
-    if (!rows.length && instance && instance.searchTerm) {
+    if (!rows.length && !isBrowseState(state) && instance && instance.searchTerm) {
       rows.push({ label: 'Keyword', value: instance.searchTerm });
     }
     return rows;
@@ -800,15 +779,6 @@ STATIC_SITE_JS = """
       params.delete('category');
     }
     updateUrl(params, null, false);
-    if (instance && typeof instance.triggerFilters === 'function') {
-      SearchRuntime.applyingUrlState = true;
-      SearchRuntime.suppressNextPageReset = true;
-      SearchRuntime.suppressNextUrlSync = true;
-      instance.triggerFilters(filtersForCategory(categoryLabel));
-      window.setTimeout(function () {
-        SearchRuntime.applyingUrlState = false;
-      }, 0);
-    }
   }
 
   function setupAdvancedForm() {
@@ -865,16 +835,6 @@ STATIC_SITE_JS = """
         return;
       }
       updateUrl(params, action, false);
-      var state = stateFromParams(params);
-      if (SearchRuntime.instance && typeof SearchRuntime.instance.triggerSearchWithFilters === 'function') {
-        SearchRuntime.applyingUrlState = true;
-        SearchRuntime.suppressNextPageReset = true;
-        SearchRuntime.suppressNextUrlSync = true;
-        SearchRuntime.instance.triggerSearchWithFilters(state.term, filtersForCategory(state.category));
-        window.setTimeout(function () {
-          SearchRuntime.applyingUrlState = false;
-        }, 0);
-      }
     });
     window.addEventListener('popstate', setFormFromUrl);
     window.addEventListener('giza:search-url-change', setFormFromUrl);
@@ -912,9 +872,10 @@ STATIC_SITE_JS = """
     var meta = data.meta || {};
     var url = meta.url || data.url || '#';
     var title = meta.title || data.title || url;
-    var catalogId = meta.catalog_id || '';
-    var image = meta.thumbnail || meta.image || DEFAULT_IMAGE;
-    var thumbClass = meta.thumbnail ? 'thumbnail' : 'thumbnail no-img';
+    var catalogId = meta.catalog_id || data.catalog_id || '';
+    var thumbnail = meta.thumbnail || data.thumbnail || '';
+    var image = thumbnail || meta.image || data.image || DEFAULT_IMAGE;
+    var thumbClass = thumbnail ? 'thumbnail' : 'thumbnail no-img';
     var subheader = [];
     if (catalogId) subheader.push('<li>' + escapeHtml(catalogId) + '</li>');
     return [
@@ -935,6 +896,21 @@ STATIC_SITE_JS = """
         this.categoryCounts = {};
         this.activeCategory = categoryLabelFromParam(currentParams().get('category'));
         this.render();
+        this._handleBrowseResults = (event) => {
+          var detail = event.detail || {};
+          this.categoryCounts = detail.category_counts || {};
+          this.activeCategory = detail.active_category || '';
+          this.render();
+        };
+        this._handleDirectSearchResults = (event) => {
+          var detail = event.detail || {};
+          var searchResult = detail.searchResult || {};
+          this.categoryCounts = searchResult.filters && searchResult.filters.category ? searchResult.filters.category : {};
+          this.activeCategory = activeCategoryFromFilters(detail.filters || {});
+          this.render();
+        };
+        window.addEventListener('giza:browse-results', this._handleBrowseResults);
+        window.addEventListener('giza:direct-search-results', this._handleDirectSearchResults);
         this.addEventListener('click', (event) => {
           var link = event.target.closest('[data-search-category]');
           if (!link) return;
@@ -942,34 +918,15 @@ STATIC_SITE_JS = """
           var label = link.getAttribute('data-search-category') || '';
           applyCategory(this.instance, label === this.activeCategory ? '' : label);
         });
-        waitForPagefindInstance(this.instanceName).then((instance) => {
-          this.instance = instance;
-          this.activeCategory = activeCategoryFromFilters(instance.searchFilters) || this.activeCategory;
-          instance.on('search', (term, filters) => {
-            this.activeCategory = activeCategoryFromFilters(filters);
-            this.render();
-          }, this);
-          instance.on('filters', (filters) => {
-            var available = filters && filters.available ? filters.available : {};
-            this.categoryCounts = available.category || (instance.availableFilters && instance.availableFilters.category) || {};
-            this.activeCategory = activeCategoryFromFilters(instance.searchFilters);
-            this.render();
-          }, this);
-          instance.on('results', () => {
-            this.activeCategory = activeCategoryFromFilters(instance.searchFilters);
-            this.render();
-          }, this);
-          window.addEventListener('giza:direct-search-results', (event) => {
-            var detail = event.detail || {};
-            var searchResult = detail.searchResult || {};
-            this.categoryCounts = searchResult.filters && searchResult.filters.category ? searchResult.filters.category : this.categoryCounts;
-            this.activeCategory = activeCategoryFromFilters(detail.filters || {});
-            this.render();
-          });
-          this.render();
-        }).catch(() => {
-          this.innerHTML = '<div class="feature-block secondary text-smaller"><h5 class="heading-alt">Search Options</h5><p>Search is available after the Pagefind index is built.</p></div>';
-        });
+      }
+
+      disconnectedCallback() {
+        if (this._handleBrowseResults) {
+          window.removeEventListener('giza:browse-results', this._handleBrowseResults);
+        }
+        if (this._handleDirectSearchResults) {
+          window.removeEventListener('giza:direct-search-results', this._handleDirectSearchResults);
+        }
       }
 
       render() {
@@ -1015,93 +972,112 @@ STATIC_SITE_JS = """
         this.pageSize = parseInt(this.getAttribute('page-size') || '20', 10) || 20;
         this.currentPage = parsePageParam();
         this.renderToken = 0;
-        this.seenSearch = false;
         this.signature = '';
-        this.fallbackTimer = null;
         this.innerHTML = '<p class="static-site-meta">Loading search results...</p>';
+        if (isBrowseState(stateFromParams(currentParams()))) {
+          this.renderBrowseFromUrl();
+        }
         this.addEventListener('click', (event) => {
           var link = event.target.closest('[data-search-page]');
           if (!link) return;
           event.preventDefault();
           var page = parseInt(link.getAttribute('data-search-page') || '1', 10);
           if (!Number.isFinite(page) || page < 1) return;
+          var browsing = isBrowseState(stateFromParams(currentParams()));
           this.currentPage = page;
           updatePageParam(page, false);
-          this.renderResults();
+          if (!browsing) this.renderResults();
           this.scrollIntoView({ block: 'start', behavior: 'smooth' });
         });
         var syncPageFromUrl = () => {
           this.currentPage = parsePageParam();
-          if (this.searchResult) this.renderResults();
-        };
-        window.addEventListener('popstate', syncPageFromUrl);
-        window.addEventListener('giza:search-url-change', syncPageFromUrl);
-        waitForPagefindInstance(this.instanceName).then((instance) => {
-          this.instance = instance;
-          instance.on('loading', () => {
-            this.renderToken += 1;
-            this.searchResult = null;
-            this.innerHTML = '<p class="static-site-meta">Searching...</p>';
-            this.scheduleDirectFallback();
-          }, this);
-          instance.on('search', (term, filters) => {
-            var nextSignature = searchSignature(term, filters);
-            var suppressPageReset = SearchRuntime.applyingUrlState || SearchRuntime.suppressNextPageReset;
-            SearchRuntime.suppressNextPageReset = false;
-            if (this.seenSearch && nextSignature !== this.signature && !suppressPageReset) {
-              this.currentPage = 1;
-              updatePageParam(1, true);
-            }
-            this.signature = nextSignature;
-            this.seenSearch = true;
-          }, this);
-          instance.on('results', (searchResult) => {
-            if (this.fallbackTimer) {
-              window.clearTimeout(this.fallbackTimer);
-              this.fallbackTimer = null;
-            }
-            this.searchResult = searchResult;
-            this.renderResults();
-          }, this);
-          instance.on('error', (error) => {
-            this.renderToken += 1;
-            this.innerHTML = '<p class="callout alert">Search failed: ' + escapeHtml(error && error.message ? error.message : error) + '</p>';
-          }, this);
-          if (instance.searchResult) {
-            this.searchResult = instance.searchResult;
-            this.renderResults();
+          if (isBrowseState(stateFromParams(currentParams()))) {
+            this.renderBrowseFromUrl();
           } else {
-            this.scheduleDirectFallback();
-          }
-        }).catch(() => {
-          this.runDirectSearchFromUrl().catch(() => {
-            this.innerHTML = '<p class="callout warning">Search is available after running Pagefind for this static build.</p>';
-          });
-        });
-      }
-
-      scheduleDirectFallback() {
-        if (this.fallbackTimer) window.clearTimeout(this.fallbackTimer);
-        this.fallbackTimer = window.setTimeout(() => {
-          this.fallbackTimer = null;
-          if (!this.searchResult) {
             this.runDirectSearchFromUrl().catch((error) => {
               this.innerHTML = '<p class="callout alert">Search failed: ' + escapeHtml(error && error.message ? error.message : error) + '</p>';
             });
           }
-        }, 1200);
+        };
+        window.addEventListener('popstate', syncPageFromUrl);
+        window.addEventListener('giza:search-url-change', syncPageFromUrl);
+        if (!isBrowseState(stateFromParams(currentParams()))) {
+          this.runDirectSearchFromUrl().catch(() => {
+            this.innerHTML = '<p class="callout warning">Search is available after running Pagefind for this static build.</p>';
+          });
+        }
+      }
+
+      async renderBrowseFromUrl() {
+        var state = stateFromParams(currentParams());
+        if (!isBrowseState(state)) return false;
+        var page = parsePageParam();
+        var token = ++this.renderToken;
+        this.searchResult = null;
+        this.innerHTML = '<p class="static-site-meta">Loading search results...</p>';
+        try {
+          var data = await fetchBrowseChunk(state, page);
+          if (token !== this.renderToken) return true;
+          var latestState = stateFromParams(currentParams());
+          if (!isBrowseState(latestState)) return false;
+          if (parsePageParam() !== page || (latestState.category || '') !== (data.active_category || '')) {
+            this.renderBrowseFromUrl();
+            return true;
+          }
+          this.currentPage = Number(data.page) || page;
+          this.browseData = data;
+          dispatchBrowseResults(data);
+          this.renderBrowseResults(data);
+          return true;
+        } catch (error) {
+          if (token !== this.renderToken) return true;
+          if (page > 1 && error && error.status === 404) {
+            updatePageParam(1, true);
+            return true;
+          }
+          this.innerHTML = '<p class="callout alert">Browse results could not be loaded.</p>';
+          return false;
+        }
+      }
+
+      renderBrowseResults(data) {
+        var total = Number(data.total) || 0;
+        var pageSize = Number(data.page_size) || this.pageSize;
+        var totalPages = Math.max(1, Math.ceil(total / pageSize));
+        this.pageSize = pageSize;
+        this.currentPage = Number(data.page) || this.currentPage || 1;
+        var noun = total === 1 ? 'search result' : 'search results';
+        var status = '<div class="static-site-search-status"><h3 class="heading-alt m-t-half m-b-1">' + String(total) + ' ' + noun + ' found.</h3></div>';
+        if (!total) {
+          this.innerHTML = status + '<p>No catalog records matched this search.</p>';
+          return;
+        }
+        var cards = (data.items || []).map(renderResultCard).join('');
+        this.innerHTML = status + '<div class="media-object-holder">' + cards + '</div>' + renderPagination(this.currentPage, totalPages);
       }
 
       async runDirectSearchFromUrl() {
         var state = stateFromParams(currentParams());
+        if (isBrowseState(state)) {
+          await this.renderBrowseFromUrl();
+          return;
+        }
         var filters = filtersForCategory(state.category);
         var signature = searchSignature(state.term, filters);
-        this.renderToken += 1;
+        this.currentPage = parsePageParam();
+        if (this.searchResult && this.signature === signature) {
+          this.renderResults();
+          return;
+        }
+        var token = ++this.renderToken;
+        this.searchResult = null;
         this.innerHTML = '<p class="static-site-meta">Searching...</p>';
         var searchResult = await directPagefindSearch(state.term, filters);
+        if (token !== this.renderToken) return;
         var latestState = stateFromParams(currentParams());
         var latestFilters = filtersForCategory(latestState.category);
         if (signature !== searchSignature(latestState.term, latestFilters)) return;
+        this.signature = signature;
         this.searchResult = searchResult;
         window.dispatchEvent(new CustomEvent('giza:direct-search-results', {
           detail: { searchResult: searchResult, filters: filters }
@@ -1142,56 +1118,12 @@ STATIC_SITE_JS = """
     customElements.define('giza-search-results', GizaSearchResults);
   }
 
-  function triggerSearchFromUrl(instance) {
-    var state = stateFromParams(currentParams());
-    var filters = filtersForCategory(state.category);
-    instance.faceted = true;
-    SearchRuntime.applyingUrlState = true;
-    SearchRuntime.suppressNextPageReset = true;
-    SearchRuntime.suppressNextUrlSync = true;
-    if (state.term || typeof instance.triggerFilters !== 'function') {
-      instance.triggerSearchWithFilters(state.term, filters);
-    } else {
-      instance.triggerFilters(filters);
-    }
-    window.setTimeout(function () {
-      SearchRuntime.applyingUrlState = false;
-    }, 0);
-  }
-
-  function notifyPagefindUnavailable() {
-    Array.prototype.forEach.call(document.querySelectorAll('giza-search-results'), function (element) {
-      element.innerHTML = '<p class="callout warning">Search is available after running Pagefind for this static build.</p>';
-    });
-  }
-
   window.GizaStaticSite = window.GizaStaticSite || {};
   window.GizaStaticSite.initPagefind = function () {
     if (SearchRuntime.initStarted || !document.querySelector('[data-giza-search-page]')) return;
     SearchRuntime.initStarted = true;
     defineSearchComponents();
     setupAdvancedForm();
-    waitForPagefindInstance(INSTANCE_NAME).then(function (instance) {
-      SearchRuntime.instance = instance;
-      instance.faceted = true;
-      instance.on('search', function (term, filters) {
-        var suppressUrlSync = SearchRuntime.applyingUrlState || SearchRuntime.suppressNextUrlSync;
-        SearchRuntime.suppressNextUrlSync = false;
-        if (!suppressUrlSync && !SearchRuntime.enforcingCatalog) {
-          syncSimpleSearchUrl(term, withCatalogFilter(filters));
-        }
-        if (SearchRuntime.enforcingCatalog || filtersIncludeCatalog(filters)) return;
-        SearchRuntime.enforcingCatalog = true;
-        instance.triggerSearchWithFilters(term || '', withCatalogFilter(filters));
-        window.setTimeout(function () {
-          SearchRuntime.enforcingCatalog = false;
-        }, 0);
-      }, SearchRuntime);
-      triggerSearchFromUrl(instance);
-      window.addEventListener('popstate', function () {
-        triggerSearchFromUrl(instance);
-      });
-    }).catch(notifyPagefindUnavailable);
   };
 }());
 """.strip()
@@ -1303,6 +1235,8 @@ class SafeHTML(HTMLParser):
                 continue
             if name in {"href", "src"} and not is_safe_url(value):
                 continue
+            if name == "src":
+                value = cache_harvard_image_url(value)
             rendered_attrs.append(f'{name}="{html.escape(value, quote=True)}"')
         attr_text = " " + " ".join(rendered_attrs) if rendered_attrs else ""
         self.parts.append(f"<{tag}{attr_text}>")
@@ -1382,7 +1316,7 @@ def main(argv: list[str]) -> int:
     write_videos_page(args.output, indexes["videos"])
     write_lessons(args.output, content, indexes["lookup"])
     write_collections(args.output, content, indexes["lookup"])
-    item_counts, required_manifest_ids = write_item_pages(
+    item_counts, required_manifest_ids, emitted_summaries = write_item_pages(
         args.output,
         args.es_archive,
         giza_member,
@@ -1392,6 +1326,7 @@ def main(argv: list[str]) -> int:
         args.item_limit_per_type,
         args.generate_item_redirects,
     )
+    write_search_browse_data(args.output, emitted_summaries, page_size=20)
     manifest_count = write_manifests(
         args.output,
         args.es_archive,
@@ -2057,7 +1992,6 @@ def write_search_pages(output: Path) -> None:
 <div class="page-header header-bg-5"><div class="row title"><header class="large-12 columns"><h1>Search the Archives</h1></header></div></div>
 <div class="row static-site-search-page" data-giza-search-page>
   <section class="medium-9 medium-push-3 columns">
-    <pagefind-config instance="giza-search" faceted preload excerpt-length="30"></pagefind-config>
     <giza-search-results class="static-site-search-results" instance="giza-search" page-size="20"></giza-search-results>
   </section>
   <aside class="medium-3 medium-pull-9 columns">
@@ -2065,8 +1999,8 @@ def write_search_pages(output: Path) -> None:
   </aside>
 </div>
 """.strip()
-    extra_head = '<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet">'
-    extra_scripts = '<script src="/pagefind/pagefind-component-ui.js" type="module"></script><script>GizaStaticSite.initPagefind();</script>'
+    extra_head = ""
+    extra_scripts = '<script>GizaStaticSite.initPagefind();</script>'
     search_html = render_page(
         "Search the Archives",
         advanced_search_body,
@@ -2140,7 +2074,7 @@ def write_videos_page(output: Path, videos: list[tuple[ItemSummary, dict[str, An
     for summary, source in sorted(videos, key=lambda item: item[0].title.lower()):
         primary = source.get("primarydisplay") if isinstance(source.get("primarydisplay"), dict) else {}
         main = plain_text(primary.get("main"))
-        thumb = plain_text(primary.get("thumbnail"))
+        thumb = cache_harvard_image_url(plain_text(primary.get("thumbnail")))
         body.append("<article class=\"m-b-2\">")
         body.append(f'<h3><a href="{summary.url}">{html.escape(summary.title)}</a></h3>')
         body.append('<div class="row">')
@@ -2237,6 +2171,54 @@ def write_collections(output: Path, content: dict[str, Any], lookup: dict[tuple[
         write_text(output / "collections" / slug / "index.html", render_page(title, "\n".join(detail)))
 
 
+def write_search_browse_data(output: Path, summaries: list[ItemSummary], page_size: int = 20) -> None:
+    browse_root = output / "static" / "static-site" / "search-browse"
+    category_counts = Counter(search_category_label(summary.type) for summary in summaries)
+    category_counts_json = {
+        label: category_counts[label]
+        for _, label in SEARCH_CATEGORY_ORDER
+        if category_counts[label]
+    }
+
+    def sort_key(summary: ItemSummary) -> tuple[str, str, str]:
+        return (plain_text(summary.title).casefold(), summary.type.casefold(), summary.id.casefold())
+
+    def item_json(summary: ItemSummary) -> dict[str, str]:
+        return {
+            "title": summary.title,
+            "url": summary.url,
+            "catalog_id": summary.search_identifier,
+            "thumbnail": summary.thumbnail,
+        }
+
+    def write_bucket(slug: str, active_category: str, bucket: list[ItemSummary]) -> None:
+        sorted_bucket = sorted(bucket, key=sort_key)
+        total = len(sorted_bucket)
+        page_count = max(1, (total + page_size - 1) // page_size)
+        for page in range(1, page_count + 1):
+            start = (page - 1) * page_size
+            payload = {
+                "total": total,
+                "page": page,
+                "page_size": page_size,
+                "category_counts": category_counts_json,
+                "active_category": active_category,
+                "items": [item_json(summary) for summary in sorted_bucket[start : start + page_size]],
+            }
+            write_text(
+                browse_root / slug / f"page-{page}.json",
+                json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+            )
+
+    write_bucket("all", "", summaries)
+    for slug, label in SEARCH_CATEGORY_ORDER:
+        write_bucket(
+            slug,
+            label,
+            [summary for summary in summaries if search_category_label(summary.type) == label],
+        )
+
+
 def write_item_pages(
     output: Path,
     es_archive: Path,
@@ -2246,9 +2228,10 @@ def write_item_pages(
     item_limit: int,
     item_limit_per_type: int,
     generate_redirects: bool,
-) -> tuple[Counter[str], set[str]]:
+) -> tuple[Counter[str], set[str], list[ItemSummary]]:
     counts: Counter[str] = Counter()
     required_manifest_ids: set[str] = set()
+    emitted_summaries: list[ItemSummary] = []
     total = 0
     for doc in iter_es_docs(es_archive, giza_member):
         item_type = str(doc.get("_type") or "")
@@ -2272,9 +2255,10 @@ def write_item_pages(
         if generate_redirects:
             write_redirect_page(output / item_type / item_id / "intro" / "index.html", summary.url)
             write_redirect_page(output / item_type / item_id / "allphotos" / "index.html", summary.url)
+        emitted_summaries.append(summary)
         counts[item_type] += 1
         total += 1
-    return counts, required_manifest_ids
+    return counts, required_manifest_ids, emitted_summaries
 
 
 def write_manifests(
@@ -2382,7 +2366,7 @@ def render_item_page(
 def render_primary_media(item_type: str, item_id: str, source: dict[str, Any], has_manifest: bool) -> str:
     primary = source.get("primarydisplay") if isinstance(source.get("primarydisplay"), dict) else {}
     main = plain_text(primary.get("main"))
-    thumb = plain_text(primary.get("thumbnail"))
+    thumb = cache_harvard_image_url(plain_text(primary.get("thumbnail")))
     caption = plain_text(primary.get("displaytext"))
     pdf = plain_text(source.get("pdf"))
     manifest_id = item_manifest_id(item_type, item_id)
@@ -2396,14 +2380,14 @@ def render_primary_media(item_type: str, item_id: str, source: dict[str, Any], h
         parts.append(f'<p><a href="{html.escape(main, quote=True)}">Open video source</a></p>')
     elif item_type == "pubdocs" and pdf:
         if main:
-            parts.append(f'<a href="{html.escape(pdf, quote=True)}"><img src="{html.escape(main, quote=True)}" alt=""></a>')
+            parts.append(f'<a href="{html.escape(pdf, quote=True)}"><img src="{html.escape(cache_harvard_image_url(main), quote=True)}" alt=""></a>')
         parts.append(f'<p><a class="button" href="{html.escape(pdf, quote=True)}">Download PDF</a></p>')
     elif has_manifest:
         parts.append(f'<div style="height:500px;width:100%;"><div id="mirador" data-manifest="{html.escape(manifest_url(manifest_id), quote=True)}"></div></div>')
         parts.append(f'<p><a href="{manifest_url(manifest_id)}">Open IIIF manifest</a></p>')
     elif main:
         if looks_like_image(main):
-            parts.append(f'<img src="{html.escape(main, quote=True)}" alt="">')
+            parts.append(f'<img src="{html.escape(cache_harvard_image_url(main), quote=True)}" alt="">')
         else:
             label = "Open media"
             parts.append(f'<p><a class="button" href="{html.escape(main, quote=True)}">{label}</a></p>')
@@ -2475,7 +2459,8 @@ def render_related_items(related: Any, lookup: dict[tuple[str, str], ItemSummary
 
 
 def render_summary_card(summary: ItemSummary) -> str:
-    thumb = f'<div class="thumbnail"><a href="{summary.url}"><img src="{html.escape(summary.thumbnail, quote=True)}" alt=""></a></div>' if summary.thumbnail else ""
+    thumb_url = cache_harvard_image_url(summary.thumbnail)
+    thumb = f'<div class="thumbnail"><a href="{summary.url}"><img src="{html.escape(thumb_url, quote=True)}" alt=""></a></div>' if thumb_url else ""
     meta = []
     if summary.department:
         meta.append(summary.department)
@@ -2495,7 +2480,7 @@ def render_summary_card(summary: ItemSummary) -> str:
 def render_related_card(item: dict[str, Any], item_type: str) -> str:
     item_id = plain_text(item.get("id"))
     title = first_text(item, "displaytext", "title", "displayname", "name", "number") or f"{type_label(item_type)} {item_id}"
-    thumb = plain_text(item.get("thumbnail"))
+    thumb = cache_harvard_image_url(plain_text(item.get("thumbnail")))
     url = item_url(item_type, item_id) if item_type in TYPE_LABELS and item_id else ""
     linked_title = f'<a href="{url}">{html.escape(title)}</a>' if url else html.escape(title)
     thumb_html = f'<div class="thumbnail"><a href="{url}"><img src="{html.escape(thumb, quote=True)}" alt=""></a></div>' if thumb and url else ""
@@ -2509,7 +2494,8 @@ def render_related_card(item: dict[str, Any], item_type: str) -> str:
 
 
 def render_pagefind_meta(summary: ItemSummary) -> str:
-    result_image = summary.thumbnail or "/static/images/object1.png"
+    thumbnail = cache_harvard_image_url(summary.thumbnail)
+    result_image = thumbnail or "/static/images/object1.png"
     values = {
         "title": summary.title,
         "type": type_label(summary.type),
@@ -2517,13 +2503,18 @@ def render_pagefind_meta(summary: ItemSummary) -> str:
         "catalog_id": summary.search_identifier,
         "image": result_image,
         "image_alt": summary.title if result_image else "",
-        "thumbnail": summary.thumbnail,
+        "thumbnail": thumbnail,
     }
-    return "\n".join(
+    tags = [
         f'<meta data-pagefind-meta="{html.escape(key)}[content]" content="{html.escape(value, quote=True)}">'
         for key, value in values.items()
         if value
-    )
+    ]
+    if summary.title:
+        tags.append(
+            f'<meta data-pagefind-sort="title[content]" content="{html.escape(summary.title, quote=True)}">'
+        )
+    return "\n".join(tags)
 
 
 def render_pagefind_filters(summary: ItemSummary) -> str:
@@ -2712,7 +2703,7 @@ def make_summary(item_type: str, item_id: str, source: dict[str, Any], manifest_
     primary = source.get("primarydisplay") if isinstance(source.get("primarydisplay"), dict) else {}
     manifest_id = item_manifest_id(item_type, item_id)
     has_manifest = bool(primary.get("has_manifest")) or manifest_id in manifest_ids
-    thumbnail = plain_text(primary.get("thumbnail")) or plain_text(source.get("thumbnail"))
+    thumbnail = cache_harvard_image_url(plain_text(primary.get("thumbnail")) or plain_text(source.get("thumbnail")))
     main = plain_text(primary.get("main"))
     has_image = bool(thumbnail or (main and looks_like_image(main)))
     search_identifier = plain_text(source.get("sitename") if item_type == "sites" else source.get("number")) or item_id
@@ -2789,16 +2780,19 @@ def rewrite_manifest(manifest: dict[str, Any], manifest_id: str, base_url: str) 
     return manifest
 
 
-def rewrite_iiif_refs(value: Any, manifest_id: str, base_url: str) -> None:
+def rewrite_iiif_refs(value: Any, manifest_id: str, base_url: str) -> Any:
     if isinstance(value, dict):
         for key, child in list(value.items()):
             if key in {"@id", "on", "startCanvas"} and isinstance(child, str):
-                value[key] = rewrite_iiif_ref(child, manifest_id, base_url, is_top_id=False)
+                value[key] = cache_harvard_image_url(rewrite_iiif_ref(child, manifest_id, base_url, is_top_id=False))
             else:
-                rewrite_iiif_refs(child, manifest_id, base_url)
+                value[key] = rewrite_iiif_refs(child, manifest_id, base_url)
     elif isinstance(value, list):
-        for child in value:
-            rewrite_iiif_refs(child, manifest_id, base_url)
+        for index, child in enumerate(value):
+            value[index] = rewrite_iiif_refs(child, manifest_id, base_url)
+    elif isinstance(value, str):
+        return cache_harvard_image_url(value)
+    return value
 
 
 def rewrite_iiif_ref(ref: str, manifest_id: str, base_url: str, *, is_top_id: bool) -> str:
@@ -2818,6 +2812,21 @@ def rewrite_iiif_ref(ref: str, manifest_id: str, base_url: str, *, is_top_id: bo
 
 def absolute_url(base_url: str, path: str) -> str:
     return f"{base_url.rstrip('/')}/{path.lstrip('/')}"
+
+
+def cache_harvard_image_url(url: str) -> str:
+    value = plain_text(url)
+    if not value:
+        return ""
+    parsed = urlparse(value)
+    host = (parsed.hostname or "").lower()
+    if parsed.scheme not in {"http", "https"} or host == IIIF_CACHE_HOST:
+        return value
+    if not (host == "harvard.edu" or host.endswith(".harvard.edu")):
+        return value
+    if not looks_like_image(value):
+        return value
+    return IIIF_CACHE_THUMB_URL + quote(value, safe=":/%")
 
 
 def write_redirect_page(path: Path, target: str) -> None:
