@@ -45,6 +45,26 @@ TYPE_LABELS = {
     "videos": "Videos",
 }
 
+SEARCH_CATEGORY_ORDER = [
+    ("photos", "Photos"),
+    ("objects", "Objects"),
+    ("unpubdocs", "Unpublished Documents"),
+    ("mapsandplans", "Maps and Plans"),
+    ("diarypages", "Diary Pages"),
+    ("drawings", "Drawings"),
+    ("sites", "Tombs and Monuments"),
+    ("ancientpeople", "Ancient People"),
+    ("videos", "Videos"),
+    ("modernpeople", "Modern People"),
+    ("pubdocs", "Published Documents"),
+    ("institutions", "Institutions"),
+    ("3dmodels", "3D Models"),
+    ("groups", "Groups"),
+    ("animals", "Animals"),
+]
+
+SEARCH_CATEGORY_LABELS = dict(SEARCH_CATEGORY_ORDER)
+
 RELATED_TYPE_ALIASES = {
     "giza3d": "3dmodels",
     "models": "3dmodels",
@@ -132,6 +152,22 @@ DETAIL_FIELDS = [
 ]
 
 STATIC_SITE_CSS = """
+:root {
+  --pf-text: #4a4a4a;
+  --pf-text-secondary: #666;
+  --pf-text-muted: #777;
+  --pf-background: #fff;
+  --pf-border: #c9c1b8;
+  --pf-border-focus: #857158;
+  --pf-hover: #f4f0eb;
+  --pf-mark: #572700;
+  --pf-outline-focus: #2d6f96;
+  --pf-font: Montserrat, Helvetica, Arial, sans-serif;
+  --pf-input-height: 2.5rem;
+  --pf-input-font-size: 16px;
+  --pf-summary-font-size: 1rem;
+  --pf-border-radius: 0;
+}
 .static-site-pagefind-filters {
   height: 0;
   overflow: hidden;
@@ -212,8 +248,189 @@ STATIC_SITE_CSS = """
   display: inline-block;
   margin-top: 0.5rem;
 }
-.static-site-search {
-  margin: 2rem 0;
+.static-site-search-page {
+  margin-top: 2.25rem;
+}
+.static-site-search-controls {
+  margin-bottom: 1.25rem;
+}
+.static-site-search-controls pagefind-input {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.static-site-advanced-search {
+  border-top: 1px solid #ded7cf;
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
+}
+.static-site-advanced-search h3 {
+  margin-top: 0;
+}
+.static-site-advanced-search fieldset {
+  border: 0;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+.static-site-advanced-search legend {
+  color: #4a4a4a;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.static-site-advanced-search .feature-block.tertiary {
+  padding: 0.75rem 0.85rem;
+}
+.static-site-advanced-search input[type="text"] {
+  margin-bottom: 0.85rem;
+}
+.static-site-search-results .static-site-search-status {
+  margin-bottom: 1.35rem;
+}
+.static-site-search-results .static-site-search-status h3 {
+  color: #650516;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 0.15rem;
+}
+.static-site-search-results .media-object-holder {
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 0.4rem;
+}
+.static-site-search-results .search-result {
+  border-right: solid 1px #ccc;
+  border-top: solid 1px #ccc;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0;
+  min-height: 164px;
+  padding: 1.15rem 1.2rem 1.15rem 1.35rem;
+}
+.static-site-search-results .search-result:nth-child(3n) {
+  border-right: 0;
+}
+.static-site-search-results .media-object-section:first-child {
+  flex: 0 0 80px;
+}
+.static-site-search-results .media-object-section:last-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.static-site-search-results .thumbnail {
+  align-items: center;
+  background: #f4f0eb;
+  border: 1px solid #d8d0c7;
+  box-sizing: border-box;
+  display: flex;
+  height: 80px;
+  justify-content: center;
+  margin-bottom: 0;
+  overflow: hidden;
+  padding: 4px;
+  width: 80px;
+}
+.static-site-search-results .thumbnail img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+.static-site-search-results .thumbnail.no-img img {
+  height: 44px;
+  object-fit: contain;
+  opacity: 0.62;
+  width: 44px;
+}
+.static-site-search-results .media-object-title {
+  font-weight: bold;
+  line-height: 1.35;
+  margin-bottom: 0.2rem;
+}
+.static-site-search-results .media-object-title a {
+  color: #005eb8;
+}
+.static-site-search-results .media-object-title a:hover,
+.static-site-search-results .media-object-title a:focus {
+  color: #572700;
+}
+.static-site-search-results .subheader {
+  color: #858585;
+  font-size: 1rem;
+  line-height: 1.35;
+  list-style: none;
+  margin: 0;
+}
+.static-site-search-results .subheader li {
+  display: block;
+}
+.static-site-search-results .pagination {
+  margin-top: 1.5rem;
+}
+.static-site-search-results .pagination a,
+.static-site-search-results .pagination .current,
+.static-site-search-results .pagination .disabled {
+  margin-bottom: 0.25rem;
+}
+.search-facet-section {
+  border-top: solid 1px #ded7cf;
+  display: block;
+  margin-top: 1.15rem;
+  padding-top: 1.15rem;
+}
+.search-facet-title {
+  color: #8a817a;
+  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
+  margin-bottom: 0;
+  text-transform: none;
+}
+.search-facet-list {
+  list-style: none;
+  margin-left: 0;
+}
+.search-facet-item {
+  line-height: 1.35;
+  margin-bottom: 0.4rem;
+}
+.search-facet-item a,
+.search-facet-item label {
+  color: #005eb8;
+}
+.static-site-search-page .feature-block.secondary {
+  background: #d7d2cb;
+  border-radius: 4px;
+  padding: 1.55rem 1.6rem;
+}
+.static-site-search-page .feature-block.secondary h5 {
+  color: #650516;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.search-facet-item.is-active a,
+.search-facet-item.is-active label,
+.search-facet-item input:checked + label {
+  color: #857158;
+  font-weight: bold;
+}
+.search-facet-item.is-active a:after {
+  color: #7b2d20;
+  content: "\\00d7";
+  display: inline-block;
+  font-size: 110%;
+  font-weight: normal;
+  margin-left: 0.3em;
+  vertical-align: baseline;
+}
+.search-facet-item.is-active a:hover,
+.search-facet-item.is-active a:active,
+.search-facet-item.is-active a:focus,
+.search-facet-item.is-active a:hover:after,
+.search-facet-item.is-active a:active:after,
+.search-facet-item.is-active a:focus:after {
+  color: #cc4b37;
 }
 .static-site-related .media-object-section:first-child {
   width: 90px;
@@ -225,9 +442,34 @@ STATIC_SITE_CSS = """
 .static-site-footer-note {
   margin-top: 1rem;
 }
+@media (max-width: 1024px) {
+  .static-site-search-results .media-object-holder {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .static-site-search-results .search-result:nth-child(3n) {
+    border-right: solid 1px #ccc;
+  }
+  .static-site-search-results .search-result:nth-child(2n) {
+    border-right: 0;
+  }
+}
 @media (max-width: 640px) {
   .top-bar-left.hide-for-small-only {
     display: none !important;
+  }
+  .static-site-search-page {
+    margin-top: 1rem;
+  }
+  .static-site-search-results .media-object-holder {
+    grid-template-columns: 1fr;
+  }
+  .static-site-search-results .search-result {
+    border-right: 0;
+    gap: 0.75rem;
+  }
+  .static-site-search-results .search-result:nth-child(2n),
+  .static-site-search-results .search-result:nth-child(3n) {
+    border-right: 0;
   }
   .static-site-related .media-object {
     display: block;
@@ -240,36 +482,716 @@ STATIC_SITE_CSS = """
 
 STATIC_SITE_JS = """
 (function () {
-  function seedSearchBox(term) {
-    if (!term) return;
-    var attempts = 0;
-    var timer = window.setInterval(function () {
-      attempts += 1;
-      var input = document.querySelector('#search input[type="search"], #search input[type="text"]');
-      if (input) {
-        input.value = term;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-        window.clearInterval(timer);
-      } else if (attempts > 40) {
-        window.clearInterval(timer);
-      }
-    }, 100);
+  var INSTANCE_NAME = 'giza-search';
+  var SEARCH_SCOPE_FILTER = 'search_scope';
+  var SEARCH_SCOPE_VALUE = 'catalog';
+  var DEFAULT_IMAGE = '/static/images/object1.png';
+  var CATEGORY_LABELS = {
+    photos: 'Photos',
+    objects: 'Objects',
+    unpubdocs: 'Unpublished Documents',
+    mapsandplans: 'Maps and Plans',
+    diarypages: 'Diary Pages',
+    drawings: 'Drawings',
+    sites: 'Tombs and Monuments',
+    ancientpeople: 'Ancient People',
+    videos: 'Videos',
+    modernpeople: 'Modern People',
+    pubdocs: 'Published Documents',
+    institutions: 'Institutions',
+    '3dmodels': '3D Models',
+    groups: 'Groups',
+    animals: 'Animals'
+  };
+  var CATEGORY_ORDER = [
+    'Photos',
+    'Objects',
+    'Unpublished Documents',
+    'Maps and Plans',
+    'Diary Pages',
+    'Drawings',
+    'Tombs and Monuments',
+    'Ancient People',
+    'Videos',
+    'Modern People',
+    'Published Documents',
+    'Institutions',
+    '3D Models',
+    'Groups',
+    'Animals'
+  ];
+  var ADVANCED_FIELDS = [
+    { name: 'objects_title', names: ['objects_title', 'title'], label: 'Object title or name', group: 'objects' },
+    { name: 'objects_allnumbers', names: ['objects_allnumbers', 'allnumbers'], label: 'Object or ID number', group: 'objects' },
+    { name: 'objects_medium', names: ['objects_medium', 'medium'], label: 'Material', group: 'objects' },
+    { name: 'objects_provenance', names: ['objects_provenance', 'provenance'], label: 'Findspot', group: 'objects' },
+    { name: 'objects_entrydate', names: ['objects_entrydate', 'entrydate'], label: 'Date of register entry', group: 'objects' },
+    { name: 'sites_number', names: ['sites_number', 'number'], label: 'Tomb/Monument number', group: 'sites' },
+    { name: 'sites_sitename', names: ['sites_sitename', 'sitename'], label: 'Tomb/Monument name', group: 'sites' },
+    { name: 'sites_datevalues', names: ['sites_datevalues', 'datevalues'], label: 'Site Dates', group: 'sites' },
+    { name: 'sites_people', names: ['sites_people', 'people'], label: 'People', group: 'sites' }
+  ];
+  var CATEGORY_LOOKUP = {};
+  var CATEGORY_SLUGS_BY_LABEL = {};
+  var SearchRuntime = {
+    applyingUrlState: false,
+    enforcingCatalog: false,
+    initStarted: false,
+    instance: null,
+    suppressNextPageReset: false,
+    suppressNextUrlSync: false
+  };
+
+  Object.keys(CATEGORY_LABELS).forEach(function (slug) {
+    var label = CATEGORY_LABELS[slug];
+    CATEGORY_LOOKUP[normalizeCategoryKey(slug)] = label;
+    CATEGORY_LOOKUP[normalizeCategoryKey(label)] = label;
+    CATEGORY_SLUGS_BY_LABEL[label] = slug;
+  });
+  CATEGORY_LOOKUP.tombs = CATEGORY_LABELS.sites;
+  CATEGORY_LOOKUP.tomb = CATEGORY_LABELS.sites;
+  CATEGORY_LOOKUP.tombsandmonuments = CATEGORY_LABELS.sites;
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
-  window.GizaStaticSite = {
-    initPagefind: function () {
-      var target = document.querySelector('#search');
-      if (!target || !window.PagefindUI) return;
-      new window.PagefindUI({
-        element: '#search',
-        resetStyles: false,
-        showImages: true,
-        showSubResults: true
-      });
-      var params = new URLSearchParams(window.location.search);
-      seedSearchBox(params.get('q') || params.get('query') || '');
+  function escapeAttr(value) {
+    return escapeHtml(value);
+  }
+
+  function normalizeCategoryKey(value) {
+    return String(value || '')
+      .trim()
+      .toLowerCase()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9]+/g, '');
+  }
+
+  function categoryLabelFromParam(value) {
+    return CATEGORY_LOOKUP[normalizeCategoryKey(value)] || '';
+  }
+
+  function categorySlugForLabel(label) {
+    return CATEGORY_SLUGS_BY_LABEL[label] || '';
+  }
+
+  function firstFilledParam(params, names) {
+    for (var i = 0; i < names.length; i += 1) {
+      var value = params.get(names[i]);
+      if (value && value.trim()) {
+        return { name: names[i], value: value.trim() };
+      }
     }
+    return null;
+  }
+
+  function advancedRowsFromParams(params) {
+    var rows = [];
+    ADVANCED_FIELDS.forEach(function (field) {
+      var match = firstFilledParam(params, field.names);
+      if (match) {
+        rows.push({
+          key: field.name,
+          group: field.group,
+          label: field.label,
+          value: match.value
+        });
+      }
+    });
+    return rows;
+  }
+
+  function inferCategoryFromRows(rows) {
+    for (var i = 0; i < rows.length; i += 1) {
+      if (rows[i].group === 'sites') return CATEGORY_LABELS.sites;
+    }
+    for (var j = 0; j < rows.length; j += 1) {
+      if (rows[j].group === 'objects') return CATEGORY_LABELS.objects;
+    }
+    return '';
+  }
+
+  function stateFromParams(params) {
+    var simple = firstFilledParam(params, ['q', 'query']);
+    var rows = advancedRowsFromParams(params);
+    var parts = [];
+    if (simple) parts.push(simple.value);
+    rows.forEach(function (row) {
+      parts.push(row.value);
+    });
+    return {
+      category: categoryLabelFromParam(params.get('category')) || inferCategoryFromRows(rows),
+      rows: rows,
+      simple: simple ? simple.value : '',
+      term: parts.join(' ').trim()
+    };
+  }
+
+  function currentParams() {
+    return new URLSearchParams(window.location.search);
+  }
+
+  function parsePageParam() {
+    var value = parseInt(currentParams().get('page') || '1', 10);
+    return Number.isFinite(value) && value > 0 ? value : 1;
+  }
+
+  function updateUrl(params, path, replace) {
+    var query = params.toString();
+    var nextPath = path || window.location.pathname || '/search-results/';
+    var nextUrl = nextPath + (query ? '?' + query : '');
+    if (nextUrl === window.location.pathname + window.location.search) return;
+    if (replace) {
+      window.history.replaceState(null, '', nextUrl);
+    } else {
+      window.history.pushState(null, '', nextUrl);
+    }
+    window.dispatchEvent(new CustomEvent('giza:search-url-change'));
+  }
+
+  function urlForParams(params, path) {
+    var query = params.toString();
+    return (path || window.location.pathname || '/search-results/') + (query ? '?' + query : '');
+  }
+
+  function updatePageParam(page, replace) {
+    var params = currentParams();
+    if (page > 1) {
+      params.set('page', String(page));
+    } else {
+      params.delete('page');
+    }
+    updateUrl(params, null, replace);
+  }
+
+  function cloneFilterValue(value) {
+    if (Array.isArray(value)) {
+      return value.map(String).filter(Boolean);
+    }
+    if (value == null || value === '') {
+      return [];
+    }
+    return [String(value)];
+  }
+
+  function filtersForCategory(categoryLabel) {
+    var filters = {};
+    filters[SEARCH_SCOPE_FILTER] = [SEARCH_SCOPE_VALUE];
+    if (categoryLabel) {
+      filters.category = [categoryLabel];
+    }
+    return filters;
+  }
+
+  function removeAdvancedParams(params) {
+    ADVANCED_FIELDS.forEach(function (field) {
+      field.names.forEach(function (name) {
+        params.delete(name);
+      });
+    });
+  }
+
+  function syncSimpleSearchUrl(term, filters) {
+    var params = currentParams();
+    var value = String(term || '').trim();
+    params.delete('query');
+    removeAdvancedParams(params);
+    if (value) {
+      params.set('q', value);
+    } else {
+      params.delete('q');
+    }
+    var category = activeCategoryFromFilters(filters);
+    if (category) {
+      params.set('category', categorySlugForLabel(category) || category);
+    } else {
+      params.delete('category');
+    }
+    params.delete('page');
+    updateUrl(params, null, true);
+  }
+
+  function withCatalogFilter(filters) {
+    var merged = {};
+    Object.keys(filters || {}).forEach(function (key) {
+      var values = cloneFilterValue(filters[key]);
+      if (values.length) merged[key] = values;
+    });
+    merged[SEARCH_SCOPE_FILTER] = [SEARCH_SCOPE_VALUE];
+    return merged;
+  }
+
+  function filtersIncludeCatalog(filters) {
+    return cloneFilterValue(filters && filters[SEARCH_SCOPE_FILTER]).indexOf(SEARCH_SCOPE_VALUE) !== -1;
+  }
+
+  function activeCategoryFromFilters(filters) {
+    return cloneFilterValue(filters && filters.category)[0] || '';
+  }
+
+  function filterSignature(filters) {
+    var normalized = {};
+    Object.keys(filters || {}).sort().forEach(function (key) {
+      normalized[key] = cloneFilterValue(filters[key]).sort();
+    });
+    return JSON.stringify(normalized);
+  }
+
+  function searchSignature(term, filters) {
+    return String(term || '') + '|' + filterSignature(filters || {});
+  }
+
+  function waitForPagefindInstance(instanceName) {
+    return new Promise(function (resolve, reject) {
+      var attempts = 0;
+      function check() {
+        var components = window.PagefindComponents;
+        if (components && typeof components.getInstanceManager === 'function') {
+          resolve(components.getInstanceManager().getInstance(instanceName));
+          return;
+        }
+        attempts += 1;
+        if (attempts > 120) {
+          reject(new Error('Pagefind Component UI did not load.'));
+          return;
+        }
+        window.setTimeout(check, 50);
+      }
+      check();
+    });
+  }
+
+  async function directPagefindSearch(term, filters) {
+    var pagefind = await import('/pagefind/pagefind.js');
+    if (typeof pagefind.init === 'function') {
+      await pagefind.init();
+    }
+    return pagefind.search(term ? term : null, { filters: filters });
+  }
+
+  function selectedRowsForSidebar(instance) {
+    var params = currentParams();
+    var state = stateFromParams(params);
+    var rows = [];
+    if (state.simple) {
+      rows.push({ label: 'Keyword', value: state.simple });
+    }
+    state.rows.forEach(function (row) {
+      rows.push({ label: row.label, value: row.value });
+    });
+    if (!rows.length && instance && instance.searchTerm) {
+      rows.push({ label: 'Keyword', value: instance.searchTerm });
+    }
+    return rows;
+  }
+
+  function applyCategory(instance, categoryLabel) {
+    var params = currentParams();
+    params.delete('page');
+    if (categoryLabel) {
+      params.set('category', categorySlugForLabel(categoryLabel) || categoryLabel);
+    } else {
+      params.delete('category');
+    }
+    updateUrl(params, null, false);
+    if (instance && typeof instance.triggerFilters === 'function') {
+      SearchRuntime.applyingUrlState = true;
+      SearchRuntime.suppressNextPageReset = true;
+      SearchRuntime.suppressNextUrlSync = true;
+      instance.triggerFilters(filtersForCategory(categoryLabel));
+      window.setTimeout(function () {
+        SearchRuntime.applyingUrlState = false;
+      }, 0);
+    }
+  }
+
+  function setupAdvancedForm() {
+    var form = document.getElementById('advanced-search-form');
+    if (!form) return;
+
+    function setFormFromUrl() {
+      var params = currentParams();
+      var rows = advancedRowsFromParams(params);
+      var category = categoryLabelFromParam(params.get('category')) || inferCategoryFromRows(rows) || CATEGORY_LABELS.objects;
+      var slug = categorySlugForLabel(category);
+      ADVANCED_FIELDS.forEach(function (field) {
+        var input = form.elements[field.name];
+        var match = firstFilledParam(params, field.names);
+        if (input) input.value = match ? match.value : '';
+      });
+      Array.prototype.forEach.call(form.querySelectorAll('input[name="category"]'), function (radio) {
+        radio.checked = Boolean(slug && radio.value === slug);
+      });
+      if (!slug) {
+        var defaultRadio = form.querySelector('input[name="category"][value="objects"]');
+        if (defaultRadio) defaultRadio.checked = true;
+      }
+      updateAdvancedSections();
+    }
+
+    function updateAdvancedSections() {
+      var checked = form.querySelector('input[name="category"]:checked');
+      var targetId = checked ? checked.getAttribute('data-for-id') : 'section-objects';
+      Array.prototype.forEach.call(form.querySelectorAll('.category-section'), function (section) {
+        section.style.display = section.id === targetId ? '' : 'none';
+      });
+    }
+
+    setFormFromUrl();
+    form.addEventListener('change', function (event) {
+      if (event.target && event.target.name === 'category') {
+        updateAdvancedSections();
+      }
+    });
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var params = new URLSearchParams();
+      Array.prototype.forEach.call(form.elements, function (field) {
+        if (!field.name || field.disabled) return;
+        if ((field.type === 'radio' || field.type === 'checkbox') && !field.checked) return;
+        var value = String(field.value || '').trim();
+        if (value) params.set(field.name, value);
+      });
+      params.delete('page');
+      var action = form.getAttribute('action') || '/search-results/';
+      if (!document.querySelector('giza-search-results')) {
+        window.location.href = urlForParams(params, action);
+        return;
+      }
+      updateUrl(params, action, false);
+      var state = stateFromParams(params);
+      if (SearchRuntime.instance && typeof SearchRuntime.instance.triggerSearchWithFilters === 'function') {
+        SearchRuntime.applyingUrlState = true;
+        SearchRuntime.suppressNextPageReset = true;
+        SearchRuntime.suppressNextUrlSync = true;
+        SearchRuntime.instance.triggerSearchWithFilters(state.term, filtersForCategory(state.category));
+        window.setTimeout(function () {
+          SearchRuntime.applyingUrlState = false;
+        }, 0);
+      }
+    });
+    window.addEventListener('popstate', setFormFromUrl);
+    window.addEventListener('giza:search-url-change', setFormFromUrl);
+  }
+
+  function renderPagination(currentPage, totalPages) {
+    if (totalPages <= 1) return '';
+    var items = [];
+    var previousClass = currentPage <= 1 ? ' class="pagination-previous disabled"' : ' class="pagination-previous"';
+    var nextClass = currentPage >= totalPages ? ' class="pagination-next disabled"' : ' class="pagination-next"';
+    items.push('<li' + previousClass + '>' + (currentPage <= 1 ? 'Previous' : '<a href="#" data-search-page="' + (currentPage - 1) + '" aria-label="Previous page">Previous</a>') + '</li>');
+
+    var lastWasEllipsis = false;
+    for (var page = 1; page <= totalPages; page += 1) {
+      var visible = page === 1 || page === totalPages || Math.abs(page - currentPage) <= 2;
+      if (!visible) {
+        if (!lastWasEllipsis) {
+          items.push('<li class="ellipsis"></li>');
+          lastWasEllipsis = true;
+        }
+        continue;
+      }
+      lastWasEllipsis = false;
+      if (page === currentPage) {
+        items.push('<li class="current"><span class="show-for-sr">You are on page</span> ' + page + '</li>');
+      } else {
+        items.push('<li><a href="#" data-search-page="' + page + '" aria-label="Page ' + page + '">' + page + '</a></li>');
+      }
+    }
+    items.push('<li' + nextClass + '>' + (currentPage >= totalPages ? 'Next' : '<a href="#" data-search-page="' + (currentPage + 1) + '" aria-label="Next page">Next</a>') + '</li>');
+    return '<div class="row"><div class="text-center columns p-t-1"><nav aria-label="Pagination"><ul class="pagination m-l-neghalf">' + items.join('') + '</ul></nav></div></div>';
+  }
+
+  function renderResultCard(data) {
+    var meta = data.meta || {};
+    var url = meta.url || data.url || '#';
+    var title = meta.title || data.title || url;
+    var catalogId = meta.catalog_id || '';
+    var image = meta.thumbnail || meta.image || DEFAULT_IMAGE;
+    var thumbClass = meta.thumbnail ? 'thumbnail' : 'thumbnail no-img';
+    var subheader = [];
+    if (catalogId) subheader.push('<li>' + escapeHtml(catalogId) + '</li>');
+    return [
+      '<div class="media-object list-item search-result thumbsize-md thumbs-square">',
+      '<div class="media-object-section"><div class="' + thumbClass + '"><a href="' + escapeAttr(url) + '"><img src="' + escapeAttr(image) + '" alt=""></a></div></div>',
+      '<div class="media-object-section"><p class="media-object-title"><a href="' + escapeAttr(url) + '">' + escapeHtml(title) + '</a></p>',
+      '<ul class="subheader">' + subheader.join('') + '</ul></div>',
+      '</div>'
+    ].join('');
+  }
+
+  function defineSearchComponents() {
+    if (!window.customElements || customElements.get('giza-search-results')) return;
+
+    class GizaSearchSidebar extends HTMLElement {
+      connectedCallback() {
+        this.instanceName = this.getAttribute('instance') || INSTANCE_NAME;
+        this.categoryCounts = {};
+        this.activeCategory = categoryLabelFromParam(currentParams().get('category'));
+        this.render();
+        this.addEventListener('click', (event) => {
+          var link = event.target.closest('[data-search-category]');
+          if (!link) return;
+          event.preventDefault();
+          var label = link.getAttribute('data-search-category') || '';
+          applyCategory(this.instance, label === this.activeCategory ? '' : label);
+        });
+        waitForPagefindInstance(this.instanceName).then((instance) => {
+          this.instance = instance;
+          this.activeCategory = activeCategoryFromFilters(instance.searchFilters) || this.activeCategory;
+          instance.on('search', (term, filters) => {
+            this.activeCategory = activeCategoryFromFilters(filters);
+            this.render();
+          }, this);
+          instance.on('filters', (filters) => {
+            var available = filters && filters.available ? filters.available : {};
+            this.categoryCounts = available.category || (instance.availableFilters && instance.availableFilters.category) || {};
+            this.activeCategory = activeCategoryFromFilters(instance.searchFilters);
+            this.render();
+          }, this);
+          instance.on('results', () => {
+            this.activeCategory = activeCategoryFromFilters(instance.searchFilters);
+            this.render();
+          }, this);
+          window.addEventListener('giza:direct-search-results', (event) => {
+            var detail = event.detail || {};
+            var searchResult = detail.searchResult || {};
+            this.categoryCounts = searchResult.filters && searchResult.filters.category ? searchResult.filters.category : this.categoryCounts;
+            this.activeCategory = activeCategoryFromFilters(detail.filters || {});
+            this.render();
+          });
+          this.render();
+        }).catch(() => {
+          this.innerHTML = '<div class="feature-block secondary text-smaller"><h5 class="heading-alt">Search Options</h5><p>Search is available after the Pagefind index is built.</p></div>';
+        });
+      }
+
+      render() {
+        var rows = selectedRowsForSidebar(this.instance);
+        var counts = this.categoryCounts || {};
+        var hasCounts = Object.keys(counts).length > 0;
+        var html = ['<div class="feature-block secondary text-smaller"><h5 class="heading-alt">Search Options</h5><p><a href="/search/">Start a new search</a></p>'];
+        if (rows.length) {
+          html.push('<div class="search-facet-section">');
+          rows.forEach(function (row) {
+            html.push('<h6 class="search-facet-title">' + escapeHtml(row.label) + ':</h6><ul class="search-facet-list"><li class="is-active">' + escapeHtml(row.value) + '</li></ul>');
+          });
+          html.push('</div>');
+        }
+        if (hasCounts || this.activeCategory) {
+          html.push('<div class="search-facet-section"><h6 class="search-facet-title">Category:</h6><ul class="search-facet-list">');
+          CATEGORY_ORDER.slice().sort(function (a, b) {
+            return (counts[b] || 0) - (counts[a] || 0) || CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b);
+          }).forEach((label) => {
+            var count = counts[label] || 0;
+            if (!count && label !== this.activeCategory) return;
+            var active = label === this.activeCategory;
+            var params = currentParams();
+            params.delete('page');
+            if (active) {
+              params.delete('category');
+            } else {
+              params.set('category', categorySlugForLabel(label) || label);
+            }
+            var href = (window.location.pathname || '/search-results/') + (params.toString() ? '?' + params.toString() : '');
+            html.push('<li class="search-facet-item' + (active ? ' is-active' : '') + '"><a href="' + escapeAttr(href) + '" data-search-category="' + escapeAttr(label) + '">' + escapeHtml(label) + ' (' + count + ')</a></li>');
+          });
+          html.push('</ul></div>');
+        }
+        html.push('</div>');
+        this.innerHTML = html.join('');
+      }
+    }
+
+    class GizaSearchResults extends HTMLElement {
+      connectedCallback() {
+        this.instanceName = this.getAttribute('instance') || INSTANCE_NAME;
+        this.pageSize = parseInt(this.getAttribute('page-size') || '20', 10) || 20;
+        this.currentPage = parsePageParam();
+        this.renderToken = 0;
+        this.seenSearch = false;
+        this.signature = '';
+        this.fallbackTimer = null;
+        this.innerHTML = '<p class="static-site-meta">Loading search results...</p>';
+        this.addEventListener('click', (event) => {
+          var link = event.target.closest('[data-search-page]');
+          if (!link) return;
+          event.preventDefault();
+          var page = parseInt(link.getAttribute('data-search-page') || '1', 10);
+          if (!Number.isFinite(page) || page < 1) return;
+          this.currentPage = page;
+          updatePageParam(page, false);
+          this.renderResults();
+          this.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        });
+        var syncPageFromUrl = () => {
+          this.currentPage = parsePageParam();
+          if (this.searchResult) this.renderResults();
+        };
+        window.addEventListener('popstate', syncPageFromUrl);
+        window.addEventListener('giza:search-url-change', syncPageFromUrl);
+        waitForPagefindInstance(this.instanceName).then((instance) => {
+          this.instance = instance;
+          instance.on('loading', () => {
+            this.renderToken += 1;
+            this.searchResult = null;
+            this.innerHTML = '<p class="static-site-meta">Searching...</p>';
+            this.scheduleDirectFallback();
+          }, this);
+          instance.on('search', (term, filters) => {
+            var nextSignature = searchSignature(term, filters);
+            var suppressPageReset = SearchRuntime.applyingUrlState || SearchRuntime.suppressNextPageReset;
+            SearchRuntime.suppressNextPageReset = false;
+            if (this.seenSearch && nextSignature !== this.signature && !suppressPageReset) {
+              this.currentPage = 1;
+              updatePageParam(1, true);
+            }
+            this.signature = nextSignature;
+            this.seenSearch = true;
+          }, this);
+          instance.on('results', (searchResult) => {
+            if (this.fallbackTimer) {
+              window.clearTimeout(this.fallbackTimer);
+              this.fallbackTimer = null;
+            }
+            this.searchResult = searchResult;
+            this.renderResults();
+          }, this);
+          instance.on('error', (error) => {
+            this.renderToken += 1;
+            this.innerHTML = '<p class="callout alert">Search failed: ' + escapeHtml(error && error.message ? error.message : error) + '</p>';
+          }, this);
+          if (instance.searchResult) {
+            this.searchResult = instance.searchResult;
+            this.renderResults();
+          } else {
+            this.scheduleDirectFallback();
+          }
+        }).catch(() => {
+          this.runDirectSearchFromUrl().catch(() => {
+            this.innerHTML = '<p class="callout warning">Search is available after running Pagefind for this static build.</p>';
+          });
+        });
+      }
+
+      scheduleDirectFallback() {
+        if (this.fallbackTimer) window.clearTimeout(this.fallbackTimer);
+        this.fallbackTimer = window.setTimeout(() => {
+          this.fallbackTimer = null;
+          if (!this.searchResult) {
+            this.runDirectSearchFromUrl().catch((error) => {
+              this.innerHTML = '<p class="callout alert">Search failed: ' + escapeHtml(error && error.message ? error.message : error) + '</p>';
+            });
+          }
+        }, 1200);
+      }
+
+      async runDirectSearchFromUrl() {
+        var state = stateFromParams(currentParams());
+        var filters = filtersForCategory(state.category);
+        var signature = searchSignature(state.term, filters);
+        this.renderToken += 1;
+        this.innerHTML = '<p class="static-site-meta">Searching...</p>';
+        var searchResult = await directPagefindSearch(state.term, filters);
+        var latestState = stateFromParams(currentParams());
+        var latestFilters = filtersForCategory(latestState.category);
+        if (signature !== searchSignature(latestState.term, latestFilters)) return;
+        this.searchResult = searchResult;
+        window.dispatchEvent(new CustomEvent('giza:direct-search-results', {
+          detail: { searchResult: searchResult, filters: filters }
+        }));
+        this.renderResults();
+      }
+
+      renderResults() {
+        var token = this.renderToken + 1;
+        this.renderToken = token;
+        var rawResults = this.searchResult && this.searchResult.results ? this.searchResult.results : [];
+        var total = rawResults.length;
+        var totalPages = Math.max(1, Math.ceil(total / this.pageSize));
+        if (this.currentPage > totalPages) {
+          this.currentPage = totalPages;
+          updatePageParam(this.currentPage, true);
+        }
+        var start = (this.currentPage - 1) * this.pageSize;
+        var visible = rawResults.slice(start, start + this.pageSize);
+        var noun = total === 1 ? 'search result' : 'search results';
+        var status = '<div class="static-site-search-status"><h3 class="heading-alt m-t-half m-b-1">' + String(total) + ' ' + noun + ' found.</h3></div>';
+        if (!total) {
+          this.innerHTML = status + '<p>No catalog records matched this search.</p>';
+          return;
+        }
+        this.innerHTML = status + '<p class="static-site-meta">Loading results ' + (start + 1).toLocaleString() + '-' + Math.min(start + this.pageSize, total).toLocaleString() + '...</p>';
+        Promise.all(visible.map(function (raw) {
+          return raw.data().catch(function () { return null; });
+        })).then((items) => {
+          if (token !== this.renderToken) return;
+          var cards = items.filter(Boolean).map(renderResultCard).join('');
+          this.innerHTML = status + '<div class="media-object-holder">' + cards + '</div>' + renderPagination(this.currentPage, totalPages);
+        });
+      }
+    }
+
+    customElements.define('giza-search-sidebar', GizaSearchSidebar);
+    customElements.define('giza-search-results', GizaSearchResults);
+  }
+
+  function triggerSearchFromUrl(instance) {
+    var state = stateFromParams(currentParams());
+    var filters = filtersForCategory(state.category);
+    instance.faceted = true;
+    SearchRuntime.applyingUrlState = true;
+    SearchRuntime.suppressNextPageReset = true;
+    SearchRuntime.suppressNextUrlSync = true;
+    if (state.term || typeof instance.triggerFilters !== 'function') {
+      instance.triggerSearchWithFilters(state.term, filters);
+    } else {
+      instance.triggerFilters(filters);
+    }
+    window.setTimeout(function () {
+      SearchRuntime.applyingUrlState = false;
+    }, 0);
+  }
+
+  function notifyPagefindUnavailable() {
+    Array.prototype.forEach.call(document.querySelectorAll('giza-search-results'), function (element) {
+      element.innerHTML = '<p class="callout warning">Search is available after running Pagefind for this static build.</p>';
+    });
+  }
+
+  window.GizaStaticSite = window.GizaStaticSite || {};
+  window.GizaStaticSite.initPagefind = function () {
+    if (SearchRuntime.initStarted || !document.querySelector('[data-giza-search-page]')) return;
+    SearchRuntime.initStarted = true;
+    defineSearchComponents();
+    setupAdvancedForm();
+    waitForPagefindInstance(INSTANCE_NAME).then(function (instance) {
+      SearchRuntime.instance = instance;
+      instance.faceted = true;
+      instance.on('search', function (term, filters) {
+        var suppressUrlSync = SearchRuntime.applyingUrlState || SearchRuntime.suppressNextUrlSync;
+        SearchRuntime.suppressNextUrlSync = false;
+        if (!suppressUrlSync && !SearchRuntime.enforcingCatalog) {
+          syncSimpleSearchUrl(term, withCatalogFilter(filters));
+        }
+        if (SearchRuntime.enforcingCatalog || filtersIncludeCatalog(filters)) return;
+        SearchRuntime.enforcingCatalog = true;
+        instance.triggerSearchWithFilters(term || '', withCatalogFilter(filters));
+        window.setTimeout(function () {
+          SearchRuntime.enforcingCatalog = false;
+        }, 0);
+      }, SearchRuntime);
+      triggerSearchFromUrl(instance);
+      window.addEventListener('popstate', function () {
+        triggerSearchFromUrl(instance);
+      });
+    }).catch(notifyPagefindUnavailable);
   };
 }());
 """.strip()
@@ -288,6 +1210,7 @@ class ItemSummary:
     material: str
     period: str
     site_name: str
+    search_identifier: str
     has_image: bool
     has_manifest: bool
     has_pdf: bool
@@ -876,25 +1799,104 @@ def giza3d_body() -> str:
 
 
 def write_search_pages(output: Path) -> None:
-    body = """
-<div class="page-header header-bg-6"><div class="row title"><header class="large-12 columns"><h1>Search Digital Giza</h1></header></div></div>
-<div class="row"><section class="large-12 columns">
-  <p class="lead text-alt">Search public catalog records, static pages, lessons, videos, library entries, and public collection pages.</p>
-  <div id="search" class="static-site-search"></div>
-</section></div>
+    advanced_search_body = """
+<div class="page-header header-bg-5"><div class="row title"><header class="large-12 columns"><h1>Search the Archives</h1></header></div></div>
+<div class="row static-site-search-page" data-giza-search-page>
+  <section class="large-12 columns">
+    <section class="static-site-advanced-search" data-pagefind-ignore>
+      <h3>Advanced Search</h3>
+      <p>Narrow your search results using the advanced search fields below.</p>
+      <p class="text-smaller">Need help with abbreviations? Check out our <a href="/faq/#abbr">list of abbreviations on the FAQ page.</a></p>
+
+      <form id="advanced-search-form" action="/search-results/" method="get">
+        <div class="row">
+          <fieldset id="category-radio-selector" class="medium-4 medium-push-8 columns">
+            <legend>Search within the selected category:</legend>
+            <div class="feature-block tertiary">
+              <input id="objects" data-for-id="section-objects" value="objects" type="radio" name="category" checked><label for="objects">Objects</label><br>
+              <input id="tombs" data-for-id="section-sites" value="sites" type="radio" name="category"><label for="tombs">Tombs and Monuments</label><br>
+              <input id="diary" data-for-id="section-objects" value="diarypages" type="radio" name="category"><label for="diary">Diary Pages</label><br>
+              <input id="unpubdocs" data-for-id="section-objects" value="unpubdocs" type="radio" name="category"><label for="unpubdocs">Unpublished Documents</label><br>
+              <input id="mapsandplans" data-for-id="section-objects" value="mapsandplans" type="radio" name="category"><label for="mapsandplans">Maps and Plans</label>
+            </div>
+          </fieldset>
+
+          <section id="section-objects" class="medium-8 medium-pull-4 columns category-section">
+            <label>Object title or name:
+              <input name="objects_title" type="text" placeholder="Example: 'royal statue' or 'Khafre'">
+            </label>
+            <label>Object or ID number:
+              <input name="objects_allnumbers" type="text" placeholder="Example: 'HUMFA_14-11-206'">
+            </label>
+            <label>Material:
+              <input name="objects_medium" type="text" placeholder="Example: 'alabaster'">
+            </label>
+            <label>Findspot:
+              <input name="objects_provenance" type="text" placeholder="Example: 'G 2110'">
+            </label>
+            <label>Date of register entry:
+              <input name="objects_entrydate" type="text" placeholder="Example: 05/23/1924">
+            </label>
+          </section>
+
+          <section id="section-sites" class="medium-8 medium-pull-4 columns category-section" style="display: none;">
+            <label>Tomb/Monument number:
+              <input name="sites_number" type="text" placeholder="Example: 'G 7000 X'">
+            </label>
+            <label>Tomb/Monument name:
+              <input name="sites_sitename" type="text" placeholder="Example: 'Eastern Cemetery'">
+            </label>
+            <label>Site Dates:
+              <input name="sites_datevalues" type="text" placeholder="Example: 'Khufu to Shepseskaf'">
+            </label>
+            <label>People:
+              <input name="sites_people" type="text" placeholder="Example: 'George Reisner'">
+            </label>
+          </section>
+        </div>
+
+        <div class="row">
+          <div class="large-12 columns">
+            <button class="button primary" type="submit">Search</button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </section>
+</div>
 """.strip()
-    extra_head = '<link href="/pagefind/pagefind-ui.css" rel="stylesheet">'
-    extra_scripts = '<script src="/pagefind/pagefind-ui.js"></script><script>GizaStaticSite.initPagefind();</script>'
-    html_text = render_page(
-        "Search Digital Giza",
-        body,
-        description="Search Digital Giza public records.",
+    results_body = """
+<div class="page-header header-bg-5"><div class="row title"><header class="large-12 columns"><h1>Search the Archives</h1></header></div></div>
+<div class="row static-site-search-page" data-giza-search-page>
+  <section class="medium-9 medium-push-3 columns">
+    <pagefind-config instance="giza-search" faceted preload excerpt-length="30"></pagefind-config>
+    <giza-search-results class="static-site-search-results" instance="giza-search" page-size="20"></giza-search-results>
+  </section>
+  <aside class="medium-3 medium-pull-9 columns">
+    <giza-search-sidebar instance="giza-search"></giza-search-sidebar>
+  </aside>
+</div>
+""".strip()
+    extra_head = '<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet">'
+    extra_scripts = '<script src="/pagefind/pagefind-component-ui.js" type="module"></script><script>GizaStaticSite.initPagefind();</script>'
+    search_html = render_page(
+        "Search the Archives",
+        advanced_search_body,
+        description="Search the Digital Giza archives.",
         extra_head=extra_head,
         extra_scripts=extra_scripts,
         index_body=False,
     )
-    write_text(output / "search" / "index.html", html_text)
-    write_text(output / "search-results" / "index.html", html_text)
+    results_html = render_page(
+        "Search Results",
+        results_body,
+        description="Search the Digital Giza archives.",
+        extra_head=extra_head,
+        extra_scripts=extra_scripts,
+        index_body=False,
+    )
+    write_text(output / "search" / "index.html", search_html)
+    write_text(output / "search-results" / "index.html", results_html)
 
 
 def write_library_page(
@@ -1323,6 +2325,8 @@ def render_pagefind_meta(summary: ItemSummary) -> str:
     values = {
         "title": summary.title,
         "type": type_label(summary.type),
+        "category": search_category_label(summary.type),
+        "catalog_id": summary.search_identifier,
         "image": result_image,
         "image_alt": summary.title if result_image else "",
         "thumbnail": summary.thumbnail,
@@ -1336,6 +2340,8 @@ def render_pagefind_meta(summary: ItemSummary) -> str:
 
 def render_pagefind_filters(summary: ItemSummary) -> str:
     filters = [
+        ("category", search_category_label(summary.type)),
+        ("search_scope", "catalog"),
         ("type", type_label(summary.type)),
         ("department", summary.department),
         ("classification", summary.classification),
@@ -1521,6 +2527,7 @@ def make_summary(item_type: str, item_id: str, source: dict[str, Any], manifest_
     thumbnail = plain_text(primary.get("thumbnail")) or plain_text(source.get("thumbnail"))
     main = plain_text(primary.get("main"))
     has_image = bool(thumbnail or (main and looks_like_image(main)))
+    search_identifier = plain_text(source.get("sitename") if item_type == "sites" else source.get("number")) or item_id
     return ItemSummary(
         type=item_type,
         id=item_id,
@@ -1533,6 +2540,7 @@ def make_summary(item_type: str, item_id: str, source: dict[str, Any], manifest_
         material=plain_text(source.get("medium")),
         period=plain_text(source.get("period")),
         site_name=plain_text(source.get("sitename")),
+        search_identifier=search_identifier,
         has_image=has_image,
         has_manifest=has_manifest,
         has_pdf=bool(plain_text(source.get("pdf"))),
@@ -1580,6 +2588,10 @@ def slug_or_fallback(*values: Any) -> str:
 
 def type_label(item_type: str) -> str:
     return TYPE_LABELS.get(item_type, item_type.replace("_", " ").replace("-", " ").title())
+
+
+def search_category_label(item_type: str) -> str:
+    return SEARCH_CATEGORY_LABELS.get(item_type, type_label(item_type))
 
 
 def rewrite_manifest(manifest: dict[str, Any], manifest_id: str, base_url: str) -> dict[str, Any]:
