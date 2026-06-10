@@ -717,13 +717,24 @@ STATIC_SITE_JS = """
     return [String(value)];
   }
 
-  function filtersForCategory(categoryLabel) {
+  function scopeOnlyFilters() {
     var filters = {};
     filters[SEARCH_SCOPE_FILTER] = [SEARCH_SCOPE_VALUE];
+    return filters;
+  }
+
+  function filtersForCategory(categoryLabel) {
+    var filters = scopeOnlyFilters();
     if (categoryLabel) {
       filters.category = [categoryLabel];
     }
     return filters;
+  }
+
+  function categoryCountsFromSearchResult(searchResult) {
+    return searchResult && searchResult.filters && searchResult.filters.category
+      ? searchResult.filters.category
+      : {};
   }
 
   function activeCategoryFromFilters(filters) {
@@ -905,7 +916,12 @@ STATIC_SITE_JS = """
         this._handleDirectSearchResults = (event) => {
           var detail = event.detail || {};
           var searchResult = detail.searchResult || {};
-          this.categoryCounts = searchResult.filters && searchResult.filters.category ? searchResult.filters.category : {};
+          var hasCategoryCounts = Object.prototype.hasOwnProperty.call(detail, 'category_counts');
+          if (hasCategoryCounts) {
+            this.categoryCounts = detail.category_counts || {};
+          } else {
+            this.categoryCounts = categoryCountsFromSearchResult(searchResult);
+          }
           this.activeCategory = activeCategoryFromFilters(detail.filters || {});
           this.render();
         };
@@ -1077,10 +1093,23 @@ STATIC_SITE_JS = """
         var latestState = stateFromParams(currentParams());
         var latestFilters = filtersForCategory(latestState.category);
         if (signature !== searchSignature(latestState.term, latestFilters)) return;
+        var categoryCounts = categoryCountsFromSearchResult(searchResult);
+        if (state.category && !Object.keys(categoryCounts).length) {
+          try {
+            var facetSearchResult = await directPagefindSearch(state.term, scopeOnlyFilters());
+            categoryCounts = categoryCountsFromSearchResult(facetSearchResult);
+          } catch (error) {
+            categoryCounts = categoryCounts || {};
+          }
+          if (token !== this.renderToken) return;
+          latestState = stateFromParams(currentParams());
+          latestFilters = filtersForCategory(latestState.category);
+          if (signature !== searchSignature(latestState.term, latestFilters)) return;
+        }
         this.signature = signature;
         this.searchResult = searchResult;
         window.dispatchEvent(new CustomEvent('giza:direct-search-results', {
-          detail: { searchResult: searchResult, filters: filters }
+          detail: { searchResult: searchResult, filters: filters, category_counts: categoryCounts }
         }));
         this.renderResults();
       }
