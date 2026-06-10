@@ -543,6 +543,7 @@ STATIC_SITE_JS = """
     enforcingCatalog: false,
     initStarted: false,
     instance: null,
+    pagefindFiltersPromise: null,
     suppressNextPageReset: false,
     suppressNextUrlSync: false
   };
@@ -732,9 +733,19 @@ STATIC_SITE_JS = """
   }
 
   function categoryCountsFromSearchResult(searchResult) {
-    return searchResult && searchResult.filters && searchResult.filters.category
-      ? searchResult.filters.category
-      : {};
+    if (searchResult && searchResult.totalFilters && searchResult.totalFilters.category) {
+      return searchResult.totalFilters.category;
+    }
+    if (searchResult && searchResult.filters && searchResult.filters.category) {
+      return searchResult.filters.category;
+    }
+    return {};
+  }
+
+  function hasSwitchableCategoryCounts(categoryCounts, activeCategory) {
+    return CATEGORY_ORDER.some(function (label) {
+      return label !== activeCategory && Number((categoryCounts || {})[label]) > 0;
+    });
   }
 
   function activeCategoryFromFilters(filters) {
@@ -761,6 +772,15 @@ STATIC_SITE_JS = """
     var pagefind = await import('/pagefind/pagefind.js');
     if (typeof pagefind.init === 'function') {
       await pagefind.init();
+    }
+    if (typeof pagefind.filters === 'function') {
+      if (!SearchRuntime.pagefindFiltersPromise) {
+        SearchRuntime.pagefindFiltersPromise = pagefind.filters().catch(function () {
+          SearchRuntime.pagefindFiltersPromise = null;
+          return {};
+        });
+      }
+      await SearchRuntime.pagefindFiltersPromise;
     }
     return pagefind.search(searchTerm, { filters: filters });
   }
@@ -1094,7 +1114,7 @@ STATIC_SITE_JS = """
         var latestFilters = filtersForCategory(latestState.category);
         if (signature !== searchSignature(latestState.term, latestFilters)) return;
         var categoryCounts = categoryCountsFromSearchResult(searchResult);
-        if (state.category && !Object.keys(categoryCounts).length) {
+        if (state.category && !hasSwitchableCategoryCounts(categoryCounts, state.category)) {
           try {
             var facetSearchResult = await directPagefindSearch(state.term, scopeOnlyFilters());
             categoryCounts = categoryCountsFromSearchResult(facetSearchResult);
