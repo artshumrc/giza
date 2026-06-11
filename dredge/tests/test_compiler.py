@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 import json
+import shutil
 import sqlite3
+import subprocess
 from pathlib import Path
 
 import pytest
 
+from dredge.codegen import generate_client_source
 from dredge.cli import main
-from dredge.compiler import BuildError, compile_site
+from dredge.compiler import BuildError, compile_site, load_config
+from dredge.query import SearchRequest, build_search_queries, escape_fts_query, search
 
 
 def test_compile_fixture_site_and_query_results(tmp_path: Path) -> None:
@@ -238,6 +242,177 @@ def test_selector_warnings_are_aggregated_with_samples(tmp_path: Path) -> None:
     assert "index.html" in warning.message
 
 
+def test_query_builder_generates_safe_sql_for_all_facet_types(tmp_path: Path) -> None:
+    config_path, _ = _write_fixture_project(tmp_path)
+    config = load_config(config_path)
+
+    queries = build_search_queries(
+        config,
+        {
+            "query": 'golden" OR category:collection',
+            "filters": {
+                "category": ["guide", "collection"],
+                "featured": True,
+                "published": {"max": "2024-12-31"},
+                "rating": {"min": 3.0},
+                "tags": ["ancient", "archive"],
+                "year": {"min": 2023, "max": 2024},
+            },
+            "limit": 5,
+            "offset": 0,
+            "includeFacets": True,
+        },
+    )
+
+    assert "golden" not in queries.results.sql
+    assert "category:collection" not in queries.results.sql
+    assert "documents_fts MATCH ?" in queries.results.sql
+    assert 'd."category" IN (?, ?)' in queries.results.sql
+    assert 'd."featured" = ?' in queries.results.sql
+    assert 'd."published" <= ?' in queries.results.sql
+    assert 'd."rating" >= ?' in queries.results.sql
+    assert 'd."year" >= ? AND d."year" <= ?' in queries.results.sql
+    assert 'EXISTS (SELECT 1 FROM "facet_tags" af' in queries.results.sql
+    assert queries.results.parameters[0] == escape_fts_query('golden" OR category:collection')
+    assert set(queries.facets) == {"category", "featured", "published", "rating", "tags", "year"}
+
+
+def test_search_api_handles_empty_search_filtered_search_pagination_and_facets(tmp_path: Path) -> None:
+    config_path, _ = _write_fixture_project(tmp_path)
+    config = load_config(config_path)
+    result = compile_site(config_path)
+
+    connection = sqlite3.connect(f"file:{result.db_path}?mode=ro&immutable=1", uri=True)
+    try:
+        empty_page = search(connection, config, SearchRequest(limit=1, offset=1))
+        assert empty_page.total == 2
+        assert [hit["url"] for hit in empty_page.hits] == ["/collections/beta/"]
+
+        golden = search(
+            connection,
+            config,
+            {
+                "query": "golden coffin",
+                "filters": {"category": "guide"},
+                "includeFacets": ["category", "tags"],
+            },
+        )
+        assert golden.total == 1
+        assert golden.hits[0]["url"] == "/"
+        assert golden.hits[0]["category"] == "guide"
+        assert golden.hits[0]["year"] == 2024
+        assert isinstance(golden.hits[0]["score"], float)
+        assert golden.facets is not None
+        assert [(bucket.value, bucket.count) for bucket in golden.facets["category"]] == [("guide", 1)]
+        assert {bucket.value for bucket in golden.facets["tags"]} == {"ancient", "burial"}
+
+        filtered = search(
+            connection,
+            config,
+            {
+                "filters": {
+                    "category": ["collection"],
+                    "featured": False,
+                    "published": {"min": "2023-01-01", "max": "2023-12-31"},
+                    "rating": {"min": 3.0, "max": 4.0},
+                    "tags": "archive",
+                    "year": 2023,
+                }
+            },
+        )
+        assert filtered.total == 1
+        assert filtered.hits[0]["url"] == "/collections/beta/"
+    finally:
+        connection.close()
+
+
+def test_compile_writes_generated_types_worker_protocol_and_stale_handling(tmp_path: Path) -> None:
+    client_path = tmp_path / "src" / "dredge-client.ts"
+    config_path, _ = _write_fixture_project(
+        tmp_path,
+        client={"out": str(client_path), "worker_url": "/search/dredge-worker.abc123.js"},
+    )
+
+    result = compile_site(config_path)
+
+    assert result.client_path == client_path
+    source = client_path.read_text(encoding="utf-8")
+    assert "export interface DredgeFilters" in source
+    assert "category?: string | string[];" in source
+    assert "tags?: string | string[];" in source
+    assert "year?: number | number[] | DredgeRange<number>;" in source
+    assert "published?: string | string[] | DredgeRange<string>;" in source
+    assert "export type DredgeWorkerRequest" in source
+    assert "export type DredgeWorkerResponse" in source
+    assert "rejectOlderSearches" in source
+    assert "STALE_RESPONSE" in source
+    assert 'const DEFAULT_WORKER_URL = "/search/dredge-worker.abc123.js";' in source
+
+
+def test_codegen_cli_requires_client_output(tmp_path: Path) -> None:
+    config_path, _ = _write_fixture_project(tmp_path)
+
+    assert main(["codegen", "--config", str(config_path)]) == 1
+
+
+def test_generated_client_typechecks_fixture_app_with_pnpm(tmp_path: Path) -> None:
+    pnpm = shutil.which("pnpm")
+    if pnpm is None:
+        pytest.skip("pnpm is not installed")
+
+    client_path = tmp_path / "dredge-client.ts"
+    config_path, _ = _write_fixture_project(tmp_path, client={"out": str(client_path)})
+    config = load_config(config_path)
+    client_path.write_text(generate_client_source(config), encoding="utf-8")
+    app_path = tmp_path / "fixture-app.ts"
+    app_path.write_text(
+        """
+        import { DredgeSearchClient, type DredgeSearchRequest } from "./dredge-client";
+
+        const client = new DredgeSearchClient({ workerUrl: "/search/dredge-worker.js" });
+        const request: DredgeSearchRequest = {
+          query: "golden",
+          filters: {
+            category: ["guide", "collection"],
+            featured: false,
+            published: { min: "2023-01-01", max: "2024-12-31" },
+            rating: { min: 3, max: 5 },
+            tags: "ancient",
+            year: { min: 2023, max: 2024 },
+          },
+          includeFacets: ["category", "tags"],
+        };
+
+        async function runSearch() {
+          const response = await client.search(request);
+          const firstTitle: string | undefined = response.hits[0]?.title;
+          return firstTitle;
+        }
+
+        void runSearch();
+        """,
+        encoding="utf-8",
+    )
+
+    subprocess.run(
+        [
+            pnpm,
+            "dlx",
+            "--package",
+            "typescript",
+            "tsc",
+            "--strict",
+            "--target",
+            "ES2020",
+            "--lib",
+            "ES2020,DOM",
+            "--noEmit",
+            str(app_path),
+        ],
+        check=True,
+    )
+
+
 def _plan_uses_index(
     connection: sqlite3.Connection,
     sql: str,
@@ -253,6 +428,7 @@ def _write_fixture_project(
     *,
     index_attrs: str | None = None,
     include_descriptions: bool = True,
+    client: dict[str, str] | None = None,
 ) -> tuple[Path, Path]:
     source_dir = tmp_path / "site"
     output_dir = tmp_path / "search"
@@ -337,6 +513,8 @@ def _write_fixture_project(
         "result_fields": ["title", "url", "description", "category", "year"],
         "composite_indices": [["category", "year"]],
     }
+    if client is not None:
+        config["client"] = client
     config_path = tmp_path / "dredge.config.json"
     config_path.write_text(json.dumps(config, indent=2), encoding="utf-8")
     return config_path, output_dir

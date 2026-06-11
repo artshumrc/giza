@@ -1,6 +1,6 @@
 # Dredge Production Implementation Plan
 
-Status: Milestone 2 complete. The Python compiler now has a shared validation path, deterministic fixture coverage, typed facet normalization checks, structured build diagnostics, bounded warning aggregation, generated SQLite schema and facet indexes, finalized compact databases, and read-only query-plan verification. Runtime validation remains important, but it follows the hardened compiler artifact because the first useful artifact is the generated database.
+Status: Milestone 3 complete. The Python compiler now has a shared validation path, deterministic fixture coverage, typed facet normalization checks, structured build diagnostics, bounded warning aggregation, generated SQLite schema and facet indexes, finalized compact databases, read-only query-plan verification, a safe query builder, tested search and facet semantics, generated TypeScript client types, worker protocol types, and stale response handling. Runtime validation remains important, but it follows the hardened compiler artifact because the first useful artifact is the generated database.
 
 Dredge is a compiled, configuration-driven, client-side search system for very large static sites. The target use case is a static site with 150,000+ generated pages, no permanent search server, and rich search plus faceted navigation in supported browsers.
 
@@ -723,6 +723,10 @@ Exit criteria:
 - Composite indexes improve or preserve measured query plans.
 
 ### Milestone 3: Query Engine And Code Generation
+
+Status: complete.
+
+Implemented behavior: empty queries skip FTS and paginate deterministically by document id; non-empty user queries are tokenized, quoted, and bound as FTS parameters; filters are generated only from validated facet identifiers and bound values; scalar multi-select filters use OR semantics; array filters use `EXISTS`; numeric and date ranges are inclusive; facet counts are computed after active query and filters are applied.
 
 Deliverables:
 

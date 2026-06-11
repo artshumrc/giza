@@ -221,6 +221,7 @@ class CompileResult:
     manifest_path: Path
     manifest: dict[str, Any]
     page_count: int
+    client_path: Path | None = None
     warnings: tuple[BuildWarning, ...] = dataclass_field(default_factory=tuple)
     skipped: tuple[SkippedFile, ...] = dataclass_field(default_factory=tuple)
 
@@ -441,12 +442,14 @@ def compile_site(config_path: Path) -> CompileResult:
         }
         manifest_path = config.output_dir / "search-manifest.json"
         manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        client_path = _write_generated_client(config)
 
         return CompileResult(
             db_path=db_path,
             manifest_path=manifest_path,
             manifest=manifest,
             page_count=len(candidates),
+            client_path=client_path,
             warnings=warnings.to_warnings(),
             skipped=skipped,
         )
@@ -852,6 +855,12 @@ def _run_post_build_checks(
         _verify_query_plans(connection, config)
     finally:
         connection.close()
+
+
+def _write_generated_client(config: DredgeConfig) -> Path | None:
+    from .codegen import write_client
+
+    return write_client(config)
 
 
 def _run_smoke_queries(
