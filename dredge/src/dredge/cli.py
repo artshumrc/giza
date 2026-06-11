@@ -4,7 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from .compiler import BuildError, check_sqlite_capabilities, compile_site, load_config
+from .compiler import BuildError, compile_site, validate_config
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -25,8 +25,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.command == "validate":
-            config = load_config(config_path)
-            check_sqlite_capabilities()
+            config = validate_config(config_path)
             print(f"valid: {config.path}")
             return 0
 

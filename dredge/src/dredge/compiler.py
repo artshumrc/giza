@@ -8,7 +8,7 @@ import shutil
 import sqlite3
 import tempfile
 import unicodedata
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field as dataclass_field
 from datetime import date
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -23,6 +23,7 @@ MANIFEST_VERSION = 1
 SQLITE_PAGE_SIZE = 16_384
 RANGE_BLOCK_BYTES = 65_536
 BATCH_SIZE = 10_000
+MAX_WARNING_SAMPLES = 3
 
 IDENTIFIER_RE = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 ATTRIBUTE_RE = re.compile(r"^[A-Za-z_:][-A-Za-z0-9_:.]*$")
@@ -56,9 +57,22 @@ SCALAR_SQL_TYPES = {
 
 
 class BuildError(Exception):
-    def __init__(self, code: str, message: str) -> None:
+    def __init__(
+        self,
+        code: str,
+        message: str,
+        *,
+        path: Path | None = None,
+        field: str | None = None,
+        selector: str | None = None,
+        value: Any | None = None,
+    ) -> None:
         super().__init__(message)
         self.code = code
+        self.path = path
+        self.field = field
+        self.selector = selector
+        self.value = value
 
 
 @dataclass(frozen=True)
@@ -68,6 +82,70 @@ class BuildWarning:
     path: Path | None = None
     field: str | None = None
     selector: str | None = None
+    count: int = 1
+    sample_paths: tuple[Path, ...] = dataclass_field(default_factory=tuple)
+
+
+@dataclass
+class _WarningBucket:
+    code: str
+    message: str
+    field: str | None
+    selector: str | None
+    count: int = 0
+    sample_paths: list[Path] = dataclass_field(default_factory=list)
+
+
+class _WarningCollector:
+    def __init__(self, sample_limit: int = MAX_WARNING_SAMPLES) -> None:
+        self._sample_limit = sample_limit
+        self._buckets: dict[tuple[str, str | None, str | None, str], _WarningBucket] = {}
+        self._order: list[tuple[str, str | None, str | None, str]] = []
+
+    def add(
+        self,
+        *,
+        code: str,
+        message: str,
+        path: Path | None = None,
+        field: str | None = None,
+        selector: str | None = None,
+    ) -> None:
+        key = (code, field, selector, message)
+        bucket = self._buckets.get(key)
+        if bucket is None:
+            bucket = _WarningBucket(code=code, message=message, field=field, selector=selector)
+            self._buckets[key] = bucket
+            self._order.append(key)
+
+        bucket.count += 1
+        if path is not None and len(bucket.sample_paths) < self._sample_limit:
+            bucket.sample_paths.append(path)
+
+    def to_warnings(self) -> tuple[BuildWarning, ...]:
+        warnings: list[BuildWarning] = []
+        for key in self._order:
+            bucket = self._buckets[key]
+            sample_paths = tuple(bucket.sample_paths)
+            samples = ", ".join(str(path) for path in sample_paths)
+            occurrence = "occurrence" if bucket.count == 1 else "occurrences"
+            sample_label = "sample" if len(sample_paths) == 1 else "samples"
+            if samples:
+                message = f"{bucket.message} ({bucket.count} {occurrence}; {sample_label}: {samples})"
+            else:
+                message = f"{bucket.message} ({bucket.count} {occurrence})"
+            warnings.append(
+                BuildWarning(
+                    code=bucket.code,
+                    message=message,
+                    path=sample_paths[0] if sample_paths else None,
+                    field=bucket.field,
+                    selector=bucket.selector,
+                    count=bucket.count,
+                    sample_paths=sample_paths,
+                )
+            )
+        return tuple(warnings)
 
 
 @dataclass(frozen=True)
@@ -143,14 +221,14 @@ class CompileResult:
     manifest_path: Path
     manifest: dict[str, Any]
     page_count: int
-    warnings: tuple[BuildWarning, ...] = field(default_factory=tuple)
-    skipped: tuple[SkippedFile, ...] = field(default_factory=tuple)
+    warnings: tuple[BuildWarning, ...] = dataclass_field(default_factory=tuple)
+    skipped: tuple[SkippedFile, ...] = dataclass_field(default_factory=tuple)
 
 
 def load_config(config_path: Path) -> DredgeConfig:
     path = _absolute_path(config_path)
     if not path.exists():
-        raise BuildError("CONFIG_NOT_FOUND", f"configuration file does not exist: {path}")
+        raise BuildError("CONFIG_NOT_FOUND", f"configuration file does not exist: {path}", path=path)
 
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
@@ -252,6 +330,12 @@ def check_sqlite_capabilities() -> None:
         connection.close()
 
 
+def validate_config(config_path: Path) -> DredgeConfig:
+    config = load_config(config_path)
+    check_sqlite_capabilities()
+    return config
+
+
 def discover_html_files(config: DredgeConfig) -> tuple[tuple[FileCandidate, ...], tuple[SkippedFile, ...]]:
     candidates: list[FileCandidate] = []
     skipped: list[SkippedFile] = []
@@ -291,8 +375,7 @@ def discover_html_files(config: DredgeConfig) -> tuple[tuple[FileCandidate, ...]
 
 
 def compile_site(config_path: Path) -> CompileResult:
-    config = load_config(config_path)
-    check_sqlite_capabilities()
+    config = validate_config(config_path)
     candidates, skipped = discover_html_files(config)
     if not candidates:
         raise BuildError("DISCOVERY_NO_FILES", f"no HTML files matched include/exclude patterns in {config.source_dir}")
@@ -301,7 +384,7 @@ def compile_site(config_path: Path) -> CompileResult:
     temp_dir = Path(tempfile.mkdtemp(prefix=".dredge-build-", dir=config.output_dir))
     build_db_path = temp_dir / "build.db"
     compact_db_path = temp_dir / "compact.db"
-    warnings: list[BuildWarning] = []
+    warnings = _WarningCollector()
 
     try:
         smoke_token: str | None = None
@@ -321,7 +404,7 @@ def compile_site(config_path: Path) -> CompileResult:
             for index, candidate in enumerate(candidates, start=1):
                 document = _extract_document(index, candidate, config, warnings)
                 if smoke_token is None:
-                    smoke_token = _first_search_token(f"{document.title} {document.body}")
+                    smoke_token = _first_search_token(document.title) or _first_search_token(document.body)
                 if smoke_filter is None:
                     smoke_filter = _first_filter(document)
                 _insert_document(connection, insert_sql, array_insert_sql, config, document)
@@ -364,7 +447,7 @@ def compile_site(config_path: Path) -> CompileResult:
             manifest_path=manifest_path,
             manifest=manifest,
             page_count=len(candidates),
-            warnings=tuple(warnings),
+            warnings=warnings.to_warnings(),
             skipped=skipped,
         )
     except BuildError:
@@ -547,12 +630,12 @@ def _extract_document(
     document_id: int,
     candidate: FileCandidate,
     config: DredgeConfig,
-    warnings: list[BuildWarning],
+    warnings: _WarningCollector,
 ) -> ExtractedDocument:
     try:
         html_bytes = candidate.path.read_bytes()
     except OSError as error:
-        raise BuildError("HTML_READ_FAILED", f"failed to read {candidate.path}: {error}") from error
+        raise BuildError("HTML_READ_FAILED", f"failed to read {candidate.path}: {error}", path=candidate.path) from error
 
     soup = BeautifulSoup(html_bytes, "html.parser")
     _remove_non_indexable_content(soup)
@@ -562,40 +645,34 @@ def _extract_document(
         title = title_values[0]
     else:
         title = candidate.url
-        warnings.append(
-            BuildWarning(
-                code="SELECTOR_MISS",
-                message=f"title selector matched no text in {candidate.path}; using URL as title",
-                path=candidate.path,
-                field="title",
-                selector=config.selectors["title"],
-            )
+        warnings.add(
+            code="SELECTOR_MISS",
+            message="title selector matched no text; using URL as title",
+            path=candidate.path,
+            field="title",
+            selector=config.selectors["title"],
         )
 
     description_values = _extract_values(soup, config.selectors["description"])
     description = description_values[0] if description_values else None
     if not description_values:
-        warnings.append(
-            BuildWarning(
-                code="SELECTOR_MISS",
-                message=f"description selector matched no text in {candidate.path}",
-                path=candidate.path,
-                field="description",
-                selector=config.selectors["description"],
-            )
+        warnings.add(
+            code="SELECTOR_MISS",
+            message="description selector matched no text",
+            path=candidate.path,
+            field="description",
+            selector=config.selectors["description"],
         )
 
     body_values = _extract_values(soup, config.selectors["body"])
     body = _normalize_text(" ".join(body_values))
     if not body:
-        warnings.append(
-            BuildWarning(
-                code="SELECTOR_MISS",
-                message=f"body selector matched no text in {candidate.path}",
-                path=candidate.path,
-                field="body",
-                selector=config.selectors["body"],
-            )
+        warnings.add(
+            code="SELECTOR_MISS",
+            message="body selector matched no text",
+            path=candidate.path,
+            field="body",
+            selector=config.selectors["body"],
         )
 
     scalar_facets: dict[str, str | int | float | None] = {}
@@ -608,6 +685,9 @@ def _extract_document(
                 raise BuildError(
                     "FACET_REQUIRED_MISSING",
                     f"missing required facet {facet.name!r} in {candidate.path} from source {facet.source!r}",
+                    path=candidate.path,
+                    field=facet.name,
+                    selector=facet.source,
                 )
             array_facets[facet.name] = tuple(values)
             continue
@@ -617,19 +697,20 @@ def _extract_document(
                 raise BuildError(
                     "FACET_REQUIRED_MISSING",
                     f"missing required facet {facet.name!r} in {candidate.path} from source {facet.source!r}",
+                    path=candidate.path,
+                    field=facet.name,
+                    selector=facet.source,
                 )
             scalar_facets[facet.name] = None
             continue
 
         if len(raw_values) > 1:
-            warnings.append(
-                BuildWarning(
-                    code="FACET_MULTIPLE_VALUES",
-                    message=f"facet {facet.name!r} found multiple values in {candidate.path}; using the first value",
-                    path=candidate.path,
-                    field=facet.name,
-                    selector=facet.source,
-                )
+            warnings.add(
+                code="FACET_MULTIPLE_VALUES",
+                message=f"facet {facet.name!r} found multiple values; using the first value",
+                path=candidate.path,
+                field=facet.name,
+                selector=facet.source,
             )
         scalar_facets[facet.name] = _coerce_scalar_facet(facet, raw_values[0], candidate.path)
 
@@ -700,24 +781,52 @@ def _coerce_scalar_facet(facet: FacetConfig, value: str, path: Path) -> str | in
                 raise ValueError
             return int(text, 10)
         except ValueError as error:
-            raise BuildError("FACET_VALUE_INVALID", f"invalid integer value for facet {facet.name!r} in {path}: {value!r}") from error
+            raise BuildError(
+                "FACET_VALUE_INVALID",
+                f"invalid integer value for facet {facet.name!r} in {path}: {value!r}",
+                path=path,
+                field=facet.name,
+                selector=facet.source,
+                value=value,
+            ) from error
     if facet.type == "number":
         try:
             return float(text)
         except ValueError as error:
-            raise BuildError("FACET_VALUE_INVALID", f"invalid number value for facet {facet.name!r} in {path}: {value!r}") from error
+            raise BuildError(
+                "FACET_VALUE_INVALID",
+                f"invalid number value for facet {facet.name!r} in {path}: {value!r}",
+                path=path,
+                field=facet.name,
+                selector=facet.source,
+                value=value,
+            ) from error
     if facet.type == "boolean":
         lowered = text.lower()
         if lowered in {"true", "1", "yes", "y", "on"}:
             return 1
         if lowered in {"false", "0", "no", "n", "off"}:
             return 0
-        raise BuildError("FACET_VALUE_INVALID", f"invalid boolean value for facet {facet.name!r} in {path}: {value!r}")
+        raise BuildError(
+            "FACET_VALUE_INVALID",
+            f"invalid boolean value for facet {facet.name!r} in {path}: {value!r}",
+            path=path,
+            field=facet.name,
+            selector=facet.source,
+            value=value,
+        )
     if facet.type == "date":
         try:
             return date.fromisoformat(text).isoformat()
         except ValueError as error:
-            raise BuildError("FACET_VALUE_INVALID", f"invalid ISO date value for facet {facet.name!r} in {path}: {value!r}") from error
+            raise BuildError(
+                "FACET_VALUE_INVALID",
+                f"invalid ISO date value for facet {facet.name!r} in {path}: {value!r}",
+                path=path,
+                field=facet.name,
+                selector=facet.source,
+                value=value,
+            ) from error
     raise BuildError("CONFIG_INVALID", f"unsupported scalar facet type: {facet.type}")
 
 

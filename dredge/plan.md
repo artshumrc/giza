@@ -1,6 +1,6 @@
 # Dredge Production Implementation Plan
 
-Status: Milestone 0 complete. The Python compiler MVP now crawls static HTML files, populates a SQLite database, writes a manifest, and verifies local smoke queries. Runtime validation remains important, but it follows the compiler MVP because the first useful artifact is the generated database.
+Status: Milestone 1 complete. The Python compiler now has a shared validation path, deterministic fixture coverage, typed facet normalization checks, structured build diagnostics, bounded warning aggregation, and local integration tests. Runtime validation remains important, but it follows the hardened compiler artifact because the first useful artifact is the generated database.
 
 Dredge is a compiled, configuration-driven, client-side search system for very large static sites. The target use case is a static site with 150,000+ generated pages, no permanent search server, and rich search plus faceted navigation in supported browsers.
 
@@ -686,6 +686,8 @@ Exit criteria:
 - No browser runtime work is required to complete this milestone.
 
 ### Milestone 1: Compiler Correctness Hardening
+
+Status: complete.
 
 Deliverables:
 
