@@ -1,6 +1,6 @@
 # Dredge Production Implementation Plan
 
-Status: Milestone 1 complete. The Python compiler now has a shared validation path, deterministic fixture coverage, typed facet normalization checks, structured build diagnostics, bounded warning aggregation, and local integration tests. Runtime validation remains important, but it follows the hardened compiler artifact because the first useful artifact is the generated database.
+Status: Milestone 2 complete. The Python compiler now has a shared validation path, deterministic fixture coverage, typed facet normalization checks, structured build diagnostics, bounded warning aggregation, generated SQLite schema and facet indexes, finalized compact databases, and read-only query-plan verification. Runtime validation remains important, but it follows the hardened compiler artifact because the first useful artifact is the generated database.
 
 Dredge is a compiled, configuration-driven, client-side search system for very large static sites. The target use case is a static site with 150,000+ generated pages, no permanent search server, and rich search plus faceted navigation in supported browsers.
 
@@ -705,6 +705,8 @@ Exit criteria:
 - Extraction does not retain full site content in memory.
 
 ### Milestone 2: SQLite Schema, FTS, And Indexing
+
+Status: complete.
 
 Deliverables:
 

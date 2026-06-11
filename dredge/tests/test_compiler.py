@@ -93,6 +93,71 @@ def test_compile_is_deterministic_for_unchanged_input(tmp_path: Path) -> None:
     assert rows == [(1, "/"), (2, "/collections/beta/")]
 
 
+def test_final_database_schema_indexes_and_query_plans(tmp_path: Path) -> None:
+    config_path, _ = _write_fixture_project(tmp_path)
+
+    result = compile_site(config_path)
+
+    connection = sqlite3.connect(f"file:{result.db_path}?mode=ro&immutable=1", uri=True)
+    try:
+        assert connection.execute("PRAGMA integrity_check").fetchone() == ("ok",)
+        assert connection.execute("PRAGMA page_size").fetchone() == (16_384,)
+
+        fts_sql = connection.execute(
+            "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'documents_fts'"
+        ).fetchone()[0]
+        assert "content=''" in fts_sql
+
+        index_names = {
+            row[0]
+            for row in connection.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'index' AND name NOT LIKE 'sqlite_autoindex%'"
+            )
+        }
+        assert {
+            "documents_category_idx",
+            "documents_category_year_idx",
+            "documents_featured_idx",
+            "documents_published_idx",
+            "documents_rating_idx",
+            "documents_year_idx",
+            "facet_tags_value_document_idx",
+        } <= index_names
+
+        assert connection.execute("SELECT COUNT(*) FROM sqlite_stat1").fetchone()[0] > 0
+
+        assert _plan_uses_index(
+            connection,
+            "SELECT id FROM documents INDEXED BY documents_year_idx WHERE year = ? ORDER BY id",
+            (2024,),
+            "documents_year_idx",
+        )
+        assert _plan_uses_index(
+            connection,
+            """
+            SELECT id
+            FROM documents INDEXED BY documents_category_year_idx
+            WHERE category = ? AND year = ?
+            ORDER BY id
+            """,
+            ("guide", 2024),
+            "documents_category_year_idx",
+        )
+        assert _plan_uses_index(
+            connection,
+            """
+            SELECT document_id
+            FROM facet_tags INDEXED BY facet_tags_value_document_idx
+            WHERE value = ?
+            ORDER BY document_id
+            """,
+            ("ancient",),
+            "facet_tags_value_document_idx",
+        )
+    finally:
+        connection.close()
+
+
 def test_invalid_config_fails_before_output(tmp_path: Path) -> None:
     output_dir = tmp_path / "search"
     config_path = tmp_path / "dredge.config.json"
@@ -171,6 +236,16 @@ def test_selector_warnings_are_aggregated_with_samples(tmp_path: Path) -> None:
     assert len(warning.sample_paths) == 2
     assert "2 occurrences" in warning.message
     assert "index.html" in warning.message
+
+
+def _plan_uses_index(
+    connection: sqlite3.Connection,
+    sql: str,
+    parameters: tuple[object, ...],
+    index_name: str,
+) -> bool:
+    details = [str(row[3]) for row in connection.execute(f"EXPLAIN QUERY PLAN {sql}", parameters)]
+    return any("SEARCH" in detail.upper() and index_name in detail for detail in details)
 
 
 def _write_fixture_project(

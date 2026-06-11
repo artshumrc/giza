@@ -424,7 +424,7 @@ def compile_site(config_path: Path) -> CompileResult:
         db_path = config.output_dir / db_file
         compact_db_path.replace(db_path)
 
-        _run_smoke_queries(db_path, smoke_token, smoke_filter)
+        _run_post_build_checks(db_path, config, smoke_token, smoke_filter)
 
         manifest = {
             "manifest_version": MANIFEST_VERSION,
@@ -595,7 +595,7 @@ def _create_schema(connection: sqlite3.Connection, config: DredgeConfig) -> None
         )
 
     for index in config.composite_indices:
-        name = "documents_" + "_".join(index) + "_idx"
+        name = _composite_index_name(index)
         columns = ", ".join(_quote_identifier(column) for column in index)
         connection.execute(f"CREATE INDEX {_quote_identifier(name)} ON documents({columns}, id)")
 
@@ -840,41 +840,107 @@ def _finalize_database(connection: sqlite3.Connection, compact_db_path: Path) ->
     connection.execute(f"VACUUM INTO {_quote_sql_string(str(compact_db_path))}")
 
 
-def _run_smoke_queries(
+def _run_post_build_checks(
     db_path: Path,
+    config: DredgeConfig,
+    smoke_token: str | None,
+    smoke_filter: tuple[str, str, str | int | float] | None,
+) -> None:
+    connection = sqlite3.connect(f"file:{db_path}?mode=ro&immutable=1", uri=True)
+    try:
+        _run_smoke_queries(connection, smoke_token, smoke_filter)
+        _verify_query_plans(connection, config)
+    finally:
+        connection.close()
+
+
+def _run_smoke_queries(
+    connection: sqlite3.Connection,
     smoke_token: str | None,
     smoke_filter: tuple[str, str, str | int | float] | None,
 ) -> None:
     if smoke_token is None:
         raise BuildError("SMOKE_QUERY_FAILED", "could not find a token for the FTS smoke query")
 
-    connection = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
-    try:
-        fts_count = connection.execute(
-            "SELECT COUNT(*) FROM documents_fts WHERE documents_fts MATCH ?",
-            (smoke_token,),
-        ).fetchone()[0]
-        if fts_count < 1:
-            raise BuildError("SMOKE_QUERY_FAILED", f"FTS smoke query returned no rows for token {smoke_token!r}")
+    fts_count = connection.execute(
+        "SELECT COUNT(*) FROM documents_fts WHERE documents_fts MATCH ?",
+        (smoke_token,),
+    ).fetchone()[0]
+    if fts_count < 1:
+        raise BuildError("SMOKE_QUERY_FAILED", f"FTS smoke query returned no rows for token {smoke_token!r}")
 
-        if smoke_filter is None:
-            filtered_count = connection.execute("SELECT COUNT(*) FROM documents WHERE id = 1").fetchone()[0]
-        elif smoke_filter[0] == "array":
-            _, name, value = smoke_filter
-            filtered_count = connection.execute(
-                f"SELECT COUNT(*) FROM {_quote_identifier(_array_table_name(name))} WHERE value = ?",
-                (value,),
-            ).fetchone()[0]
-        else:
-            _, name, value = smoke_filter
-            filtered_count = connection.execute(
-                f"SELECT COUNT(*) FROM documents WHERE {_quote_identifier(name)} = ?",
-                (value,),
-            ).fetchone()[0]
-        if filtered_count < 1:
-            raise BuildError("SMOKE_QUERY_FAILED", "filtered smoke query returned no rows")
-    finally:
-        connection.close()
+    if smoke_filter is None:
+        filtered_count = connection.execute("SELECT COUNT(*) FROM documents WHERE id = 1").fetchone()[0]
+    elif smoke_filter[0] == "array":
+        _, name, value = smoke_filter
+        filtered_count = connection.execute(
+            f"SELECT COUNT(*) FROM {_quote_identifier(_array_table_name(name))} WHERE value = ?",
+            (value,),
+        ).fetchone()[0]
+    else:
+        _, name, value = smoke_filter
+        filtered_count = connection.execute(
+            f"SELECT COUNT(*) FROM documents WHERE {_quote_identifier(name)} = ?",
+            (value,),
+        ).fetchone()[0]
+    if filtered_count < 1:
+        raise BuildError("SMOKE_QUERY_FAILED", "filtered smoke query returned no rows")
+
+
+def _verify_query_plans(connection: sqlite3.Connection, config: DredgeConfig) -> None:
+    for facet in config.scalar_facets:
+        index_name = f"documents_{facet.name}_idx"
+        facet_column = _quote_identifier(facet.name)
+        sql = (
+            f"SELECT id FROM documents INDEXED BY {_quote_identifier(index_name)} "
+            f"WHERE {facet_column} = ? ORDER BY id LIMIT 10"
+        )
+        _assert_query_plan_uses_index(connection, f"scalar facet {facet.name!r}", sql, (None,), index_name)
+
+    for facet in config.array_facets:
+        table_name = _quote_identifier(_array_table_name(facet.name))
+        index_name = f"facet_{facet.name}_value_document_idx"
+        sql = (
+            f"SELECT document_id FROM {table_name} INDEXED BY {_quote_identifier(index_name)} "
+            "WHERE value = ? ORDER BY document_id LIMIT 10"
+        )
+        _assert_query_plan_uses_index(connection, f"array facet {facet.name!r}", sql, (None,), index_name)
+
+    for index in config.composite_indices:
+        index_name = _composite_index_name(index)
+        where_clause = " AND ".join(f"{_quote_identifier(column)} = ?" for column in index)
+        sql = (
+            f"SELECT id FROM documents INDEXED BY {_quote_identifier(index_name)} "
+            f"WHERE {where_clause} ORDER BY id LIMIT 10"
+        )
+        _assert_query_plan_uses_index(
+            connection,
+            f"composite index {', '.join(index)!r}",
+            sql,
+            tuple(None for _ in index),
+            index_name,
+        )
+
+
+def _assert_query_plan_uses_index(
+    connection: sqlite3.Connection,
+    label: str,
+    sql: str,
+    parameters: tuple[Any, ...],
+    index_name: str,
+) -> None:
+    details = _query_plan_details(connection, sql, parameters)
+    if any("SEARCH" in detail.upper() and index_name in detail for detail in details):
+        return
+    detail_text = " | ".join(details)
+    raise BuildError(
+        "QUERY_PLAN_VERIFICATION_FAILED",
+        f"{label} query plan did not use generated index {index_name!r}: {detail_text}",
+    )
+
+
+def _query_plan_details(connection: sqlite3.Connection, sql: str, parameters: tuple[Any, ...]) -> tuple[str, ...]:
+    return tuple(str(row[3]) for row in connection.execute(f"EXPLAIN QUERY PLAN {sql}", parameters))
 
 
 def _first_search_token(text: str) -> str | None:
@@ -1015,6 +1081,10 @@ def _sha256_file(path: Path) -> str:
 
 def _array_table_name(facet_name: str) -> str:
     return f"facet_{facet_name}"
+
+
+def _composite_index_name(index: tuple[str, ...]) -> str:
+    return "documents_" + "_".join(index) + "_idx"
 
 
 def _quote_identifier(name: str) -> str:
