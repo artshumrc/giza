@@ -1,6 +1,6 @@
 # Dredge Production Implementation Plan
 
-Status: ready to begin implementation. The first implementation milestone is a Python compiler MVP that crawls static HTML files and populates a SQLite database. Runtime validation remains important, but it follows the compiler MVP because the first useful artifact is the generated database.
+Status: Milestone 0 complete. The Python compiler MVP now crawls static HTML files, populates a SQLite database, writes a manifest, and verifies local smoke queries. Runtime validation remains important, but it follows the compiler MVP because the first useful artifact is the generated database.
 
 Dredge is a compiled, configuration-driven, client-side search system for very large static sites. The target use case is a static site with 150,000+ generated pages, no permanent search server, and rich search plus faceted navigation in supported browsers.
 
@@ -660,6 +660,8 @@ Hosting requirements:
 ## 14. Implementation Milestones
 
 ### Milestone 0: Python Compiler MVP
+
+Status: complete.
 
 Purpose: produce the first useful Dredge artifact: a SQLite database built from static HTML files. This milestone intentionally prioritizes correctness and debuggability over compiler speed.
 
