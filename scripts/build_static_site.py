@@ -540,9 +540,12 @@ STATIC_SITE_JS = """
   var CATEGORY_SLUGS_BY_LABEL = {};
   var SearchRuntime = {
     applyingUrlState: false,
+    categoryCountsCache: {},
+    categoryCountsPromises: {},
     enforcingCatalog: false,
     initStarted: false,
     instance: null,
+    pagefindPromise: null,
     pagefindFiltersPromise: null,
     suppressNextPageReset: false,
     suppressNextUrlSync: false
@@ -748,6 +751,30 @@ STATIC_SITE_JS = """
     });
   }
 
+  function shouldLoadCategoryCounts(categoryCounts, activeCategory) {
+    if (!Object.keys(categoryCounts || {}).length) return true;
+    return Boolean(activeCategory && !hasSwitchableCategoryCounts(categoryCounts, activeCategory));
+  }
+
+  function categoryCountsCacheKey(term) {
+    return String(term || '').trim();
+  }
+
+  function cachedCategoryCountsForTerm(term) {
+    var key = categoryCountsCacheKey(term);
+    if (!key || !Object.prototype.hasOwnProperty.call(SearchRuntime.categoryCountsCache, key)) {
+      return null;
+    }
+    return SearchRuntime.categoryCountsCache[key];
+  }
+
+  function cacheCategoryCountsForTerm(term, categoryCounts) {
+    var key = categoryCountsCacheKey(term);
+    if (!key) return categoryCounts || {};
+    SearchRuntime.categoryCountsCache[key] = categoryCounts || {};
+    return SearchRuntime.categoryCountsCache[key];
+  }
+
   function activeCategoryFromFilters(filters) {
     return cloneFilterValue(filters && filters.category)[0] || '';
   }
@@ -764,25 +791,60 @@ STATIC_SITE_JS = """
     return String(term || '') + '|' + filterSignature(filters || {});
   }
 
+  async function loadPagefind() {
+    if (SearchRuntime.pagefindPromise) return SearchRuntime.pagefindPromise;
+    SearchRuntime.pagefindPromise = import('/pagefind/pagefind.js').then(async function (pagefind) {
+      if (typeof pagefind.init === 'function') {
+        await pagefind.init();
+      }
+      return pagefind;
+    }).catch(function (error) {
+      SearchRuntime.pagefindPromise = null;
+      throw error;
+    });
+    return SearchRuntime.pagefindPromise;
+  }
+
+  async function loadPagefindFilters(pagefind) {
+    if (typeof pagefind.filters !== 'function') return {};
+    if (!SearchRuntime.pagefindFiltersPromise) {
+      SearchRuntime.pagefindFiltersPromise = pagefind.filters().catch(function () {
+        SearchRuntime.pagefindFiltersPromise = null;
+        return {};
+      });
+    }
+    return SearchRuntime.pagefindFiltersPromise;
+  }
+
   async function directPagefindSearch(term, filters) {
     var searchTerm = String(term || '').trim();
     if (!searchTerm) {
       throw new Error('Empty browse searches use static browse data.');
     }
-    var pagefind = await import('/pagefind/pagefind.js');
-    if (typeof pagefind.init === 'function') {
-      await pagefind.init();
-    }
-    if (typeof pagefind.filters === 'function') {
-      if (!SearchRuntime.pagefindFiltersPromise) {
-        SearchRuntime.pagefindFiltersPromise = pagefind.filters().catch(function () {
-          SearchRuntime.pagefindFiltersPromise = null;
-          return {};
-        });
-      }
-      await SearchRuntime.pagefindFiltersPromise;
-    }
+    var pagefind = await loadPagefind();
     return pagefind.search(searchTerm, { filters: filters });
+  }
+
+  async function categoryCountsForTerm(term) {
+    var searchTerm = categoryCountsCacheKey(term);
+    if (!searchTerm) return {};
+    var cachedCounts = cachedCategoryCountsForTerm(searchTerm);
+    if (cachedCounts !== null) return cachedCounts;
+    if (SearchRuntime.categoryCountsPromises[searchTerm]) {
+      return SearchRuntime.categoryCountsPromises[searchTerm];
+    }
+    SearchRuntime.categoryCountsPromises[searchTerm] = (async function () {
+      var pagefind = await loadPagefind();
+      await loadPagefindFilters(pagefind);
+      var searchResult = await pagefind.search(searchTerm, { filters: scopeOnlyFilters() });
+      return cacheCategoryCountsForTerm(searchTerm, categoryCountsFromSearchResult(searchResult));
+    }()).catch(function () {
+      return {};
+    }).then(function (categoryCounts) {
+      delete SearchRuntime.categoryCountsPromises[searchTerm];
+      return categoryCounts;
+    });
+    return SearchRuntime.categoryCountsPromises[searchTerm];
   }
 
   function selectedRowsForSidebar(instance) {
@@ -1103,6 +1165,10 @@ STATIC_SITE_JS = """
         this.currentPage = parsePageParam();
         if (this.searchResult && this.signature === signature) {
           this.renderResults();
+          var existingCategoryCounts = cachedCategoryCountsForTerm(state.term) || categoryCountsFromSearchResult(this.searchResult);
+          if (shouldLoadCategoryCounts(existingCategoryCounts, state.category)) {
+            this.updateDirectSearchCategoryCounts(signature, state.term, filters).catch(function () {});
+          }
           return;
         }
         var token = ++this.renderToken;
@@ -1113,25 +1179,27 @@ STATIC_SITE_JS = """
         var latestState = stateFromParams(currentParams());
         var latestFilters = filtersForCategory(latestState.category);
         if (signature !== searchSignature(latestState.term, latestFilters)) return;
-        var categoryCounts = categoryCountsFromSearchResult(searchResult);
-        if (state.category && !hasSwitchableCategoryCounts(categoryCounts, state.category)) {
-          try {
-            var facetSearchResult = await directPagefindSearch(state.term, scopeOnlyFilters());
-            categoryCounts = categoryCountsFromSearchResult(facetSearchResult);
-          } catch (error) {
-            categoryCounts = categoryCounts || {};
-          }
-          if (token !== this.renderToken) return;
-          latestState = stateFromParams(currentParams());
-          latestFilters = filtersForCategory(latestState.category);
-          if (signature !== searchSignature(latestState.term, latestFilters)) return;
-        }
+        var cachedCategoryCounts = cachedCategoryCountsForTerm(state.term);
+        var categoryCounts = cachedCategoryCounts === null ? categoryCountsFromSearchResult(searchResult) : cachedCategoryCounts;
         this.signature = signature;
         this.searchResult = searchResult;
         window.dispatchEvent(new CustomEvent('giza:direct-search-results', {
           detail: { searchResult: searchResult, filters: filters, category_counts: categoryCounts }
         }));
         this.renderResults();
+        if (shouldLoadCategoryCounts(categoryCounts, state.category)) {
+          this.updateDirectSearchCategoryCounts(signature, state.term, filters).catch(function () {});
+        }
+      }
+
+      async updateDirectSearchCategoryCounts(signature, term, filters) {
+        var categoryCounts = await categoryCountsForTerm(term);
+        var latestState = stateFromParams(currentParams());
+        var latestFilters = filtersForCategory(latestState.category);
+        if (this.signature !== signature || signature !== searchSignature(latestState.term, latestFilters)) return;
+        window.dispatchEvent(new CustomEvent('giza:direct-search-results', {
+          detail: { searchResult: this.searchResult, filters: filters, category_counts: categoryCounts }
+        }));
       }
 
       renderResults() {
@@ -2368,7 +2436,7 @@ def render_item_page(
     manifest_id = item_manifest_id(item_type, item_id)
     has_manifest = summary.has_manifest
     media_html = render_primary_media(item_type, item_id, source, has_manifest)
-    description_html = render_description(source)
+    description_html = render_description(source, pagefind_body=True)
     details_html = render_details(source)
     related_html = render_related_items(source.get("relateditems"), lookup)
     filters_html = render_pagefind_filters(summary)
@@ -2377,7 +2445,7 @@ def render_item_page(
     if has_manifest:
         extra_scripts = render_mirador_script(manifest_url(manifest_id))
 
-    body = [page_header(title, source.get("sitename"), bg="1")]
+    body = [page_header(title, source.get("sitename"), bg="1", pagefind_body=True)]
     body.append(filters_html)
     body.append('<div class="row content-start">')
     body.append('<section class="large-8 columns content-col-primary">')
@@ -2409,6 +2477,7 @@ def render_item_page(
         body_class="section-explore-body header-full mode-full",
         extra_head=extra_head,
         extra_scripts=extra_scripts,
+        index_body=None,
     )
 
 
@@ -2453,13 +2522,14 @@ def render_primary_media(item_type: str, item_id: str, source: dict[str, Any], h
     return "\n".join(parts)
 
 
-def render_description(source: dict[str, Any]) -> str:
+def render_description(source: dict[str, Any], *, pagefind_body: bool = False) -> str:
     diary = source.get("diarytranscription")
     if has_value(diary):
         return f'<div class="item__overview text-alt"><h5>Diary Transcription:</h5>{text_to_paragraphs(diary)}</div>'
     description = source.get("description")
     if has_value(description):
-        return f'<div class="item__overview"><div class="lead text-alt">{text_to_paragraphs(description)}</div></div>'
+        pagefind_attr = ' data-pagefind-body' if pagefind_body else ''
+        return f'<div class="item__overview"{pagefind_attr}><div class="lead text-alt">{text_to_paragraphs(description)}</div></div>'
     return ""
 
 
@@ -2570,15 +2640,6 @@ def render_pagefind_filters(summary: ItemSummary) -> str:
     filters = [
         ("category", search_category_label(summary.type)),
         ("search_scope", "catalog"),
-        ("type", type_label(summary.type)),
-        ("department", summary.department),
-        ("classification", summary.classification),
-        ("material", summary.material),
-        ("period", summary.period),
-        ("site_name", summary.site_name),
-        ("has_image", "Yes" if summary.has_image else "No"),
-        ("has_manifest", "Yes" if summary.has_manifest else "No"),
-        ("has_pdf", "Yes" if summary.has_pdf else "No"),
     ]
     spans = [
         f'<span data-pagefind-filter="{html.escape(name)}">{html.escape(value)}</span>'
@@ -2619,9 +2680,14 @@ def render_page(
     body_class: str = "",
     extra_head: str = "",
     extra_scripts: str = "",
-    index_body: bool = True,
+    index_body: bool | None = False,
 ) -> str:
-    main_attr = 'data-pagefind-body' if index_body else 'data-pagefind-ignore'
+    if index_body is True:
+        main_attr = ' data-pagefind-body'
+    elif index_body is False:
+        main_attr = ' data-pagefind-ignore'
+    else:
+        main_attr = ''
     escaped_title = html.escape(title)
     escaped_description = html.escape(description, quote=True)
     return f"""<!doctype html>
@@ -2642,7 +2708,7 @@ def render_page(
 </head>
 <body class="{html.escape(body_class, quote=True)}">
   {site_header()}
-  <main id="content" {main_attr}>
+  <main id="content"{main_attr}>
 {body}
   </main>
   {site_footer()}
@@ -2731,10 +2797,11 @@ def site_footer() -> str:
 """.strip()
 
 
-def page_header(title: str, subtitle: Any = "", bg: str = "1") -> str:
+def page_header(title: str, subtitle: Any = "", bg: str = "1", *, pagefind_body: bool = False) -> str:
     subtitle_text = plain_text(subtitle)
     subtitle_html = f'<h3 class="page-header__meta">{html.escape(subtitle_text)}</h3>' if subtitle_text else ""
-    return f'<div class="page-header header-bg-{html.escape(str(bg))}"><div class="row title"><header class="large-12 columns"><h1>{html.escape(plain_text(title))}</h1>{subtitle_html}</header></div></div>'
+    pagefind_attr = ' data-pagefind-body' if pagefind_body else ''
+    return f'<div class="page-header header-bg-{html.escape(str(bg))}"><div class="row title"><header class="large-12 columns"><h1{pagefind_attr}>{html.escape(plain_text(title))}</h1>{subtitle_html}</header></div></div>'
 
 
 def feature_block(title: str, content: str, icon: str = "info-circle") -> str:
