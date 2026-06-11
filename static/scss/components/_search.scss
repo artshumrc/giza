@@ -532,3 +532,52 @@ body {
 		}
 	}
 }
+
+// Search and Filter Loading spinners / indicators
+.giza-spinner {
+	display: inline-block;
+	width: 1.5rem;
+	height: 1.5rem;
+	vertical-align: text-bottom;
+	border: 0.2em solid currentColor;
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: giza-spinner-border .7s linear infinite;
+
+	&.spinner-sm {
+		width: 1rem;
+		height: 1rem;
+		border-width: 0.15em;
+	}
+}
+
+@keyframes giza-spinner-border {
+	to { transform: rotate(360deg); }
+}
+
+.static-site-loading {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: $global-padding;
+	margin-bottom: $global-padding;
+	color: $umber;
+
+	.static-site-meta {
+		margin: 0;
+	}
+}
+
+.category-loading {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: $umber;
+	margin-top: rem-calc(6px);
+	margin-bottom: rem-calc(12px);
+
+	.static-site-meta {
+		margin: 0;
+		font-size: rem-calc(12px);
+	}
+}

@@ -501,11 +501,17 @@
         this.instanceName = this.getAttribute('instance') || INSTANCE_NAME;
         this.categoryCounts = {};
         this.activeCategory = categoryLabelFromParam(currentParams().get('category'));
+        this.loadingCategories = true;
         this.render();
+        this._handleSearchStart = (event) => {
+          this.loadingCategories = true;
+          this.render();
+        };
         this._handleBrowseResults = (event) => {
           var detail = event.detail || {};
           this.categoryCounts = detail.category_counts || {};
           this.activeCategory = detail.active_category || '';
+          this.loadingCategories = false;
           this.render();
         };
         this._handleDirectSearchResults = (event) => {
@@ -518,8 +524,10 @@
             this.categoryCounts = categoryCountsFromSearchResult(searchResult);
           }
           this.activeCategory = activeCategoryFromFilters(detail.filters || {});
+          this.loadingCategories = detail.is_final_counts !== undefined ? !detail.is_final_counts : shouldLoadCategoryCounts(this.categoryCounts, this.activeCategory);
           this.render();
         };
+        window.addEventListener('giza:search-start', this._handleSearchStart);
         window.addEventListener('giza:browse-results', this._handleBrowseResults);
         window.addEventListener('giza:direct-search-results', this._handleDirectSearchResults);
         this.addEventListener('click', (event) => {
@@ -532,6 +540,9 @@
       }
 
       disconnectedCallback() {
+        if (this._handleSearchStart) {
+          window.removeEventListener('giza:search-start', this._handleSearchStart);
+        }
         if (this._handleBrowseResults) {
           window.removeEventListener('giza:browse-results', this._handleBrowseResults);
         }
@@ -552,7 +563,11 @@
           });
           html.push('</div>');
         }
-        if (hasCounts || this.activeCategory) {
+        if (this.loadingCategories) {
+          html.push('<div class="search-facet-section"><h6 class="search-facet-title">Category:</h6> ');
+          html.push('<div class="category-loading"><div class="giza-spinner spinner-sm"></div><p class="static-site-meta">Loading categories...</p></div>');
+          html.push('</div>');
+        } else if (hasCounts || this.activeCategory) {
           html.push('<div class="search-facet-section"><h6 class="search-facet-title">Category:</h6><ul class="search-facet-list">');
           CATEGORY_ORDER.slice().sort(function (a, b) {
             return (counts[b] || 0) - (counts[a] || 0) || CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b);
@@ -584,7 +599,7 @@
         this.currentPage = parsePageParam();
         this.renderToken = 0;
         this.signature = '';
-        this.innerHTML = '<p class="static-site-meta">Loading search results...</p>';
+        this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">Loading search results...</p></div>';
         if (isBrowseState(stateFromParams(currentParams()))) {
           this.renderBrowseFromUrl();
         }
@@ -625,7 +640,8 @@
         var page = parsePageParam();
         var token = ++this.renderToken;
         this.searchResult = null;
-        this.innerHTML = '<p class="static-site-meta">Loading search results...</p>';
+        window.dispatchEvent(new CustomEvent('giza:search-start', { detail: { isBrowse: true, state: state } }));
+        this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">Loading search results...</p></div>';
         try {
           var data = await fetchBrowseChunk(state, page);
           if (token !== this.renderToken) return true;
@@ -686,7 +702,8 @@
         }
         var token = ++this.renderToken;
         this.searchResult = null;
-        this.innerHTML = '<p class="static-site-meta">Searching...</p>';
+        window.dispatchEvent(new CustomEvent('giza:search-start', { detail: { isBrowse: false, state: state } }));
+        this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">Searching...</p></div>';
         var searchResult = await directPagefindSearch(state.term, filters);
         if (token !== this.renderToken) return;
         var latestState = stateFromParams(currentParams());
@@ -697,7 +714,12 @@
         this.signature = signature;
         this.searchResult = searchResult;
         window.dispatchEvent(new CustomEvent('giza:direct-search-results', {
-          detail: { searchResult: searchResult, filters: filters, category_counts: categoryCounts }
+          detail: {
+            searchResult: searchResult,
+            filters: filters,
+            category_counts: categoryCounts,
+            is_final_counts: !shouldLoadCategoryCounts(categoryCounts, state.category)
+          }
         }));
         this.renderResults();
         if (shouldLoadCategoryCounts(categoryCounts, state.category)) {
@@ -711,7 +733,7 @@
         var latestFilters = filtersForCategory(latestState.category);
         if (this.signature !== signature || signature !== searchSignature(latestState.term, latestFilters)) return;
         window.dispatchEvent(new CustomEvent('giza:direct-search-results', {
-          detail: { searchResult: this.searchResult, filters: filters, category_counts: categoryCounts }
+          detail: { searchResult: this.searchResult, filters: filters, category_counts: categoryCounts, is_final_counts: true }
         }));
       }
 
@@ -733,7 +755,7 @@
           this.innerHTML = status + '<p>No catalog records matched this search.</p>';
           return;
         }
-        this.innerHTML = status + '<p class="static-site-meta">Loading results ' + (start + 1).toLocaleString() + '-' + Math.min(start + this.pageSize, total).toLocaleString() + '...</p>';
+        this.innerHTML = status + '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">Loading results ' + (start + 1).toLocaleString() + '-' + Math.min(start + this.pageSize, total).toLocaleString() + '...</p></div>';
         Promise.all(visible.map(function (raw) {
           return raw.data().catch(function () { return null; });
         })).then((items) => {

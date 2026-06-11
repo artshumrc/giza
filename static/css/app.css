@@ -10784,6 +10784,56 @@ body.list-active .media-object-holder {
   #timeline-embed .tl-slidenav-icon:before {
     font-size: 50px !important; } }
 
+.giza-spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  vertical-align: text-bottom;
+  border: 0.2em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  -webkit-animation: giza-spinner-border .7s linear infinite;
+          animation: giza-spinner-border .7s linear infinite; }
+  .giza-spinner.spinner-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em; }
+
+@-webkit-keyframes giza-spinner-border {
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
+
+@keyframes giza-spinner-border {
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
+
+.static-site-loading {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+      align-items: center;
+  gap: 10px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: #8C8179; }
+  .static-site-loading .static-site-meta {
+    margin: 0; }
+
+.category-loading {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+      align-items: center;
+  gap: 8px;
+  color: #8C8179;
+  margin-top: 0.375rem;
+  margin-bottom: 0.75rem; }
+  .category-loading .static-site-meta {
+    margin: 0;
+    font-size: 0.75rem; }
+
 .gizaviewer {
   width: 100%;
   margin: 0 auto;
