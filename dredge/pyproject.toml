@@ -5,7 +5,7 @@ description = "Static-site SQLite search compiler"
 readme = "plan.md"
 requires-python = ">=3.14"
 dependencies = [
-    "beautifulsoup4>=4.12.3",
+    "selectolax>=0.4.3",
 ]
 
 [project.scripts]

@@ -4,6 +4,10 @@ import json
 import shutil
 import sqlite3
 import subprocess
+import threading
+from functools import partial
+from http.client import HTTPConnection
+from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 import pytest
@@ -12,6 +16,7 @@ from dredge.codegen import generate_client_source
 from dredge.cli import main
 from dredge.compiler import BuildError, compile_site, load_config
 from dredge.query import SearchRequest, build_search_queries, escape_fts_query, search
+from dredge.range_server import RangeRequestHandler
 
 
 def test_compile_fixture_site_and_query_results(tmp_path: Path) -> None:
@@ -74,6 +79,36 @@ def test_cli_validate_and_compile(tmp_path: Path) -> None:
     assert main(["validate", "--config", str(config_path)]) == 0
     assert main(["compile", "--config", str(config_path)]) == 0
     assert (output_dir / "search-manifest.json").exists()
+
+
+def test_cli_compile_writes_metrics_json(tmp_path: Path) -> None:
+    config_path, _ = _write_fixture_project(tmp_path)
+    metrics_path = tmp_path / "metrics.json"
+
+    assert main(["compile", "--config", str(config_path), "--metrics-json", str(metrics_path)]) == 0
+
+    metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+    assert metrics["metrics_version"] == 1
+    assert metrics["candidate_count"] == 2
+    assert metrics["page_count"] == 2
+    assert metrics["ingest"]["documents"] == 2
+    assert metrics["ingest"]["documents_per_second"] > 0
+    assert metrics["database"]["db_file"].startswith("search.")
+    assert metrics["database"]["db_file"].endswith(".db")
+    for phase in (
+        "validation",
+        "discovery",
+        "extraction_ingest",
+        "index_creation",
+        "fts_optimize",
+        "analyze",
+        "vacuum_into",
+        "hashing",
+        "post_build_checks",
+        "manifest_write",
+    ):
+        assert phase in metrics["phases"]
+        assert metrics["phases"][phase] >= 0
 
 
 def test_compile_is_deterministic_for_unchanged_input(tmp_path: Path) -> None:
@@ -347,6 +382,100 @@ def test_compile_writes_generated_types_worker_protocol_and_stale_handling(tmp_p
     assert "rejectOlderSearches" in source
     assert "STALE_RESPONSE" in source
     assert 'const DEFAULT_WORKER_URL = "/search/dredge-worker.abc123.js";' in source
+
+
+def test_pagefind_compatible_attributes_extract_and_ignore_content(tmp_path: Path) -> None:
+    source_dir = tmp_path / "site"
+    output_dir = tmp_path / "search"
+    source_dir.mkdir()
+    (source_dir / "index.html").write_text(
+        """
+        <!doctype html>
+        <html>
+        <head>
+          <title>Fallback Title</title>
+          <meta name="description" content="Catalog description">
+          <meta data-pagefind-meta="catalog_id[content]" content="abc-123">
+          <meta data-pagefind-sort="title[content]" content="Pagefind Title">
+        </head>
+        <body>
+          <h1 data-pagefind-body>Pagefind Title</h1>
+          <p data-pagefind-body>Visible golden content.</p>
+          <div data-pagefind-ignore>Ignored secret content.</div>
+          <div aria-hidden="true"><span data-pagefind-filter="category">Objects</span></div>
+        </body>
+        </html>
+        """,
+        encoding="utf-8",
+    )
+    config_path = tmp_path / "dredge.config.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "source_dir": str(source_dir),
+                "output_dir": str(output_dir),
+                "selectors": {
+                    "title": "h1[data-pagefind-body]",
+                    "body": "body",
+                    "description": "meta[name='description']@content",
+                },
+                "facets": {
+                    "catalog_id": {
+                        "type": "string",
+                        "source": "meta[data-pagefind-meta='catalog_id[content]']@content",
+                    },
+                    "category": {"type": "string", "source": "[data-pagefind-filter='category']"},
+                    "sort_title": {
+                        "type": "string",
+                        "source": "meta[data-pagefind-sort='title[content]']@content",
+                    },
+                },
+                "result_fields": ["title", "url", "description", "category", "catalog_id", "sort_title"],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = compile_site(config_path)
+
+    connection = sqlite3.connect(result.db_path)
+    try:
+        assert connection.execute("SELECT title, category, catalog_id, sort_title FROM documents").fetchone() == (
+            "Pagefind Title",
+            "Objects",
+            "abc-123",
+            "Pagefind Title",
+        )
+        assert connection.execute("SELECT COUNT(*) FROM documents_fts WHERE documents_fts MATCH ?", ("golden",)).fetchone() == (1,)
+        assert connection.execute("SELECT COUNT(*) FROM documents_fts WHERE documents_fts MATCH ?", ("secret",)).fetchone() == (0,)
+    finally:
+        connection.close()
+
+
+def test_range_server_serves_partial_content(tmp_path: Path) -> None:
+    (tmp_path / "search.db").write_bytes(b"0123456789")
+
+    class QuietRangeRequestHandler(RangeRequestHandler):
+        def log_message(self, format: str, *args: object) -> None:
+            pass
+
+    handler = partial(QuietRangeRequestHandler, directory=str(tmp_path))
+    with ThreadingHTTPServer(("127.0.0.1", 0), handler) as server:
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        connection = HTTPConnection("127.0.0.1", server.server_address[1], timeout=5)
+        try:
+            connection.request("GET", "/search.db", headers={"Range": "bytes=2-5"})
+            response = connection.getresponse()
+            body = response.read()
+        finally:
+            connection.close()
+            server.shutdown()
+
+    assert response.status == 206
+    assert response.getheader("Content-Range") == "bytes 2-5/10"
+    assert response.getheader("Content-Length") == "4"
+    assert body == b"2345"
 
 
 def test_codegen_cli_requires_client_output(tmp_path: Path) -> None:

@@ -6,15 +6,19 @@ import json
 import re
 import shutil
 import sqlite3
+import sys
 import tempfile
+import time
 import unicodedata
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass, field as dataclass_field
 from datetime import date
 from pathlib import Path, PurePosixPath
-from typing import Any
+from typing import Any, TextIO
 from urllib.parse import urljoin
 
-from bs4 import BeautifulSoup
+from selectolax.parser import HTMLParser
 
 from . import __version__
 
@@ -23,6 +27,10 @@ MANIFEST_VERSION = 1
 SQLITE_PAGE_SIZE = 16_384
 RANGE_BLOCK_BYTES = 65_536
 BATCH_SIZE = 10_000
+INSERT_BATCH_SIZE = 5_000
+PROGRESS_DOCUMENT_INTERVAL = 5_000
+PROGRESS_TIME_INTERVAL_SECONDS = 10.0
+METRICS_VERSION = 1
 MAX_WARNING_SAMPLES = 3
 
 IDENTIFIER_RE = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
@@ -224,6 +232,122 @@ class CompileResult:
     client_path: Path | None = None
     warnings: tuple[BuildWarning, ...] = dataclass_field(default_factory=tuple)
     skipped: tuple[SkippedFile, ...] = dataclass_field(default_factory=tuple)
+    metrics: dict[str, Any] = dataclass_field(default_factory=dict)
+
+
+class _MetricsRecorder:
+    def __init__(self, config_path: Path) -> None:
+        self._started_at = time.perf_counter()
+        self.config_path = _absolute_path(config_path)
+        self.phase_order: list[str] = []
+        self.phases: dict[str, float] = {}
+        self.candidate_count = 0
+        self.ingest_documents = 0
+        self.ingest_seconds = 0.0
+        self.ingest_build_db_bytes: int | None = None
+        self.ingest_peak_rss_bytes: int | None = None
+
+    @contextmanager
+    def phase(self, name: str) -> Iterator[None]:
+        start = time.perf_counter()
+        try:
+            yield
+        finally:
+            elapsed = time.perf_counter() - start
+            if name not in self.phases:
+                self.phase_order.append(name)
+                self.phases[name] = 0.0
+            self.phases[name] += elapsed
+
+    def record_ingest(self, *, documents: int, seconds: float, build_db_path: Path) -> None:
+        self.ingest_documents = documents
+        self.ingest_seconds = seconds
+        self.ingest_build_db_bytes = _path_size(build_db_path)
+        self.ingest_peak_rss_bytes = _peak_rss_bytes()
+
+    def to_payload(
+        self,
+        *,
+        config: DredgeConfig,
+        page_count: int,
+        skipped_count: int,
+        warning_count: int,
+        db_path: Path,
+        manifest_path: Path,
+        db_sha256: str,
+        db_bytes: int,
+    ) -> dict[str, Any]:
+        ingest_rate = self.ingest_documents / self.ingest_seconds if self.ingest_seconds > 0 else None
+        return {
+            "metrics_version": METRICS_VERSION,
+            "config_path": str(config.path),
+            "source_dir": str(config.source_dir),
+            "output_dir": str(config.output_dir),
+            "candidate_count": self.candidate_count,
+            "page_count": page_count,
+            "skipped_count": skipped_count,
+            "warning_count": warning_count,
+            "total_elapsed_seconds": _round_seconds(time.perf_counter() - self._started_at),
+            "phase_order": list(self.phase_order),
+            "phases": {name: _round_seconds(self.phases[name]) for name in self.phase_order},
+            "ingest": {
+                "documents": self.ingest_documents,
+                "seconds": _round_seconds(self.ingest_seconds),
+                "documents_per_second": _round_seconds(ingest_rate) if ingest_rate is not None else None,
+                "build_db_bytes": self.ingest_build_db_bytes,
+                "peak_rss_bytes": self.ingest_peak_rss_bytes,
+            },
+            "database": {
+                "path": str(db_path),
+                "manifest_path": str(manifest_path),
+                "db_file": db_path.name,
+                "db_sha256": db_sha256,
+                "db_bytes": db_bytes,
+            },
+        }
+
+
+class _ProgressReporter:
+    def __init__(self, stream: TextIO | None, *, total_documents: int, build_db_path: Path) -> None:
+        self._stream = stream
+        self._total_documents = total_documents
+        self._build_db_path = build_db_path
+        self._started_at = time.perf_counter()
+        self._last_report_at = self._started_at
+        self._last_document_count = 0
+
+    def should_report(self, processed_documents: int) -> bool:
+        if self._stream is None or processed_documents == self._last_document_count:
+            return False
+
+        now = time.perf_counter()
+        final = processed_documents == self._total_documents
+        enough_documents = processed_documents - self._last_document_count >= PROGRESS_DOCUMENT_INTERVAL
+        enough_time = now - self._last_report_at >= PROGRESS_TIME_INTERVAL_SECONDS
+        return final or enough_documents or enough_time
+
+    def maybe_report(self, processed_documents: int, *, build_db_bytes: int | None = None) -> None:
+        if not self.should_report(processed_documents):
+            return
+
+        now = time.perf_counter()
+        elapsed = max(now - self._started_at, 0.000001)
+        documents_per_second = processed_documents / elapsed
+        remaining_documents = max(self._total_documents - processed_documents, 0)
+        eta_seconds = remaining_documents / documents_per_second if documents_per_second > 0 else None
+        print(
+            "dredge: ingest "
+            f"{processed_documents:,}/{self._total_documents:,} docs "
+            f"({documents_per_second:,.1f} docs/s, "
+            f"elapsed {_format_duration(elapsed)}, "
+            f"eta {_format_duration(eta_seconds)}, "
+            f"build_db {_format_bytes(build_db_bytes if build_db_bytes is not None else _path_size(self._build_db_path))}, "
+            f"peak_rss {_format_bytes(_peak_rss_bytes())})",
+            file=self._stream,
+            flush=True,
+        )
+        self._last_report_at = now
+        self._last_document_count = processed_documents
 
 
 def load_config(config_path: Path) -> DredgeConfig:
@@ -343,7 +467,7 @@ def discover_html_files(config: DredgeConfig) -> tuple[tuple[FileCandidate, ...]
     seen_urls: dict[str, Path] = {}
     output_inside_source = _same_or_child(config.output_dir, config.source_dir)
 
-    for path in sorted(config.source_dir.rglob("*"), key=lambda found: found.relative_to(config.source_dir).as_posix()):
+    for path in _discovery_paths(config):
         if path.is_dir():
             continue
         rel_path = path.relative_to(config.source_dir).as_posix()
@@ -375,9 +499,37 @@ def discover_html_files(config: DredgeConfig) -> tuple[tuple[FileCandidate, ...]
     return tuple(sorted(candidates, key=lambda candidate: (candidate.url, candidate.rel_path))), tuple(skipped)
 
 
-def compile_site(config_path: Path) -> CompileResult:
-    config = validate_config(config_path)
-    candidates, skipped = discover_html_files(config)
+def _discovery_paths(config: DredgeConfig) -> tuple[Path, ...]:
+    if _can_use_include_glob_discovery(config.include):
+        paths: set[Path] = set()
+        for pattern in config.include:
+            paths.update(config.source_dir.glob(pattern))
+        return tuple(sorted(paths, key=lambda found: found.relative_to(config.source_dir).as_posix()))
+
+    return tuple(sorted(config.source_dir.rglob("*"), key=lambda found: found.relative_to(config.source_dir).as_posix()))
+
+
+def _can_use_include_glob_discovery(include: tuple[str, ...]) -> bool:
+    return all(_is_html_include_glob(pattern) for pattern in include)
+
+
+def _is_html_include_glob(pattern: str) -> bool:
+    pure_path = PurePosixPath(pattern)
+    return not pure_path.is_absolute() and ".." not in pure_path.parts and pattern.lower().endswith((".html", ".htm"))
+
+
+def compile_site(
+    config_path: Path,
+    *,
+    metrics_json_path: Path | None = None,
+    progress_stream: TextIO | None = None,
+) -> CompileResult:
+    metrics = _MetricsRecorder(config_path)
+    with metrics.phase("validation"):
+        config = validate_config(config_path)
+    with metrics.phase("discovery"):
+        candidates, skipped = discover_html_files(config)
+    metrics.candidate_count = len(candidates)
     if not candidates:
         raise BuildError("DISCOVERY_NO_FILES", f"no HTML files matched include/exclude patterns in {config.source_dir}")
 
@@ -392,57 +544,100 @@ def compile_site(config_path: Path) -> CompileResult:
         smoke_filter: tuple[str, str, str | int | float] | None = None
         connection = sqlite3.connect(build_db_path)
         try:
-            _configure_build_database(connection)
-            _create_schema(connection, config)
+            with metrics.phase("table_creation"):
+                _configure_build_database(connection)
+                _create_tables(connection, config)
             insert_sql = _document_insert_sql(config)
             array_insert_sql = {
                 facet.name: f"INSERT OR IGNORE INTO {_quote_identifier(_array_table_name(facet.name))} "
                 "(document_id, value) VALUES (?, ?)"
                 for facet in config.array_facets
             }
+            batches = _InsertBatches.for_config(config)
+            progress = _ProgressReporter(progress_stream, total_documents=len(candidates), build_db_path=build_db_path)
 
             connection.execute("BEGIN")
-            for index, candidate in enumerate(candidates, start=1):
-                document = _extract_document(index, candidate, config, warnings)
-                if smoke_token is None:
-                    smoke_token = _first_search_token(document.title) or _first_search_token(document.body)
-                if smoke_filter is None:
-                    smoke_filter = _first_filter(document)
-                _insert_document(connection, insert_sql, array_insert_sql, config, document)
-                if index % BATCH_SIZE == 0:
-                    connection.commit()
-                    connection.execute("BEGIN")
+            ingest_started_at = time.perf_counter()
+            with metrics.phase("extraction_ingest"):
+                for index, candidate in enumerate(candidates, start=1):
+                    document = _extract_document(index, candidate, config, warnings)
+                    if smoke_token is None:
+                        smoke_token = _first_search_token(document.title) or _first_search_token(document.body)
+                    if smoke_filter is None:
+                        smoke_filter = _first_filter(document)
+                    _queue_document_insert(batches, config, document)
+                    report_due = progress.should_report(index)
+                    build_db_bytes = None
+                    if len(batches.documents) >= INSERT_BATCH_SIZE or report_due:
+                        _flush_insert_batches(connection, insert_sql, array_insert_sql, batches)
+                        if report_due:
+                            build_db_bytes = _sqlite_database_size_bytes(connection)
+                    if index % BATCH_SIZE == 0:
+                        _flush_insert_batches(connection, insert_sql, array_insert_sql, batches)
+                        connection.commit()
+                        progress.maybe_report(index, build_db_bytes=build_db_bytes or _path_size(build_db_path))
+                        connection.execute("BEGIN")
+                    else:
+                        progress.maybe_report(index, build_db_bytes=build_db_bytes)
+                _flush_insert_batches(connection, insert_sql, array_insert_sql, batches)
+                connection.commit()
+                progress.maybe_report(len(candidates), build_db_bytes=_path_size(build_db_path))
+            metrics.record_ingest(
+                documents=len(candidates),
+                seconds=time.perf_counter() - ingest_started_at,
+                build_db_path=build_db_path,
+            )
+            with metrics.phase("index_creation"):
+                _create_indexes(connection, config)
             connection.commit()
-            _finalize_database(connection, compact_db_path)
+            _finalize_database(connection, compact_db_path, metrics)
         except Exception:
             connection.rollback()
             raise
         finally:
             connection.close()
 
-        db_sha256 = _sha256_file(compact_db_path)
-        db_file = f"search.{db_sha256}.db"
-        db_path = config.output_dir / db_file
-        compact_db_path.replace(db_path)
+        with metrics.phase("hashing"):
+            db_sha256 = _sha256_file(compact_db_path)
+            db_file = f"search.{db_sha256}.db"
+            db_path = config.output_dir / db_file
+            compact_db_path.replace(db_path)
 
-        _run_post_build_checks(db_path, config, smoke_token, smoke_filter)
+        with metrics.phase("post_build_checks"):
+            _run_post_build_checks(db_path, config, smoke_token, smoke_filter)
 
-        manifest = {
-            "manifest_version": MANIFEST_VERSION,
-            "db_schema_version": DB_SCHEMA_VERSION,
-            "db_file": db_file,
-            "db_sha256": db_sha256,
-            "db_bytes": db_path.stat().st_size,
-            "sqlite_page_size": SQLITE_PAGE_SIZE,
-            "range_required": True,
-            "range_block_bytes": RANGE_BLOCK_BYTES,
-            "page_count": len(candidates),
-            "config_hash": config.config_hash,
-            "runtime_min_version": __version__,
-        }
-        manifest_path = config.output_dir / "search-manifest.json"
-        manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        client_path = _write_generated_client(config)
+        with metrics.phase("manifest_write"):
+            manifest = {
+                "manifest_version": MANIFEST_VERSION,
+                "db_schema_version": DB_SCHEMA_VERSION,
+                "db_file": db_file,
+                "db_sha256": db_sha256,
+                "db_bytes": db_path.stat().st_size,
+                "sqlite_page_size": SQLITE_PAGE_SIZE,
+                "range_required": True,
+                "range_block_bytes": RANGE_BLOCK_BYTES,
+                "page_count": len(candidates),
+                "config_hash": config.config_hash,
+                "runtime_min_version": __version__,
+            }
+            manifest_path = config.output_dir / "search-manifest.json"
+            manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        with metrics.phase("client_write"):
+            client_path = _write_generated_client(config)
+
+        warning_tuple = warnings.to_warnings()
+        metrics_payload = metrics.to_payload(
+            config=config,
+            page_count=len(candidates),
+            skipped_count=len(skipped),
+            warning_count=len(warning_tuple),
+            db_path=db_path,
+            manifest_path=manifest_path,
+            db_sha256=db_sha256,
+            db_bytes=manifest["db_bytes"],
+        )
+        if metrics_json_path is not None:
+            _write_metrics_json(metrics_json_path, metrics_payload)
 
         return CompileResult(
             db_path=db_path,
@@ -450,8 +645,9 @@ def compile_site(config_path: Path) -> CompileResult:
             manifest=manifest,
             page_count=len(candidates),
             client_path=client_path,
-            warnings=warnings.to_warnings(),
+            warnings=warning_tuple,
             skipped=skipped,
+            metrics=metrics_payload,
         )
     except BuildError:
         raise
@@ -562,6 +758,11 @@ def _configure_build_database(connection: sqlite3.Connection) -> None:
 
 
 def _create_schema(connection: sqlite3.Connection, config: DredgeConfig) -> None:
+    _create_tables(connection, config)
+    _create_indexes(connection, config)
+
+
+def _create_tables(connection: sqlite3.Connection, config: DredgeConfig) -> None:
     scalar_columns = [f"{_quote_identifier(facet.name)} {SCALAR_SQL_TYPES[facet.type]}" for facet in config.scalar_facets]
     document_columns = [
         "id INTEGER PRIMARY KEY",
@@ -586,6 +787,11 @@ def _create_schema(connection: sqlite3.Connection, config: DredgeConfig) -> None
             "PRIMARY KEY (document_id, value)"
             ") WITHOUT ROWID"
         )
+
+
+def _create_indexes(connection: sqlite3.Connection, config: DredgeConfig) -> None:
+    for facet in config.array_facets:
+        table_name = _quote_identifier(_array_table_name(facet.name))
         connection.execute(
             f"CREATE INDEX {_quote_identifier(f'facet_{facet.name}_value_document_idx')} "
             f"ON {table_name}(value, document_id)"
@@ -610,23 +816,52 @@ def _document_insert_sql(config: DredgeConfig) -> str:
     return f"INSERT INTO documents ({sql_columns}) VALUES ({placeholders})"
 
 
-def _insert_document(
-    connection: sqlite3.Connection,
-    insert_sql: str,
-    array_insert_sql: dict[str, str],
+@dataclass
+class _InsertBatches:
+    documents: list[tuple[Any, ...]]
+    fts: list[tuple[int, str, str]]
+    array_facets: dict[str, list[tuple[int, str]]]
+
+    @classmethod
+    def for_config(cls, config: DredgeConfig) -> _InsertBatches:
+        return cls(
+            documents=[],
+            fts=[],
+            array_facets={facet.name: [] for facet in config.array_facets},
+        )
+
+
+def _queue_document_insert(
+    batches: _InsertBatches,
     config: DredgeConfig,
     document: ExtractedDocument,
 ) -> None:
-    values = [document.id, document.url, document.title, document.description, document.content_hash]
+    values: list[Any] = [document.id, document.url, document.title, document.description, document.content_hash]
     values.extend(document.scalar_facets.get(facet.name) for facet in config.scalar_facets)
-    connection.execute(insert_sql, values)
-    connection.execute(
-        "INSERT INTO documents_fts(rowid, title, body) VALUES (?, ?, ?)",
-        (document.id, document.title, document.body),
-    )
+    batches.documents.append(tuple(values))
+    batches.fts.append((document.id, document.title, document.body))
     for facet in config.array_facets:
-        for value in document.array_facets.get(facet.name, ()):
-            connection.execute(array_insert_sql[facet.name], (document.id, value))
+        batches.array_facets[facet.name].extend(
+            (document.id, value) for value in document.array_facets.get(facet.name, ())
+        )
+
+
+def _flush_insert_batches(
+    connection: sqlite3.Connection,
+    insert_sql: str,
+    array_insert_sql: dict[str, str],
+    batches: _InsertBatches,
+) -> None:
+    if batches.documents:
+        connection.executemany(insert_sql, batches.documents)
+        batches.documents.clear()
+    if batches.fts:
+        connection.executemany("INSERT INTO documents_fts(rowid, title, body) VALUES (?, ?, ?)", batches.fts)
+        batches.fts.clear()
+    for facet_name, rows in batches.array_facets.items():
+        if rows:
+            connection.executemany(array_insert_sql[facet_name], rows)
+            rows.clear()
 
 
 def _extract_document(
@@ -640,10 +875,11 @@ def _extract_document(
     except OSError as error:
         raise BuildError("HTML_READ_FAILED", f"failed to read {candidate.path}: {error}", path=candidate.path) from error
 
-    soup = BeautifulSoup(html_bytes, "html.parser")
-    _remove_non_indexable_content(soup)
+    tree = HTMLParser(html_bytes)
+    facet_raw_values = {facet.name: _extract_values(tree, facet.source) for facet in config.facets}
+    _remove_non_indexable_content(tree)
 
-    title_values = _extract_values(soup, config.selectors["title"])
+    title_values = _extract_values(tree, config.selectors["title"])
     if title_values:
         title = title_values[0]
     else:
@@ -656,7 +892,7 @@ def _extract_document(
             selector=config.selectors["title"],
         )
 
-    description_values = _extract_values(soup, config.selectors["description"])
+    description_values = _extract_values(tree, config.selectors["description"])
     description = description_values[0] if description_values else None
     if not description_values:
         warnings.add(
@@ -667,7 +903,7 @@ def _extract_document(
             selector=config.selectors["description"],
         )
 
-    body_values = _extract_values(soup, config.selectors["body"])
+    body_values = _extract_values(tree, config.selectors["body"])
     body = _normalize_text(" ".join(body_values))
     if not body:
         warnings.add(
@@ -681,7 +917,7 @@ def _extract_document(
     scalar_facets: dict[str, str | int | float | None] = {}
     array_facets: dict[str, tuple[str, ...]] = {}
     for facet in config.facets:
-        raw_values = _extract_values(soup, facet.source)
+        raw_values = facet_raw_values[facet.name]
         if facet.is_array:
             values = _normalize_array_values(raw_values)
             if facet.required and not values:
@@ -729,30 +965,32 @@ def _extract_document(
     )
 
 
-def _remove_non_indexable_content(soup: BeautifulSoup) -> None:
-    for tag in soup(["script", "style", "noscript", "template"]):
+def _remove_non_indexable_content(tree: HTMLParser) -> None:
+    for tag in tree.css("script, style, noscript, template"):
         tag.decompose()
-    for tag in soup.select("[hidden], [aria-hidden='true']"):
+    for tag in tree.css("[data-pagefind-ignore]"):
         tag.decompose()
-    for tag in soup.select("[style]"):
-        style = str(tag.get("style", "")).replace(" ", "").lower()
+    for tag in tree.css("[hidden], [aria-hidden='true']"):
+        tag.decompose()
+    for tag in tree.css("[style]"):
+        style = str(tag.attributes.get("style", "")).replace(" ", "").lower()
         if "display:none" in style or "visibility:hidden" in style:
             tag.decompose()
 
 
-def _extract_values(soup: BeautifulSoup, source: str) -> list[str]:
+def _extract_values(tree: HTMLParser, source: str) -> list[str]:
     kind, selector, attribute = _parse_source(source, allow_direct_attribute=True)
     values: list[str] = []
     if kind == "attribute":
-        for tag in soup.find_all(attrs={attribute: True}):
-            values.extend(_normalize_attribute_value(tag.get(attribute)))
+        for tag in tree.css(f"[{attribute}]"):
+            values.extend(_normalize_attribute_value(tag.attributes.get(attribute)))
     elif kind == "selector_attribute":
-        for tag in soup.select(selector):
-            if tag.has_attr(attribute):
-                values.extend(_normalize_attribute_value(tag.get(attribute)))
+        for tag in tree.css(selector):
+            if attribute in tag.attributes:
+                values.extend(_normalize_attribute_value(tag.attributes.get(attribute)))
     else:
-        for tag in soup.select(selector):
-            values.append(tag.get_text(" ", strip=True))
+        for tag in tree.css(selector):
+            values.append(tag.text(separator=" ", strip=True))
     return [value for value in (_normalize_text(value) for value in values) if value]
 
 
@@ -833,14 +1071,17 @@ def _coerce_scalar_facet(facet: FacetConfig, value: str, path: Path) -> str | in
     raise BuildError("CONFIG_INVALID", f"unsupported scalar facet type: {facet.type}")
 
 
-def _finalize_database(connection: sqlite3.Connection, compact_db_path: Path) -> None:
-    connection.execute("INSERT INTO documents_fts(documents_fts) VALUES('optimize')")
-    connection.execute("ANALYZE")
-    connection.execute("PRAGMA optimize")
+def _finalize_database(connection: sqlite3.Connection, compact_db_path: Path, metrics: _MetricsRecorder) -> None:
+    with metrics.phase("fts_optimize"):
+        connection.execute("INSERT INTO documents_fts(documents_fts) VALUES('optimize')")
+    with metrics.phase("analyze"):
+        connection.execute("ANALYZE")
+        connection.execute("PRAGMA optimize")
     connection.commit()
     if compact_db_path.exists():
         compact_db_path.unlink()
-    connection.execute(f"VACUUM INTO {_quote_sql_string(str(compact_db_path))}")
+    with metrics.phase("vacuum_into"):
+        connection.execute(f"VACUUM INTO {_quote_sql_string(str(compact_db_path))}")
 
 
 def _run_post_build_checks(
@@ -851,6 +1092,9 @@ def _run_post_build_checks(
 ) -> None:
     connection = sqlite3.connect(f"file:{db_path}?mode=ro&immutable=1", uri=True)
     try:
+        integrity = connection.execute("PRAGMA integrity_check").fetchone()[0]
+        if integrity != "ok":
+            raise BuildError("DATABASE_INTEGRITY_CHECK_FAILED", f"PRAGMA integrity_check returned {integrity!r}")
         _run_smoke_queries(connection, smoke_token, smoke_filter)
         _verify_query_plans(connection, config)
     finally:
@@ -990,7 +1234,7 @@ def _validate_selector_source(source: str, field_name: str, allow_direct_attribu
     if not selector:
         raise BuildError("CONFIG_INVALID", f"{field_name} has an empty CSS selector")
     try:
-        BeautifulSoup("", "html.parser").select(selector)
+        HTMLParser("").css(selector)
     except Exception as error:
         raise BuildError("CONFIG_INVALID", f"{field_name} has invalid CSS selector {selector!r}: {error}") from error
 
@@ -1070,6 +1314,69 @@ def _canonical_url(base_url: str, rel_path: str) -> str:
 
 def _normalize_text(value: str) -> str:
     return unicodedata.normalize("NFC", " ".join(value.split()))
+
+
+def _write_metrics_json(metrics_json_path: Path, metrics: dict[str, Any]) -> None:
+    path = _absolute_path(metrics_json_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = path.with_name(f"{path.name}.tmp")
+    temporary_path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary_path.replace(path)
+
+
+def _round_seconds(value: float) -> float:
+    return round(value, 6)
+
+
+def _path_size(path: Path) -> int | None:
+    try:
+        return path.stat().st_size
+    except OSError:
+        return None
+
+
+def _sqlite_database_size_bytes(connection: sqlite3.Connection) -> int | None:
+    page_count = connection.execute("PRAGMA page_count").fetchone()
+    page_size = connection.execute("PRAGMA page_size").fetchone()
+    if page_count is None or page_size is None:
+        return None
+    return int(page_count[0]) * int(page_size[0])
+
+
+def _peak_rss_bytes() -> int | None:
+    try:
+        import resource
+    except ImportError:
+        return None
+
+    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    if peak <= 0:
+        return None
+    if sys.platform == "darwin":
+        return int(peak)
+    return int(peak * 1024)
+
+
+def _format_duration(seconds: float | None) -> str:
+    if seconds is None:
+        return "unknown"
+    total_seconds = max(int(seconds), 0)
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    if hours:
+        return f"{hours:d}:{minutes:02d}:{seconds:02d}"
+    return f"{minutes:02d}:{seconds:02d}"
+
+
+def _format_bytes(size: int | None) -> str:
+    if size is None:
+        return "unknown"
+    value = float(size)
+    for unit in ("B", "KiB", "MiB", "GiB"):
+        if value < 1024 or unit == "GiB":
+            return f"{value:.1f} {unit}" if unit != "B" else f"{int(value)} B"
+        value /= 1024
+    return f"{value:.1f} GiB"
 
 
 def _sha256_text(value: str) -> str:
