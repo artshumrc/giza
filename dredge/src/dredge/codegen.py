@@ -13,7 +13,10 @@ def write_client(config: DredgeConfig, *, require_output: bool = False) -> Path 
     configured_path = config.client.get("out")
     if configured_path is None:
         if require_output:
-            raise BuildError("CLIENT_OUTPUT_MISSING", "client.out must be configured before running codegen")
+            raise BuildError(
+                "CLIENT_OUTPUT_MISSING",
+                "client.out must be configured before running codegen",
+            )
         return None
 
     path = _resolve_client_path(config, configured_path)
@@ -21,7 +24,9 @@ def write_client(config: DredgeConfig, *, require_output: bool = False) -> Path 
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(generate_client_source(config), encoding="utf-8")
     except OSError as error:
-        raise BuildError("CLIENT_WRITE_FAILED", f"failed to write generated client {path}: {error}") from error
+        raise BuildError(
+            "CLIENT_WRITE_FAILED", f"failed to write generated client {path}: {error}"
+        ) from error
     return path
 
 
@@ -74,12 +79,12 @@ export type DredgeStatus =
   | "idle"
   | "checking_support"
   | "fetching_manifest"
-  | "probing_range_support"
-  | "opening_range_vfs"
+  | "checking_storage"
+  | "downloading_db"
+  | "decompressing_db"
+  | "writing_opfs"
+  | "opening_db"
   | "ready"
-  | "cache_read"
-  | "range_fetch"
-  | "cache_write"
   | "failed";
 
 export type DredgeErrorCode =
@@ -87,10 +92,10 @@ export type DredgeErrorCode =
   | "UNSUPPORTED_SYNC_ACCESS"
   | "MANIFEST_FETCH_FAILED"
   | "RUNTIME_VERSION_MISMATCH"
-  | "RANGE_NOT_SUPPORTED"
+  | "DB_DOWNLOAD_FAILED"
+  | "DB_DECOMPRESS_FAILED"
   | "DB_SIZE_MISMATCH"
-  | "DB_RANGE_REQUEST_FAILED"
-  | "RANGE_CACHE_CORRUPT"
+  | "DB_STORAGE_CORRUPT"
   | "QUOTA_EXCEEDED"
   | "SQLITE_OPEN_FAILED"
   | "SQLITE_BUSY_LOCKED"
@@ -326,7 +331,9 @@ export class DredgeSearchClient {{
 
 
 def _filters_interface(config: DredgeConfig) -> str:
-    return "\n".join(f"  {facet.name}?: {_filter_type(facet)};" for facet in config.facets)
+    return "\n".join(
+        f"  {facet.name}?: {_filter_type(facet)};" for facet in config.facets
+    )
 
 
 def _result_interface_fields(config: DredgeConfig) -> str:
@@ -348,7 +355,9 @@ def _filter_type(facet: FacetConfig) -> str:
         return "boolean | boolean[]"
     if facet.type == "date":
         return "string | string[] | DredgeRange<string>"
-    raise BuildError("CONFIG_INVALID", f"unsupported facet type for codegen: {facet.type}")
+    raise BuildError(
+        "CONFIG_INVALID", f"unsupported facet type for codegen: {facet.type}"
+    )
 
 
 def _result_field_type(config: DredgeConfig, field: str) -> tuple[bool, str]:

@@ -6,6 +6,7 @@ readme = "plan.md"
 requires-python = ">=3.14"
 dependencies = [
     "selectolax>=0.4.3",
+    "brotli>=1.1.0",
 ]
 
 [project.scripts]

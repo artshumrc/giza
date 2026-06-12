@@ -1,0 +1,46 @@
+{
+  "source_dir": "dist",
+  "output_dir": "dist/search",
+  "allow_output_in_source": true,
+  "base_url": "/",
+  "include": ["**/full/index.html"],
+  "exclude": [],
+  "selectors": {
+    "title": "meta[data-pagefind-meta='title[content]']@content",
+    "body": "[data-pagefind-body]",
+    "description": "meta[name='description']@content"
+  },
+  "facets": {
+    "category": {
+      "type": "string",
+      "source": "meta[data-pagefind-meta='category[content]']@content"
+    },
+    "type": {
+      "type": "string",
+      "source": "meta[data-pagefind-meta='type[content]']@content"
+    },
+    "catalog_id": {
+      "type": "string",
+      "source": "meta[data-pagefind-meta='catalog_id[content]']@content"
+    },
+    "image": {
+      "type": "string",
+      "source": "meta[data-pagefind-meta='image[content]']@content"
+    },
+    "thumbnail": {
+      "type": "string",
+      "source": "meta[data-pagefind-meta='thumbnail[content]']@content"
+    }
+  },
+  "result_fields": [
+    "title",
+    "url",
+    "description",
+    "category",
+    "type",
+    "catalog_id",
+    "image",
+    "thumbnail"
+  ],
+  "composite_indices": []
+}

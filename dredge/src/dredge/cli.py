@@ -27,20 +27,40 @@ def main(argv: list[str] | None = None) -> int:
                 help="Write compiler timing and progress metrics to this JSON file",
             )
 
-    serve_parser = subparsers.add_parser("serve-range")
-    serve_parser.add_argument("--directory", type=Path, default=Path("."), help="Directory to serve")
-    serve_parser.add_argument("--host", default="127.0.0.1", help="Host to bind")
-    serve_parser.add_argument("--port", type=int, default=8000, help="Port to bind")
+    synth_parser = subparsers.add_parser(
+        "synth",
+        help="Generate a deterministic synthetic site for stress testing",
+    )
+    synth_parser.add_argument(
+        "root", type=Path, help="Directory to generate the site and config into"
+    )
+    synth_parser.add_argument(
+        "-n", "--count", type=int, default=1_000, help="Number of pages to generate"
+    )
+    synth_parser.add_argument(
+        "--seed", type=int, default=1, help="Deterministic generation seed"
+    )
+    synth_parser.add_argument(
+        "--shard-size",
+        type=int,
+        default=1_000,
+        help="Pages per subdirectory shard",
+    )
 
     args = parser.parse_args(argv)
 
-    if args.command == "serve-range":
-        from .range_server import serve_range_directory
+    if args.command == "synth":
+        from .synthetic import generate_site
 
-        try:
-            serve_range_directory(args.directory, args.host, args.port)
-        except KeyboardInterrupt:
-            return 0
+        site = generate_site(
+            args.root,
+            count=args.count,
+            seed=args.seed,
+            shard_size=args.shard_size,
+        )
+        print(f"generated {site.page_count} pages")
+        print(f"source: {site.source_dir}")
+        print(f"config: {site.config_path}")
         return 0
 
     config_path = Path(args.config)
@@ -57,11 +77,14 @@ def main(argv: list[str] | None = None) -> int:
             print(f"client: {client_path}")
             return 0
 
-        result = compile_site(config_path, metrics_json_path=args.metrics_json, progress_stream=sys.stderr)
+        result = compile_site(
+            config_path, metrics_json_path=args.metrics_json, progress_stream=sys.stderr
+        )
         for warning in result.warnings:
             print(f"warning[{warning.code}]: {warning.message}", file=sys.stderr)
         print(f"compiled {result.page_count} pages")
         print(f"database: {result.db_path}")
+        print(f"compressed: {result.compressed_db_path}")
         print(f"manifest: {result.manifest_path}")
         if args.metrics_json is not None:
             print(f"metrics: {args.metrics_json}")

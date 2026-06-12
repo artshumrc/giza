@@ -20,12 +20,15 @@ from urllib.parse import urljoin
 
 from selectolax.parser import HTMLParser
 
+import brotli
+
 from . import __version__
 
 DB_SCHEMA_VERSION = 1
 MANIFEST_VERSION = 1
 SQLITE_PAGE_SIZE = 16_384
-RANGE_BLOCK_BYTES = 65_536
+DB_COMPRESSION = "brotli"
+BROTLI_QUALITY = 11
 BATCH_SIZE = 10_000
 INSERT_BATCH_SIZE = 5_000
 PROGRESS_DOCUMENT_INTERVAL = 5_000
@@ -107,7 +110,9 @@ class _WarningBucket:
 class _WarningCollector:
     def __init__(self, sample_limit: int = MAX_WARNING_SAMPLES) -> None:
         self._sample_limit = sample_limit
-        self._buckets: dict[tuple[str, str | None, str | None, str], _WarningBucket] = {}
+        self._buckets: dict[
+            tuple[str, str | None, str | None, str], _WarningBucket
+        ] = {}
         self._order: list[tuple[str, str | None, str | None, str]] = []
 
     def add(
@@ -122,7 +127,9 @@ class _WarningCollector:
         key = (code, field, selector, message)
         bucket = self._buckets.get(key)
         if bucket is None:
-            bucket = _WarningBucket(code=code, message=message, field=field, selector=selector)
+            bucket = _WarningBucket(
+                code=code, message=message, field=field, selector=selector
+            )
             self._buckets[key] = bucket
             self._order.append(key)
 
@@ -226,6 +233,7 @@ class ExtractedDocument:
 @dataclass(frozen=True)
 class CompileResult:
     db_path: Path
+    compressed_db_path: Path
     manifest_path: Path
     manifest: dict[str, Any]
     page_count: int
@@ -259,7 +267,9 @@ class _MetricsRecorder:
                 self.phases[name] = 0.0
             self.phases[name] += elapsed
 
-    def record_ingest(self, *, documents: int, seconds: float, build_db_path: Path) -> None:
+    def record_ingest(
+        self, *, documents: int, seconds: float, build_db_path: Path
+    ) -> None:
         self.ingest_documents = documents
         self.ingest_seconds = seconds
         self.ingest_build_db_bytes = _path_size(build_db_path)
@@ -273,11 +283,17 @@ class _MetricsRecorder:
         skipped_count: int,
         warning_count: int,
         db_path: Path,
+        compressed_db_path: Path,
         manifest_path: Path,
         db_sha256: str,
         db_bytes: int,
+        db_compressed_bytes: int,
     ) -> dict[str, Any]:
-        ingest_rate = self.ingest_documents / self.ingest_seconds if self.ingest_seconds > 0 else None
+        ingest_rate = (
+            self.ingest_documents / self.ingest_seconds
+            if self.ingest_seconds > 0
+            else None
+        )
         return {
             "metrics_version": METRICS_VERSION,
             "config_path": str(config.path),
@@ -287,28 +303,39 @@ class _MetricsRecorder:
             "page_count": page_count,
             "skipped_count": skipped_count,
             "warning_count": warning_count,
-            "total_elapsed_seconds": _round_seconds(time.perf_counter() - self._started_at),
+            "total_elapsed_seconds": _round_seconds(
+                time.perf_counter() - self._started_at
+            ),
             "phase_order": list(self.phase_order),
-            "phases": {name: _round_seconds(self.phases[name]) for name in self.phase_order},
+            "phases": {
+                name: _round_seconds(self.phases[name]) for name in self.phase_order
+            },
             "ingest": {
                 "documents": self.ingest_documents,
                 "seconds": _round_seconds(self.ingest_seconds),
-                "documents_per_second": _round_seconds(ingest_rate) if ingest_rate is not None else None,
+                "documents_per_second": _round_seconds(ingest_rate)
+                if ingest_rate is not None
+                else None,
                 "build_db_bytes": self.ingest_build_db_bytes,
                 "peak_rss_bytes": self.ingest_peak_rss_bytes,
             },
             "database": {
                 "path": str(db_path),
+                "compressed_path": str(compressed_db_path),
                 "manifest_path": str(manifest_path),
-                "db_file": db_path.name,
+                "db_file": compressed_db_path.name,
                 "db_sha256": db_sha256,
                 "db_bytes": db_bytes,
+                "db_compressed_bytes": db_compressed_bytes,
+                "db_compression": DB_COMPRESSION,
             },
         }
 
 
 class _ProgressReporter:
-    def __init__(self, stream: TextIO | None, *, total_documents: int, build_db_path: Path) -> None:
+    def __init__(
+        self, stream: TextIO | None, *, total_documents: int, build_db_path: Path
+    ) -> None:
         self._stream = stream
         self._total_documents = total_documents
         self._build_db_path = build_db_path
@@ -322,11 +349,16 @@ class _ProgressReporter:
 
         now = time.perf_counter()
         final = processed_documents == self._total_documents
-        enough_documents = processed_documents - self._last_document_count >= PROGRESS_DOCUMENT_INTERVAL
+        enough_documents = (
+            processed_documents - self._last_document_count
+            >= PROGRESS_DOCUMENT_INTERVAL
+        )
         enough_time = now - self._last_report_at >= PROGRESS_TIME_INTERVAL_SECONDS
         return final or enough_documents or enough_time
 
-    def maybe_report(self, processed_documents: int, *, build_db_bytes: int | None = None) -> None:
+    def maybe_report(
+        self, processed_documents: int, *, build_db_bytes: int | None = None
+    ) -> None:
         if not self.should_report(processed_documents):
             return
 
@@ -334,7 +366,11 @@ class _ProgressReporter:
         elapsed = max(now - self._started_at, 0.000001)
         documents_per_second = processed_documents / elapsed
         remaining_documents = max(self._total_documents - processed_documents, 0)
-        eta_seconds = remaining_documents / documents_per_second if documents_per_second > 0 else None
+        eta_seconds = (
+            remaining_documents / documents_per_second
+            if documents_per_second > 0
+            else None
+        )
         print(
             "dredge: ingest "
             f"{processed_documents:,}/{self._total_documents:,} docs "
@@ -353,7 +389,9 @@ class _ProgressReporter:
 def load_config(config_path: Path) -> DredgeConfig:
     path = _absolute_path(config_path)
     if not path.exists():
-        raise BuildError("CONFIG_NOT_FOUND", f"configuration file does not exist: {path}", path=path)
+        raise BuildError(
+            "CONFIG_NOT_FOUND", f"configuration file does not exist: {path}", path=path
+        )
 
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
@@ -364,18 +402,24 @@ def load_config(config_path: Path) -> DredgeConfig:
         ) from error
 
     if not isinstance(raw, dict):
-        raise BuildError("CONFIG_INVALID", f"configuration root must be an object: {path}")
+        raise BuildError(
+            "CONFIG_INVALID", f"configuration root must be an object: {path}"
+        )
 
     unknown = sorted(set(raw) - TOP_LEVEL_KEYS)
     if unknown:
-        raise BuildError("CONFIG_INVALID", f"unknown configuration key(s): {', '.join(unknown)}")
+        raise BuildError(
+            "CONFIG_INVALID", f"unknown configuration key(s): {', '.join(unknown)}"
+        )
 
     base_dir = path.parent
     source_dir = _required_path(raw, "source_dir", base_dir)
     output_dir = _required_path(raw, "output_dir", base_dir)
 
     if not source_dir.exists() or not source_dir.is_dir():
-        raise BuildError("CONFIG_INVALID", f"source_dir must be an existing directory: {source_dir}")
+        raise BuildError(
+            "CONFIG_INVALID", f"source_dir must be an existing directory: {source_dir}"
+        )
 
     allow_output_in_source = _optional_bool(raw, "allow_output_in_source", False)
     if _same_or_child(output_dir, source_dir) and not allow_output_in_source:
@@ -391,7 +435,9 @@ def load_config(config_path: Path) -> DredgeConfig:
     selectors = _load_selectors(raw)
     facets = _load_facets(raw)
     facet_map = {facet.name: facet for facet in facets}
-    result_fields = tuple(_optional_string_list(raw, "result_fields", ["title", "url", "description"]))
+    result_fields = tuple(
+        _optional_string_list(raw, "result_fields", ["title", "url", "description"])
+    )
     _validate_result_fields(result_fields, facet_map)
     composite_indices = tuple(_load_composite_indices(raw, facet_map))
     client = _load_client(raw)
@@ -405,7 +451,11 @@ def load_config(config_path: Path) -> DredgeConfig:
         "exclude": list(exclude),
         "selectors": selectors,
         "facets": {
-            facet.name: {"type": facet.type, "source": facet.source, "required": facet.required}
+            facet.name: {
+                "type": facet.type,
+                "source": facet.source,
+                "required": facet.required,
+            }
             for facet in facets
         },
         "result_fields": list(result_fields),
@@ -413,7 +463,11 @@ def load_config(config_path: Path) -> DredgeConfig:
         "client": client,
         "allow_output_in_source": allow_output_in_source,
     }
-    config_hash = _sha256_text(json.dumps(effective_config, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
+    config_hash = _sha256_text(
+        json.dumps(
+            effective_config, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+        )
+    )
 
     return DredgeConfig(
         path=path,
@@ -461,7 +515,9 @@ def validate_config(config_path: Path) -> DredgeConfig:
     return config
 
 
-def discover_html_files(config: DredgeConfig) -> tuple[tuple[FileCandidate, ...], tuple[SkippedFile, ...]]:
+def discover_html_files(
+    config: DredgeConfig,
+) -> tuple[tuple[FileCandidate, ...], tuple[SkippedFile, ...]]:
     candidates: list[FileCandidate] = []
     skipped: list[SkippedFile] = []
     seen_urls: dict[str, Path] = {}
@@ -496,7 +552,9 @@ def discover_html_files(config: DredgeConfig) -> tuple[tuple[FileCandidate, ...]
         seen_urls[url] = path
         candidates.append(FileCandidate(path=path, rel_path=rel_path, url=url))
 
-    return tuple(sorted(candidates, key=lambda candidate: (candidate.url, candidate.rel_path))), tuple(skipped)
+    return tuple(
+        sorted(candidates, key=lambda candidate: (candidate.url, candidate.rel_path))
+    ), tuple(skipped)
 
 
 def _discovery_paths(config: DredgeConfig) -> tuple[Path, ...]:
@@ -504,9 +562,18 @@ def _discovery_paths(config: DredgeConfig) -> tuple[Path, ...]:
         paths: set[Path] = set()
         for pattern in config.include:
             paths.update(config.source_dir.glob(pattern))
-        return tuple(sorted(paths, key=lambda found: found.relative_to(config.source_dir).as_posix()))
+        return tuple(
+            sorted(
+                paths, key=lambda found: found.relative_to(config.source_dir).as_posix()
+            )
+        )
 
-    return tuple(sorted(config.source_dir.rglob("*"), key=lambda found: found.relative_to(config.source_dir).as_posix()))
+    return tuple(
+        sorted(
+            config.source_dir.rglob("*"),
+            key=lambda found: found.relative_to(config.source_dir).as_posix(),
+        )
+    )
 
 
 def _can_use_include_glob_discovery(include: tuple[str, ...]) -> bool:
@@ -515,7 +582,11 @@ def _can_use_include_glob_discovery(include: tuple[str, ...]) -> bool:
 
 def _is_html_include_glob(pattern: str) -> bool:
     pure_path = PurePosixPath(pattern)
-    return not pure_path.is_absolute() and ".." not in pure_path.parts and pattern.lower().endswith((".html", ".htm"))
+    return (
+        not pure_path.is_absolute()
+        and ".." not in pure_path.parts
+        and pattern.lower().endswith((".html", ".htm"))
+    )
 
 
 def compile_site(
@@ -531,7 +602,10 @@ def compile_site(
         candidates, skipped = discover_html_files(config)
     metrics.candidate_count = len(candidates)
     if not candidates:
-        raise BuildError("DISCOVERY_NO_FILES", f"no HTML files matched include/exclude patterns in {config.source_dir}")
+        raise BuildError(
+            "DISCOVERY_NO_FILES",
+            f"no HTML files matched include/exclude patterns in {config.source_dir}",
+        )
 
     config.output_dir.mkdir(parents=True, exist_ok=True)
     temp_dir = Path(tempfile.mkdtemp(prefix=".dredge-build-", dir=config.output_dir))
@@ -554,7 +628,11 @@ def compile_site(
                 for facet in config.array_facets
             }
             batches = _InsertBatches.for_config(config)
-            progress = _ProgressReporter(progress_stream, total_documents=len(candidates), build_db_path=build_db_path)
+            progress = _ProgressReporter(
+                progress_stream,
+                total_documents=len(candidates),
+                build_db_path=build_db_path,
+            )
 
             connection.execute("BEGIN")
             ingest_started_at = time.perf_counter()
@@ -562,26 +640,37 @@ def compile_site(
                 for index, candidate in enumerate(candidates, start=1):
                     document = _extract_document(index, candidate, config, warnings)
                     if smoke_token is None:
-                        smoke_token = _first_search_token(document.title) or _first_search_token(document.body)
+                        smoke_token = _first_search_token(
+                            document.title
+                        ) or _first_search_token(document.body)
                     if smoke_filter is None:
                         smoke_filter = _first_filter(document)
                     _queue_document_insert(batches, config, document)
                     report_due = progress.should_report(index)
                     build_db_bytes = None
                     if len(batches.documents) >= INSERT_BATCH_SIZE or report_due:
-                        _flush_insert_batches(connection, insert_sql, array_insert_sql, batches)
+                        _flush_insert_batches(
+                            connection, insert_sql, array_insert_sql, batches
+                        )
                         if report_due:
                             build_db_bytes = _sqlite_database_size_bytes(connection)
                     if index % BATCH_SIZE == 0:
-                        _flush_insert_batches(connection, insert_sql, array_insert_sql, batches)
+                        _flush_insert_batches(
+                            connection, insert_sql, array_insert_sql, batches
+                        )
                         connection.commit()
-                        progress.maybe_report(index, build_db_bytes=build_db_bytes or _path_size(build_db_path))
+                        progress.maybe_report(
+                            index,
+                            build_db_bytes=build_db_bytes or _path_size(build_db_path),
+                        )
                         connection.execute("BEGIN")
                     else:
                         progress.maybe_report(index, build_db_bytes=build_db_bytes)
                 _flush_insert_batches(connection, insert_sql, array_insert_sql, batches)
                 connection.commit()
-                progress.maybe_report(len(candidates), build_db_bytes=_path_size(build_db_path))
+                progress.maybe_report(
+                    len(candidates), build_db_bytes=_path_size(build_db_path)
+                )
             metrics.record_ingest(
                 documents=len(candidates),
                 seconds=time.perf_counter() - ingest_started_at,
@@ -599,12 +688,18 @@ def compile_site(
 
         with metrics.phase("hashing"):
             db_sha256 = _sha256_file(compact_db_path)
-            db_file = f"search.{db_sha256}.db"
-            db_path = config.output_dir / db_file
+            db_file = f"search.{db_sha256}.db.br"
+            uncompressed_file = f"search.{db_sha256}.db"
+            db_path = config.output_dir / uncompressed_file
             compact_db_path.replace(db_path)
 
         with metrics.phase("post_build_checks"):
             _run_post_build_checks(db_path, config, smoke_token, smoke_filter)
+
+        with metrics.phase("compression"):
+            compressed_db_path = config.output_dir / db_file
+            db_bytes = db_path.stat().st_size
+            db_compressed_bytes = _brotli_compress_file(db_path, compressed_db_path)
 
         with metrics.phase("manifest_write"):
             manifest = {
@@ -612,16 +707,18 @@ def compile_site(
                 "db_schema_version": DB_SCHEMA_VERSION,
                 "db_file": db_file,
                 "db_sha256": db_sha256,
-                "db_bytes": db_path.stat().st_size,
+                "db_bytes": db_bytes,
+                "db_compressed_bytes": db_compressed_bytes,
+                "db_compression": DB_COMPRESSION,
                 "sqlite_page_size": SQLITE_PAGE_SIZE,
-                "range_required": True,
-                "range_block_bytes": RANGE_BLOCK_BYTES,
                 "page_count": len(candidates),
                 "config_hash": config.config_hash,
                 "runtime_min_version": __version__,
             }
             manifest_path = config.output_dir / "search-manifest.json"
-            manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            manifest_path.write_text(
+                json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
         with metrics.phase("client_write"):
             client_path = _write_generated_client(config)
 
@@ -632,15 +729,18 @@ def compile_site(
             skipped_count=len(skipped),
             warning_count=len(warning_tuple),
             db_path=db_path,
+            compressed_db_path=compressed_db_path,
             manifest_path=manifest_path,
             db_sha256=db_sha256,
             db_bytes=manifest["db_bytes"],
+            db_compressed_bytes=db_compressed_bytes,
         )
         if metrics_json_path is not None:
             _write_metrics_json(metrics_json_path, metrics_payload)
 
         return CompileResult(
             db_path=db_path,
+            compressed_db_path=compressed_db_path,
             manifest_path=manifest_path,
             manifest=manifest,
             page_count=len(candidates),
@@ -663,7 +763,9 @@ def _load_selectors(raw: dict[str, Any]) -> dict[str, str]:
         raise BuildError("CONFIG_INVALID", "selectors must be an object")
     unknown = sorted(set(value) - SELECTOR_KEYS)
     if unknown:
-        raise BuildError("CONFIG_INVALID", f"unknown selector key(s): {', '.join(unknown)}")
+        raise BuildError(
+            "CONFIG_INVALID", f"unknown selector key(s): {', '.join(unknown)}"
+        )
 
     selectors = {
         "title": "title, h1",
@@ -672,10 +774,14 @@ def _load_selectors(raw: dict[str, Any]) -> dict[str, str]:
     }
     for key, selector in value.items():
         if not isinstance(selector, str) or not selector.strip():
-            raise BuildError("CONFIG_INVALID", f"selector {key!r} must be a non-empty string")
+            raise BuildError(
+                "CONFIG_INVALID", f"selector {key!r} must be a non-empty string"
+            )
         selectors[key] = selector.strip()
     for key, selector in selectors.items():
-        _validate_selector_source(selector, f"selectors.{key}", allow_direct_attribute=False)
+        _validate_selector_source(
+            selector, f"selectors.{key}", allow_direct_attribute=False
+        )
     return selectors
 
 
@@ -687,41 +793,74 @@ def _load_facets(raw: dict[str, Any]) -> tuple[FacetConfig, ...]:
     facets: list[FacetConfig] = []
     for name in sorted(value):
         if not IDENTIFIER_RE.match(name):
-            raise BuildError("CONFIG_INVALID", f"facet name must match {IDENTIFIER_RE.pattern}: {name!r}")
+            raise BuildError(
+                "CONFIG_INVALID",
+                f"facet name must match {IDENTIFIER_RE.pattern}: {name!r}",
+            )
         facet_raw = value[name]
         if not isinstance(facet_raw, dict):
             raise BuildError("CONFIG_INVALID", f"facet {name!r} must be an object")
         unknown = sorted(set(facet_raw) - FACET_KEYS)
         if unknown:
-            raise BuildError("CONFIG_INVALID", f"unknown key(s) on facet {name!r}: {', '.join(unknown)}")
+            raise BuildError(
+                "CONFIG_INVALID",
+                f"unknown key(s) on facet {name!r}: {', '.join(unknown)}",
+            )
         facet_type = facet_raw.get("type")
         if facet_type not in FACET_TYPES:
-            raise BuildError("CONFIG_INVALID", f"facet {name!r} has unsupported type: {facet_type!r}")
+            raise BuildError(
+                "CONFIG_INVALID", f"facet {name!r} has unsupported type: {facet_type!r}"
+            )
         source = facet_raw.get("source")
         if not isinstance(source, str) or not source.strip():
-            raise BuildError("CONFIG_INVALID", f"facet {name!r} source must be a non-empty string")
+            raise BuildError(
+                "CONFIG_INVALID", f"facet {name!r} source must be a non-empty string"
+            )
         required = facet_raw.get("required", False)
         if not isinstance(required, bool):
-            raise BuildError("CONFIG_INVALID", f"facet {name!r} required must be a boolean")
-        _validate_selector_source(source.strip(), f"facets.{name}.source", allow_direct_attribute=True)
-        facets.append(FacetConfig(name=name, type=facet_type, source=source.strip(), required=required))
+            raise BuildError(
+                "CONFIG_INVALID", f"facet {name!r} required must be a boolean"
+            )
+        _validate_selector_source(
+            source.strip(), f"facets.{name}.source", allow_direct_attribute=True
+        )
+        facets.append(
+            FacetConfig(
+                name=name, type=facet_type, source=source.strip(), required=required
+            )
+        )
     return tuple(facets)
 
 
-def _load_composite_indices(raw: dict[str, Any], facets: dict[str, FacetConfig]) -> list[tuple[str, ...]]:
+def _load_composite_indices(
+    raw: dict[str, Any], facets: dict[str, FacetConfig]
+) -> list[tuple[str, ...]]:
     value = raw.get("composite_indices", [])
     if not isinstance(value, list):
         raise BuildError("CONFIG_INVALID", "composite_indices must be an array")
     indices: list[tuple[str, ...]] = []
     for index_number, index in enumerate(value, start=1):
-        if not isinstance(index, list) or len(index) < 2 or not all(isinstance(name, str) for name in index):
-            raise BuildError("CONFIG_INVALID", f"composite_indices[{index_number}] must contain at least two facet names")
+        if (
+            not isinstance(index, list)
+            or len(index) < 2
+            or not all(isinstance(name, str) for name in index)
+        ):
+            raise BuildError(
+                "CONFIG_INVALID",
+                f"composite_indices[{index_number}] must contain at least two facet names",
+            )
         for name in index:
             facet = facets.get(name)
             if facet is None:
-                raise BuildError("CONFIG_INVALID", f"composite index references unknown facet: {name!r}")
+                raise BuildError(
+                    "CONFIG_INVALID",
+                    f"composite index references unknown facet: {name!r}",
+                )
             if facet.is_array:
-                raise BuildError("CONFIG_INVALID", f"composite index cannot include array facet: {name!r}")
+                raise BuildError(
+                    "CONFIG_INVALID",
+                    f"composite index cannot include array facet: {name!r}",
+                )
         indices.append(tuple(index))
     return indices
 
@@ -732,20 +871,29 @@ def _load_client(raw: dict[str, Any]) -> dict[str, str]:
         raise BuildError("CONFIG_INVALID", "client must be an object")
     unknown = sorted(set(value) - CLIENT_KEYS)
     if unknown:
-        raise BuildError("CONFIG_INVALID", f"unknown client key(s): {', '.join(unknown)}")
+        raise BuildError(
+            "CONFIG_INVALID", f"unknown client key(s): {', '.join(unknown)}"
+        )
     client: dict[str, str] = {}
     for key, item in value.items():
         if not isinstance(item, str) or not item.strip():
-            raise BuildError("CONFIG_INVALID", f"client.{key} must be a non-empty string")
+            raise BuildError(
+                "CONFIG_INVALID", f"client.{key} must be a non-empty string"
+            )
         client[key] = item
     return client
 
 
-def _validate_result_fields(result_fields: tuple[str, ...], facets: dict[str, FacetConfig]) -> None:
+def _validate_result_fields(
+    result_fields: tuple[str, ...], facets: dict[str, FacetConfig]
+) -> None:
     allowed = {"id", "title", "url", "description"} | set(facets)
     for field_name in result_fields:
         if field_name not in allowed:
-            raise BuildError("CONFIG_INVALID", f"result_fields references unknown field: {field_name!r}")
+            raise BuildError(
+                "CONFIG_INVALID",
+                f"result_fields references unknown field: {field_name!r}",
+            )
 
 
 def _configure_build_database(connection: sqlite3.Connection) -> None:
@@ -763,7 +911,10 @@ def _create_schema(connection: sqlite3.Connection, config: DredgeConfig) -> None
 
 
 def _create_tables(connection: sqlite3.Connection, config: DredgeConfig) -> None:
-    scalar_columns = [f"{_quote_identifier(facet.name)} {SCALAR_SQL_TYPES[facet.type]}" for facet in config.scalar_facets]
+    scalar_columns = [
+        f"{_quote_identifier(facet.name)} {SCALAR_SQL_TYPES[facet.type]}"
+        for facet in config.scalar_facets
+    ]
     document_columns = [
         "id INTEGER PRIMARY KEY",
         "url TEXT NOT NULL UNIQUE",
@@ -806,11 +957,15 @@ def _create_indexes(connection: sqlite3.Connection, config: DredgeConfig) -> Non
     for index in config.composite_indices:
         name = _composite_index_name(index)
         columns = ", ".join(_quote_identifier(column) for column in index)
-        connection.execute(f"CREATE INDEX {_quote_identifier(name)} ON documents({columns}, id)")
+        connection.execute(
+            f"CREATE INDEX {_quote_identifier(name)} ON documents({columns}, id)"
+        )
 
 
 def _document_insert_sql(config: DredgeConfig) -> str:
-    columns = ["id", "url", "title", "description", "content_hash"] + [facet.name for facet in config.scalar_facets]
+    columns = ["id", "url", "title", "description", "content_hash"] + [
+        facet.name for facet in config.scalar_facets
+    ]
     placeholders = ", ".join("?" for _ in columns)
     sql_columns = ", ".join(_quote_identifier(column) for column in columns)
     return f"INSERT INTO documents ({sql_columns}) VALUES ({placeholders})"
@@ -836,8 +991,16 @@ def _queue_document_insert(
     config: DredgeConfig,
     document: ExtractedDocument,
 ) -> None:
-    values: list[Any] = [document.id, document.url, document.title, document.description, document.content_hash]
-    values.extend(document.scalar_facets.get(facet.name) for facet in config.scalar_facets)
+    values: list[Any] = [
+        document.id,
+        document.url,
+        document.title,
+        document.description,
+        document.content_hash,
+    ]
+    values.extend(
+        document.scalar_facets.get(facet.name) for facet in config.scalar_facets
+    )
     batches.documents.append(tuple(values))
     batches.fts.append((document.id, document.title, document.body))
     for facet in config.array_facets:
@@ -856,7 +1019,10 @@ def _flush_insert_batches(
         connection.executemany(insert_sql, batches.documents)
         batches.documents.clear()
     if batches.fts:
-        connection.executemany("INSERT INTO documents_fts(rowid, title, body) VALUES (?, ?, ?)", batches.fts)
+        connection.executemany(
+            "INSERT INTO documents_fts(rowid, title, body) VALUES (?, ?, ?)",
+            batches.fts,
+        )
         batches.fts.clear()
     for facet_name, rows in batches.array_facets.items():
         if rows:
@@ -873,10 +1039,16 @@ def _extract_document(
     try:
         html_bytes = candidate.path.read_bytes()
     except OSError as error:
-        raise BuildError("HTML_READ_FAILED", f"failed to read {candidate.path}: {error}", path=candidate.path) from error
+        raise BuildError(
+            "HTML_READ_FAILED",
+            f"failed to read {candidate.path}: {error}",
+            path=candidate.path,
+        ) from error
 
     tree = HTMLParser(html_bytes)
-    facet_raw_values = {facet.name: _extract_values(tree, facet.source) for facet in config.facets}
+    facet_raw_values = {
+        facet.name: _extract_values(tree, facet.source) for facet in config.facets
+    }
     _remove_non_indexable_content(tree)
 
     title_values = _extract_values(tree, config.selectors["title"])
@@ -951,7 +1123,9 @@ def _extract_document(
                 field=facet.name,
                 selector=facet.source,
             )
-        scalar_facets[facet.name] = _coerce_scalar_facet(facet, raw_values[0], candidate.path)
+        scalar_facets[facet.name] = _coerce_scalar_facet(
+            facet, raw_values[0], candidate.path
+        )
 
     return ExtractedDocument(
         id=document_id,
@@ -1012,7 +1186,9 @@ def _normalize_array_values(values: list[str]) -> list[str]:
     return sorted(normalized)
 
 
-def _coerce_scalar_facet(facet: FacetConfig, value: str, path: Path) -> str | int | float:
+def _coerce_scalar_facet(
+    facet: FacetConfig, value: str, path: Path
+) -> str | int | float:
     text = _normalize_text(value)
     if facet.type == "string":
         return text
@@ -1071,9 +1247,13 @@ def _coerce_scalar_facet(facet: FacetConfig, value: str, path: Path) -> str | in
     raise BuildError("CONFIG_INVALID", f"unsupported scalar facet type: {facet.type}")
 
 
-def _finalize_database(connection: sqlite3.Connection, compact_db_path: Path, metrics: _MetricsRecorder) -> None:
+def _finalize_database(
+    connection: sqlite3.Connection, compact_db_path: Path, metrics: _MetricsRecorder
+) -> None:
     with metrics.phase("fts_optimize"):
-        connection.execute("INSERT INTO documents_fts(documents_fts) VALUES('optimize')")
+        connection.execute(
+            "INSERT INTO documents_fts(documents_fts) VALUES('optimize')"
+        )
     with metrics.phase("analyze"):
         connection.execute("ANALYZE")
         connection.execute("PRAGMA optimize")
@@ -1094,7 +1274,10 @@ def _run_post_build_checks(
     try:
         integrity = connection.execute("PRAGMA integrity_check").fetchone()[0]
         if integrity != "ok":
-            raise BuildError("DATABASE_INTEGRITY_CHECK_FAILED", f"PRAGMA integrity_check returned {integrity!r}")
+            raise BuildError(
+                "DATABASE_INTEGRITY_CHECK_FAILED",
+                f"PRAGMA integrity_check returned {integrity!r}",
+            )
         _run_smoke_queries(connection, smoke_token, smoke_filter)
         _verify_query_plans(connection, config)
     finally:
@@ -1113,17 +1296,24 @@ def _run_smoke_queries(
     smoke_filter: tuple[str, str, str | int | float] | None,
 ) -> None:
     if smoke_token is None:
-        raise BuildError("SMOKE_QUERY_FAILED", "could not find a token for the FTS smoke query")
+        raise BuildError(
+            "SMOKE_QUERY_FAILED", "could not find a token for the FTS smoke query"
+        )
 
     fts_count = connection.execute(
         "SELECT COUNT(*) FROM documents_fts WHERE documents_fts MATCH ?",
         (smoke_token,),
     ).fetchone()[0]
     if fts_count < 1:
-        raise BuildError("SMOKE_QUERY_FAILED", f"FTS smoke query returned no rows for token {smoke_token!r}")
+        raise BuildError(
+            "SMOKE_QUERY_FAILED",
+            f"FTS smoke query returned no rows for token {smoke_token!r}",
+        )
 
     if smoke_filter is None:
-        filtered_count = connection.execute("SELECT COUNT(*) FROM documents WHERE id = 1").fetchone()[0]
+        filtered_count = connection.execute(
+            "SELECT COUNT(*) FROM documents WHERE id = 1"
+        ).fetchone()[0]
     elif smoke_filter[0] == "array":
         _, name, value = smoke_filter
         filtered_count = connection.execute(
@@ -1148,7 +1338,9 @@ def _verify_query_plans(connection: sqlite3.Connection, config: DredgeConfig) ->
             f"SELECT id FROM documents INDEXED BY {_quote_identifier(index_name)} "
             f"WHERE {facet_column} = ? ORDER BY id LIMIT 10"
         )
-        _assert_query_plan_uses_index(connection, f"scalar facet {facet.name!r}", sql, (None,), index_name)
+        _assert_query_plan_uses_index(
+            connection, f"scalar facet {facet.name!r}", sql, (None,), index_name
+        )
 
     for facet in config.array_facets:
         table_name = _quote_identifier(_array_table_name(facet.name))
@@ -1157,11 +1349,15 @@ def _verify_query_plans(connection: sqlite3.Connection, config: DredgeConfig) ->
             f"SELECT document_id FROM {table_name} INDEXED BY {_quote_identifier(index_name)} "
             "WHERE value = ? ORDER BY document_id LIMIT 10"
         )
-        _assert_query_plan_uses_index(connection, f"array facet {facet.name!r}", sql, (None,), index_name)
+        _assert_query_plan_uses_index(
+            connection, f"array facet {facet.name!r}", sql, (None,), index_name
+        )
 
     for index in config.composite_indices:
         index_name = _composite_index_name(index)
-        where_clause = " AND ".join(f"{_quote_identifier(column)} = ?" for column in index)
+        where_clause = " AND ".join(
+            f"{_quote_identifier(column)} = ?" for column in index
+        )
         sql = (
             f"SELECT id FROM documents INDEXED BY {_quote_identifier(index_name)} "
             f"WHERE {where_clause} ORDER BY id LIMIT 10"
@@ -1192,8 +1388,13 @@ def _assert_query_plan_uses_index(
     )
 
 
-def _query_plan_details(connection: sqlite3.Connection, sql: str, parameters: tuple[Any, ...]) -> tuple[str, ...]:
-    return tuple(str(row[3]) for row in connection.execute(f"EXPLAIN QUERY PLAN {sql}", parameters))
+def _query_plan_details(
+    connection: sqlite3.Connection, sql: str, parameters: tuple[Any, ...]
+) -> tuple[str, ...]:
+    return tuple(
+        str(row[3])
+        for row in connection.execute(f"EXPLAIN QUERY PLAN {sql}", parameters)
+    )
 
 
 def _first_search_token(text: str) -> str | None:
@@ -1204,7 +1405,9 @@ def _first_search_token(text: str) -> str | None:
     return None
 
 
-def _first_filter(document: ExtractedDocument) -> tuple[str, str, str | int | float] | None:
+def _first_filter(
+    document: ExtractedDocument,
+) -> tuple[str, str, str | int | float] | None:
     for name, value in document.scalar_facets.items():
         if value is not None:
             return ("scalar", name, value)
@@ -1223,20 +1426,32 @@ def _parse_source(source: str, allow_direct_attribute: bool) -> tuple[str, str, 
     return "selector_text", source, ""
 
 
-def _validate_selector_source(source: str, field_name: str, allow_direct_attribute: bool) -> None:
-    kind, selector, attribute = _parse_source(source, allow_direct_attribute=allow_direct_attribute)
+def _validate_selector_source(
+    source: str, field_name: str, allow_direct_attribute: bool
+) -> None:
+    kind, selector, attribute = _parse_source(
+        source, allow_direct_attribute=allow_direct_attribute
+    )
     if kind == "attribute":
         if not ATTRIBUTE_RE.match(attribute):
-            raise BuildError("CONFIG_INVALID", f"{field_name} has invalid attribute source: {source!r}")
+            raise BuildError(
+                "CONFIG_INVALID",
+                f"{field_name} has invalid attribute source: {source!r}",
+            )
         return
     if kind == "selector_attribute" and not ATTRIBUTE_RE.match(attribute):
-        raise BuildError("CONFIG_INVALID", f"{field_name} has invalid attribute name: {attribute!r}")
+        raise BuildError(
+            "CONFIG_INVALID", f"{field_name} has invalid attribute name: {attribute!r}"
+        )
     if not selector:
         raise BuildError("CONFIG_INVALID", f"{field_name} has an empty CSS selector")
     try:
         HTMLParser("").css(selector)
     except Exception as error:
-        raise BuildError("CONFIG_INVALID", f"{field_name} has invalid CSS selector {selector!r}: {error}") from error
+        raise BuildError(
+            "CONFIG_INVALID",
+            f"{field_name} has invalid CSS selector {selector!r}: {error}",
+        ) from error
 
 
 def _required_path(raw: dict[str, Any], key: str, base_dir: Path) -> Path:
@@ -1274,10 +1489,16 @@ def _optional_bool(raw: dict[str, Any], key: str, default: bool) -> bool:
     return value
 
 
-def _optional_string_list(raw: dict[str, Any], key: str, default: list[str]) -> list[str]:
+def _optional_string_list(
+    raw: dict[str, Any], key: str, default: list[str]
+) -> list[str]:
     value = raw.get(key, default)
-    if not isinstance(value, list) or not all(isinstance(item, str) and item.strip() for item in value):
-        raise BuildError("CONFIG_INVALID", f"{key} must be an array of non-empty strings")
+    if not isinstance(value, list) or not all(
+        isinstance(item, str) and item.strip() for item in value
+    ):
+        raise BuildError(
+            "CONFIG_INVALID", f"{key} must be an array of non-empty strings"
+        )
     return [item.strip() for item in value]
 
 
@@ -1296,7 +1517,9 @@ def _matches_any(rel_path: str, patterns: tuple[str, ...]) -> bool:
             return True
         if pattern.startswith("**/"):
             root_pattern = pattern[3:]
-            if pure_path.match(root_pattern) or fnmatch.fnmatchcase(rel_path, root_pattern):
+            if pure_path.match(root_pattern) or fnmatch.fnmatchcase(
+                rel_path, root_pattern
+            ):
                 return True
     return False
 
@@ -1320,7 +1543,9 @@ def _write_metrics_json(metrics_json_path: Path, metrics: dict[str, Any]) -> Non
     path = _absolute_path(metrics_json_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary_path = path.with_name(f"{path.name}.tmp")
-    temporary_path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary_path.write_text(
+        json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     temporary_path.replace(path)
 
 
@@ -1393,6 +1618,19 @@ def _sha256_file(path: Path) -> str:
         for chunk in iter(lambda: file.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _brotli_compress_file(source: Path, destination: Path) -> int:
+    compressor = brotli.Compressor(quality=BROTLI_QUALITY)
+    with source.open("rb") as src, destination.open("wb") as dst:
+        for chunk in iter(lambda: src.read(1024 * 1024), b""):
+            compressed = compressor.process(chunk)
+            if compressed:
+                dst.write(compressed)
+        tail = compressor.finish()
+        if tail:
+            dst.write(tail)
+    return destination.stat().st_size
 
 
 def _array_table_name(facet_name: str) -> str:

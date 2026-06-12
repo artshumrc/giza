@@ -4,19 +4,15 @@ import json
 import shutil
 import sqlite3
 import subprocess
-import threading
-from functools import partial
-from http.client import HTTPConnection
-from http.server import ThreadingHTTPServer
 from pathlib import Path
 
+import brotli
 import pytest
 
 from dredge.codegen import generate_client_source
 from dredge.cli import main
 from dredge.compiler import BuildError, compile_site, load_config
 from dredge.query import SearchRequest, build_search_queries, escape_fts_query, search
-from dredge.range_server import RangeRequestHandler
 
 
 def test_compile_fixture_site_and_query_results(tmp_path: Path) -> None:
@@ -26,8 +22,21 @@ def test_compile_fixture_site_and_query_results(tmp_path: Path) -> None:
 
     assert result.page_count == 2
     assert result.manifest_path == output_dir / "search-manifest.json"
-    assert result.db_path == output_dir / result.manifest["db_file"]
+    assert result.compressed_db_path == output_dir / result.manifest["db_file"]
+    assert result.manifest["db_file"].endswith(".db.br")
     assert result.manifest["db_sha256"] in result.manifest["db_file"]
+    assert result.manifest["db_compression"] == "brotli"
+    assert result.manifest["db_bytes"] == result.db_path.stat().st_size
+    assert (
+        result.manifest["db_compressed_bytes"]
+        == result.compressed_db_path.stat().st_size
+    )
+    assert "range_required" not in result.manifest
+    assert "range_block_bytes" not in result.manifest
+
+    decompressed = brotli.decompress(result.compressed_db_path.read_bytes())
+    assert decompressed == result.db_path.read_bytes()
+    assert len(decompressed) == result.manifest["db_bytes"]
 
     connection = sqlite3.connect(result.db_path)
     try:
@@ -85,7 +94,18 @@ def test_cli_compile_writes_metrics_json(tmp_path: Path) -> None:
     config_path, _ = _write_fixture_project(tmp_path)
     metrics_path = tmp_path / "metrics.json"
 
-    assert main(["compile", "--config", str(config_path), "--metrics-json", str(metrics_path)]) == 0
+    assert (
+        main(
+            [
+                "compile",
+                "--config",
+                str(config_path),
+                "--metrics-json",
+                str(metrics_path),
+            ]
+        )
+        == 0
+    )
 
     metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
     assert metrics["metrics_version"] == 1
@@ -94,7 +114,9 @@ def test_cli_compile_writes_metrics_json(tmp_path: Path) -> None:
     assert metrics["ingest"]["documents"] == 2
     assert metrics["ingest"]["documents_per_second"] > 0
     assert metrics["database"]["db_file"].startswith("search.")
-    assert metrics["database"]["db_file"].endswith(".db")
+    assert metrics["database"]["db_file"].endswith(".db.br")
+    assert metrics["database"]["db_compression"] == "brotli"
+    assert metrics["database"]["db_compressed_bytes"] > 0
     for phase in (
         "validation",
         "discovery",
@@ -105,6 +127,7 @@ def test_cli_compile_writes_metrics_json(tmp_path: Path) -> None:
         "vacuum_into",
         "hashing",
         "post_build_checks",
+        "compression",
         "manifest_write",
     ):
         assert phase in metrics["phases"]
@@ -126,7 +149,9 @@ def test_compile_is_deterministic_for_unchanged_input(tmp_path: Path) -> None:
 
     connection = sqlite3.connect(second.db_path)
     try:
-        rows = connection.execute("SELECT id, url FROM documents ORDER BY id").fetchall()
+        rows = connection.execute(
+            "SELECT id, url FROM documents ORDER BY id"
+        ).fetchall()
     finally:
         connection.close()
     assert rows == [(1, "/"), (2, "/collections/beta/")]
@@ -201,7 +226,9 @@ def test_invalid_config_fails_before_output(tmp_path: Path) -> None:
     output_dir = tmp_path / "search"
     config_path = tmp_path / "dredge.config.json"
     config_path.write_text(
-        json.dumps({"source_dir": str(tmp_path / "missing"), "output_dir": str(output_dir)}),
+        json.dumps(
+            {"source_dir": str(tmp_path / "missing"), "output_dir": str(output_dir)}
+        ),
         encoding="utf-8",
     )
 
@@ -216,7 +243,9 @@ def test_cli_validate_invalid_config_fails_before_output(tmp_path: Path) -> None
     output_dir = tmp_path / "search"
     config_path = tmp_path / "dredge.config.json"
     config_path.write_text(
-        json.dumps({"source_dir": str(tmp_path / "missing"), "output_dir": str(output_dir)}),
+        json.dumps(
+            {"source_dir": str(tmp_path / "missing"), "output_dir": str(output_dir)}
+        ),
         encoding="utf-8",
     )
 
@@ -267,7 +296,9 @@ def test_selector_warnings_are_aggregated_with_samples(tmp_path: Path) -> None:
 
     result = compile_site(config_path)
 
-    description_warnings = [warning for warning in result.warnings if warning.field == "description"]
+    description_warnings = [
+        warning for warning in result.warnings if warning.field == "description"
+    ]
     assert len(description_warnings) == 1
     warning = description_warnings[0]
     assert warning.code == "SELECTOR_MISS"
@@ -308,11 +339,22 @@ def test_query_builder_generates_safe_sql_for_all_facet_types(tmp_path: Path) ->
     assert 'd."rating" >= ?' in queries.results.sql
     assert 'd."year" >= ? AND d."year" <= ?' in queries.results.sql
     assert 'EXISTS (SELECT 1 FROM "facet_tags" af' in queries.results.sql
-    assert queries.results.parameters[0] == escape_fts_query('golden" OR category:collection')
-    assert set(queries.facets) == {"category", "featured", "published", "rating", "tags", "year"}
+    assert queries.results.parameters[0] == escape_fts_query(
+        'golden" OR category:collection'
+    )
+    assert set(queries.facets) == {
+        "category",
+        "featured",
+        "published",
+        "rating",
+        "tags",
+        "year",
+    }
 
 
-def test_search_api_handles_empty_search_filtered_search_pagination_and_facets(tmp_path: Path) -> None:
+def test_search_api_handles_empty_search_filtered_search_pagination_and_facets(
+    tmp_path: Path,
+) -> None:
     config_path, _ = _write_fixture_project(tmp_path)
     config = load_config(config_path)
     result = compile_site(config_path)
@@ -338,8 +380,13 @@ def test_search_api_handles_empty_search_filtered_search_pagination_and_facets(t
         assert golden.hits[0]["year"] == 2024
         assert isinstance(golden.hits[0]["score"], float)
         assert golden.facets is not None
-        assert [(bucket.value, bucket.count) for bucket in golden.facets["category"]] == [("guide", 1)]
-        assert {bucket.value for bucket in golden.facets["tags"]} == {"ancient", "burial"}
+        assert [
+            (bucket.value, bucket.count) for bucket in golden.facets["category"]
+        ] == [("guide", 1)]
+        assert {bucket.value for bucket in golden.facets["tags"]} == {
+            "ancient",
+            "burial",
+        }
 
         filtered = search(
             connection,
@@ -361,11 +408,16 @@ def test_search_api_handles_empty_search_filtered_search_pagination_and_facets(t
         connection.close()
 
 
-def test_compile_writes_generated_types_worker_protocol_and_stale_handling(tmp_path: Path) -> None:
+def test_compile_writes_generated_types_worker_protocol_and_stale_handling(
+    tmp_path: Path,
+) -> None:
     client_path = tmp_path / "src" / "dredge-client.ts"
     config_path, _ = _write_fixture_project(
         tmp_path,
-        client={"out": str(client_path), "worker_url": "/search/dredge-worker.abc123.js"},
+        client={
+            "out": str(client_path),
+            "worker_url": "/search/dredge-worker.abc123.js",
+        },
     )
 
     result = compile_site(config_path)
@@ -384,7 +436,9 @@ def test_compile_writes_generated_types_worker_protocol_and_stale_handling(tmp_p
     assert 'const DEFAULT_WORKER_URL = "/search/dredge-worker.abc123.js";' in source
 
 
-def test_pagefind_compatible_attributes_extract_and_ignore_content(tmp_path: Path) -> None:
+def test_pagefind_compatible_attributes_extract_and_ignore_content(
+    tmp_path: Path,
+) -> None:
     source_dir = tmp_path / "site"
     output_dir = tmp_path / "search"
     source_dir.mkdir()
@@ -424,13 +478,23 @@ def test_pagefind_compatible_attributes_extract_and_ignore_content(tmp_path: Pat
                         "type": "string",
                         "source": "meta[data-pagefind-meta='catalog_id[content]']@content",
                     },
-                    "category": {"type": "string", "source": "[data-pagefind-filter='category']"},
+                    "category": {
+                        "type": "string",
+                        "source": "[data-pagefind-filter='category']",
+                    },
                     "sort_title": {
                         "type": "string",
                         "source": "meta[data-pagefind-sort='title[content]']@content",
                     },
                 },
-                "result_fields": ["title", "url", "description", "category", "catalog_id", "sort_title"],
+                "result_fields": [
+                    "title",
+                    "url",
+                    "description",
+                    "category",
+                    "catalog_id",
+                    "sort_title",
+                ],
             }
         ),
         encoding="utf-8",
@@ -440,42 +504,24 @@ def test_pagefind_compatible_attributes_extract_and_ignore_content(tmp_path: Pat
 
     connection = sqlite3.connect(result.db_path)
     try:
-        assert connection.execute("SELECT title, category, catalog_id, sort_title FROM documents").fetchone() == (
+        assert connection.execute(
+            "SELECT title, category, catalog_id, sort_title FROM documents"
+        ).fetchone() == (
             "Pagefind Title",
             "Objects",
             "abc-123",
             "Pagefind Title",
         )
-        assert connection.execute("SELECT COUNT(*) FROM documents_fts WHERE documents_fts MATCH ?", ("golden",)).fetchone() == (1,)
-        assert connection.execute("SELECT COUNT(*) FROM documents_fts WHERE documents_fts MATCH ?", ("secret",)).fetchone() == (0,)
+        assert connection.execute(
+            "SELECT COUNT(*) FROM documents_fts WHERE documents_fts MATCH ?",
+            ("golden",),
+        ).fetchone() == (1,)
+        assert connection.execute(
+            "SELECT COUNT(*) FROM documents_fts WHERE documents_fts MATCH ?",
+            ("secret",),
+        ).fetchone() == (0,)
     finally:
         connection.close()
-
-
-def test_range_server_serves_partial_content(tmp_path: Path) -> None:
-    (tmp_path / "search.db").write_bytes(b"0123456789")
-
-    class QuietRangeRequestHandler(RangeRequestHandler):
-        def log_message(self, format: str, *args: object) -> None:
-            pass
-
-    handler = partial(QuietRangeRequestHandler, directory=str(tmp_path))
-    with ThreadingHTTPServer(("127.0.0.1", 0), handler) as server:
-        thread = threading.Thread(target=server.serve_forever, daemon=True)
-        thread.start()
-        connection = HTTPConnection("127.0.0.1", server.server_address[1], timeout=5)
-        try:
-            connection.request("GET", "/search.db", headers={"Range": "bytes=2-5"})
-            response = connection.getresponse()
-            body = response.read()
-        finally:
-            connection.close()
-            server.shutdown()
-
-    assert response.status == 206
-    assert response.getheader("Content-Range") == "bytes 2-5/10"
-    assert response.getheader("Content-Length") == "4"
-    assert body == b"2345"
 
 
 def test_codegen_cli_requires_client_output(tmp_path: Path) -> None:
@@ -548,8 +594,13 @@ def _plan_uses_index(
     parameters: tuple[object, ...],
     index_name: str,
 ) -> bool:
-    details = [str(row[3]) for row in connection.execute(f"EXPLAIN QUERY PLAN {sql}", parameters)]
-    return any("SEARCH" in detail.upper() and index_name in detail for detail in details)
+    details = [
+        str(row[3])
+        for row in connection.execute(f"EXPLAIN QUERY PLAN {sql}", parameters)
+    ]
+    return any(
+        "SEARCH" in detail.upper() and index_name in detail for detail in details
+    )
 
 
 def _write_fixture_project(
@@ -571,8 +622,16 @@ def _write_fixture_project(
         "data-dredge-featured='yes' "
         "data-dredge-published='2024-01-30'"
     )
-    index_description = '<meta name="description" content="Guide to alpha tombs">' if include_descriptions else ""
-    beta_description = '<meta name="description" content="Collection page">' if include_descriptions else ""
+    index_description = (
+        '<meta name="description" content="Guide to alpha tombs">'
+        if include_descriptions
+        else ""
+    )
+    beta_description = (
+        '<meta name="description" content="Collection page">'
+        if include_descriptions
+        else ""
+    )
     (source_dir / "index.html").write_text(
         f"""
         <!doctype html>
@@ -632,11 +691,18 @@ def _write_fixture_project(
             "description": "meta[name='description']@content",
         },
         "facets": {
-            "category": {"type": "string", "source": "data-dredge-category", "required": True},
+            "category": {
+                "type": "string",
+                "source": "data-dredge-category",
+                "required": True,
+            },
             "featured": {"type": "boolean", "source": "data-dredge-featured"},
             "published": {"type": "date", "source": "data-dredge-published"},
             "rating": {"type": "number", "source": "data-dredge-rating"},
-            "tags": {"type": "string_array", "source": "meta[property='article:tag']@content"},
+            "tags": {
+                "type": "string_array",
+                "source": "meta[property='article:tag']@content",
+            },
             "year": {"type": "integer", "source": "data-dredge-year"},
         },
         "result_fields": ["title", "url", "description", "category", "year"],

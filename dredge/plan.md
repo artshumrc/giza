@@ -487,6 +487,13 @@ Storage rules:
 - The OPFS storage namespace is derived from `db_sha256` so a new database never collides with a stale one.
 - Decompressed bytes are written to a temporary file and become visible as the active database only after the full write succeeds and the byte length is verified.
 - The runtime may verify `db_sha256` over the decompressed bytes; full verification is allowed here because the entire database is local before the first query.
+
+Read-only open tuning:
+
+- After opening, the runtime must set a page cache large enough to hold effectively the whole database (`PRAGMA cache_size = -131072`, i.e. 128 MB for the current ~90 MB corpus). This is mandatory, not optional: with the default ~8 MB cache, a broad ranked query repeatedly re-reads index pages through the OPFS synchronous-access-handle path and degrades from milliseconds to **tens of seconds**. Validation measured a broad-term ranked query exceeding 160 s with the default cache versus under 200 ms (p95) once the cache was sized to the database.
+- `PRAGMA temp_store = MEMORY` keeps sorts and transient tables off the OPFS-backed file.
+- `PRAGMA query_only = 1` enforces the read-only contract at the engine level.
+- The first ranked query of a session pays a one-time cost (~1.6 s on the 150k corpus) to page in the FTS index and compute global statistics; subsequent warm queries are within budget. Optionally issue a background warmup query immediately after open.
 - A no-persistent-storage mode is not supported. Synchronous OPFS storage is required.
 
 Decompression rules:
@@ -777,6 +784,28 @@ Exit criteria:
 - Browsers without synchronous OPFS access handles fail fast with `UNSUPPORTED_SYNC_ACCESS`.
 - Multi-tab read-only access is correct or the product scope is adjusted.
 - First-boot download, decompression, and OPFS write timings, plus warm-boot timings, are within adjustable production budgets.
+
+Status: validated against a real 150,000-page compiler-generated database in a Chromium worker (Electron 42 / Chrome 148) via the `runtime/` harness.
+
+Measured results (synthetic 150k corpus; uncompressed DB 90.23 MB, Brotli 25.39 MB; SQLite page size 16 KB; read-only open with `cache_size = -131072`, `temp_store = MEMORY`, `query_only = 1`):
+
+- Cold boot total ~1.04 s — manifest 5.7 ms, download 700 ms (transparent `Content-Encoding: br` in dev), OPFS write 311 ms, SQLite open 22 ms.
+- Warm boot total ~11 ms — `fromCache: true`, no download, no OPFS write, SQLite open ~6 ms.
+- Warm query p50 / p95 / p99 (25 timed runs each, one untimed warmup):
+  - Point lookup (1 match): 1.5 / 4.8 / 8.1 ms.
+  - Selective search (~150 matches): 3.3 / 4.8 / 5.0 ms.
+  - Moderate search (~3,000 matches): 7.6 / 9.3 / 10.6 ms.
+  - Selective search plus scalar filters: 5.7 / 8.6 / 23.0 ms.
+  - Facet category counts (full `GROUP BY`): 12.7 / 17.8 / 20.9 ms.
+  - Array-facet `EXISTS` filter: 2.3 / 8.6 / 11.1 ms.
+  - Broad search (~all 150k matches, worst case): 138 / 184 / 196 ms.
+- One-time cold first ranked query (FTS index page-in plus global stats): ~1.6 s, paid once per session before the page cache is warm.
+
+Key findings:
+
+- The default page cache (~8 MB) thrashes catastrophically against a 90 MB database over OPFS sync access handles; a broad-term ranked query exceeded 160 s. Setting a database-sized page cache (`cache_size = -131072`, 128 MB) is mandatory and brought broad-search p95 to under 200 ms.
+- All realistic (point, selective, moderate, filtered, facet) queries meet the production budgets below. Only the deliberately pathological broad-term case (a single token matching nearly every document) and the one-time cold first query exceed the steady-state search budget; both are expected and acceptable.
+- Reloading the page while a worker still holds OPFS sync access handles causes `NoModificationAllowedError` from the SAH pool; the runtime must tear down the open database (and the worker) before re-acquiring handles.
 
 ### Milestone 5: Runtime Storage And Worker Productionization
 
