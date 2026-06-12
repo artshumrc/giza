@@ -38,31 +38,32 @@ interface OpenDatabase {
   exec: Exec;
 }
 
+// Storage backend chosen at boot. "opfs" uses the SAH pool VFS for persistence;
+// "memory" deserializes the database into WASM memory and is used as a fallback
+// when the SAH pool is unavailable — most commonly because another tab in the
+// same origin already holds the pool's exclusive access handles
+// (NoModificationAllowedError), or when the environment lacks OPFS sync access.
+type StorageBackend = "opfs" | "memory";
+
 let sqlite3: any;
 let poolUtil: any;
 let opened: OpenDatabase | undefined;
+let backend: StorageBackend = "opfs";
 
-function assertSyncAccessHandleSupport(): void {
-  // The most performant OPFS path requires synchronous access handles inside a
-  // worker. Fail fast and loud if they are unavailable rather than degrading.
+function canUseSyncAccessHandles(): boolean {
+  // The persistent OPFS path requires synchronous access handles inside a
+  // worker. When they are unavailable we transparently fall back to memory.
   const proto = (globalThis as any).FileSystemFileHandle?.prototype;
   if (typeof proto?.createSyncAccessHandle !== "function") {
-    throw new WorkerError({
-      code: "UNSUPPORTED_SYNC_ACCESS",
-      message:
-        "FileSystemFileHandle.createSyncAccessHandle is unavailable in this worker. " +
-        "Dredge requires synchronous OPFS access handles.",
-    });
+    return false;
   }
   if (typeof navigator === "undefined" || typeof navigator.storage?.getDirectory !== "function") {
-    throw new WorkerError({
-      code: "UNSUPPORTED_OPFS",
-      message: "navigator.storage.getDirectory is unavailable; OPFS is required.",
-    });
+    return false;
   }
+  return true;
 }
 
-async function ensureSqlite(): Promise<void> {
+async function ensureSqlite(status: StatusFn): Promise<void> {
   if (sqlite3) {
     return;
   }
@@ -74,19 +75,24 @@ async function ensureSqlite(): Promise<void> {
       message: `Failed to initialize SQLite WASM: ${(error as Error).message}`,
     });
   }
-  if (typeof sqlite3.installOpfsSAHPoolVfs !== "function") {
-    throw new WorkerError({
-      code: "UNSUPPORTED_SYNC_ACCESS",
-      message: "This SQLite build does not provide the OPFS SyncAccessHandle pool VFS.",
-    });
+
+  // Prefer the persistent OPFS SAH pool VFS. If it cannot be installed — most
+  // commonly because another tab already holds the pool's exclusive access
+  // handles — fall back to an in-memory database instead of failing the boot.
+  if (!canUseSyncAccessHandles() || typeof sqlite3.installOpfsSAHPoolVfs !== "function") {
+    backend = "memory";
+    return;
   }
   try {
     poolUtil = await sqlite3.installOpfsSAHPoolVfs({ name: VFS_NAME });
+    backend = "opfs";
   } catch (error) {
-    throw new WorkerError({
-      code: "UNSUPPORTED_SYNC_ACCESS",
-      message: `Failed to install OPFS SAH pool VFS: ${(error as Error).message}`,
-    });
+    poolUtil = undefined;
+    backend = "memory";
+    status(
+      "checking_support",
+      `OPFS persistence unavailable (${(error as Error).message}); using in-memory database for this tab.`,
+    );
   }
 }
 
@@ -194,21 +200,50 @@ function cleanupStaleDatabases(keepPath: string): void {
   }
 }
 
+function applyReadOnlyPragmas(db: any): void {
+  // Read-only workload tuning: a large page cache avoids re-reading pages
+  // through the (relatively expensive) OPFS sync-access-handle path during
+  // large FTS doclist scans, and temp tables/sorts stay in memory.
+  db.exec("PRAGMA cache_size = -131072"); // 128 MB, enough to hold the whole DB
+  db.exec("PRAGMA temp_store = MEMORY");
+  db.exec("PRAGMA query_only = 1");
+}
+
 function openDatabaseHandle(path: string): unknown {
   try {
     // OpfsSAHPoolDb opens a database file that lives inside the SAH pool.
     const db = new poolUtil.OpfsSAHPoolDb(path);
-    // Read-only workload tuning: a large page cache avoids re-reading pages
-    // through the (relatively expensive) OPFS sync-access-handle path during
-    // large FTS doclist scans, and temp tables/sorts stay in memory.
-    db.exec("PRAGMA cache_size = -131072"); // 128 MB, enough to hold the whole DB
-    db.exec("PRAGMA temp_store = MEMORY");
-    db.exec("PRAGMA query_only = 1");
+    applyReadOnlyPragmas(db);
     return db;
   } catch (error) {
     throw new WorkerError({
       code: "SQLITE_OPEN_FAILED",
       message: `Failed to open database: ${(error as Error).message}`,
+    });
+  }
+}
+
+function openInMemoryDatabase(bytes: Uint8Array): unknown {
+  try {
+    // Load the downloaded database bytes straight into WASM memory. This works
+    // regardless of how many tabs are open because it never touches OPFS.
+    const db = new sqlite3.oo1.DB();
+    const pointer = sqlite3.wasm.allocFromTypedArray(bytes);
+    const rc = sqlite3.capi.sqlite3_deserialize(
+      db.pointer,
+      "main",
+      pointer,
+      bytes.byteLength,
+      bytes.byteLength,
+      sqlite3.capi.SQLITE_DESERIALIZE_FREEONCLOSE,
+    );
+    db.checkRc(rc);
+    applyReadOnlyPragmas(db);
+    return db;
+  } catch (error) {
+    throw new WorkerError({
+      code: "SQLITE_OPEN_FAILED",
+      message: `Failed to open in-memory database: ${(error as Error).message}`,
     });
   }
 }
@@ -241,15 +276,63 @@ export function getManifest(): DredgeManifest | undefined {
   return opened?.manifest;
 }
 
+async function bootInMemory(
+  manifest: DredgeManifest,
+  manifestUrl: string,
+  status: StatusFn,
+  t0: number,
+  manifestDone: number,
+): Promise<BootTimings> {
+  // In-memory mode cannot reuse a cached copy; always fetch + decode. The
+  // download honours the HTTP cache, so a warm browser cache keeps this cheap.
+  status("downloading_db");
+  const downloadStart = performance.now();
+  const manifestBase = new URL(manifestUrl, self.location.href).toString();
+  const compressed = await downloadCompressed(manifest, manifestBase);
+  const downloadMs = performance.now() - downloadStart;
+  const compressedBytes = compressed.byteLength;
+
+  status("decompressing_db");
+  const decompressStart = performance.now();
+  const raw = await decompress(compressed, manifest);
+  const decompressMs = performance.now() - decompressStart;
+  const decompressedBytes = raw.byteLength;
+
+  status("opening_db");
+  const openStart = performance.now();
+  closeDatabase();
+  const db = openInMemoryDatabase(raw);
+  const openMs = performance.now() - openStart;
+
+  opened = { db, manifest, exec: makeExec(db) };
+  status("ready");
+
+  const totalMs = performance.now() - t0;
+  return {
+    fromCache: false,
+    manifestMs: manifestDone - t0,
+    downloadMs,
+    decompressMs,
+    writeOpfsMs: 0,
+    openMs,
+    totalMs,
+    compressedBytes,
+    decompressedBytes,
+  };
+}
+
 export async function boot(manifestUrl: string, reset: boolean, status: StatusFn): Promise<BootTimings> {
   status("checking_support");
-  assertSyncAccessHandleSupport();
-  await ensureSqlite();
+  await ensureSqlite(status);
 
   const t0 = performance.now();
   status("fetching_manifest");
   const manifest = await fetchManifest(manifestUrl);
   const manifestDone = performance.now();
+
+  if (backend === "memory") {
+    return bootInMemory(manifest, manifestUrl, status, t0, manifestDone);
+  }
 
   const path = dbPathFor(manifest);
   if (reset) {
