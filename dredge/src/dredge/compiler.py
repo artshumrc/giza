@@ -10,7 +10,7 @@ import sys
 import tempfile
 import time
 import unicodedata
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, field as dataclass_field
 from datetime import date
@@ -23,6 +23,7 @@ from selectolax.parser import HTMLParser
 import brotli
 
 from . import __version__
+from .progress import CompileProgress
 
 DB_SCHEMA_VERSION = 1
 MANIFEST_VERSION = 1
@@ -595,10 +596,29 @@ def compile_site(
     metrics_json_path: Path | None = None,
     progress_stream: TextIO | None = None,
 ) -> CompileResult:
+    ui = CompileProgress(progress_stream)
+    with ui.activate():
+        return _compile_site(
+            config_path,
+            metrics_json_path=metrics_json_path,
+            progress_stream=progress_stream,
+            ui=ui,
+        )
+
+
+def _compile_site(
+    config_path: Path,
+    *,
+    metrics_json_path: Path | None,
+    progress_stream: TextIO | None,
+    ui: CompileProgress,
+) -> CompileResult:
     metrics = _MetricsRecorder(config_path)
     with metrics.phase("validation"):
+        ui.set_phase("validation")
         config = validate_config(config_path)
     with metrics.phase("discovery"):
+        ui.set_phase("discovery")
         candidates, skipped = discover_html_files(config)
     metrics.candidate_count = len(candidates)
     if not candidates:
@@ -619,6 +639,7 @@ def compile_site(
         connection = sqlite3.connect(build_db_path)
         try:
             with metrics.phase("table_creation"):
+                ui.set_phase("table_creation")
                 _configure_build_database(connection)
                 _create_tables(connection, config)
             insert_sql = _document_insert_sql(config)
@@ -628,15 +649,21 @@ def compile_site(
                 for facet in config.array_facets
             }
             batches = _InsertBatches.for_config(config)
-            progress = _ProgressReporter(
-                progress_stream,
-                total_documents=len(candidates),
-                build_db_path=build_db_path,
+            reporter = (
+                None
+                if ui.enabled
+                else _ProgressReporter(
+                    progress_stream,
+                    total_documents=len(candidates),
+                    build_db_path=build_db_path,
+                )
             )
+            files_advance = ui.begin_files(len(candidates))
 
             connection.execute("BEGIN")
             ingest_started_at = time.perf_counter()
             with metrics.phase("extraction_ingest"):
+                ui.set_phase("extraction_ingest")
                 for index, candidate in enumerate(candidates, start=1):
                     document = _extract_document(index, candidate, config, warnings)
                     if smoke_token is None:
@@ -646,7 +673,11 @@ def compile_site(
                     if smoke_filter is None:
                         smoke_filter = _first_filter(document)
                     _queue_document_insert(batches, config, document)
-                    report_due = progress.should_report(index)
+                    report_due = (
+                        reporter.should_report(index)
+                        if reporter is not None
+                        else index % PROGRESS_DOCUMENT_INTERVAL == 0
+                    )
                     build_db_bytes = None
                     if len(batches.documents) >= INSERT_BATCH_SIZE or report_due:
                         _flush_insert_batches(
@@ -659,27 +690,34 @@ def compile_site(
                             connection, insert_sql, array_insert_sql, batches
                         )
                         connection.commit()
-                        progress.maybe_report(
-                            index,
-                            build_db_bytes=build_db_bytes or _path_size(build_db_path),
-                        )
+                        if reporter is not None:
+                            reporter.maybe_report(
+                                index,
+                                build_db_bytes=build_db_bytes
+                                or _path_size(build_db_path),
+                            )
                         connection.execute("BEGIN")
-                    else:
-                        progress.maybe_report(index, build_db_bytes=build_db_bytes)
+                    elif reporter is not None:
+                        reporter.maybe_report(index, build_db_bytes=build_db_bytes)
+                    files_advance(index, build_db_bytes)
                 _flush_insert_batches(connection, insert_sql, array_insert_sql, batches)
                 connection.commit()
-                progress.maybe_report(
-                    len(candidates), build_db_bytes=_path_size(build_db_path)
-                )
+                final_db_bytes = _path_size(build_db_path)
+                if reporter is not None:
+                    reporter.maybe_report(
+                        len(candidates), build_db_bytes=final_db_bytes
+                    )
+                files_advance(len(candidates), final_db_bytes)
             metrics.record_ingest(
                 documents=len(candidates),
                 seconds=time.perf_counter() - ingest_started_at,
                 build_db_path=build_db_path,
             )
             with metrics.phase("index_creation"):
+                ui.set_phase("index_creation")
                 _create_indexes(connection, config)
             connection.commit()
-            _finalize_database(connection, compact_db_path, metrics)
+            _finalize_database(connection, compact_db_path, metrics, ui)
         except Exception:
             connection.rollback()
             raise
@@ -687,6 +725,7 @@ def compile_site(
             connection.close()
 
         with metrics.phase("hashing"):
+            ui.set_phase("hashing")
             db_sha256 = _sha256_file(compact_db_path)
             db_file = f"search.{db_sha256}.db.br"
             uncompressed_file = f"search.{db_sha256}.db"
@@ -694,14 +733,20 @@ def compile_site(
             compact_db_path.replace(db_path)
 
         with metrics.phase("post_build_checks"):
+            ui.set_phase("post_build_checks")
             _run_post_build_checks(db_path, config, smoke_token, smoke_filter)
 
         with metrics.phase("compression"):
+            ui.set_phase("compression")
             compressed_db_path = config.output_dir / db_file
             db_bytes = db_path.stat().st_size
-            db_compressed_bytes = _brotli_compress_file(db_path, compressed_db_path)
+            compress_advance = ui.begin_compression(db_bytes)
+            db_compressed_bytes = _brotli_compress_file(
+                db_path, compressed_db_path, on_chunk=compress_advance
+            )
 
         with metrics.phase("manifest_write"):
+            ui.set_phase("manifest_write")
             manifest = {
                 "manifest_version": MANIFEST_VERSION,
                 "db_schema_version": DB_SCHEMA_VERSION,
@@ -720,8 +765,10 @@ def compile_site(
                 json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
             )
         with metrics.phase("client_write"):
+            ui.set_phase("client_write")
             client_path = _write_generated_client(config)
 
+        ui.finish()
         warning_tuple = warnings.to_warnings()
         metrics_payload = metrics.to_payload(
             config=config,
@@ -1248,9 +1295,13 @@ def _coerce_scalar_facet(
 
 
 def _finalize_database(
-    connection: sqlite3.Connection, compact_db_path: Path, metrics: _MetricsRecorder
+    connection: sqlite3.Connection,
+    compact_db_path: Path,
+    metrics: _MetricsRecorder,
+    ui: CompileProgress,
 ) -> None:
     with metrics.phase("fts_optimize"):
+        ui.set_phase("fts_optimize")
         connection.execute(
             "INSERT INTO documents_fts(documents_fts) VALUES('optimize')"
         )
@@ -1261,6 +1312,7 @@ def _finalize_database(
     if compact_db_path.exists():
         compact_db_path.unlink()
     with metrics.phase("vacuum_into"):
+        ui.set_phase("vacuum_into")
         connection.execute(f"VACUUM INTO {_quote_sql_string(str(compact_db_path))}")
 
 
@@ -1620,13 +1672,20 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _brotli_compress_file(source: Path, destination: Path) -> int:
+def _brotli_compress_file(
+    source: Path,
+    destination: Path,
+    *,
+    on_chunk: Callable[[int], None] | None = None,
+) -> int:
     compressor = brotli.Compressor(quality=BROTLI_QUALITY)
     with source.open("rb") as src, destination.open("wb") as dst:
         for chunk in iter(lambda: src.read(1024 * 1024), b""):
             compressed = compressor.process(chunk)
             if compressed:
                 dst.write(compressed)
+            if on_chunk is not None:
+                on_chunk(len(chunk))
         tail = compressor.finish()
         if tail:
             dst.write(tail)
