@@ -29,6 +29,36 @@ cmd = "npx -y pagefind --site dist"
 [tool.poe.tasks.static-pagefind-limited]
 cmd = "npx -y pagefind --site /tmp/opencode/giza-static-test"
 
+[tool.poe.tasks.static-dredge-assets]
+cmd = "node dredge/runtime/scripts/install-into-site.mjs --out dist"
+help = "Build the Dredge browser library and install it into dist/search."
+
+[tool.poe.tasks.static-dredge-assets-limited]
+cmd = "node dredge/runtime/scripts/install-into-site.mjs --out /tmp/opencode/giza-static-test"
+help = "Build the Dredge browser library and install it into the limited build."
+
+[tool.poe.tasks.static-dredge-compile]
+cmd = "uv run --project dredge dredge compile -c dredge.config.json"
+help = "Compile the Dredge SQLite/FTS5 index from dist/ into dist/search."
+
+[tool.poe.tasks.static-dredge-compile-limited]
+cmd = "uv run --project dredge dredge compile -c dredge.config.limited.json"
+help = "Compile the Dredge index for the limited build."
+
+[tool.poe.tasks.static-dredge]
+sequence = [
+    { ref = "static-dredge-assets" },
+    { ref = "static-dredge-compile" },
+]
+help = "Build + install the Dredge library and compile its index into dist/search."
+
+[tool.poe.tasks.static-dredge-limited]
+sequence = [
+    { ref = "static-dredge-assets-limited" },
+    { ref = "static-dredge-compile-limited" },
+]
+help = "Dredge library + index for the limited build."
+
 [tool.poe.tasks.static-serve]
 cmd = "python -m http.server --directory dist 8000"
 

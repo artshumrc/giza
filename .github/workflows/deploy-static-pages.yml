@@ -42,17 +42,29 @@ jobs:
         with:
           node-version: 22
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Install Python tooling
         run: uv sync --group dev
+
+      - name: Install Dredge runtime dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: dredge/runtime
 
       - name: Build static site
         run: uv run poe static-build-staging
 
-      - name: Build Pagefind index
-        run: uv run poe static-pagefind
+      - name: Build Dredge search index
+        run: uv run poe static-dredge
 
       - name: Prepare Pages artifact
         run: |
+          # The client only downloads the brotli-compressed database; drop the
+          # uncompressed intermediate so it is not shipped in the Pages artifact.
+          rm -f dist/search/*.db
           printf '%s\n' 'giza.digitalhumanities.harvard.edu' > dist/CNAME
           touch dist/.nojekyll
 

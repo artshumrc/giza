@@ -1,0 +1,23 @@
+[project]
+name = "dredge"
+version = "0.1.0"
+description = "Static-site SQLite search compiler"
+readme = "plan.md"
+requires-python = ">=3.14"
+dependencies = [
+    "selectolax>=0.4.3",
+    "brotli>=1.1.0",
+    "rich>=13.7.0",
+]
+
+[project.scripts]
+dredge = "dredge.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
