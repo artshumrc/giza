@@ -1,0 +1,8 @@
+{% comment %}
+Build-time override of layouts/default.html used only by the static-site
+generator (scripts/static_site_builder/django_templates.py). It renders just
+the main_content block of pages/full.html, delimited by markers, so the
+generator can wrap it in the static-site chrome and search markers. The
+production layouts/default.html (header, footer, modals, analytics) is never
+used at build time.
+{% endcomment %}<!--MC_START-->{% block 'main_content' %}{% endblock %}<!--MC_END-->

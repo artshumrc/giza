@@ -1,0 +1,6 @@
+{% comment %}
+Build-time override that neutralizes partials/modals.html (login, sign-up,
+and add-to-collection modals) for the static deployment. full.html includes
+this partial inside its main_content block; the static site has no auth or
+MyGiza workflows, so it renders nothing.
+{% endcomment %}
