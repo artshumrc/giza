@@ -149,6 +149,7 @@
       category: categoryLabelFromParam(params.get('category')) || inferCategoryFromRows(rows),
       rows: rows,
       simple: simple ? simple.value : '',
+      sort: (params.get('sort') || '').toLowerCase(),
       term: parts.join(' ').trim()
     };
   }
@@ -164,6 +165,42 @@
 
   function isBrowseState(state) {
     return !state.term;
+  }
+
+  // Available result orderings. "relevance" (bm25) only makes sense when there
+  // is a keyword query, so it is hidden/ignored for empty-query browse.
+  var SORT_OPTIONS = [
+    { value: 'relevance', label: 'Relevance' },
+    { value: 'title', label: 'Title (A\u2013Z)' },
+    { value: 'id', label: 'ID' }
+  ];
+
+  function defaultSortForTerm(hasTerm) {
+    return hasTerm ? 'relevance' : 'title';
+  }
+
+  // Resolve the effective sort for a state: honour the URL `sort` param when
+  // valid, otherwise fall back to the context default. "relevance" is demoted
+  // to the default when there is no keyword query.
+  function resolveSort(state) {
+    var hasTerm = Boolean(state && state.term);
+    var requested = String((state && state.sort) || '').toLowerCase();
+    if (requested === 'relevance' && !hasTerm) {
+      requested = '';
+    }
+    if (requested !== 'relevance' && requested !== 'title' && requested !== 'id') {
+      return defaultSortForTerm(hasTerm);
+    }
+    return requested;
+  }
+
+  // Translate a resolved sort value into a Dredge sort directive. "relevance"
+  // maps to no directive so the worker uses bm25 (keyword) ordering. "id" sorts
+  // by the user-visible catalog identifier shown on each result card.
+  function dredgeSortFor(sortValue) {
+    if (sortValue === 'title') return { field: 'title', direction: 'asc' };
+    if (sortValue === 'id') return { field: 'catalog_id', direction: 'asc' };
+    return null;
   }
 
   function updateUrl(params, path, replace) {
@@ -270,8 +307,8 @@
     return JSON.stringify(normalized);
   }
 
-  function searchSignature(term, filters) {
-    return String(term || '') + '|' + filterSignature(filters || {});
+  function searchSignature(term, filters, sort) {
+    return String(term || '') + '|' + filterSignature(filters || {}) + '|' + String(sort || '');
   }
 
   async function loadDredge() {
@@ -313,10 +350,9 @@
   }
 
   // Fetch a single page of results plus the total and category facet counts.
-  // Pagination is performed server-side in the worker via LIMIT/OFFSET. An
-  // empty query is a match-all browse: results are ordered alphabetically by
-  // title, scoped to the selected category (if any).
-  async function dredgeSearchPage(term, filters, page, pageSize) {
+  // Pagination is performed server-side in the worker via LIMIT/OFFSET. The
+  // resolved sort controls ordering; an empty query defaults to title order.
+  async function dredgeSearchPage(term, filters, page, pageSize, sortValue) {
     var searchTerm = String(term || '').trim();
     var client = await loadDredge();
     var currentPage = Math.max(1, Number(page) || 1);
@@ -327,8 +363,9 @@
       offset: (currentPage - 1) * pageSize,
       includeFacets: ['category']
     };
-    if (!searchTerm) {
-      request.sort = { field: 'title', direction: 'asc' };
+    var sort = dredgeSortFor(sortValue);
+    if (sort) {
+      request.sort = sort;
     }
     return client.search(request);
   }
@@ -358,6 +395,37 @@
       params.delete('category');
     }
     updateUrl(params, null, false);
+  }
+
+  function applySort(sortValue) {
+    var params = currentParams();
+    params.delete('page');
+    var hasTerm = Boolean(stateFromParams(params).term);
+    if (sortValue && sortValue !== defaultSortForTerm(hasTerm)) {
+      params.set('sort', sortValue);
+    } else {
+      params.delete('sort');
+    }
+    updateUrl(params, null, false);
+  }
+
+  // Render the result-ordering control. "Relevance" is omitted when there is no
+  // keyword query, since match-all browse has no relevance score.
+  function renderSortControl(activeSort, hasTerm) {
+    var options = SORT_OPTIONS.filter(function (option) {
+      return option.value !== 'relevance' || hasTerm;
+    }).map(function (option) {
+      var selected = option.value === activeSort ? ' selected' : '';
+      return '<option value="' + option.value + '"' + selected + '>' + escapeHtml(option.label) + '</option>';
+    }).join('');
+    return [
+      '<label class="static-site-sort">',
+      '<span class="static-site-sort-label">Sort by</span>',
+      '<select class="static-site-sort-select" data-search-sort aria-label="Sort results by">',
+      options,
+      '</select>',
+      '</label>'
+    ].join('');
   }
 
   function setupAdvancedForm() {
@@ -572,6 +640,11 @@
           updatePageParam(page, false);
           this.scrollIntoView({ block: 'start', behavior: 'smooth' });
         });
+        this.addEventListener('change', (event) => {
+          var select = event.target.closest('[data-search-sort]');
+          if (!select) return;
+          applySort(select.value);
+        });
         var syncPageFromUrl = () => {
           this.currentPage = parsePageParam();
           this.runDirectSearchFromUrl().catch((error) => {
@@ -589,6 +662,7 @@
         var state = stateFromParams(currentParams());
         var browse = isBrowseState(state);
         var filters = filtersForCategory(state.category);
+        var sortValue = resolveSort(state);
         var page = parsePageParam();
         this.currentPage = page;
         var token = ++this.renderToken;
@@ -596,7 +670,7 @@
         this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">' + (browse ? 'Loading search results...' : 'Searching...') + '</p></div>';
         var response;
         try {
-          response = await dredgeSearchPage(state.term, filters, page, this.pageSize);
+          response = await dredgeSearchPage(state.term, filters, page, this.pageSize, sortValue);
         } catch (error) {
           if (error && error.code === 'STALE_RESPONSE') return;
           throw error;
@@ -604,7 +678,8 @@
         if (token !== this.renderToken) return;
         var latestState = stateFromParams(currentParams());
         var latestFilters = filtersForCategory(latestState.category);
-        if (searchSignature(state.term, filters) !== searchSignature(latestState.term, latestFilters) || parsePageParam() !== page) {
+        var latestSort = resolveSort(latestState);
+        if (searchSignature(state.term, filters, sortValue) !== searchSignature(latestState.term, latestFilters, latestSort) || parsePageParam() !== page) {
           return;
         }
         var categoryCounts = facetCountsFromResponse(response);
@@ -628,8 +703,11 @@
           updatePageParam(totalPages, true);
           return;
         }
+        var state = stateFromParams(currentParams());
         var noun = total === 1 ? 'search result' : 'search results';
-        var status = '<div class="static-site-search-status"><h3 class="heading-alt m-t-half m-b-1">' + String(total) + ' ' + noun + ' found.</h3></div>';
+        var heading = '<h3 class="heading-alt m-t-half m-b-1">' + String(total) + ' ' + noun + ' found.</h3>';
+        var sortControl = total ? renderSortControl(resolveSort(state), Boolean(state.term)) : '';
+        var status = '<div class="static-site-search-status">' + heading + sortControl + '</div>';
         if (!total) {
           this.innerHTML = status + '<p>No catalog records matched this search.</p>';
           return;

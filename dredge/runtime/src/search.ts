@@ -180,11 +180,15 @@ function buildFilterClauses(
   return { sql, bind };
 }
 
+// Built-in free-text columns ordered case-insensitively so alphabetical sorts
+// read naturally ("apple" before "Banana"). Other columns (ids, codes, facet
+// values) keep their natural BINARY collation, which matches the indexes the
+// compiler builds for them and lets those sorts use a covering index.
+const NOCASE_SORT_COLUMNS = new Set(["title", "description"]);
+
 // Build the ORDER BY clause. An explicit, valid sort wins; otherwise relevance
 // (bm25) ordering is used for keyword queries and document id for match-all
-// browse. `d.id` is always appended as a stable tiebreaker. Text columns are
-// compared case-insensitively (COLLATE NOCASE); this is ignored for numeric
-// values, so it is safe to apply unconditionally.
+// browse. `d.id` is always appended as a stable tiebreaker.
 function buildOrderClause(
   schema: SchemaInfo,
   sort: DredgeSort | undefined,
@@ -192,7 +196,8 @@ function buildOrderClause(
 ): string {
   if (sort && schema.documentColumns.includes(sort.field)) {
     const direction = sort.direction === "desc" ? "DESC" : "ASC";
-    return `ORDER BY d.${quoteIdentifier(sort.field)} COLLATE NOCASE ${direction}, d.id`;
+    const collate = NOCASE_SORT_COLUMNS.has(sort.field) ? " COLLATE NOCASE" : "";
+    return `ORDER BY d.${quoteIdentifier(sort.field)}${collate} ${direction}, d.id`;
   }
   return usesFts ? "ORDER BY bm25(documents_fts), d.id" : "ORDER BY d.id";
 }
