@@ -71,6 +71,24 @@ RELATED_SECTION_LABELS = {
     "videos": "Videos",
 }
 
+RELATED_SECTION_ICONS = {
+    "sites": "map-marker",
+    "objects": "vase",
+    "diarypages": "sticky-note-o",
+    "mapsandplans": "map-o",
+    "drawings": "pencil-square-o",
+    "pubdocs": "book",
+    "unpubdocs": "file-text-o",
+    "3dmodels": "pyramid-3d",
+    "videos": "video-camera",
+    "ancientpeople": "user",
+    "modernpeople": "user",
+    "institutions": "university",
+    "groups": "users",
+    "animals": "paw",
+    "audio": "music",
+}
+
 RELATED_ORDER = [
     "sites",
     "objects",
@@ -92,6 +110,7 @@ RELATED_ORDER = [
 ]
 
 DETAIL_FIELDS = [
+    ("Type", "constituenttype", "text"),
     ("ID", "number", "text"),
     ("Alternate IDs", "allnumbers", "text"),
     ("Site Name", "sitename", "text"),
@@ -121,8 +140,8 @@ DETAIL_FIELDS = [
     ("Display Date", "displaydate", "text"),
     ("Institution", "institution", "text"),
     ("Gender", "gender", "text"),
+    ("Also Known As", "altnames", "altnames"),
     ("Citation", "boilertext", "safe_html"),
-    ("Bibliography", "bibreferences", "text"),
     ("Notes", "notes", "text"),
     ("Remarks", "remarks", "text"),
     ("Research Activity", "researchactivity", "text"),

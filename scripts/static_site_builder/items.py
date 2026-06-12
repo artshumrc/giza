@@ -7,6 +7,7 @@ from typing import Any
 from .constants import (
     DETAIL_FIELDS,
     RELATED_ORDER,
+    RELATED_SECTION_ICONS,
     RELATED_SECTION_LABELS,
     RELATED_TYPE_ALIASES,
     TYPE_LABELS,
@@ -110,6 +111,9 @@ def render_item_page(
     body.append(feature_block("Details", details_html, icon="info-circle"))
     if related_html:
         body.append(related_html)
+    bibliography_html = render_bibliography(source)
+    if bibliography_html:
+        body.append(bibliography_html)
     body.append("</section>")
     body.append('<aside class="large-4 columns content-col-secondary">')
     body.append(
@@ -222,6 +226,11 @@ def render_details(source: dict[str, Any]) -> str:
     for label, key, mode in DETAIL_FIELDS:
         if not has_value(source.get(key)):
             continue
+        if mode == "altnames":
+            altname_dds = render_altname_values(source.get(key))
+            if altname_dds:
+                rows.append(f"<dt>{html.escape(label)}</dt>{altname_dds}")
+            continue
         if mode == "safe_html":
             value = sanitize_html_field(source.get(key))
         else:
@@ -235,6 +244,38 @@ def render_details(source: dict[str, Any]) -> str:
         + "\n".join(rows)
         + "</dl></div>"
     )
+
+
+def render_altname_values(value: Any) -> str:
+    if not isinstance(value, list):
+        text = plain_text(value)
+        return f"<dd>{html.escape(text)}</dd>" if text else ""
+    dds = []
+    for entry in value:
+        if isinstance(entry, dict):
+            name = plain_text(entry.get("name"))
+            name_type = plain_text(entry.get("type"))
+            if name and name_type:
+                dds.append(f"<dd>{html.escape(name_type)} : {html.escape(name)}</dd>")
+            elif name:
+                dds.append(f"<dd>{html.escape(name)}</dd>")
+        else:
+            text = plain_text(entry)
+            if text:
+                dds.append(f"<dd>{html.escape(text)}</dd>")
+    return "".join(dds)
+
+
+def render_bibliography(source: dict[str, Any]) -> str:
+    if not has_value(source.get("bibreferences")):
+        return ""
+    body = (
+        '<div class="feature-block__body"><ul class="feature-block__list">'
+        '<li><div class="media-object list-item list-item-textblob">'
+        f"{text_to_paragraphs(source.get('bibreferences'))}"
+        "</div></li></ul></div>"
+    )
+    return feature_block("Full Bibliography", body, icon="bookmark")
 
 
 def render_related_items(
@@ -254,6 +295,11 @@ def render_related_items(
         if not isinstance(items, list) or not items:
             continue
         related_type = RELATED_TYPE_ALIASES.get(key, key)
+        if related_type == "photos":
+            # Photos are surfaced through the Mirador viewer, not a separate
+            # related section. Some photos are not IIIF-compliant; hide the
+            # section entirely for this static deployment.
+            continue
         label = RELATED_SECTION_LABELS.get(
             related_type, RELATED_SECTION_LABELS.get(key, type_label(key))
         )
@@ -276,7 +322,9 @@ def render_related_items(
         )
         sections.append(
             feature_block(
-                f'{label} <span class="badge">{len(cards):,}</span>', body, icon="list"
+                f'{label} <span class="badge">{len(cards):,}</span>',
+                body,
+                icon=RELATED_SECTION_ICONS.get(related_type, "list"),
             )
         )
     return "\n".join(sections)
