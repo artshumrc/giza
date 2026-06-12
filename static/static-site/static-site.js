@@ -58,6 +58,7 @@
     initStarted: false,
     instance: null,
     dredgeClientPromise: null,
+    dredgeReady: false,
     suppressNextPageReset: false,
     suppressNextUrlSync: false
   };
@@ -311,11 +312,31 @@
     return String(term || '') + '|' + filterSignature(filters || {}) + '|' + String(sort || '');
   }
 
+  // Loading spinner markup. When the search database has not finished
+  // downloading/initializing yet (first visit), show a friendlier note that
+  // explains the one-time wait; otherwise show the normal search message.
+  function loadingMarkup(browse, preparing) {
+    if (preparing && !SearchRuntime.dredgeReady) {
+      return '<div class="static-site-loading static-site-loading-preparing" data-search-loading>' +
+        '<div class="giza-spinner"></div>' +
+        '<div class="static-site-loading-text">' +
+        '<p class="static-site-meta">Preparing search&hellip;</p>' +
+        '<p class="static-site-meta static-site-loading-note">Downloading the search database. On a slow connection this can take a few seconds&mdash;it is cached for the rest of your visit.</p>' +
+        '</div></div>';
+    }
+    return '<div class="static-site-loading" data-search-loading>' +
+      '<div class="giza-spinner"></div>' +
+      '<p class="static-site-meta">' + (browse ? 'Loading search results...' : 'Searching...') + '</p></div>';
+  }
+
   async function loadDredge() {
     if (SearchRuntime.dredgeClientPromise) return SearchRuntime.dredgeClientPromise;
     SearchRuntime.dredgeClientPromise = import('/search/dredge-client.js').then(function (module) {
       var client = new module.DredgeSearchClient();
-      return client.init().then(function () { return client; });
+      return client.init().then(function () {
+        SearchRuntime.dredgeReady = true;
+        return client;
+      });
     }).catch(function (error) {
       SearchRuntime.dredgeClientPromise = null;
       throw error;
@@ -629,7 +650,7 @@
         this.currentPage = parsePageParam();
         this.renderToken = 0;
         this.signature = '';
-        this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">Loading search results...</p></div>';
+        this.innerHTML = loadingMarkup(true, true);
         this.addEventListener('click', (event) => {
           var link = event.target.closest('[data-search-page]');
           if (!link) return;
@@ -667,7 +688,16 @@
         this.currentPage = page;
         var token = ++this.renderToken;
         window.dispatchEvent(new CustomEvent('giza:search-start', { detail: { isBrowse: browse, state: state } }));
-        this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">' + (browse ? 'Loading search results...' : 'Searching...') + '</p></div>';
+        this.innerHTML = loadingMarkup(browse, true);
+        if (!SearchRuntime.dredgeReady) {
+          // Swap the "downloading database" note for the normal search message
+          // as soon as the database is ready, while results are still loading.
+          loadDredge().then(() => {
+            if (token === this.renderToken && this.querySelector('[data-search-loading]')) {
+              this.innerHTML = loadingMarkup(browse, false);
+            }
+          }).catch(function () {});
+        }
         var response;
         try {
           response = await dredgeSearchPage(state.term, filters, page, this.pageSize, sortValue);

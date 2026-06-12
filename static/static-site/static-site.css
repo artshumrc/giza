@@ -166,6 +166,22 @@
   padding: 0.3rem 1.6rem 0.3rem 0.5rem;
   width: auto;
 }
+.static-site-loading.static-site-loading-preparing {
+  align-items: flex-start;
+}
+.static-site-loading .static-site-loading-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.static-site-loading .static-site-loading-text .static-site-meta {
+  margin: 0;
+}
+.static-site-loading .static-site-loading-note {
+  font-size: 0.8rem;
+  max-width: 48ch;
+  opacity: 0.85;
+}
 .static-site-search-results .media-object-holder {
   display: grid;
   gap: 0;
