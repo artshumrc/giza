@@ -24,7 +24,6 @@ from urllib.parse import urlparse
 from static_site_builder.constants import (
     EXPECTED_ITEM_COUNT,
     EXPECTED_MANIFEST_COUNT,
-    SEARCH_CATEGORY_ORDER,
     STATIC_TEMPLATE_PAGES,
 )
 from static_site_builder.items import (
@@ -52,7 +51,6 @@ from static_site_builder.urls import (
     item_manifest_id,
     lesson_slug,
     manifest_url,
-    search_category_label,
 )
 
 
@@ -113,7 +111,7 @@ def main(argv: list[str]) -> int:
     write_videos_page(args.output, indexes["videos"])
     write_lessons(args.output, content, indexes["lookup"])
     write_collections(args.output, content, indexes["lookup"])
-    item_counts, required_manifest_ids, emitted_summaries = write_item_pages(
+    item_counts, required_manifest_ids, _ = write_item_pages(
         args.output,
         args.es_archive,
         giza_member,
@@ -123,7 +121,6 @@ def main(argv: list[str]) -> int:
         args.item_limit_per_type,
         args.generate_item_redirects,
     )
-    write_search_browse_data(args.output, emitted_summaries, page_size=20)
     manifest_count = write_manifests(
         args.output,
         args.es_archive,
@@ -984,71 +981,6 @@ def write_collections(
         write_text(
             output / "collections" / slug / "index.html",
             render_page(title, "\n".join(detail)),
-        )
-
-
-def write_search_browse_data(
-    output: Path, summaries: list[ItemSummary], page_size: int = 20
-) -> None:
-    browse_root = output / "static" / "static-site" / "search-browse"
-    category_counts = Counter(
-        search_category_label(summary.type) for summary in summaries
-    )
-    category_counts_json = {
-        label: category_counts[label]
-        for _, label in SEARCH_CATEGORY_ORDER
-        if category_counts[label]
-    }
-
-    def sort_key(summary: ItemSummary) -> tuple[str, str, str]:
-        return (
-            plain_text(summary.title).casefold(),
-            summary.type.casefold(),
-            summary.id.casefold(),
-        )
-
-    def item_json(summary: ItemSummary) -> dict[str, str]:
-        return {
-            "title": summary.title,
-            "url": summary.url,
-            "catalog_id": summary.search_identifier,
-            "thumbnail": summary.thumbnail,
-        }
-
-    def write_bucket(
-        slug: str, active_category: str, bucket: list[ItemSummary]
-    ) -> None:
-        sorted_bucket = sorted(bucket, key=sort_key)
-        total = len(sorted_bucket)
-        page_count = max(1, (total + page_size - 1) // page_size)
-        for page in range(1, page_count + 1):
-            start = (page - 1) * page_size
-            payload = {
-                "total": total,
-                "page": page,
-                "page_size": page_size,
-                "category_counts": category_counts_json,
-                "active_category": active_category,
-                "items": [
-                    item_json(summary)
-                    for summary in sorted_bucket[start : start + page_size]
-                ],
-            }
-            write_text(
-                browse_root / slug / f"page-{page}.json",
-                json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
-            )
-
-    write_bucket("all", "", summaries)
-    for slug, label in SEARCH_CATEGORY_ORDER:
-        write_bucket(
-            slug,
-            label,
-            [
-                summary
-                for summary in summaries
-                if search_category_label(summary.type) == label
-            ],
         )
 
 

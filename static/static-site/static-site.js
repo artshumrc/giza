@@ -3,7 +3,6 @@
   var SEARCH_SCOPE_FILTER = 'search_scope';
   var SEARCH_SCOPE_VALUE = 'catalog';
   var DEFAULT_IMAGE = '/static/images/object1.png';
-  var BROWSE_DATA_BASE = '/static/static-site/search-browse';
   var CATEGORY_LABELS = {
     photos: 'Photos',
     objects: 'Objects',
@@ -167,34 +166,6 @@
     return !state.term;
   }
 
-  function browseSlugForCategory(categoryLabel) {
-    return categoryLabel ? (categorySlugForLabel(categoryLabel) || normalizeCategoryKey(categoryLabel)) : 'all';
-  }
-
-  function browseChunkUrl(categoryLabel, page) {
-    return BROWSE_DATA_BASE + '/' + encodeURIComponent(browseSlugForCategory(categoryLabel)) + '/page-' + String(page) + '.json';
-  }
-
-  async function fetchBrowseChunk(state, page) {
-    var response = await fetch(browseChunkUrl(state.category, page), { headers: { Accept: 'application/json' } });
-    if (!response.ok) {
-      var error = new Error('Browse data could not be loaded.');
-      error.status = response.status;
-      throw error;
-    }
-    return response.json();
-  }
-
-  function dispatchBrowseResults(data) {
-    window.dispatchEvent(new CustomEvent('giza:browse-results', {
-      detail: {
-        active_category: data.active_category || '',
-        category_counts: data.category_counts || {},
-        total: data.total || 0
-      }
-    }));
-  }
-
   function updateUrl(params, path, replace) {
     var query = params.toString();
     var nextPath = path || window.location.pathname || '/search-results/';
@@ -342,21 +313,24 @@
   }
 
   // Fetch a single page of results plus the total and category facet counts.
-  // Pagination is performed server-side in the worker via LIMIT/OFFSET.
+  // Pagination is performed server-side in the worker via LIMIT/OFFSET. An
+  // empty query is a match-all browse: results are ordered alphabetically by
+  // title, scoped to the selected category (if any).
   async function dredgeSearchPage(term, filters, page, pageSize) {
     var searchTerm = String(term || '').trim();
-    if (!searchTerm) {
-      throw new Error('Empty browse searches use static browse data.');
-    }
     var client = await loadDredge();
     var currentPage = Math.max(1, Number(page) || 1);
-    return client.search({
+    var request = {
       query: searchTerm,
       filters: dredgeFiltersFor(filters),
       limit: pageSize,
       offset: (currentPage - 1) * pageSize,
       includeFacets: ['category']
-    });
+    };
+    if (!searchTerm) {
+      request.sort = { field: 'title', direction: 'asc' };
+    }
+    return client.search(request);
   }
 
   function selectedRowsForSidebar(instance) {
@@ -506,13 +480,6 @@
           this.loadingCategories = true;
           this.render();
         };
-        this._handleBrowseResults = (event) => {
-          var detail = event.detail || {};
-          this.categoryCounts = detail.category_counts || {};
-          this.activeCategory = detail.active_category || '';
-          this.loadingCategories = false;
-          this.render();
-        };
         this._handleDirectSearchResults = (event) => {
           var detail = event.detail || {};
           var searchResult = detail.searchResult || {};
@@ -527,7 +494,6 @@
           this.render();
         };
         window.addEventListener('giza:search-start', this._handleSearchStart);
-        window.addEventListener('giza:browse-results', this._handleBrowseResults);
         window.addEventListener('giza:direct-search-results', this._handleDirectSearchResults);
         this.addEventListener('click', (event) => {
           var link = event.target.closest('[data-search-category]');
@@ -541,9 +507,6 @@
       disconnectedCallback() {
         if (this._handleSearchStart) {
           window.removeEventListener('giza:search-start', this._handleSearchStart);
-        }
-        if (this._handleBrowseResults) {
-          window.removeEventListener('giza:browse-results', this._handleBrowseResults);
         }
         if (this._handleDirectSearchResults) {
           window.removeEventListener('giza:direct-search-results', this._handleDirectSearchResults);
@@ -599,9 +562,6 @@
         this.renderToken = 0;
         this.signature = '';
         this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">Loading search results...</p></div>';
-        if (isBrowseState(stateFromParams(currentParams()))) {
-          this.renderBrowseFromUrl();
-        }
         this.addEventListener('click', (event) => {
           var link = event.target.closest('[data-search-page]');
           if (!link) return;
@@ -614,84 +574,26 @@
         });
         var syncPageFromUrl = () => {
           this.currentPage = parsePageParam();
-          if (isBrowseState(stateFromParams(currentParams()))) {
-            this.renderBrowseFromUrl();
-          } else {
-            this.runDirectSearchFromUrl().catch((error) => {
-              this.innerHTML = '<p class="callout alert">Search failed: ' + escapeHtml(error && error.message ? error.message : error) + '</p>';
-            });
-          }
+          this.runDirectSearchFromUrl().catch((error) => {
+            this.innerHTML = '<p class="callout alert">Search failed: ' + escapeHtml(error && error.message ? error.message : error) + '</p>';
+          });
         };
         window.addEventListener('popstate', syncPageFromUrl);
         window.addEventListener('giza:search-url-change', syncPageFromUrl);
-        if (!isBrowseState(stateFromParams(currentParams()))) {
-          this.runDirectSearchFromUrl().catch(() => {
-            this.innerHTML = '<p class="callout warning">Search is unavailable: the Dredge index could not be loaded for this static build.</p>';
-          });
-        }
-      }
-
-      async renderBrowseFromUrl() {
-        var state = stateFromParams(currentParams());
-        if (!isBrowseState(state)) return false;
-        var page = parsePageParam();
-        var token = ++this.renderToken;
-        this.searchResult = null;
-        window.dispatchEvent(new CustomEvent('giza:search-start', { detail: { isBrowse: true, state: state } }));
-        this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">Loading search results...</p></div>';
-        try {
-          var data = await fetchBrowseChunk(state, page);
-          if (token !== this.renderToken) return true;
-          var latestState = stateFromParams(currentParams());
-          if (!isBrowseState(latestState)) return false;
-          if (parsePageParam() !== page || (latestState.category || '') !== (data.active_category || '')) {
-            this.renderBrowseFromUrl();
-            return true;
-          }
-          this.currentPage = Number(data.page) || page;
-          this.browseData = data;
-          dispatchBrowseResults(data);
-          this.renderBrowseResults(data);
-          return true;
-        } catch (error) {
-          if (token !== this.renderToken) return true;
-          if (page > 1 && error && error.status === 404) {
-            updatePageParam(1, true);
-            return true;
-          }
-          this.innerHTML = '<p class="callout alert">Browse results could not be loaded.</p>';
-          return false;
-        }
-      }
-
-      renderBrowseResults(data) {
-        var total = Number(data.total) || 0;
-        var pageSize = Number(data.page_size) || this.pageSize;
-        var totalPages = Math.max(1, Math.ceil(total / pageSize));
-        this.pageSize = pageSize;
-        this.currentPage = Number(data.page) || this.currentPage || 1;
-        var noun = total === 1 ? 'search result' : 'search results';
-        var status = '<div class="static-site-search-status"><h3 class="heading-alt m-t-half m-b-1">' + String(total) + ' ' + noun + ' found.</h3></div>';
-        if (!total) {
-          this.innerHTML = status + '<p>No catalog records matched this search.</p>';
-          return;
-        }
-        var cards = (data.items || []).map(renderResultCard).join('');
-        this.innerHTML = status + '<div class="media-object-holder">' + cards + '</div>' + renderPagination(this.currentPage, totalPages);
+        this.runDirectSearchFromUrl().catch(() => {
+          this.innerHTML = '<p class="callout warning">Search is unavailable: the Dredge index could not be loaded for this static build.</p>';
+        });
       }
 
       async runDirectSearchFromUrl() {
         var state = stateFromParams(currentParams());
-        if (isBrowseState(state)) {
-          await this.renderBrowseFromUrl();
-          return;
-        }
+        var browse = isBrowseState(state);
         var filters = filtersForCategory(state.category);
         var page = parsePageParam();
         this.currentPage = page;
         var token = ++this.renderToken;
-        window.dispatchEvent(new CustomEvent('giza:search-start', { detail: { isBrowse: false, state: state } }));
-        this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">Searching...</p></div>';
+        window.dispatchEvent(new CustomEvent('giza:search-start', { detail: { isBrowse: browse, state: state } }));
+        this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">' + (browse ? 'Loading search results...' : 'Searching...') + '</p></div>';
         var response;
         try {
           response = await dredgeSearchPage(state.term, filters, page, this.pageSize);

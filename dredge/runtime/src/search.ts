@@ -16,12 +16,22 @@ export interface DredgeFilters {
   [facet: string]: DredgeFilterValue | undefined;
 }
 
+export interface DredgeSort {
+  // A selectable `documents` column to order by (e.g. "title"). Unknown
+  // columns are ignored and the default ordering is used instead.
+  field: string;
+  direction?: "asc" | "desc";
+}
+
 export interface DredgeSearchRequest {
   query?: string;
   filters?: DredgeFilters;
   limit?: number;
   offset?: number;
   includeFacets?: boolean | string[];
+  // Explicit ordering. When omitted, results are ordered by relevance
+  // (bm25) for keyword queries, or by document id for match-all browse.
+  sort?: DredgeSort;
 }
 
 export interface DredgeFacetBucket {
@@ -170,6 +180,23 @@ function buildFilterClauses(
   return { sql, bind };
 }
 
+// Build the ORDER BY clause. An explicit, valid sort wins; otherwise relevance
+// (bm25) ordering is used for keyword queries and document id for match-all
+// browse. `d.id` is always appended as a stable tiebreaker. Text columns are
+// compared case-insensitively (COLLATE NOCASE); this is ignored for numeric
+// values, so it is safe to apply unconditionally.
+function buildOrderClause(
+  schema: SchemaInfo,
+  sort: DredgeSort | undefined,
+  usesFts: boolean,
+): string {
+  if (sort && schema.documentColumns.includes(sort.field)) {
+    const direction = sort.direction === "desc" ? "DESC" : "ASC";
+    return `ORDER BY d.${quoteIdentifier(sort.field)} COLLATE NOCASE ${direction}, d.id`;
+  }
+  return usesFts ? "ORDER BY bm25(documents_fts), d.id" : "ORDER BY d.id";
+}
+
 function facetNamesToCount(schema: SchemaInfo, includeFacets: boolean | string[]): string[] {
   if (includeFacets === true) {
     return [...schema.scalarColumns, ...schema.arrayFacets.keys()];
@@ -219,7 +246,7 @@ export function search(
   // Page of hits with all selectable document columns.
   const columns = schema.documentColumns;
   const select = columns.map((name) => `d.${quoteIdentifier(name)}`).join(", ");
-  const order = usesFts ? "ORDER BY bm25(documents_fts), d.id" : "ORDER BY d.id";
+  const order = buildOrderClause(schema, request.sort, usesFts);
   const hitRows = exec(
     `SELECT ${select} ${from} ${whereSql} ${order} LIMIT ? OFFSET ?`,
     [...baseBind, limit, offset],

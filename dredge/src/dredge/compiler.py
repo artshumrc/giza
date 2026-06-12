@@ -988,6 +988,12 @@ def _create_tables(connection: sqlite3.Connection, config: DredgeConfig) -> None
 
 
 def _create_indexes(connection: sqlite3.Connection, config: DredgeConfig) -> None:
+    # Case-insensitive title index so match-all browse can stream results in
+    # alphabetical order (ORDER BY title COLLATE NOCASE) without a full sort.
+    connection.execute(
+        "CREATE INDEX documents_title_nocase_idx ON documents(title COLLATE NOCASE, id)"
+    )
+
     for facet in config.array_facets:
         table_name = _quote_identifier(_array_table_name(facet.name))
         connection.execute(
