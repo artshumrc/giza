@@ -34,7 +34,6 @@ _APP_CSS_LINK_RE = re.compile(r'<link[^>]*?\bhref="[^"]*app\.css"[^>]*>', re.IGN
 _PHOTOS_JUMP_LINK_RE = re.compile(
     r'<li>\s*<a href="#photos">.*?</a>\s*</li>', re.DOTALL
 )
-_BLANK_LINES_RE = re.compile(r"(?:[ \t]*\n){3,}")
 _IMAGE_FIELDS = ("thumbnail", "main")
 
 
@@ -102,8 +101,34 @@ def _prepare_object(source: dict[str, Any], has_manifest: bool) -> dict[str, Any
         primary = {}
     primary["has_manifest"] = bool(has_manifest)
     obj["primarydisplay"] = primary
+    # The Photos section and its per-photo gallery modals are intentionally
+    # hidden in the static build. Dropping the data here means full.html's
+    # photo card loop and (unsliced) modal loop iterate nothing, avoiding a
+    # large amount of wasted rendering and post-processing on photo-heavy items.
+    related = obj.get("relateditems")
+    if isinstance(related, dict):
+        related.pop("photos", None)
     _rewrite_images(obj)
     return obj
+
+
+def _collapse_blank_lines(content: str) -> str:
+    """Collapse runs of blank lines to a single blank line.
+
+    Rendering full.html leaves long runs of blank lines where ``{% %}`` tags
+    and skipped loop iterations stood. A linear pass is dramatically faster
+    than a backtracking regex on the large rendered pages.
+    """
+    out: list[str] = []
+    blank = False
+    for line in content.split("\n"):
+        if line and not line.isspace():
+            out.append(line)
+            blank = False
+        elif not blank:
+            out.append("")
+            blank = True
+    return "\n".join(out)
 
 
 def _post_process(content: str) -> str:
@@ -132,7 +157,7 @@ def _post_process(content: str) -> str:
     )
     # Collapse the long runs of blank lines left by stripped comments and the
     # many empty template-loop iterations (e.g. the jump menu).
-    content = _BLANK_LINES_RE.sub("\n\n", content)
+    content = _collapse_blank_lines(content)
     return content
 
 
@@ -159,3 +184,14 @@ def render_item_main_content(
     match = _MAIN_CONTENT_RE.search(rendered)
     content = match.group(1) if match else rendered
     return _post_process(content).strip()
+
+
+def warm_engine() -> None:
+    """Pre-compile the item template.
+
+    Building the engine and compiling ``pages/full.html`` (and the partials it
+    includes) is done once here so that, when the build forks a pool of render
+    workers, each worker has the compiled templates ready instead of compiling
+    them on its first item.
+    """
+    _engine().get_template("pages/full.html")

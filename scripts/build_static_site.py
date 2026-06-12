@@ -8,15 +8,17 @@ It reads the compressed production exports directly and emits static HTML/JSON.
 from __future__ import annotations
 
 import argparse
-import copy
 import gzip
 import html
 import json
+import os
 import re
 import shutil
 import sys
 import tarfile
 from collections import Counter, defaultdict
+from concurrent.futures import ProcessPoolExecutor
+from multiprocessing import get_context
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import urlparse
@@ -26,6 +28,7 @@ from static_site_builder.constants import (
     EXPECTED_MANIFEST_COUNT,
     STATIC_TEMPLATE_PAGES,
 )
+from static_site_builder.django_templates import warm_engine
 from static_site_builder.items import (
     get_doc_id,
     make_summary,
@@ -83,6 +86,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         action="store_true",
         help="Generate intro/allphotos redirect pages for emitted item pages.",
     )
+    parser.add_argument(
+        "--jobs",
+        type=int,
+        default=os.cpu_count() or 1,
+        help="Number of parallel render worker processes (1 disables the pool).",
+    )
     return parser.parse_args(argv)
 
 
@@ -120,6 +129,7 @@ def main(argv: list[str]) -> int:
         args.item_limit,
         args.item_limit_per_type,
         args.generate_item_redirects,
+        args.jobs,
     )
     manifest_count = write_manifests(
         args.output,
@@ -128,6 +138,7 @@ def main(argv: list[str]) -> int:
         base_url,
         args.manifest_limit,
         required_manifest_ids,
+        args.jobs,
     )
     write_404(args.output)
 
@@ -984,6 +995,28 @@ def write_collections(
         )
 
 
+_WORKER_OUTPUT: Path | None = None
+_WORKER_REDIRECTS = False
+
+
+def _init_render_worker(output: Path, generate_redirects: bool) -> None:
+    global _WORKER_OUTPUT, _WORKER_REDIRECTS
+    _WORKER_OUTPUT = output
+    _WORKER_REDIRECTS = generate_redirects
+    warm_engine()
+
+
+def _render_item_job(job: tuple[str, str, dict[str, Any], ItemSummary]) -> None:
+    item_type, item_id, source, summary = job
+    assert _WORKER_OUTPUT is not None
+    html_text = render_item_page(item_type, item_id, source, summary)
+    base = _WORKER_OUTPUT / item_type / item_id
+    write_text(base / "full" / "index.html", html_text)
+    if _WORKER_REDIRECTS:
+        write_redirect_page(base / "intro" / "index.html", summary.url)
+        write_redirect_page(base / "allphotos" / "index.html", summary.url)
+
+
 def write_item_pages(
     output: Path,
     es_archive: Path,
@@ -993,45 +1026,87 @@ def write_item_pages(
     item_limit: int,
     item_limit_per_type: int,
     generate_redirects: bool,
+    jobs: int,
 ) -> tuple[Counter[str], set[str], list[ItemSummary]]:
     counts: Counter[str] = Counter()
     required_manifest_ids: set[str] = set()
     emitted_summaries: list[ItemSummary] = []
     total = 0
-    for doc in iter_es_docs(es_archive, giza_member):
-        item_type = str(doc.get("_type") or "")
-        if item_type == "library":
-            continue
-        if item_limit and total >= item_limit:
-            break
-        if item_limit_per_type and counts[item_type] >= item_limit_per_type:
-            continue
 
-        source = doc.get("_source") or {}
-        item_id = get_doc_id(doc)
-        if not item_id:
-            continue
-        summary = lookup.get((item_type, item_id)) or make_summary(
-            item_type, item_id, source, manifest_ids
-        )
-        if summary.has_manifest:
-            required_manifest_ids.add(item_manifest_id(item_type, item_id))
-        html_text = render_item_page(
-            item_type, item_id, source, summary, manifest_ids, lookup
-        )
-        item_dir = output / item_type / item_id / "full"
-        write_text(item_dir / "index.html", html_text)
-        if generate_redirects:
-            write_redirect_page(
-                output / item_type / item_id / "intro" / "index.html", summary.url
+    def select() -> Iterable[tuple[str, str, dict[str, Any], ItemSummary]]:
+        nonlocal total
+        for doc in iter_es_docs(es_archive, giza_member):
+            item_type = str(doc.get("_type") or "")
+            if item_type == "library":
+                continue
+            if item_limit and total >= item_limit:
+                break
+            if item_limit_per_type and counts[item_type] >= item_limit_per_type:
+                continue
+
+            source = doc.get("_source") or {}
+            item_id = get_doc_id(doc)
+            if not item_id:
+                continue
+            summary = lookup.get((item_type, item_id)) or make_summary(
+                item_type, item_id, source, manifest_ids
             )
-            write_redirect_page(
-                output / item_type / item_id / "allphotos" / "index.html", summary.url
-            )
-        emitted_summaries.append(summary)
-        counts[item_type] += 1
-        total += 1
+            if summary.has_manifest:
+                required_manifest_ids.add(item_manifest_id(item_type, item_id))
+            emitted_summaries.append(summary)
+            counts[item_type] += 1
+            total += 1
+            yield item_type, item_id, source, summary
+
+    if jobs <= 1:
+        _init_render_worker(output, generate_redirects)
+        for job in select():
+            _render_item_job(job)
+        return counts, required_manifest_ids, emitted_summaries
+
+    # Rendering each page is CPU-bound and independent, so fan the work out to a
+    # pool of worker processes that also write their own files. A fork context
+    # lets workers inherit the already-loaded indexes and compiled templates.
+    # Work is submitted in bounded batches so the source documents for the whole
+    # archive are never materialised in memory at once.
+    batch_size = max(jobs * 128, 256)
+    batch: list[tuple[str, str, dict[str, Any], ItemSummary]] = []
+    with ProcessPoolExecutor(
+        max_workers=jobs,
+        mp_context=get_context("fork"),
+        initializer=_init_render_worker,
+        initargs=(output, generate_redirects),
+    ) as executor:
+        for job in select():
+            batch.append(job)
+            if len(batch) >= batch_size:
+                list(executor.map(_render_item_job, batch, chunksize=16))
+                batch.clear()
+        if batch:
+            list(executor.map(_render_item_job, batch, chunksize=16))
     return counts, required_manifest_ids, emitted_summaries
+
+
+_MANIFEST_OUTPUT_DIR: Path | None = None
+_MANIFEST_BASE_URL = ""
+
+
+def _init_manifest_worker(manifest_dir: Path, base_url: str) -> None:
+    global _MANIFEST_OUTPUT_DIR, _MANIFEST_BASE_URL
+    _MANIFEST_OUTPUT_DIR = manifest_dir
+    _MANIFEST_BASE_URL = base_url
+
+
+def _write_manifest_job(job: tuple[str, dict[str, Any]]) -> None:
+    manifest_id, manifest = job
+    assert _MANIFEST_OUTPUT_DIR is not None
+    # ``manifest`` is this process's own (unpickled or streamed-once) copy, so it
+    # can be rewritten in place without a defensive deepcopy.
+    rewritten = rewrite_manifest(manifest, manifest_id, _MANIFEST_BASE_URL)
+    write_text(
+        _MANIFEST_OUTPUT_DIR / f"{manifest_id}.json",
+        json.dumps(rewritten, ensure_ascii=False, indent=2),
+    )
 
 
 def write_manifests(
@@ -1041,34 +1116,60 @@ def write_manifests(
     base_url: str,
     manifest_limit: int,
     required_manifest_ids: set[str],
+    jobs: int,
 ) -> int:
     manifest_dir = output / "manifests"
     manifest_dir.mkdir(parents=True, exist_ok=True)
     count = 0
     sample_count = 0
     pending_required = set(required_manifest_ids)
-    for doc in iter_es_docs(es_archive, iiif_member):
-        manifest_id = str(
-            doc.get("_id") or (doc.get("_source") or {}).get("id") or ""
-        ).strip()
-        manifest = (doc.get("_source") or {}).get("manifest")
-        if not manifest_id or not isinstance(manifest, dict):
-            continue
-        sample_slot = not manifest_limit or sample_count < manifest_limit
-        required = manifest_id in pending_required
-        if not sample_slot and not required:
-            continue
-        rewritten = rewrite_manifest(copy.deepcopy(manifest), manifest_id, base_url)
-        write_text(
-            manifest_dir / f"{manifest_id}.json",
-            json.dumps(rewritten, ensure_ascii=False, indent=2),
-        )
-        count += 1
-        if sample_slot and manifest_limit:
-            sample_count += 1
-        pending_required.discard(manifest_id)
-        if manifest_limit and sample_count >= manifest_limit and not pending_required:
-            break
+
+    def select() -> Iterable[tuple[str, dict[str, Any]]]:
+        nonlocal count, sample_count
+        for doc in iter_es_docs(es_archive, iiif_member):
+            manifest_id = str(
+                doc.get("_id") or (doc.get("_source") or {}).get("id") or ""
+            ).strip()
+            manifest = (doc.get("_source") or {}).get("manifest")
+            if not manifest_id or not isinstance(manifest, dict):
+                continue
+            sample_slot = not manifest_limit or sample_count < manifest_limit
+            required = manifest_id in pending_required
+            if not sample_slot and not required:
+                continue
+            count += 1
+            if sample_slot and manifest_limit:
+                sample_count += 1
+            pending_required.discard(manifest_id)
+            yield manifest_id, manifest
+            if (
+                manifest_limit
+                and sample_count >= manifest_limit
+                and not pending_required
+            ):
+                break
+
+    if jobs <= 1:
+        _init_manifest_worker(manifest_dir, base_url)
+        for job in select():
+            _write_manifest_job(job)
+    else:
+        batch_size = max(jobs * 64, 256)
+        batch: list[tuple[str, dict[str, Any]]] = []
+        with ProcessPoolExecutor(
+            max_workers=jobs,
+            mp_context=get_context("fork"),
+            initializer=_init_manifest_worker,
+            initargs=(manifest_dir, base_url),
+        ) as executor:
+            for job in select():
+                batch.append(job)
+                if len(batch) >= batch_size:
+                    list(executor.map(_write_manifest_job, batch, chunksize=16))
+                    batch.clear()
+            if batch:
+                list(executor.map(_write_manifest_job, batch, chunksize=16))
+
     if pending_required:
         missing = ", ".join(sorted(pending_required)[:10])
         extra = "..." if len(pending_required) > 10 else ""

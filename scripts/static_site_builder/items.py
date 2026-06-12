@@ -68,8 +68,6 @@ def render_item_page(
     item_id: str,
     source: dict[str, Any],
     summary: ItemSummary,
-    manifest_ids: set[str],
-    lookup: dict[tuple[str, str], ItemSummary],
 ) -> str:
     title = summary.title
     manifest_id = item_manifest_id(item_type, item_id)
