@@ -58,8 +58,7 @@
     enforcingCatalog: false,
     initStarted: false,
     instance: null,
-    pagefindPromise: null,
-    pagefindFiltersPromise: null,
+    dredgeClientPromise: null,
     suppressNextPageReset: false,
     suppressNextUrlSync: false
   };
@@ -304,60 +303,60 @@
     return String(term || '') + '|' + filterSignature(filters || {});
   }
 
-  async function loadPagefind() {
-    if (SearchRuntime.pagefindPromise) return SearchRuntime.pagefindPromise;
-    SearchRuntime.pagefindPromise = import('/pagefind/pagefind.js').then(async function (pagefind) {
-      if (typeof pagefind.init === 'function') {
-        await pagefind.init();
-      }
-      return pagefind;
+  async function loadDredge() {
+    if (SearchRuntime.dredgeClientPromise) return SearchRuntime.dredgeClientPromise;
+    SearchRuntime.dredgeClientPromise = import('/search/dredge-client.js').then(function (module) {
+      var client = new module.DredgeSearchClient();
+      return client.init().then(function () { return client; });
     }).catch(function (error) {
-      SearchRuntime.pagefindPromise = null;
+      SearchRuntime.dredgeClientPromise = null;
       throw error;
     });
-    return SearchRuntime.pagefindPromise;
+    return SearchRuntime.dredgeClientPromise;
   }
 
-  async function loadPagefindFilters(pagefind) {
-    if (typeof pagefind.filters !== 'function') return {};
-    if (!SearchRuntime.pagefindFiltersPromise) {
-      SearchRuntime.pagefindFiltersPromise = pagefind.filters().catch(function () {
-        SearchRuntime.pagefindFiltersPromise = null;
-        return {};
+  // Translate giza's filter shape into Dredge filters. The redundant
+  // search_scope filter is dropped: the Dredge index only contains catalog
+  // item pages (scoped by the build's include glob), so it is implicit.
+  function dredgeFiltersFor(filters) {
+    var out = {};
+    var categories = cloneFilterValue(filters && filters.category);
+    if (categories.length) out.category = categories;
+    return out;
+  }
+
+  // Build a {label: count} map from a Dredge category facet response. Dredge
+  // computes each facet ignoring its own filter, so these counts stay
+  // switchable even when a category is currently selected.
+  function facetCountsFromResponse(response) {
+    var counts = {};
+    var buckets = response && response.facets && response.facets.category;
+    if (Array.isArray(buckets)) {
+      buckets.forEach(function (bucket) {
+        if (bucket && bucket.value != null) {
+          counts[String(bucket.value)] = Number(bucket.count) || 0;
+        }
       });
     }
-    return SearchRuntime.pagefindFiltersPromise;
+    return counts;
   }
 
-  async function directPagefindSearch(term, filters) {
+  // Fetch a single page of results plus the total and category facet counts.
+  // Pagination is performed server-side in the worker via LIMIT/OFFSET.
+  async function dredgeSearchPage(term, filters, page, pageSize) {
     var searchTerm = String(term || '').trim();
     if (!searchTerm) {
       throw new Error('Empty browse searches use static browse data.');
     }
-    var pagefind = await loadPagefind();
-    return pagefind.search(searchTerm, { filters: filters });
-  }
-
-  async function categoryCountsForTerm(term) {
-    var searchTerm = categoryCountsCacheKey(term);
-    if (!searchTerm) return {};
-    var cachedCounts = cachedCategoryCountsForTerm(searchTerm);
-    if (cachedCounts !== null) return cachedCounts;
-    if (SearchRuntime.categoryCountsPromises[searchTerm]) {
-      return SearchRuntime.categoryCountsPromises[searchTerm];
-    }
-    SearchRuntime.categoryCountsPromises[searchTerm] = (async function () {
-      var pagefind = await loadPagefind();
-      await loadPagefindFilters(pagefind);
-      var searchResult = await pagefind.search(searchTerm, { filters: scopeOnlyFilters() });
-      return cacheCategoryCountsForTerm(searchTerm, categoryCountsFromSearchResult(searchResult));
-    }()).catch(function () {
-      return {};
-    }).then(function (categoryCounts) {
-      delete SearchRuntime.categoryCountsPromises[searchTerm];
-      return categoryCounts;
+    var client = await loadDredge();
+    var currentPage = Math.max(1, Number(page) || 1);
+    return client.search({
+      query: searchTerm,
+      filters: dredgeFiltersFor(filters),
+      limit: pageSize,
+      offset: (currentPage - 1) * pageSize,
+      includeFacets: ['category']
     });
-    return SearchRuntime.categoryCountsPromises[searchTerm];
   }
 
   function selectedRowsForSidebar(instance) {
@@ -609,10 +608,8 @@
           event.preventDefault();
           var page = parseInt(link.getAttribute('data-search-page') || '1', 10);
           if (!Number.isFinite(page) || page < 1) return;
-          var browsing = isBrowseState(stateFromParams(currentParams()));
           this.currentPage = page;
           updatePageParam(page, false);
-          if (!browsing) this.renderResults();
           this.scrollIntoView({ block: 'start', behavior: 'smooth' });
         });
         var syncPageFromUrl = () => {
@@ -629,7 +626,7 @@
         window.addEventListener('giza:search-url-change', syncPageFromUrl);
         if (!isBrowseState(stateFromParams(currentParams()))) {
           this.runDirectSearchFromUrl().catch(() => {
-            this.innerHTML = '<p class="callout warning">Search is available after running Pagefind for this static build.</p>';
+            this.innerHTML = '<p class="callout warning">Search is unavailable: the Dredge index could not be loaded for this static build.</p>';
           });
         }
       }
@@ -690,79 +687,54 @@
           return;
         }
         var filters = filtersForCategory(state.category);
-        var signature = searchSignature(state.term, filters);
-        this.currentPage = parsePageParam();
-        if (this.searchResult && this.signature === signature) {
-          this.renderResults();
-          var existingCategoryCounts = cachedCategoryCountsForTerm(state.term) || categoryCountsFromSearchResult(this.searchResult);
-          if (shouldLoadCategoryCounts(existingCategoryCounts, state.category)) {
-            this.updateDirectSearchCategoryCounts(signature, state.term, filters).catch(function () {});
-          }
-          return;
-        }
+        var page = parsePageParam();
+        this.currentPage = page;
         var token = ++this.renderToken;
-        this.searchResult = null;
         window.dispatchEvent(new CustomEvent('giza:search-start', { detail: { isBrowse: false, state: state } }));
         this.innerHTML = '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">Searching...</p></div>';
-        var searchResult = await directPagefindSearch(state.term, filters);
+        var response;
+        try {
+          response = await dredgeSearchPage(state.term, filters, page, this.pageSize);
+        } catch (error) {
+          if (error && error.code === 'STALE_RESPONSE') return;
+          throw error;
+        }
         if (token !== this.renderToken) return;
         var latestState = stateFromParams(currentParams());
         var latestFilters = filtersForCategory(latestState.category);
-        if (signature !== searchSignature(latestState.term, latestFilters)) return;
-        var cachedCategoryCounts = cachedCategoryCountsForTerm(state.term);
-        var categoryCounts = cachedCategoryCounts === null ? categoryCountsFromSearchResult(searchResult) : cachedCategoryCounts;
-        this.signature = signature;
-        this.searchResult = searchResult;
+        if (searchSignature(state.term, filters) !== searchSignature(latestState.term, latestFilters) || parsePageParam() !== page) {
+          return;
+        }
+        var categoryCounts = facetCountsFromResponse(response);
+        this.lastResponse = response;
         window.dispatchEvent(new CustomEvent('giza:direct-search-results', {
           detail: {
-            searchResult: searchResult,
+            searchResult: null,
             filters: filters,
             category_counts: categoryCounts,
-            is_final_counts: !shouldLoadCategoryCounts(categoryCounts, state.category)
+            is_final_counts: true
           }
         }));
-        this.renderResults();
-        if (shouldLoadCategoryCounts(categoryCounts, state.category)) {
-          this.updateDirectSearchCategoryCounts(signature, state.term, filters).catch(function () {});
-        }
+        this.renderDredgeResults(response, page);
       }
 
-      async updateDirectSearchCategoryCounts(signature, term, filters) {
-        var categoryCounts = await categoryCountsForTerm(term);
-        var latestState = stateFromParams(currentParams());
-        var latestFilters = filtersForCategory(latestState.category);
-        if (this.signature !== signature || signature !== searchSignature(latestState.term, latestFilters)) return;
-        window.dispatchEvent(new CustomEvent('giza:direct-search-results', {
-          detail: { searchResult: this.searchResult, filters: filters, category_counts: categoryCounts, is_final_counts: true }
-        }));
-      }
-
-      renderResults() {
-        var token = this.renderToken + 1;
-        this.renderToken = token;
-        var rawResults = this.searchResult && this.searchResult.results ? this.searchResult.results : [];
-        var total = rawResults.length;
+      renderDredgeResults(response, page) {
+        var total = Number(response && response.total) || 0;
         var totalPages = Math.max(1, Math.ceil(total / this.pageSize));
-        if (this.currentPage > totalPages) {
+        if (page > totalPages && total > 0) {
           this.currentPage = totalPages;
-          updatePageParam(this.currentPage, true);
+          updatePageParam(totalPages, true);
+          return;
         }
-        var start = (this.currentPage - 1) * this.pageSize;
-        var visible = rawResults.slice(start, start + this.pageSize);
         var noun = total === 1 ? 'search result' : 'search results';
         var status = '<div class="static-site-search-status"><h3 class="heading-alt m-t-half m-b-1">' + String(total) + ' ' + noun + ' found.</h3></div>';
         if (!total) {
           this.innerHTML = status + '<p>No catalog records matched this search.</p>';
           return;
         }
-        this.innerHTML = status + '<div class="static-site-loading"><div class="giza-spinner"></div><p class="static-site-meta">Loading results ' + (start + 1).toLocaleString() + '-' + Math.min(start + this.pageSize, total).toLocaleString() + '...</p></div>';
-        Promise.all(visible.map(function (raw) {
-          return raw.data().catch(function () { return null; });
-        })).then((items) => {
-          if (token !== this.renderToken) return;
-          var cards = items.filter(Boolean).map(renderResultCard).join('');
-          this.innerHTML = status + '<div class="media-object-holder">' + cards + '</div>' + renderPagination(this.currentPage, totalPages);
-        });
+        var hits = (response && response.hits) || [];
+        var cards = hits.map(function (hit) { return renderResultCard({ meta: hit }); }).join('');
+        this.innerHTML = status + '<div class="media-object-holder">' + cards + '</div>' + renderPagination(page, totalPages);
       }
     }
 
@@ -771,7 +743,7 @@
   }
 
   window.GizaStaticSite = window.GizaStaticSite || {};
-  window.GizaStaticSite.initPagefind = function () {
+  window.GizaStaticSite.initStaticSearch = function () {
     if (SearchRuntime.initStarted || !document.querySelector('[data-giza-search-page]')) return;
     SearchRuntime.initStarted = true;
     defineSearchComponents();

@@ -156,7 +156,8 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
     print(
-        "Run `npx -y pagefind --site <output>` after this build to create the search index."
+        "Run `uv run poe static-dredge` after this build to install the Dredge "
+        "search library and compile the search index."
     )
     return 0
 
@@ -729,7 +730,7 @@ def write_search_pages(output: Path) -> None:
     advanced_search_body = render_static_site_template("search.html").strip()
     results_body = render_static_site_template("search-results.html").strip()
     extra_head = ""
-    extra_scripts = "<script>GizaStaticSite.initPagefind();</script>"
+    extra_scripts = "<script>GizaStaticSite.initStaticSearch();</script>"
     search_html = render_page(
         "Search the Archives",
         advanced_search_body,
