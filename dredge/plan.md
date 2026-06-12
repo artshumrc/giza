@@ -14,8 +14,8 @@ The prior concept is directionally sound, but production readiness requires expl
 - Support 150,000+ HTML pages without keeping all page content in memory.
 - Provide full-text search, typed filters, result pagination, and facet counts from the browser.
 - Keep runtime search off the main thread by using a Web Worker.
-- Cache fetched SQLite pages or aligned byte ranges in the browser's Origin Private File System.
-- Fail explicitly on unsupported browsers or storage conditions before opening SQLite, and detect hosts without HTTP Range support with a minimal range probe rather than a full-file transfer.
+- Ship the full SQLite database to the browser as a single Brotli-compressed asset and store the decompressed database in the browser's Origin Private File System.
+- Require the most performant OPFS access path, synchronous access handles in a worker, and fail fast and loud when it is unavailable rather than silently degrading.
 - Generate a type-safe client API from the exact search configuration.
 - Produce deterministic, content-addressed assets that are safe to deploy on static hosting.
 
@@ -24,7 +24,7 @@ The prior concept is directionally sound, but production readiness requires expl
 ## 2. Non-Goals For The First Production Version
 
 - No server-hosted search fallback.
-- No support for browsers or hosts that cannot support the selected HTTP Range VFS and persistent page cache requirements.
+- No support for browsers that cannot provide synchronous OPFS access handles in a worker.
 - No runtime index building in the browser.
 - No arbitrary SQL API exposed to application code.
 - No silent downgrade to a smaller or less capable search mode.
@@ -48,7 +48,7 @@ static HTML output
   dredge compile
         |
         +--> search/search-manifest.json
-        +--> search/search.<db_hash>.db
+        +--> search/search.<db_hash>.db.br
         +--> search/dredge-worker.<hash>.js
         +--> generated dredge-client.ts
 
@@ -61,14 +61,15 @@ generated DredgeSearchClient
         v
 Web Worker
         |
-        +--> support check
+        +--> support check (sync OPFS access handles required)
         +--> manifest fetch
-        +--> HTTP Range VFS + OPFS byte-range cache
+        +--> full compressed db download + brotli decompress
+        +--> OPFS storage via sync access handles
         +--> read-only SQLite connection
         +--> parameterized search and facet queries
 ```
 
-The main thread never opens SQLite and never performs database I/O. SQLite access, HTTP Range orchestration, and OPFS page-cache work are isolated inside the worker.
+The main thread never opens SQLite and never performs database I/O. SQLite access, database download and decompression, and OPFS storage work are isolated inside the worker.
 
 ---
 
@@ -95,6 +96,14 @@ Implementation order for the first pass:
 5. Insert documents, facet rows, and FTS rows.
 6. Finalize the database and write `search-manifest.json`.
 7. Run local smoke queries against the generated database.
+
+Client-side build tooling:
+
+- The Python compiler produces the database, manifest, and generated `dredge-client.ts`; it does not bundle JavaScript.
+- Any build step required to produce the runtime worker bundle (`dredge-worker.<hash>.js`) and any WASM assets uses `pnpm` for package management and Vite for bundling.
+- Use Vite to bundle the worker as an ES module worker, emit content-addressed filenames, and copy required SQLite WASM assets into `output_dir`.
+- The generated `dredge-client.ts` is plain TypeScript that the consuming app compiles with its own toolchain; Dredge does not require the app to use Vite.
+- Pin Node and `pnpm` versions, commit the `pnpm-lock.yaml`, and keep the worker build reproducible.
 
 ---
 
@@ -162,7 +171,7 @@ Every compile produces these deployable assets:
 | Asset | Purpose | Caching Strategy |
 | --- | --- | --- |
 | `search-manifest.json` | Current database identity, size, hashes, schema, and runtime compatibility. | Fetched with `cache: "no-cache"`. |
-| `search.<db_hash>.db` | Immutable SQLite database accessed by HTTP Range requests. | Content-addressed filename. Safe for long-lived static caching when served without byte-transforming compression. |
+| `search.<db_hash>.db.br` | Immutable, Brotli-compressed SQLite database downloaded in full and decompressed in the worker. | Content-addressed filename. Safe for long-lived static caching. |
 | `dredge-worker.<hash>.js` | Runtime worker bundle. | Content-addressed filename. |
 | `dredge-client.ts` | Generated typed client used by the app. | Committed or generated during the app build. |
 
@@ -172,12 +181,12 @@ Manifest shape:
 {
   "manifest_version": 1,
   "db_schema_version": 1,
-  "db_file": "search.4f3a1c....db",
+  "db_file": "search.4f3a1c....db.br",
   "db_sha256": "4f3a1c...",
   "db_bytes": 73400320,
+  "db_compressed_bytes": 21544960,
+  "db_compression": "brotli",
   "sqlite_page_size": 16384,
-  "range_required": true,
-  "range_block_bytes": 65536,
   "page_count": 150000,
   "config_hash": "9dd2...",
   "runtime_min_version": "0.1.0",
@@ -195,11 +204,11 @@ Determinism requirements:
 
 Runtime access requirements:
 
-- The database file is not transferred in full during boot.
-- The runtime VFS reads the immutable database using HTTP `Range` requests.
-- Fetched SQLite pages or aligned byte ranges are cached in OPFS under a namespace derived from `db_sha256`.
-- `db_sha256` identifies the immutable database artifact, but the runtime must not require a full-file hash verification before the first query.
-- `range_block_bytes` should be a multiple of `sqlite_page_size` and is the default persistent cache unit.
+- The full database is transferred once as a single Brotli-compressed asset and decompressed in the worker.
+- The decompressed database is stored in OPFS and opened read-only through a synchronous-access-handle VFS.
+- The OPFS storage namespace is derived from `db_sha256`, which identifies the decompressed, immutable database artifact.
+- `db_sha256` is computed over the decompressed database bytes and may be verified after download because the whole database is local before the first query.
+- `db_compressed_bytes` and `db_compression` describe the over-the-wire asset; `db_bytes` describes the decompressed database written to OPFS.
 
 ---
 
@@ -429,7 +438,7 @@ export interface DredgeSearchResponse {
 Client behavior:
 
 - Lazily start the worker on first use or explicit `init()`.
-- Expose status changes for boot, manifest fetch, range support probe, cache activity, ready, and failure states.
+- Expose status changes for boot, manifest fetch, download, decompression, OPFS storage, ready, and failure states.
 - Reject searches before readiness with a typed error.
 - Assign sequence ids to search requests and discard stale responses from older keystrokes.
 - Support debouncing at the application layer rather than hard-coding debounce in the client.
@@ -437,66 +446,74 @@ Client behavior:
 
 ---
 
-## 10. Runtime HTTP Range VFS And OPFS Page Cache
+## 10. Runtime Database Download, OPFS Storage, And SQLite Open
 
 ### 10.1 Support Detection
 
-The worker must check browser and hosting support before opening SQLite. The only database-byte request allowed during support detection is a minimal HTTP Range probe, such as `Range: bytes=0-0`.
+The worker must check browser support before downloading or opening the database. Support detection performs no database I/O.
 
 Required support:
 
 - `Worker` module support from the application.
 - WebAssembly support required by the selected SQLite runtime.
-- HTTP `Range` support for the immutable database asset, verified by a `206 Partial Content` response with a valid `Content-Range`.
-- Stable byte offsets for the database asset. The host must not transparently gzip, brotli, or otherwise transform the `.db` bytes served to the range VFS.
-- Persistent page-cache storage in the worker. The first production runtime uses OPFS for this cache.
-- Any additional OPFS APIs required by the selected range VFS. If the VFS requires synchronous access handles, check `FileSystemFileHandle.createSyncAccessHandle` inside the worker.
+- OPFS root access in the worker, verified by `navigator.storage.getDirectory`.
+- Synchronous OPFS access handles in the worker, verified by `FileSystemFileHandle.prototype.createSyncAccessHandle`. This is the most performant OPFS storage path and is mandatory.
+- A Brotli decompression path for the compressed database asset.
 
-Unsupported cases return a typed error to the main thread. They do not throw unstructured errors and do not fetch all database bytes.
+Synchronous OPFS access handles are a hard requirement. If `createSyncAccessHandle` is unavailable in the worker, the runtime returns `UNSUPPORTED_SYNC_ACCESS` immediately and does not attempt any slower OPFS access mode or any in-memory fallback. The failure is explicit and loud.
 
-### 10.2 HTTP Range And Page Cache Lifecycle
+Unsupported cases return a typed error to the main thread. They do not throw unstructured errors and do not download the database.
 
-The runtime treats the deployed database file as the source of truth and OPFS as a persistent cache of fetched SQLite pages or aligned byte ranges. It must not seed OPFS by transferring every database byte during first boot.
+### 10.2 Database Download, Decompression, And Storage Lifecycle
+
+The runtime ships the entire database to the browser as a single Brotli-compressed asset, decompresses it, and stores the decompressed database in an OPFS file opened through a synchronous access handle. The OPFS copy is the persistent cache, so warm boots skip the network download and decompression entirely.
 
 Boot sequence:
 
 1. Fetch `search-manifest.json` with `cache: "no-cache"`.
 2. Validate manifest version and runtime compatibility.
-3. Validate browser storage support required by the persistent page cache.
-4. Probe the database asset with a one-byte HTTP Range request.
-5. Verify `206 Partial Content`, `Content-Range`, total byte length, and untransformed byte serving.
-6. Open SQLite read-only through the selected HTTP Range VFS.
-7. On each VFS read, align the requested offset and length to cache blocks derived from `range_block_bytes`.
-8. Return cached blocks from OPFS when present.
-9. Fetch missing blocks with HTTP Range requests, write them to OPFS under the `db_sha256` namespace, and satisfy the SQLite read.
-10. Remove obsolete database cache namespaces after the current database is ready or when quota pressure requires eviction.
+3. Run support detection, including the mandatory synchronous OPFS access handle check.
+4. Derive the OPFS storage path from `db_sha256`.
+5. If a complete OPFS database for the current `db_sha256` already exists, open it directly and skip download.
+6. Otherwise fetch the full compressed database asset `search.<db_hash>.db.br`.
+7. Decompress the asset to the raw database bytes.
+8. Write the decompressed bytes to a temporary OPFS file via a synchronous access handle.
+9. Verify the decompressed byte length against `db_bytes`, then atomically promote the temporary file to the final `db_sha256` path.
+10. Open SQLite read-only against the OPFS file through the synchronous-access-handle VFS.
+11. Remove obsolete database files from prior `db_sha256` namespaces after the current database is ready or when quota pressure requires eviction.
 
-Cache rules:
+Storage rules:
 
-- Cache keys include `db_sha256`, byte offset, and byte length.
-- Cache writes use temporary keys or files and become visible only after the full range is written.
-- Cache blocks should be multiples of the SQLite page size to avoid repeatedly fetching partial pages.
-- The runtime may prefetch adjacent blocks after measuring that it improves cold-query behavior.
-- The runtime must not require full-file SHA-256 verification before the first query.
-- A no-persistent-cache mode is a future explicit feature, not a silent fallback.
+- The OPFS storage namespace is derived from `db_sha256` so a new database never collides with a stale one.
+- Decompressed bytes are written to a temporary file and become visible as the active database only after the full write succeeds and the byte length is verified.
+- The runtime may verify `db_sha256` over the decompressed bytes; full verification is allowed here because the entire database is local before the first query.
+- A no-persistent-storage mode is not supported. Synchronous OPFS storage is required.
+
+Decompression rules:
+
+- The compressed asset is transferred as `search.<db_hash>.db.br`.
+- If the host serves the asset with `Content-Encoding: br`, the runtime fetches the transparently decompressed bytes directly.
+- If the host serves the asset as an opaque body, the runtime decompresses Brotli in the worker before writing to OPFS.
+- The chosen decompression path must produce bytes whose length matches `db_bytes`.
 
 Failure recovery:
 
-- A partial cached block is ignored and deleted on the next boot or cache read.
-- A range probe that returns `200 OK` for a range request returns `RANGE_NOT_SUPPORTED`.
-- A range response with the wrong `Content-Range` or length returns `DB_RANGE_REQUEST_FAILED`.
-- A corrupt cached block is evicted and fetched once before returning `RANGE_CACHE_CORRUPT` or the underlying SQLite error.
-- Cache quota errors evict obsolete database namespaces first, then least-recently-used blocks if implemented. If the current read still cannot be cached, return `QUOTA_EXCEEDED` rather than silently switching modes.
+- A partial or interrupted OPFS write is discarded and the temporary file is deleted on the next boot.
+- A decompressed byte length that does not match `db_bytes` returns `DB_SIZE_MISMATCH` and the temporary file is deleted.
+- A failed or corrupt download returns `DB_DOWNLOAD_FAILED`.
+- A Brotli decompression failure returns `DB_DECOMPRESS_FAILED`.
+- A corrupt OPFS database is deleted and re-downloaded once before returning `DB_STORAGE_CORRUPT` or the underlying SQLite error.
+- Storage quota errors evict obsolete database namespaces first. If the current database still cannot be stored, return `QUOTA_EXCEEDED` rather than silently switching modes.
 - Lock contention retries with bounded backoff, then returns `SQLITE_BUSY_LOCKED`.
 
 ### 10.3 Multi-Tab Behavior
 
-Use or adapt a maintained HTTP Range-capable SQLite VFS rather than writing a custom VFS first. The selected VFS must support an OPFS-backed persistent page cache or provide clear extension points for one.
+Use a maintained synchronous-access-handle OPFS SQLite VFS rather than writing a custom VFS first.
 
 Production requirements:
 
 - Two tabs from the same origin can initialize and query without corrupting the database.
-- If the VFS serializes cache writes, queries remain correct and errors are typed.
+- Concurrent first-boot downloads from two tabs must converge on a single stored database without corrupting the OPFS file. Use a coordinated write so only one tab promotes the final file.
 - If the VFS cannot satisfy multi-tab read-only access reliably, Milestone 4 must stop runtime implementation and choose a different runtime strategy.
 
 ### 10.4 Worker State Machine
@@ -507,11 +524,12 @@ Runtime state should be explicit:
 idle
   -> checking_support
   -> fetching_manifest
-  -> probing_range_support
-  -> opening_range_vfs
+  -> checking_storage
+  -> downloading_db        (skipped when a valid OPFS copy exists)
+  -> decompressing_db      (skipped when a valid OPFS copy exists)
+  -> writing_opfs          (skipped when a valid OPFS copy exists)
+  -> opening_db
   -> ready
-
-While ready, individual queries may enter cache_read, range_fetch, and cache_write substates for missing database pages.
 
 Any state can transition to failed with a typed DredgeError.
 ```
@@ -521,15 +539,15 @@ Typed error codes:
 | Code | Meaning |
 | --- | --- |
 | `UNSUPPORTED_OPFS` | OPFS directory access is missing. |
-| `UNSUPPORTED_SYNC_ACCESS` | Sync access handles are unavailable in the worker when required by the selected VFS. |
+| `UNSUPPORTED_SYNC_ACCESS` | Synchronous OPFS access handles are unavailable in the worker. This is a hard, loud failure. |
 | `MANIFEST_FETCH_FAILED` | Manifest could not be fetched or parsed. |
 | `RUNTIME_VERSION_MISMATCH` | Manifest requires a newer runtime. |
-| `RANGE_NOT_SUPPORTED` | The host does not serve the database with valid HTTP Range responses. |
-| `DB_SIZE_MISMATCH` | The probed database byte length does not match the manifest. |
-| `DB_RANGE_REQUEST_FAILED` | A database range request failed or returned invalid bytes. |
-| `RANGE_CACHE_CORRUPT` | A cached range could not be used after one eviction and refetch attempt. |
-| `QUOTA_EXCEEDED` | Persistent page-cache writes fail after allowed eviction. |
-| `SQLITE_OPEN_FAILED` | SQLite could not open the range-backed database. |
+| `DB_DOWNLOAD_FAILED` | The compressed database asset failed to download or returned invalid bytes. |
+| `DB_DECOMPRESS_FAILED` | Brotli decompression of the database asset failed. |
+| `DB_SIZE_MISMATCH` | The decompressed database byte length does not match the manifest. |
+| `DB_STORAGE_CORRUPT` | The stored OPFS database could not be used after one eviction and re-download attempt. |
+| `QUOTA_EXCEEDED` | OPFS writes fail after allowed eviction. |
+| `SQLITE_OPEN_FAILED` | SQLite could not open the OPFS database. |
 | `SQLITE_BUSY_LOCKED` | OPFS or SQLite locking did not resolve within the retry budget. |
 | `QUERY_FAILED` | A prepared query failed unexpectedly. |
 
@@ -547,11 +565,10 @@ Initial acceptance targets for the 150,000 page stress dataset:
 | --- | --- |
 | Compiler memory | Peak RSS under 2 GB. |
 | Compiler correctness | 100 percent of generated fixture pages are indexed or reported as skipped with reason. |
-| Final DB size | Measured initially in Milestone 0 and stress-tested in Milestone 6. Initial soft target: under 150 MB uncompressed. |
-| Unsupported browser failure | Typed failure before opening SQLite or fetching database pages. |
-| Host range support | Invalid HTTP Range support is detected with a minimal probe and returns a typed error. |
-| Cold range behavior | First load transfers only the manifest, range probe, and SQLite pages needed by actual queries. |
-| Warm startup | Ready under 1 second after cache metadata and previously fetched pages are available on a current desktop browser. |
+| Final DB size | Measured initially in Milestone 0 and stress-tested in Milestone 6. Initial soft target: under 150 MB uncompressed and under 50 MB Brotli-compressed over the wire. |
+| Unsupported browser failure | Typed failure before downloading or opening the database when synchronous OPFS access handles are unavailable. |
+| Cold boot behavior | First load transfers the manifest plus the single compressed database asset, then decompresses and stores it once in OPFS. |
+| Warm startup | Ready under 1 second when a valid OPFS database already exists, with no database download or decompression on a current desktop browser. |
 | Query latency | p95 under 150 ms for search plus active filters on reference desktop hardware. |
 | Facet latency | p95 under 300 ms for requested facet counts on reference desktop hardware. |
 | Typing behavior | Stale worker responses are discarded and never overwrite newer results. |
@@ -585,15 +602,14 @@ Reference devices and browsers must be recorded in benchmark output. Targets can
 
 ### 12.3 Browser Tests
 
-- First boot fetches the manifest, probes range support, opens the range VFS, and fetches only pages needed by queries.
-- Warm boot reuses OPFS-cached pages and avoids refetching cached ranges.
-- Unsupported OPFS path fails before opening SQLite or fetching query pages.
+- First boot fetches the manifest, downloads the compressed database, decompresses it, stores it in OPFS, and opens it read-only.
+- Warm boot reuses the OPFS database and performs no database download or decompression.
+- Missing synchronous OPFS access handles fail with `UNSUPPORTED_SYNC_ACCESS` before downloading or opening the database.
 - Private browsing or quota denial returns a typed error.
-- Hosts that ignore `Range` and return `200 OK` fail with `RANGE_NOT_SUPPORTED`.
-- Corrupt cached ranges are evicted and refetched once.
-- No browser test should transfer all database bytes before the first query result unless the query genuinely touches every required page.
-- Two tabs query simultaneously.
-- Worker termination and recreation do not corrupt cached ranges.
+- A truncated or corrupt download fails with `DB_DOWNLOAD_FAILED` or `DB_SIZE_MISMATCH`.
+- A corrupt OPFS database is deleted and re-downloaded once.
+- Two tabs query simultaneously and converge on a single stored database.
+- Worker termination and recreation do not corrupt the stored database.
 
 ### 12.4 Stress Harness
 
@@ -617,10 +633,10 @@ Stress output must include:
 - Peak memory.
 - Final DB bytes.
 - Manifest bytes.
-- Runtime first-boot timing.
+- Runtime first-boot timing, including download, decompression, and OPFS write.
 - Runtime warm-boot timing.
-- Cold-query range request count and transferred bytes.
-- Warm-query cache hit rate and transferred bytes.
+- Compressed transfer bytes and decompressed database bytes.
+- Brotli compression ratio.
 - Query p50, p95, and p99.
 - Facet p50, p95, and p99.
 
@@ -640,16 +656,16 @@ Security requirements:
 Privacy requirements:
 
 - No default analytics or outbound telemetry.
-- Search queries stay local. The network sees only static asset requests for the manifest, worker, WASM, and database byte ranges.
+- Search queries stay local. The network sees only static asset requests for the manifest, worker, WASM, and the compressed database file.
 - Diagnostics are exposed to the host app so the app can decide what to log.
 
 Hosting requirements:
 
 - Search assets should be served from the same origin as the app unless CORS is explicitly configured.
-- The database asset must support HTTP `Range` requests and return `206 Partial Content` for valid range reads.
-- The database asset must be served with stable byte offsets. Do not apply transparent gzip or brotli transformation to the `.db` response used by the range VFS.
-- If search assets are cross-origin, CORS must allow range requests and expose `Accept-Ranges`, `Content-Length`, `Content-Range`, and any cache validators used by the runtime.
-- Service workers, CDNs, and static-host rewrites must not collapse database range requests into full-file responses.
+- The database asset is downloaded in full as a single Brotli-compressed file, so HTTP Range support is not required.
+- If the host sets `Content-Encoding: br`, it must serve the exact compressed artifact and the runtime relies on transparent decompression; otherwise the runtime decompresses the opaque body itself.
+- The host must not double-compress or otherwise re-transform the `.db.br` asset in a way that changes the bytes the runtime expects.
+- If search assets are cross-origin, CORS must allow the asset requests and expose `Content-Length` and any cache validators used by the runtime.
 - The manifest should not rely on custom cache headers because some static hosts provide limited header control.
 - Hashed filenames are required for database and worker assets.
 - The worker and WASM assets must be compatible with the site's Content Security Policy.
@@ -744,38 +760,40 @@ Exit criteria:
 
 ### Milestone 4: Runtime Validation Gate
 
-Purpose: prove the HTTP Range VFS, browser storage, and SQLite assumptions using the real database artifact shape produced by the Python compiler.
+Purpose: prove the full-download, Brotli decompression, synchronous OPFS storage, and SQLite open assumptions using the real database artifact shape produced by the Python compiler.
 
 Deliverables:
 
-- Minimal generated SQLite database opened through the selected HTTP Range-capable SQLite runtime in a worker.
-- HTTP Range VFS read-only open path with OPFS-backed page cache.
-- Support detection for current Chrome, Edge, Safari, Firefox, and representative static hosting behavior.
-- Two-tab read-only query test.
+- Minimal generated SQLite database downloaded as a Brotli-compressed asset, decompressed, stored in OPFS, and opened read-only through a synchronous-access-handle VFS in a worker.
+- Support detection that requires synchronous OPFS access handles and fails loudly when they are missing.
+- Support detection for current Chrome, Edge, Safari, and Firefox.
+- Two-tab read-only query test, including concurrent first-boot download convergence.
 - Runtime measurements against a compiler-generated database.
 - Decision on VFS choice and any required database schema adjustments.
 
 Exit criteria:
 
-- HTTP Range VFS plus OPFS page cache works reliably on the target supported browsers and hosting setup, or an alternate runtime strategy is selected.
+- The synchronous-access-handle OPFS VFS opens the decompressed database reliably on the target supported browsers, or an alternate runtime strategy is selected.
+- Browsers without synchronous OPFS access handles fail fast with `UNSUPPORTED_SYNC_ACCESS`.
 - Multi-tab read-only access is correct or the product scope is adjusted.
-- Cold-query range bytes, range request counts, cache hit rates, and warm-query timings are within adjustable production budgets.
+- First-boot download, decompression, and OPFS write timings, plus warm-boot timings, are within adjustable production budgets.
 
-### Milestone 5: Runtime Cache And Worker Productionization
+### Milestone 5: Runtime Storage And Worker Productionization
 
 Deliverables:
 
 - Manifest fetch and compatibility validation.
-- HTTP Range VFS integration, OPFS page-cache writes, and obsolete cache cleanup.
-- Read-only range-backed SQLite open path.
+- Full database download, Brotli decompression, synchronous OPFS writes, and obsolete database cleanup.
+- Read-only OPFS-backed SQLite open path.
 - Typed state machine and typed errors.
+- Worker bundle and WASM assets built with `pnpm` and Vite, emitted with content-addressed filenames into `output_dir`.
 - Browser tests for first boot, warm boot, failure paths, and multi-tab.
 
 Exit criteria:
 
-- Unsupported runtimes fail before opening SQLite or fetching query pages.
-- Warm boot avoids network fetches for cached database pages.
-- Corrupt or partial cached ranges recover once and then fail loudly if still invalid.
+- Unsupported runtimes fail before downloading or opening the database.
+- Warm boot avoids any database download when a valid OPFS database exists.
+- Corrupt or partial stored databases recover once and then fail loudly if still invalid.
 
 ### Milestone 6: Stress Testing And Performance Tuning
 
@@ -817,12 +835,12 @@ Exit criteria:
 
 | Risk | Mitigation |
 | --- | --- |
-| HTTP Range VFS or OPFS page caching is not reliable across required browsers. | Milestone 4 blocks runtime implementation until verified or an alternate runtime is selected. |
-| Static hosting or CDN behavior breaks range reads. | Probe for `206 Partial Content`, stable `Content-Range`, and untransformed bytes before opening SQLite. Document required hosting settings. |
-| Cold queries require too many range requests or bytes. | Measure early, tune SQLite page size, cache block size, FTS detail/tokenizer, indexes, and optional adjacent-block prefetch. |
+| Synchronous OPFS access handles are unavailable in a required browser. | Milestone 4 blocks runtime implementation until verified. The runtime fails fast and loud with `UNSUPPORTED_SYNC_ACCESS` and never silently degrades. |
+| Static hosting or CDN behavior alters the compressed database bytes. | Use content-addressed `.db.br` filenames and verify decompressed bytes against `db_bytes` before opening SQLite. Document required hosting settings. |
+| Full database download is large on first boot. | Brotli-compress the database for transfer, measure compression ratio, and store the decompressed database in OPFS so the download happens at most once per database version. |
 | Facet counts are slower than result search. | Measure query plans, add generated covering indexes, restrict initial count semantics, or make selected facets explicit. |
-| Static hosting cache headers cannot be controlled. | Use content-addressed filenames, fetch the manifest with cache revalidation, and rely on range probes for database identity checks. |
-| Multi-tab OPFS page-cache writes cause intermittent failures. | Use maintained cooperative cache coordination, add bounded retries, and gate on browser tests. |
+| Static hosting cache headers cannot be controlled. | Use content-addressed filenames and fetch the manifest with cache revalidation for database identity checks. |
+| Multi-tab first-boot downloads cause intermittent failures. | Coordinate so only one tab promotes the final OPFS database, add bounded retries, and gate on browser tests. |
 | Query syntax causes FTS errors for normal user input. | Default to Dredge-managed tokenization and escaping, with raw FTS syntax disabled. |
 | Build memory grows with site size. | Stream extraction, batch inserts, avoid retaining bodies, and enforce stress memory budgets. |
 
@@ -833,10 +851,10 @@ Exit criteria:
 - The architecture has a static asset contract.
 - The configuration schema is explicit enough to implement.
 - The database schema has a concrete first version.
-- Runtime uses HTTP Range reads with OPFS-cached SQLite pages or aligned ranges.
-- Runtime cache invalidation is defined through content hashes and cache namespaces.
-- Hosting requirements for byte-range SQLite access are explicit.
-- Browser unsupported states are typed and fail before opening SQLite or fetching query pages.
+- Runtime downloads the full Brotli-compressed database and stores the decompressed database in OPFS via synchronous access handles.
+- Runtime storage invalidation is defined through content hashes and OPFS namespaces.
+- Hosting requirements for the compressed database asset are explicit.
+- Browser unsupported states are typed and fail before downloading or opening the database.
 - Query safety rules are explicit.
 - Performance claims are replaced with measurable acceptance targets.
 - The 150,000+ page stress path is part of the plan, not a later afterthought.
