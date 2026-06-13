@@ -29,6 +29,8 @@ DB_SCHEMA_VERSION = 1
 MANIFEST_VERSION = 1
 SQLITE_PAGE_SIZE = 16_384
 DB_COMPRESSION = "brotli"
+BROTLI_MIN_QUALITY = 0
+BROTLI_MAX_QUALITY = 11
 BROTLI_QUALITY = 11
 BATCH_SIZE = 10_000
 INSERT_BATCH_SIZE = 5_000
@@ -595,7 +597,13 @@ def compile_site(
     *,
     metrics_json_path: Path | None = None,
     progress_stream: TextIO | None = None,
+    brotli_quality: int = BROTLI_QUALITY,
 ) -> CompileResult:
+    if not BROTLI_MIN_QUALITY <= brotli_quality <= BROTLI_MAX_QUALITY:
+        raise ValueError(
+            f"brotli_quality must be between {BROTLI_MIN_QUALITY} and "
+            f"{BROTLI_MAX_QUALITY}; got {brotli_quality}"
+        )
     ui = CompileProgress(progress_stream)
     with ui.activate():
         return _compile_site(
@@ -603,6 +611,7 @@ def compile_site(
             metrics_json_path=metrics_json_path,
             progress_stream=progress_stream,
             ui=ui,
+            brotli_quality=brotli_quality,
         )
 
 
@@ -612,6 +621,7 @@ def _compile_site(
     metrics_json_path: Path | None,
     progress_stream: TextIO | None,
     ui: CompileProgress,
+    brotli_quality: int,
 ) -> CompileResult:
     metrics = _MetricsRecorder(config_path)
     with metrics.phase("validation"):
@@ -742,7 +752,10 @@ def _compile_site(
             db_bytes = db_path.stat().st_size
             compress_advance = ui.begin_compression(db_bytes)
             db_compressed_bytes = _brotli_compress_file(
-                db_path, compressed_db_path, on_chunk=compress_advance
+                db_path,
+                compressed_db_path,
+                quality=brotli_quality,
+                on_chunk=compress_advance,
             )
 
         with metrics.phase("manifest_write"):
@@ -1682,9 +1695,10 @@ def _brotli_compress_file(
     source: Path,
     destination: Path,
     *,
+    quality: int = BROTLI_QUALITY,
     on_chunk: Callable[[int], None] | None = None,
 ) -> int:
-    compressor = brotli.Compressor(quality=BROTLI_QUALITY)
+    compressor = brotli.Compressor(quality=quality)
     with source.open("rb") as src, destination.open("wb") as dst:
         for chunk in iter(lambda: src.read(1024 * 1024), b""):
             compressed = compressor.process(chunk)

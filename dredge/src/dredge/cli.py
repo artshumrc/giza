@@ -5,7 +5,14 @@ import sys
 from pathlib import Path
 
 from .codegen import write_client
-from .compiler import BuildError, compile_site, validate_config
+from .compiler import (
+    BROTLI_MAX_QUALITY,
+    BROTLI_MIN_QUALITY,
+    BROTLI_QUALITY,
+    BuildError,
+    compile_site,
+    validate_config,
+)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -25,6 +32,17 @@ def main(argv: list[str] | None = None) -> int:
                 "--metrics-json",
                 type=Path,
                 help="Write compiler timing and progress metrics to this JSON file",
+            )
+            command_parser.add_argument(
+                "--brotli-quality",
+                type=int,
+                choices=range(BROTLI_MIN_QUALITY, BROTLI_MAX_QUALITY + 1),
+                default=BROTLI_QUALITY,
+                metavar=f"{BROTLI_MIN_QUALITY}-{BROTLI_MAX_QUALITY}",
+                help=(
+                    "Brotli quality for the compressed search database "
+                    f"(default: {BROTLI_QUALITY})"
+                ),
             )
 
     synth_parser = subparsers.add_parser(
@@ -78,7 +96,10 @@ def main(argv: list[str] | None = None) -> int:
             return 0
 
         result = compile_site(
-            config_path, metrics_json_path=args.metrics_json, progress_stream=sys.stderr
+            config_path,
+            metrics_json_path=args.metrics_json,
+            progress_stream=sys.stderr,
+            brotli_quality=args.brotli_quality,
         )
         for warning in result.warnings:
             print(f"warning[{warning.code}]: {warning.message}", file=sys.stderr)

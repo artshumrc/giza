@@ -5,6 +5,11 @@
 
 {% block title %}Digital Giza | {{ object.displaytext }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/blueimp-gallery.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/triiiceratops-1.0.0-rc.17.element.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="page-header header-bg-1" id="content">
     <div class="row title">
@@ -72,10 +77,19 @@
 </div>
 
 
-<div id="miradorModal" class="reveal-modal photo-gallery-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-  <div class="row">
-      <div id="mirador"></div>
+<div id="triiiceratopsModal" class="large reveal photo-gallery-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+  <div class="triiiceratops-viewer-container triiiceratops-viewer-container--modal">
+    <triiiceratops-viewer
+      id="triiiceratops-photo-viewer"
+      style="height: 100%; width: 100%; display: block;"
+      theme="light"
+      config='{"showToggle":false,"toolbarOpen":false,"rightPanelWidth":"125px","toolbar":{"showSearch":false,"showGallery":false,"showAnnotations":false,"showFullscreen":false,"showInfo":false,"showViewingMode":false,"showStructures":false,"showCollection":false},"gallery":{"open":true,"dockPosition":"right","draggable":false,"showCloseButton":false},"information":{"position":"right"}}'
+      theme-config='{"primary":"#1164AD","secondary":"#777777","success":"#3adb76","warning":"#ffae00","error":"#ec5840","base100":"#ffffff","base200":"#f3f4f6","baseContent":"#1f2937"}'
+    ></triiiceratops-viewer>
   </div>
+  <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 
       <!-- END MAIN CONTENT ROWS -->
@@ -83,38 +97,37 @@
 {% endblock %}
 
 {% block extra_js %}
-<script type="text/javascript" src="{% static 'js/mirador-giza.js' %}"></script>
+<script src="{% static 'js/blueimp-gallery.js' %}"></script>
+<script src="{% static 'js/triiiceratops-1.0.0-rc.17.iife.js' %}"></script>
 <script>
-$('#links').click(function(event) {
-  var target = event.target;
-  if (!$(target).is('img')) {
-    target = $(target).find('img')[0];
-  }
-  if (target.dataset.drsId) {
-    let v = target.dataset.drsId;
-    let url = "{% url 'iiif-manifest' 1 %}"; // the '1' here is a placeholder
-    $('#miradorModal').foundation('open');
+(function () {
+  var links = document.getElementById('links');
+  var viewer = document.getElementById('triiiceratops-photo-viewer');
+  if (!links) return;
 
-    const config = {
-      windows: [{
-        imageToolsEnabled: true,
-        manifestId: url.replace('1', v),
-        loadedManifest: url.replace('1', v),
-      }]
+  links.addEventListener('click', function (event) {
+    var target = event.target;
+    if (!target || !target.tagName) return;
+    if (target.tagName.toLowerCase() !== 'img' && target.querySelector) {
+      target = target.querySelector('img') || target;
     }
-    var addConfig = Mirador.actions.importConfig(config);
-    miradorInstance.store.dispatch(addConfig);
+    if (target.tagName.toLowerCase() !== 'img') return;
 
-    let closeButton = document.getElementsByClassName("mirador-window-close");
-    closeButton[0].addEventListener("click", function() {
-      $('#miradorModal').foundation('close');
-    });
-  } else {
+    var drsId = target.getAttribute('data-drs-id');
+    if (drsId && viewer) {
+      event.preventDefault();
+      var manifestUrl = "{% url 'iiif-manifest' 1 %}".replace('1', drsId);
+      viewer.manifestId = manifestUrl;
+      viewer.setAttribute('manifest-id', manifestUrl);
+      $('#triiiceratopsModal').foundation('open');
+      return;
+    }
+
     var link = target.src ? target.parentNode : target;
-    options = {index: link, event: event, titleElement: 'div.title'},
-    links = $(this).find('a');
-    blueimp.Gallery(links, options);
-  }
-});
+    var options = {index: link, event: event, titleElement: 'div.title'};
+    var galleryLinks = $(links).find('a[href]');
+    blueimp.Gallery(galleryLinks, options);
+  });
+})();
 </script>
 {% endblock %}

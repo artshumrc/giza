@@ -28,7 +28,7 @@ from static_site_builder.constants import (
     EXPECTED_MANIFEST_COUNT,
     STATIC_TEMPLATE_PAGES,
 )
-from static_site_builder.django_templates import warm_engine
+from static_site_builder.django_templates import render_item_allphotos_content, warm_engine
 from static_site_builder.items import (
     get_doc_id,
     make_summary,
@@ -84,7 +84,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--generate-item-redirects",
         action="store_true",
-        help="Generate intro/allphotos redirect pages for emitted item pages.",
+        help="Generate intro redirect pages for emitted item pages.",
     )
     parser.add_argument(
         "--jobs",
@@ -1012,9 +1012,46 @@ def _render_item_job(job: tuple[str, str, dict[str, Any], ItemSummary]) -> None:
     html_text = render_item_page(item_type, item_id, source, summary)
     base = _WORKER_OUTPUT / item_type / item_id
     write_text(base / "full" / "index.html", html_text)
+    if has_related_photos(source):
+        allphotos = render_item_allphotos_content(item_type, item_id, source)
+        write_text(
+            base / "allphotos" / "index.html",
+            render_page(
+                f"All Photos | {summary.title}",
+                allphotos.body,
+                description=truncate_text(f"All related photos for {summary.title}", 160),
+                body_class="section-explore-body header-full mode-intro",
+                extra_head=allphotos.extra_head,
+                extra_scripts=allphotos.extra_scripts,
+                index_body=False,
+            ),
+        )
     if _WORKER_REDIRECTS:
         write_redirect_page(base / "intro" / "index.html", summary.url)
-        write_redirect_page(base / "allphotos" / "index.html", summary.url)
+
+
+def has_related_photos(source: dict[str, Any]) -> bool:
+    related = source.get("relateditems")
+    if not isinstance(related, dict):
+        return False
+    return bool(related.get("photos"))
+
+
+def related_photo_manifest_ids(source: dict[str, Any]) -> list[str]:
+    related = source.get("relateditems")
+    if not isinstance(related, dict):
+        return []
+    photos = related.get("photos")
+    if not isinstance(photos, list):
+        return []
+    manifest_ids: list[str] = []
+    for photo in photos:
+        if not isinstance(photo, dict):
+            continue
+        drs_id = plain_text(photo.get("drs_id")).strip()
+        if drs_id:
+            manifest_ids.append(drs_id)
+    return manifest_ids
 
 
 def write_item_pages(
@@ -1053,6 +1090,8 @@ def write_item_pages(
             )
             if summary.has_manifest:
                 required_manifest_ids.add(item_manifest_id(item_type, item_id))
+            if has_related_photos(source):
+                required_manifest_ids.update(related_photo_manifest_ids(source))
             emitted_summaries.append(summary)
             counts[item_type] += 1
             total += 1

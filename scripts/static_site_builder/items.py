@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import html
-import json
 from typing import Any
 
 from .django_templates import render_item_main_content
@@ -13,7 +12,6 @@ from .urls import (
     item_manifest_id,
     item_title,
     item_url,
-    manifest_url,
     search_category_label,
     type_label,
 )
@@ -70,7 +68,6 @@ def render_item_page(
     summary: ItemSummary,
 ) -> str:
     title = summary.title
-    manifest_id = item_manifest_id(item_type, item_id)
     has_manifest = summary.has_manifest
     main_content = render_item_main_content(
         item_type, item_id, source, has_manifest=has_manifest
@@ -82,9 +79,7 @@ def render_item_page(
             main_content,
         ]
     )
-    extra_scripts = (
-        render_mirador_script(manifest_url(manifest_id)) if has_manifest else ""
-    )
+    extra_scripts = render_triiiceratops_assets() if has_manifest else ""
     return render_page(
         title,
         body,
@@ -160,24 +155,8 @@ def render_pagefind_filters(summary: ItemSummary) -> str:
     )
 
 
-def render_mirador_script(manifest_path: str) -> str:
-    manifest_json = json.dumps(manifest_path)
-    return f"""
-<script src="/static/js/mirador.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {{
-  var target = document.getElementById('mirador');
-  if (!target || !window.Mirador) return;
-  var manifest = target.getAttribute('data-manifest') || {manifest_json};
-  window.Mirador.viewer({{
-    id: 'mirador',
-    windows: [{{
-      imageToolsEnabled: true,
-      loadedManifest: manifest,
-      manifestId: manifest,
-      thumbnailNavigationPosition: 'far-right'
-    }}]
-  }});
-}});
-</script>
+def render_triiiceratops_assets() -> str:
+    return """
+<link rel="stylesheet" href="/static/css/triiiceratops-1.0.0-rc.17.element.css">
+<script src="/static/js/triiiceratops-1.0.0-rc.17.iife.js"></script>
 """.strip()

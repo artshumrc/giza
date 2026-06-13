@@ -6674,6 +6674,20 @@ input[type="radio"] {
   .modal-img-container img {
     margin: 0 auto; }
 
+.triiiceratops-viewer-container {
+  width: 100%;
+  max-width: 100%;
+   }
+
+.triiiceratops-viewer-container--modal {
+  height: 70vh;
+  min-height: 420px; }
+
+.photo-gallery-modal triiiceratops-viewer {
+  display: block;
+  height: 100%;
+  width: 100%; }
+
 /*  Navbar
 --------------------------------------*/
 @media screen and (max-width: 19.9375em) {

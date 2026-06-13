@@ -90,6 +90,30 @@ def test_cli_validate_and_compile(tmp_path: Path) -> None:
     assert (output_dir / "search-manifest.json").exists()
 
 
+def test_cli_compile_accepts_low_brotli_quality(tmp_path: Path) -> None:
+    config_path, output_dir = _write_fixture_project(tmp_path)
+
+    assert (
+        main(
+            [
+                "compile",
+                "--config",
+                str(config_path),
+                "--brotli-quality",
+                "1",
+            ]
+        )
+        == 0
+    )
+
+    manifest = json.loads(
+        (output_dir / "search-manifest.json").read_text(encoding="utf-8")
+    )
+    compressed_path = output_dir / manifest["db_file"]
+    db_path = output_dir / manifest["db_file"].removesuffix(".br")
+    assert brotli.decompress(compressed_path.read_bytes()) == db_path.read_bytes()
+
+
 def test_cli_compile_writes_metrics_json(tmp_path: Path) -> None:
     config_path, _ = _write_fixture_project(tmp_path)
     metrics_path = tmp_path / "metrics.json"

@@ -42,6 +42,10 @@ help = "Build the Dredge browser library and install it into the limited build."
 cmd = "uv run --project dredge dredge compile -c dredge.config.json"
 help = "Compile the Dredge SQLite/FTS5 index from dist/ into dist/search."
 
+[tool.poe.tasks.static-dredge-compile-local]
+cmd = "uv run --project dredge dredge compile -c dredge.config.json --brotli-quality 1"
+help = "Compile the Dredge index for local development with fast Brotli compression."
+
 [tool.poe.tasks.static-dredge-compile-limited]
 cmd = "uv run --project dredge dredge compile -c dredge.config.limited.json"
 help = "Compile the Dredge index for the limited build."
@@ -52,6 +56,13 @@ sequence = [
     { ref = "static-dredge-compile" },
 ]
 help = "Build + install the Dredge library and compile its index into dist/search."
+
+[tool.poe.tasks.static-dredge-local]
+sequence = [
+    { ref = "static-dredge-assets" },
+    { ref = "static-dredge-compile-local" },
+]
+help = "Dredge library + fast local index for dist/search."
 
 [tool.poe.tasks.static-dredge-limited]
 sequence = [

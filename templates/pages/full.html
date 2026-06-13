@@ -59,13 +59,23 @@
             Your browser does not support the video tag.
           </video>
         {% elif object.primarydisplay.has_manifest %}
-          <div style="height:500px;width:100%;">
-            <div id="mirador"></div>
+          <div class="triiiceratops-viewer-container">
+            {% with object_id=object.id|stringformat:"s" %}
+            {% with manifest_id=type|add:"-"|add:object_id %}
+            <triiiceratops-viewer
+              style="display: block; height: 500px; width: 100%;"
+              manifest-id="{% url 'iiif-manifest' manifest_id %}"
+              theme="light"
+              config='{"showToggle":false,"toolbarOpen":false,"toolbar":{"showSearch":false,"showGallery":false,"showAnnotations":false,"showFullscreen":false,"showInfo":false,"showViewingMode":false,"showStructures":false,"showCollection":false},"gallery":{"fixedHeight":60,"open":true,"dockPosition":"right","draggable":false,"showCloseButton":false},"information":{"position":"right"}}'
+              theme-config='{"primary":"#1164AD","secondary":"#777777","success":"#3adb76","warning":"#ffae00","error":"#ec5840","base100":"#ffffff","base200":"#f3f4f6","baseContent":"#1f2937"}'
+            ></triiiceratops-viewer>
+            {% endwith %}
+            {% endwith %}
           </div>
         {% else %}
           <img src="{{ object.primarydisplay.main }}" alt="">
         {% endif %}
-        {% if object.primarydisplay.displaytext %}
+        {% if object.primarydisplay.displaytext and not object.primarydisplay.has_manifest %}
         <p class="item__featured-image__caption">
           {{ object.primarydisplay.displaytext }}
         </p>
@@ -405,44 +415,6 @@
     </section>
 
     <section class="large-4 columns content-col-secondary">
-      <!-- {% if object.relateditems.photos %}
-      <section id="featureBlock_photos" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
-        <div class="feature-block__header">
-          <h3 class="feature-block__title">
-            <i class="icon-camera icon-padded"></i> Photos
-            <a name="photos"></a>
-            <span class="badge">{{ object.relateditems.photos|length }}</span>
-          </h3>
-          <button class="toggler" data-toggle="featureBlock_photos">
-            <span class="sr-only">Collapse or Expand</span>
-          </button>
-        </div>
-        <div class="feature-block__body">
-          <ul class="feature-block__list item-grid thumbsize-sm thumbs-square">
-            {% for item in object.relateditems.photos|slice:":10" %}
-            <li>
-              <div class="media-object list-item list-item-thumbonly">
-                <div class="media-object-section">
-                  <div class="thumbnail">
-                    <a data-open="gallery{{ item.id }}"><img src="{{ item.thumbnail }}"></a>
-                  </div>
-                </div> -->
-                <!-- <div class="media-object-section">
-                  <p class="media-object-title"><a href="#0"></a></p>
-                  <ul class="subheader">
-                  </ul>
-                </div> -->
-              <!-- </div>
-            </li>
-            {% endfor %}
-          </ul>
-
-          <div class="feature-block__footer">
-            <p class="content-footer-info"><a href="{% url 'get_type_html' type object.id 'allphotos' %}">View all {{ object.relateditems.photos|length }} Photos <i class="icon-angle-right"></i></a></p>
-          </div>
-        </div>
-      </section>
-      {% endif %} -->
 
       {% if object.relateditems.3dmodels %}
       <section id="featureBlock_models" class="feature-block secondary collapsible" data-toggler=".is-collapsed">
@@ -700,34 +672,6 @@
       </section>
     </div>
 
-    <!-- Modal -->
-
-    <!-- {% for item in object.relateditems.photos %}
-    <div class="large reveal modal-inverse photo-gallery-modal" id="gallery{{ item.id }}" data-reveal dava-v-offset="65">
-
-      {% if item.number %}
-        <p><b>ID:</b> <a href="{% url 'get_type_html' 'photos' item.id 'full' %}">{{ item.number }}</a></p>
-      {% endif %}
-      {% if item.displaytext %}
-        <p><b>Subjects:</b> {{ item.displaytext }}</p>
-      {% endif %}
-      {% if item.description %}
-        <p><b>Description:</b> {{ item.description }}</p>
-      {% endif %}
-
-      <div class="modal-img-container">
-        <img src="{{ item.main }}" alt="{{ item.displaytext }}">
-      </div>
-
-
-      <button class="close-button" data-close aria-label="Close modal" type="button">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endfor %} -->
-
-    <!-- /Modal -->
-
     <!--
       TEMPORARY FIX:
       Include modals and styles for Adding items to Collections
@@ -737,27 +681,9 @@
 {% endblock %}
 
 {% block extra_js %}
-<script type="text/javascript" src="{% static 'js/mirador-giza.js' %}"></script>
-<script>
-  $(document).ready(function(){
-    let miradorDiv = $('#mirador');
-    if(miradorDiv) {
-      let type = "{{ type }}";
-      let id = "{{ type }}-{{ object.id }}";
-      let url = "{% url 'iiif-manifest' 1 %}".replace('1', id); // the 1 is a placeholder
-
-      const config = {
-        windows: [{
-          imageToolsEnabled: true,
-          manifestId: url,
-          loadedManifest: url,
-          thumbnailNavigationPosition: 'far-right',
-        }]
-      }
-      var addConfig = Mirador.actions.importConfig(config);
-      miradorInstance.store.dispatch(addConfig);
-    }
-  });
-</script>
+{% if object.primarydisplay.has_manifest %}
+<link rel="stylesheet" href="{% static 'css/triiiceratops-1.0.0-rc.17.element.css' %}">
+<script src="{% static 'js/triiiceratops-1.0.0-rc.17.iife.js' %}"></script>
+{% endif %}
 
 {% endblock %}

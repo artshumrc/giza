@@ -9,13 +9,15 @@ A standalone ``django.template.Engine`` is configured with no app registry,
 no urlconf, and no staticfiles backend. A build-only override of
 ``layouts/default.html`` makes ``full.html`` emit just its ``main_content``
 block (delimited by markers) so the generator can wrap it in the static-site
-chrome, search markers, and Mirador bootstrap.
+chrome and search markers. A build-only override of ``base.html`` does the same
+for ``allphotos.html`` while also exposing its extra CSS and JavaScript blocks.
 """
 
 from __future__ import annotations
 
 import copy
 import re
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from types import SimpleNamespace
@@ -29,12 +31,19 @@ _TMS_TEMPLATES_DIR = _REPO_ROOT / "tms" / "templates"
 _OVERRIDES_DIR = _TEMPLATES_DIR / "static-site" / "build-overrides"
 
 _MAIN_CONTENT_RE = re.compile(r"<!--MC_START-->(.*)<!--MC_END-->", re.DOTALL)
+_CONTENT_RE = re.compile(r"<!--CONTENT_START-->(.*)<!--CONTENT_END-->", re.DOTALL)
+_EXTRA_CSS_RE = re.compile(r"<!--EXTRA_CSS_START-->(.*)<!--EXTRA_CSS_END-->", re.DOTALL)
+_EXTRA_JS_RE = re.compile(r"<!--EXTRA_JS_START-->(.*)<!--EXTRA_JS_END-->", re.DOTALL)
 _HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
 _APP_CSS_LINK_RE = re.compile(r'<link[^>]*?\bhref="[^"]*app\.css"[^>]*>', re.IGNORECASE)
-_PHOTOS_JUMP_LINK_RE = re.compile(
-    r'<li>\s*<a href="#photos">.*?</a>\s*</li>', re.DOTALL
-)
 _IMAGE_FIELDS = ("thumbnail", "main")
+
+
+@dataclass(frozen=True)
+class RenderedTemplateContent:
+    body: str
+    extra_head: str = ""
+    extra_scripts: str = ""
 
 
 def _configure_settings() -> None:
@@ -101,13 +110,6 @@ def _prepare_object(source: dict[str, Any], has_manifest: bool) -> dict[str, Any
         primary = {}
     primary["has_manifest"] = bool(has_manifest)
     obj["primarydisplay"] = primary
-    # The Photos section and its per-photo gallery modals are intentionally
-    # hidden in the static build. Dropping the data here means full.html's
-    # photo card loop and (unsliced) modal loop iterate nothing, avoiding a
-    # large amount of wasted rendering and post-processing on photo-heavy items.
-    related = obj.get("relateditems")
-    if isinstance(related, dict):
-        related.pop("photos", None)
     _rewrite_images(obj)
     return obj
 
@@ -132,14 +134,9 @@ def _collapse_blank_lines(content: str) -> str:
 
 
 def _post_process(content: str) -> str:
-    # full.html keeps the Photos section and per-photo gallery modals as HTML
-    # comments whose template loops still execute (emitting hundreds of
-    # commented-out nodes). Stripping HTML comments hides Photos entirely and
-    # removes that bloat. The MC markers were already consumed by extraction.
+    # Strip nonfunctional comments left by the runtime template. The MC markers
+    # were already consumed by extraction.
     content = _HTML_COMMENT_RE.sub("", content)
-    # The dangling small-screen jump-menu link to the (now absent) Photos
-    # section.
-    content = _PHOTOS_JUMP_LINK_RE.sub("", content)
     # The static layout already loads app.css; drop the stray in-body link.
     content = _APP_CSS_LINK_RE.sub("", content)
     # Mark the overview as the Pagefind/Dredge body so search indexes the
@@ -159,6 +156,26 @@ def _post_process(content: str) -> str:
     # many empty template-loop iterations (e.g. the jump menu).
     content = _collapse_blank_lines(content)
     return content
+
+
+def _post_process_fragment(content: str) -> str:
+    content = _HTML_COMMENT_RE.sub("", content)
+    content = _APP_CSS_LINK_RE.sub("", content)
+    return _collapse_blank_lines(content).strip()
+
+
+def _post_process_allphotos_body(content: str) -> str:
+    content = _post_process_fragment(content)
+    return content.replace(
+        'class="page-header header-bg-1" id="content"',
+        'class="page-header header-bg-1"',
+        1,
+    )
+
+
+def _extract_block(pattern: re.Pattern[str], rendered: str) -> str:
+    match = pattern.search(rendered)
+    return match.group(1) if match else ""
 
 
 def render_item_main_content(
@@ -186,12 +203,42 @@ def render_item_main_content(
     return _post_process(content).strip()
 
 
+def render_item_allphotos_content(
+    item_type: str,
+    item_id: str,
+    source: dict[str, Any],
+) -> RenderedTemplateContent:
+    from django.template import Context
+
+    engine = _engine()
+    template = engine.get_template("pages/allphotos.html")
+    context = Context(
+        {
+            "object": _prepare_object(source, has_manifest=False),
+            "type": item_type,
+            "user": SimpleNamespace(is_authenticated=False),
+            "request": SimpleNamespace(user=SimpleNamespace(is_authenticated=False)),
+        }
+    )
+    rendered = template.render(context)
+    body = _extract_block(_CONTENT_RE, rendered) or rendered
+    extra_head = _extract_block(_EXTRA_CSS_RE, rendered)
+    extra_scripts = _extract_block(_EXTRA_JS_RE, rendered)
+    return RenderedTemplateContent(
+        body=_post_process_allphotos_body(body),
+        extra_head=_post_process_fragment(extra_head),
+        extra_scripts=_post_process_fragment(extra_scripts),
+    )
+
+
 def warm_engine() -> None:
-    """Pre-compile the item template.
+    """Pre-compile the item templates.
 
     Building the engine and compiling ``pages/full.html`` (and the partials it
-    includes) is done once here so that, when the build forks a pool of render
-    workers, each worker has the compiled templates ready instead of compiling
-    them on its first item.
+    includes) plus ``pages/allphotos.html`` is done once here so that, when the
+    build forks a pool of render workers, each worker has the compiled templates
+    ready instead of compiling them on its first item.
     """
-    _engine().get_template("pages/full.html")
+    engine = _engine()
+    engine.get_template("pages/full.html")
+    engine.get_template("pages/allphotos.html")
