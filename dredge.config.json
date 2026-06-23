@@ -10,6 +10,10 @@
     "body": "[data-pagefind-body]",
     "description": "meta[name='description']@content"
   },
+  "search_fields": [
+    "meta[data-pagefind-meta='catalog_id[content]']@content",
+    "meta[data-pagefind-meta='searchtext[content]']@content"
+  ],
   "facets": {
     "category": {
       "type": "string",

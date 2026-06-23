@@ -126,6 +126,7 @@ Example:
     "body": "main",
     "description": "meta[name='description']@content"
   },
+  "search_fields": ["meta[name='keywords']@content"],
   "facets": {
     "category": {
       "type": "string",
@@ -155,6 +156,7 @@ Configuration rules:
 - `source_dir` must exist and must be read-only from Dredge's perspective.
 - `output_dir` must be separate from `source_dir` unless explicitly allowed, to avoid indexing generated search assets.
 - `include` and `exclude` are evaluated deterministically and the final file list is sorted before processing.
+- `search_fields` is an optional list of additional selector or selector-attribute sources appended to the FTS body without adding result columns or facets.
 - Facet names become generated SQL identifiers and TypeScript fields, so they must match `^[a-zA-Z_][a-zA-Z0-9_]*$`.
 - Facet types are limited to `string`, `string_array`, `integer`, `number`, `boolean`, and `date` for the first production version.
 - `string_array` facets are normalized into separate join tables rather than serialized into one text column.

@@ -29,9 +29,8 @@ def make_summary(
     main = plain_text(primary.get("main"))
     has_image = bool(thumbnail or (main and looks_like_image(main)))
     search_identifier = (
-        plain_text(
-            source.get("sitename") if item_type == "sites" else source.get("number")
-        )
+        plain_text(source.get("number"))
+        or plain_text(source.get("sitename"))
         or item_id
     )
     return ItemSummary(
@@ -85,7 +84,7 @@ def render_item_page(
         body,
         description=truncate_text(summary.description or title, 160),
         body_class="section-explore-body header-full mode-full",
-        extra_head=render_pagefind_meta(summary),
+        extra_head=render_pagefind_meta(summary, source),
         extra_scripts=extra_scripts,
         index_body=None,
     )
@@ -114,7 +113,7 @@ def render_summary_card(summary: ItemSummary) -> str:
     )
 
 
-def render_pagefind_meta(summary: ItemSummary) -> str:
+def render_pagefind_meta(summary: ItemSummary, source: dict[str, Any]) -> str:
     thumbnail = cache_harvard_image_url(summary.thumbnail)
     result_image = thumbnail or "/static/images/object1.png"
     values = {
@@ -122,6 +121,7 @@ def render_pagefind_meta(summary: ItemSummary) -> str:
         "type": type_label(summary.type),
         "category": search_category_label(summary.type),
         "catalog_id": summary.search_identifier,
+        "searchtext": render_search_text(summary, source),
         "image": result_image,
         "image_alt": summary.title if result_image else "",
         "thumbnail": thumbnail,
@@ -136,6 +136,42 @@ def render_pagefind_meta(summary: ItemSummary) -> str:
             f'<meta data-pagefind-sort="title[content]" content="{html.escape(summary.title, quote=True)}">'
         )
     return "\n".join(tags)
+
+
+def render_search_text(summary: ItemSummary, source: dict[str, Any]) -> str:
+    fields = (
+        "number",
+        "allnumbers",
+        "displaytext",
+        "title",
+        "displayname",
+        "sitename",
+        "mediaview",
+        "datevalues",
+        "people",
+        "medium",
+        "provenance",
+        "entrydate",
+        "subjects",
+        "description",
+        "remarks",
+        "notes",
+        "classificationtext",
+        "classification",
+        "department",
+        "period",
+    )
+    values = [summary.title, summary.search_identifier]
+    values.extend(plain_text(source.get(field)) for field in fields)
+    values.extend(plain_text(altnum) for altnum in source.get("altnums") or [])
+    seen: set[str] = set()
+    parts: list[str] = []
+    for value in values:
+        text = plain_text(value)
+        if text and text not in seen:
+            parts.append(text)
+            seen.add(text)
+    return " | ".join(parts)
 
 
 def render_pagefind_filters(summary: ItemSummary) -> str:

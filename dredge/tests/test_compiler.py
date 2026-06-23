@@ -15,6 +15,17 @@ from dredge.compiler import BuildError, compile_site, load_config
 from dredge.query import SearchRequest, build_search_queries, escape_fts_query, search
 
 
+def test_escape_fts_query_handles_compact_and_spaced_identifiers() -> None:
+    assert escape_fts_query("G7510") == '("G7510"* OR "G"* + "7510"*)'
+    assert escape_fts_query("G 7510") == '("G7510"* OR "G"* + "7510"*)'
+    assert escape_fts_query("A644_NS") == (
+        '("A644NS"* OR "A644"* + "NS"* OR "A"* + "644"* + "NS"*)'
+    )
+    assert escape_fts_query("HUMFA_14-11-206") == (
+        '("HUMFA1411206"* OR "HUMFA"* + "14"* + "11"* + "206"*)'
+    )
+
+
 def test_compile_fixture_site_and_query_results(tmp_path: Path) -> None:
     config_path, output_dir = _write_fixture_project(tmp_path)
 
@@ -430,6 +441,103 @@ def test_search_api_handles_empty_search_filtered_search_pagination_and_facets(
         assert filtered.hits[0]["url"] == "/collections/beta/"
     finally:
         connection.close()
+
+
+def test_search_indexes_extra_fields_and_matches_identifier_variants(
+    tmp_path: Path,
+) -> None:
+    source_dir = tmp_path / "site"
+    output_dir = tmp_path / "search"
+    source_dir.mkdir()
+    (source_dir / "sites" / "172" / "full").mkdir(parents=True)
+    (source_dir / "photos" / "20541" / "full").mkdir(parents=True)
+    (source_dir / "sites" / "172" / "full" / "index.html").write_text(
+        """
+        <!doctype html>
+        <html>
+        <head>
+          <title>G 7510</title>
+          <meta name="description" content="Eastern Cemetery tomb">
+          <meta data-pagefind-meta="category[content]" content="Tombs and Monuments">
+          <meta data-pagefind-meta="catalog_id[content]" content="G 7510">
+          <meta data-pagefind-meta="searchtext[content]" content="G 7510 G7510">
+        </head>
+        <body><main data-pagefind-body><h1>G 7510</h1></main></body>
+        </html>
+        """,
+        encoding="utf-8",
+    )
+    (source_dir / "photos" / "20541" / "full" / "index.html").write_text(
+        """
+        <!doctype html>
+        <html>
+        <head>
+          <title>Western Cemetery photo</title>
+          <meta name="description" content="Photo record">
+          <meta data-pagefind-meta="category[content]" content="Photos">
+          <meta data-pagefind-meta="catalog_id[content]" content="HUMFA_A644_NS">
+          <meta data-pagefind-meta="searchtext[content]" content="HUMFA_A644_NS A644_NS HUMFAA644NS A644">
+        </head>
+        <body><main data-pagefind-body><h1>Western Cemetery photo</h1></main></body>
+        </html>
+        """,
+        encoding="utf-8",
+    )
+    config_path = tmp_path / "dredge.config.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "source_dir": str(source_dir),
+                "output_dir": str(output_dir),
+                "base_url": "/",
+                "include": ["**/full/index.html"],
+                "selectors": {
+                    "title": "meta[data-pagefind-meta='title[content]']@content",
+                    "body": "[data-pagefind-body]",
+                    "description": "meta[name='description']@content",
+                },
+                "search_fields": [
+                    "meta[data-pagefind-meta='catalog_id[content]']@content",
+                    "meta[data-pagefind-meta='searchtext[content]']@content",
+                ],
+                "facets": {
+                    "category": {
+                        "type": "string",
+                        "source": "meta[data-pagefind-meta='category[content]']@content",
+                    },
+                    "catalog_id": {
+                        "type": "string",
+                        "source": "meta[data-pagefind-meta='catalog_id[content]']@content",
+                    },
+                },
+                "result_fields": [
+                    "title",
+                    "url",
+                    "description",
+                    "category",
+                    "catalog_id",
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    config = load_config(config_path)
+    result = compile_site(config_path)
+
+    connection = sqlite3.connect(f"file:{result.db_path}?mode=ro&immutable=1", uri=True)
+    try:
+        compact_tomb = search(connection, config, {"query": "G7510"})
+        spaced_tomb = search(connection, config, {"query": "G 7510"})
+        photo = search(connection, config, {"query": "A644_NS"})
+    finally:
+        connection.close()
+
+    assert compact_tomb.total == 1
+    assert compact_tomb.hits[0]["catalog_id"] == "G 7510"
+    assert spaced_tomb.total == 1
+    assert spaced_tomb.hits[0]["catalog_id"] == "G 7510"
+    assert photo.total == 1
+    assert photo.hits[0]["catalog_id"] == "HUMFA_A644_NS"
 
 
 def test_compile_writes_generated_types_worker_protocol_and_stale_handling(

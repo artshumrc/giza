@@ -51,6 +51,7 @@ TOP_LEVEL_KEYS = {
     "include",
     "exclude",
     "selectors",
+    "search_fields",
     "facets",
     "result_fields",
     "composite_indices",
@@ -188,6 +189,7 @@ class DredgeConfig:
     include: tuple[str, ...]
     exclude: tuple[str, ...]
     selectors: dict[str, str]
+    search_fields: tuple[str, ...]
     facets: tuple[FacetConfig, ...]
     result_fields: tuple[str, ...]
     composite_indices: tuple[tuple[str, ...], ...]
@@ -436,6 +438,7 @@ def load_config(config_path: Path) -> DredgeConfig:
     include = tuple(_optional_string_list(raw, "include", ["**/*.html"]))
     exclude = tuple(_optional_string_list(raw, "exclude", []))
     selectors = _load_selectors(raw)
+    search_fields = tuple(_load_search_fields(raw))
     facets = _load_facets(raw)
     facet_map = {facet.name: facet for facet in facets}
     result_fields = tuple(
@@ -453,6 +456,7 @@ def load_config(config_path: Path) -> DredgeConfig:
         "include": list(include),
         "exclude": list(exclude),
         "selectors": selectors,
+        "search_fields": list(search_fields),
         "facets": {
             facet.name: {
                 "type": facet.type,
@@ -481,6 +485,7 @@ def load_config(config_path: Path) -> DredgeConfig:
         include=include,
         exclude=exclude,
         selectors=selectors,
+        search_fields=search_fields,
         facets=facets,
         result_fields=result_fields,
         composite_indices=composite_indices,
@@ -845,6 +850,15 @@ def _load_selectors(raw: dict[str, Any]) -> dict[str, str]:
     return selectors
 
 
+def _load_search_fields(raw: dict[str, Any]) -> list[str]:
+    fields = _optional_string_list(raw, "search_fields", [])
+    for index, source in enumerate(fields, start=1):
+        _validate_selector_source(
+            source, f"search_fields[{index}]", allow_direct_attribute=True
+        )
+    return fields
+
+
 def _load_facets(raw: dict[str, Any]) -> tuple[FacetConfig, ...]:
     value = raw.get("facets", {})
     if not isinstance(value, dict):
@@ -1142,8 +1156,11 @@ def _extract_document(
         )
 
     body_values = _extract_values(tree, config.selectors["body"])
-    body = _normalize_text(" ".join(body_values))
-    if not body:
+    extra_search_values: list[str] = []
+    for source in config.search_fields:
+        extra_search_values.extend(_extract_values(tree, source))
+    body = _normalize_text(" ".join((*body_values, *extra_search_values)))
+    if not body_values:
         warnings.add(
             code="SELECTOR_MISS",
             message="body selector matched no text",

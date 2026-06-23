@@ -85,18 +85,146 @@ export function introspectSchema(exec: Exec): SchemaInfo {
   return { scalarColumns, arrayFacets, documentColumns };
 }
 
-// Build a forgiving FTS5 MATCH expression from free-text user input: each token
-// is sanitized of FTS operator characters and turned into a prefix term, ANDed
-// together. Returns null when the query has no usable tokens (match-all).
+// Build a forgiving FTS5 MATCH expression from free-text user input. Terms are
+// sanitized into quoted prefix searches, with compact/spaced identifier variants
+// grouped together so `G7510`, `G 7510`, and `A644_NS` can find the same record.
+interface QueryToken {
+  text: string;
+  subterms: string[];
+}
+
+interface QueryTerm {
+  subterms: string[];
+  identifier: boolean;
+}
+
+const TOKEN_RE = /[\p{L}\p{N}]+/gu;
+const TOKEN_PART_RE = /[\p{L}]+|\p{N}+/gu;
+
 export function buildMatchExpression(query: string): string | null {
-  const tokens = query
-    .split(/\s+/)
-    .map((token) => token.replace(/["*()^:\-]/g, "").trim())
-    .filter((token) => token.length > 0);
-  if (tokens.length === 0) {
+  const terms = queryTerms(query.normalize("NFC"));
+  if (terms.length === 0) {
     return null;
   }
-  return tokens.map((token) => `${token}*`).join(" ");
+  return terms.map(ftsTermExpression).join(" AND ");
+}
+
+function queryTokens(query: string): QueryToken[] {
+  const tokens: QueryToken[] = [];
+  for (const chunk of query.split(/\s+/)) {
+    const subterms = chunk.match(TOKEN_RE) ?? [];
+    if (subterms.length > 0) {
+      tokens.push({ text: chunk, subterms });
+    }
+  }
+  return tokens;
+}
+
+function queryTerms(query: string): QueryTerm[] {
+  const tokens = queryTokens(query);
+  const terms: QueryTerm[] = [];
+  let index = 0;
+  while (index < tokens.length) {
+    const token = tokens[index];
+    if (isIdentifierToken(token)) {
+      terms.push({ subterms: token.subterms, identifier: true });
+      index += 1;
+      continue;
+    }
+
+    if (canStartSpacedIdentifier(token)) {
+      const subterms = [...token.subterms];
+      let nextIndex = index + 1;
+      while (nextIndex < tokens.length && canContinueIdentifier(tokens[nextIndex])) {
+        subterms.push(...tokens[nextIndex].subterms);
+        nextIndex += 1;
+      }
+      if (nextIndex > index + 1 && hasLettersAndDigits(subterms)) {
+        terms.push({ subterms, identifier: true });
+        index = nextIndex;
+        continue;
+      }
+    }
+
+    for (const subterm of token.subterms) {
+      terms.push({ subterms: [subterm], identifier: false });
+    }
+    index += 1;
+  }
+  return terms;
+}
+
+function isIdentifierToken(token: QueryToken): boolean {
+  const compact = token.subterms.join("");
+  return (
+    compact.length > 0 &&
+    hasLettersAndDigits(token.subterms) &&
+    (/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z0-9]+(?:[_-][A-Za-z0-9]+)*$/.test(token.text) ||
+      token.subterms.length > 1 ||
+      splitTokenParts(token.subterms).length > 1)
+  );
+}
+
+function canStartSpacedIdentifier(token: QueryToken): boolean {
+  if (token.subterms.length !== 1) {
+    return false;
+  }
+  const subterm = token.subterms[0];
+  if (!/[A-Za-z]/.test(subterm)) {
+    return false;
+  }
+  return /\d/.test(subterm) || subterm.length <= 3 || subterm === subterm.toUpperCase();
+}
+
+function canContinueIdentifier(token: QueryToken): boolean {
+  if (token.subterms.length !== 1) {
+    return false;
+  }
+  const subterm = token.subterms[0];
+  return (
+    /^\d+$/.test(subterm) ||
+    (/^[A-Za-z]+$/.test(subterm) &&
+      (subterm.length <= 3 || subterm === subterm.toUpperCase())) ||
+    (/^[A-Za-z0-9]+$/.test(subterm) && hasLettersAndDigits([subterm]))
+  );
+}
+
+function hasLettersAndDigits(values: string[]): boolean {
+  const text = values.join("");
+  return /[A-Za-z]/.test(text) && /\d/.test(text);
+}
+
+function ftsTermExpression(term: QueryTerm): string {
+  if (!term.identifier) {
+    return ftsPrefixTerm(term.subterms[0]);
+  }
+
+  const expressions = [ftsPrefixTerm(term.subterms.join(""))];
+  if (term.subterms.length > 1) {
+    expressions.push(ftsPhrase(term.subterms));
+  }
+  const tokenParts = splitTokenParts(term.subterms);
+  if (tokenParts.length > 1 && tokenParts.join("\0") !== term.subterms.join("\0")) {
+    expressions.push(ftsPhrase(tokenParts));
+  }
+
+  const deduped = [...new Set(expressions)];
+  if (deduped.length === 1) {
+    return deduped[0];
+  }
+  return `(${deduped.join(" OR ")})`;
+}
+
+function splitTokenParts(subterms: string[]): string[] {
+  return subterms.flatMap((subterm) => subterm.match(TOKEN_PART_RE) ?? []);
+}
+
+function ftsPhrase(subterms: string[]): string {
+  return subterms.map(ftsPrefixTerm).join(" + ");
+}
+
+function ftsPrefixTerm(token: string): string {
+  return `"${token.replace(/"/g, '""')}"*`;
 }
 
 interface WhereClause {
