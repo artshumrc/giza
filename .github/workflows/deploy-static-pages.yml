@@ -65,7 +65,7 @@ jobs:
           # The client only downloads the brotli-compressed database; drop the
           # uncompressed intermediate so it is not shipped in the Pages artifact.
           rm -f dist/search/*.db
-          printf '%s\n' 'giza.digitalhumanities.harvard.edu' > dist/CNAME
+          printf '%s\n' 'giza.digitalhumanities.fas.harvard.edu' > dist/CNAME
           touch dist/.nojekyll
 
       - name: Configure GitHub Pages
