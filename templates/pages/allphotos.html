@@ -116,7 +116,7 @@
     var drsId = target.getAttribute('data-drs-id');
     if (drsId && viewer) {
       event.preventDefault();
-      var manifestUrl = "{% url 'iiif-manifest' 1 %}".replace('1', drsId);
+      var manifestUrl = "{% url 'iiif-manifest' '__MANIFEST_ID__' %}".replace('__MANIFEST_ID__', drsId);
       viewer.manifestId = manifestUrl;
       viewer.setAttribute('manifest-id', manifestUrl);
       $('#triiiceratopsModal').foundation('open');

@@ -129,6 +129,7 @@ def main(argv: list[str]) -> int:
         args.item_limit,
         args.item_limit_per_type,
         args.generate_item_redirects,
+        base_url,
         args.jobs,
     )
     manifest_count = write_manifests(
@@ -997,23 +998,29 @@ def write_collections(
 
 _WORKER_OUTPUT: Path | None = None
 _WORKER_REDIRECTS = False
+_WORKER_BASE_URL = ""
 
 
-def _init_render_worker(output: Path, generate_redirects: bool) -> None:
-    global _WORKER_OUTPUT, _WORKER_REDIRECTS
+def _init_render_worker(output: Path, generate_redirects: bool, base_url: str) -> None:
+    global _WORKER_OUTPUT, _WORKER_REDIRECTS, _WORKER_BASE_URL
     _WORKER_OUTPUT = output
     _WORKER_REDIRECTS = generate_redirects
+    _WORKER_BASE_URL = base_url
     warm_engine()
 
 
 def _render_item_job(job: tuple[str, str, dict[str, Any], ItemSummary]) -> None:
     item_type, item_id, source, summary = job
     assert _WORKER_OUTPUT is not None
-    html_text = render_item_page(item_type, item_id, source, summary)
+    html_text = render_item_page(
+        item_type, item_id, source, summary, base_url=_WORKER_BASE_URL
+    )
     base = _WORKER_OUTPUT / item_type / item_id
     write_text(base / "full" / "index.html", html_text)
     if has_related_photos(source):
-        allphotos = render_item_allphotos_content(item_type, item_id, source)
+        allphotos = render_item_allphotos_content(
+            item_type, item_id, source, base_url=_WORKER_BASE_URL
+        )
         write_text(
             base / "allphotos" / "index.html",
             render_page(
@@ -1063,6 +1070,7 @@ def write_item_pages(
     item_limit: int,
     item_limit_per_type: int,
     generate_redirects: bool,
+    base_url: str,
     jobs: int,
 ) -> tuple[Counter[str], set[str], list[ItemSummary]]:
     counts: Counter[str] = Counter()
@@ -1098,7 +1106,7 @@ def write_item_pages(
             yield item_type, item_id, source, summary
 
     if jobs <= 1:
-        _init_render_worker(output, generate_redirects)
+        _init_render_worker(output, generate_redirects, base_url)
         for job in select():
             _render_item_job(job)
         return counts, required_manifest_ids, emitted_summaries
@@ -1114,7 +1122,7 @@ def write_item_pages(
         max_workers=jobs,
         mp_context=get_context("fork"),
         initializer=_init_render_worker,
-        initargs=(output, generate_redirects),
+        initargs=(output, generate_redirects, base_url),
     ) as executor:
         for job in select():
             batch.append(job)

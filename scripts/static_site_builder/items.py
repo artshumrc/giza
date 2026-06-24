@@ -65,11 +65,13 @@ def render_item_page(
     item_id: str,
     source: dict[str, Any],
     summary: ItemSummary,
+    *,
+    base_url: str,
 ) -> str:
     title = summary.title
     has_manifest = summary.has_manifest
     main_content = render_item_main_content(
-        item_type, item_id, source, has_manifest=has_manifest
+        item_type, item_id, source, base_url=base_url, has_manifest=has_manifest
     )
     body = "\n".join(
         [

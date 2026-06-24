@@ -10,7 +10,17 @@ from __future__ import annotations
 
 from django import template
 
+from .media import cache_manifest_url
+from .urls import absolute_url, manifest_url
+
 register = template.Library()
+
+_STATIC_BASE_URL: str | None = None
+
+
+def set_static_base_url(base_url: str | None) -> None:
+    global _STATIC_BASE_URL
+    _STATIC_BASE_URL = base_url.rstrip("/") if base_url else None
 
 
 @register.simple_tag
@@ -25,5 +35,8 @@ def url(name: object, *args: object) -> str:
         item_type, item_id, view = args[0], args[1], args[2]
         return f"/{item_type}/{item_id}/{view}/"
     if route in {"iiif-manifest", "get_manifest"} and args:
-        return f"/manifests/{args[0]}.json"
+        local_url = manifest_url(str(args[0]))
+        if _STATIC_BASE_URL:
+            return cache_manifest_url(absolute_url(_STATIC_BASE_URL, local_url))
+        return local_url
     return "#"

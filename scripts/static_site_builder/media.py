@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 from urllib.parse import quote, urlparse
 
-from .constants import IIIF_CACHE_HOST, IIIF_CACHE_THUMB_URL
+from .constants import IIIF_CACHE_HOST, IIIF_CACHE_MANIFEST_URL, IIIF_CACHE_THUMB_URL
 from .text import plain_text
 
 
@@ -33,3 +33,14 @@ def cache_harvard_image_url(url: str) -> str:
     if not looks_like_image(value):
         return value
     return IIIF_CACHE_THUMB_URL + quote(value, safe=":/%")
+
+
+def cache_manifest_url(manifest_origin_url: str) -> str:
+    value = plain_text(manifest_origin_url)
+    if not value:
+        return ""
+    parsed = urlparse(value)
+    host = (parsed.hostname or "").lower()
+    if host == IIIF_CACHE_HOST:
+        return value
+    return IIIF_CACHE_MANIFEST_URL + quote(value, safe=":/%")

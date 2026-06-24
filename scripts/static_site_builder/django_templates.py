@@ -24,6 +24,7 @@ from types import SimpleNamespace
 from typing import Any
 
 from .media import cache_harvard_image_url
+from .buildtemplatetags import set_static_base_url
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _TEMPLATES_DIR = _REPO_ROOT / "templates"
@@ -183,10 +184,12 @@ def render_item_main_content(
     item_id: str,
     source: dict[str, Any],
     *,
+    base_url: str,
     has_manifest: bool,
 ) -> str:
     from django.template import Context
 
+    set_static_base_url(base_url)
     engine = _engine()
     template = engine.get_template("pages/full.html")
     context = Context(
@@ -207,9 +210,12 @@ def render_item_allphotos_content(
     item_type: str,
     item_id: str,
     source: dict[str, Any],
+    *,
+    base_url: str,
 ) -> RenderedTemplateContent:
     from django.template import Context
 
+    set_static_base_url(base_url)
     engine = _engine()
     template = engine.get_template("pages/allphotos.html")
     context = Context(

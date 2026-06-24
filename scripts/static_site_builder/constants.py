@@ -6,6 +6,7 @@ from .models import StaticTemplatePage
 EXPECTED_ITEM_COUNT = 158_968
 EXPECTED_MANIFEST_COUNT = 134_580
 IIIF_CACHE_HOST = "iiif-cache.digitalhumanities.fas.harvard.edu"
+IIIF_CACHE_MANIFEST_URL = f"https://{IIIF_CACHE_HOST}/iiif/manifest?manifest="
 IIIF_CACHE_THUMB_URL = f"https://{IIIF_CACHE_HOST}/iiif/thumb?url="
 
 TYPE_LABELS = {

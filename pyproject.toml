@@ -72,7 +72,12 @@ sequence = [
 help = "Dredge library + index for the limited build."
 
 [tool.poe.tasks.static-serve]
-cmd = "python -m http.server --directory dist 8000"
+cmd = "python -m http.server --directory dist ${port}"
+
+[[tool.poe.tasks.static-serve.args]]
+name = "port"
+default = "8000"
+positional = true
 
 [tool.poe.tasks.static-serve-limited]
 cmd = "python -m http.server --directory /tmp/opencode/giza-static-test 8000"
