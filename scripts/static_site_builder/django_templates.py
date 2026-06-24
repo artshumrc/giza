@@ -139,19 +139,6 @@ def _post_process(content: str) -> str:
     content = _HTML_COMMENT_RE.sub("", content)
     # The static layout already loads app.css; drop the stray in-body link.
     content = _APP_CSS_LINK_RE.sub("", content)
-    # Mark the overview as the Pagefind/Dredge body so search indexes the
-    # description (the rest of the page is excluded automatically once any
-    # data-pagefind-body element exists).
-    content = content.replace(
-        'class="item__overview text-alt"',
-        'class="item__overview text-alt" data-pagefind-body',
-        1,
-    )
-    content = content.replace(
-        'class="item__overview"',
-        'class="item__overview" data-pagefind-body',
-        1,
-    )
     # Collapse the long runs of blank lines left by stripped comments and the
     # many empty template-loop iterations (e.g. the jump menu).
     content = _collapse_blank_lines(content)

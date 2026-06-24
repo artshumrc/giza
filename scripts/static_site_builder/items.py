@@ -73,7 +73,7 @@ def render_item_page(
     )
     body = "\n".join(
         [
-            page_header(title, source.get("sitename"), bg="1", pagefind_body=True),
+            page_header(title, source.get("sitename"), bg="1"),
             render_pagefind_filters(summary),
             main_content,
         ]
@@ -86,7 +86,7 @@ def render_item_page(
         body_class="section-explore-body header-full mode-full",
         extra_head=render_pagefind_meta(summary, source),
         extra_scripts=extra_scripts,
-        index_body=None,
+        index_body=True,
     )
 
 

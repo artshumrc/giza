@@ -1,0 +1,1 @@
+unstaged changes add the full `<main>` element to the full text index. Increases index from 160mb to over 240mb. Only commit these if necessary
