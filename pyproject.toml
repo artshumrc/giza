@@ -16,7 +16,7 @@ dev = [
 cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-export.tar.gz --django-content-dump static_site/giza-content-dump.json.gz --output dist --base-url https://giza.digitalhumanities.fas.harvard.edu"
 
 [tool.poe.tasks.static-build-production]
-cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-export.tar.gz --django-content-dump static_site/giza-content-dump.json.gz --output dist --base-url http://giza.fas.harvard.edu"
+cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-export.tar.gz --django-content-dump static_site/giza-content-dump.json.gz --output dist --base-url https://giza.fas.harvard.edu"
 
 [tool.poe.tasks.static-build-local]
 cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-export.tar.gz --django-content-dump static_site/giza-content-dump.json.gz --output dist --base-url http://localhost:8000"

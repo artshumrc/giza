@@ -54,8 +54,8 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: dredge/runtime
 
-      - name: Build static site
-        run: uv run poe static-build-staging
+       - name: Build static site
+         run: uv run poe static-build-production
 
       - name: Build Dredge search index
         run: uv run poe static-dredge
@@ -65,7 +65,7 @@ jobs:
           # The client only downloads the brotli-compressed database; drop the
           # uncompressed intermediate so it is not shipped in the Pages artifact.
           rm -f dist/search/*.db
-          printf '%s\n' 'giza.digitalhumanities.fas.harvard.edu' > dist/CNAME
+          printf '%s\n' 'giza.fas.harvard.edu' > dist/CNAME
           touch dist/.nojekyll
 
       - name: Configure GitHub Pages
