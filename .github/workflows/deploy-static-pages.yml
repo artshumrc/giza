@@ -54,8 +54,8 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: dredge/runtime
 
-       - name: Build static site
-         run: uv run poe static-build-production
+      - name: Build static site
+        run: uv run poe static-build-production
 
       - name: Build Dredge search index
         run: uv run poe static-dredge
