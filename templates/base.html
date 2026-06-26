@@ -28,6 +28,15 @@
     {% block extra_css %}
     {# Override this in templates to add extra stylesheets #}
     {% endblock %}
+    <script>
+      if (!navigator.webdriver) {
+        var umamiScript = document.createElement('script');
+        umamiScript.defer = true;
+        umamiScript.src = 'https://stats.digitalhumanities.fas.harvard.edu/darth-stats.js';
+        umamiScript.dataset.websiteId = '18fabb5c-00c4-4726-a833-0732e760cdf2';
+        document.head.appendChild(umamiScript);
+      }
+    </script>
   </head>
 
   <body class="{% block body_class %}{% endblock %}">
