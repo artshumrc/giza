@@ -28,7 +28,10 @@ from static_site_builder.constants import (
     EXPECTED_MANIFEST_COUNT,
     STATIC_TEMPLATE_PAGES,
 )
-from static_site_builder.django_templates import render_item_allphotos_content, warm_engine
+from static_site_builder.django_templates import (
+    render_item_allphotos_content,
+    warm_engine,
+)
 from static_site_builder.items import (
     get_doc_id,
     make_summary,
@@ -1026,7 +1029,9 @@ def _render_item_job(job: tuple[str, str, dict[str, Any], ItemSummary]) -> None:
             render_page(
                 f"All Photos | {summary.title}",
                 allphotos.body,
-                description=truncate_text(f"All related photos for {summary.title}", 160),
+                description=truncate_text(
+                    f"All related photos for {summary.title}", 160
+                ),
                 body_class="section-explore-body header-full mode-intro",
                 extra_head=allphotos.extra_head,
                 extra_scripts=allphotos.extra_scripts,
@@ -1236,7 +1241,8 @@ def write_404(output: Path) -> None:
         ],
     )
     write_text(
-        output / "404.html", render_page("Page Not Found", body, index_body=False)
+        output / "404.html",
+        render_page("Page Not Found", body, index_body=False, include_umami=False),
     )
 
 

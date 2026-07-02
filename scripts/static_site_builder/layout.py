@@ -7,6 +7,17 @@ from .templates import render_static_site_template, static_template_html
 from .text import plain_text
 
 
+UMAMI_SCRIPT = """<script>
+        if (!navigator.webdriver) {
+            var umamiScript = document.createElement('script');
+            umamiScript.defer = true;
+            umamiScript.src = 'https://stats.digitalhumanities.fas.harvard.edu/darth-stats.js';
+            umamiScript.dataset.websiteId = '18fabb5c-00c4-4726-a833-0732e760cdf2';
+            document.head.appendChild(umamiScript);
+        }
+    </script>"""
+
+
 def render_page(
     title: str,
     body: str,
@@ -16,6 +27,7 @@ def render_page(
     extra_head: str = "",
     extra_scripts: str = "",
     index_body: bool | None = False,
+    include_umami: bool = True,
 ) -> str:
     if index_body is True:
         main_attr = " data-pagefind-body"
@@ -31,6 +43,9 @@ def render_page(
             "body_class": body_class,
             "main_attr_html": static_template_html(main_attr),
             "extra_head_html": static_template_html(extra_head),
+            "umami_script_html": static_template_html(
+                UMAMI_SCRIPT if include_umami else ""
+            ),
             "header_html": static_template_html(site_header()),
             "body_html": static_template_html(body),
             "footer_html": static_template_html(site_footer()),

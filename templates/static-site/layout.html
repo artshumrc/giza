@@ -14,15 +14,7 @@
   <link rel="stylesheet" href="/static/static-site/static-site.css">
   <link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
   {{ extra_head_html }}
-  <script>
-    if (!navigator.webdriver) {
-      var umamiScript = document.createElement('script');
-      umamiScript.defer = true;
-      umamiScript.src = 'https://stats.digitalhumanities.fas.harvard.edu/darth-stats.js';
-      umamiScript.dataset.websiteId = '18fabb5c-00c4-4726-a833-0732e760cdf2';
-      document.head.appendChild(umamiScript);
-    }
-  </script>
+  {{ umami_script_html }}
 </head>
 <body class="{{ body_class }}">
   {{ header_html }}
