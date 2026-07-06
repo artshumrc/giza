@@ -82,4 +82,4 @@ jobs:
         with:
           # Large site (tens of thousands of files); the default 10 min timeout
           # is not enough for Pages to finish syncing.
-          timeout: 1800000
+          timeout: 600000
