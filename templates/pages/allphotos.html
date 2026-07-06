@@ -7,7 +7,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/blueimp-gallery.min.css' %}">
-<link rel="stylesheet" href="{% static 'css/triiiceratops-1.0.0-rc.17.element.css' %}">
+<link rel="stylesheet" href="{% static 'css/triiiceratops.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -83,8 +83,8 @@
       id="triiiceratops-photo-viewer"
       style="height: 100%; width: 100%; display: block;"
       theme="light"
-      config='{"showToggle":false,"toolbarOpen":false,"rightPanelWidth":"125px","toolbar":{"showSearch":false,"showGallery":false,"showAnnotations":false,"showFullscreen":false,"showInfo":false,"showViewingMode":false,"showStructures":false,"showCollection":false},"gallery":{"open":true,"dockPosition":"right","draggable":false,"showCloseButton":false},"information":{"position":"right"}}'
-      theme-config='{"primary":"#1164AD","secondary":"#777777","success":"#3adb76","warning":"#ffae00","error":"#ec5840","base100":"#ffffff","base200":"#f3f4f6","baseContent":"#1f2937"}'
+      config='{"controls":"unified","showToggle":false,"toolbarOpen":true,"rightPanelWidth":"125px","toolbar":{"showSearch":false,"showGallery":false,"showAnnotations":false,"showFullscreen":false,"showInfo":false,"showViewingMode":false,"showStructures":false,"showCollection":false},"plugins":{"image-download":{"visible":true,"open":false},"image-manipulation":{"visible":true,"open":false}},"gallery":{"open":true,"dockPosition":"right","draggable":false,"showCloseButton":false},"information":{"position":"right"}}'
+      theme-config='{"primary":"#1164AD","primaryContent":"#ffffff","secondary":"#777777","success":"#3adb76","warning":"#ffae00","error":"#ec5840","base100":"#ffffff","base200":"#f3f4f6","baseContent":"#1f2937","radiusBox":"0.375rem","radiusButtons":"0.25rem"}'
     ></triiiceratops-viewer>
   </div>
   <button class="close-button" data-close aria-label="Close modal" type="button">
@@ -98,7 +98,10 @@
 
 {% block extra_js %}
 <script src="{% static 'js/blueimp-gallery.js' %}"></script>
-<script src="{% static 'js/triiiceratops-1.0.0-rc.17.iife.js' %}"></script>
+<script src="{% static 'js/triiiceratops-element.iife.js' %}"></script>
+<script src="{% static 'js/triiiceratops-plugin-image-download.iife.js' %}"></script>
+<script src="{% static 'js/triiiceratops-plugin-image-manipulation.iife.js' %}"></script>
+<script src="{% static 'js/triiiceratops-plugins.js' %}"></script>
 <script>
 (function () {
   var links = document.getElementById('links');

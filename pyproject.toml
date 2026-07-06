@@ -81,3 +81,11 @@ positional = true
 
 [tool.poe.tasks.static-serve-limited]
 cmd = "python -m http.server --directory /tmp/opencode/giza-static-test 8000"
+
+[tool.poe.tasks.build-and-serve-limited]
+sequence = [
+    { ref = "static-build-limited" },
+    { ref = "static-dredge-limited" },
+    { ref = "static-serve-limited" },
+]
+help = "Build the limited static site, prepare Dredge, and serve it locally."
