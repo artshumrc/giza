@@ -10,7 +10,15 @@ dependencies = []
 dev = [
     "django>=5.2",
     "poethepoet>=0.32.0",
+    "dredge",
 ]
+
+[tool.uv.sources]
+# Dredge lives in its own repo (github.com/artshumrc/dredge). The Python CLI is
+# installed from git; uv.lock pins the exact commit. The browser runtime (JS) is
+# not published to npm — the `static-dredge-assets` task builds it from a sibling
+# checkout of the same repo at ../dredge (see the deploy workflow for CI).
+dredge = { git = "https://github.com/artshumrc/dredge", branch = "main" }
 
 [tool.poe.tasks.static-build-staging]
 cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-export.tar.gz --django-content-dump static_site/giza-content-dump.json.gz --output dist --base-url https://giza.digitalhumanities.fas.harvard.edu"
@@ -31,23 +39,23 @@ cmd = "npx -y pagefind --site dist"
 cmd = "npx -y pagefind --site /tmp/opencode/giza-static-test"
 
 [tool.poe.tasks.static-dredge-assets]
-cmd = "node dredge/runtime/scripts/install-into-site.mjs --out dist"
-help = "Build the Dredge browser library and install it into dist/search."
+cmd = "node ../dredge/runtime/scripts/install-into-site.mjs --out dist"
+help = "Build the Dredge browser library from ../dredge and install it into dist/search."
 
 [tool.poe.tasks.static-dredge-assets-limited]
-cmd = "node dredge/runtime/scripts/install-into-site.mjs --out /tmp/opencode/giza-static-test"
-help = "Build the Dredge browser library and install it into the limited build."
+cmd = "node ../dredge/runtime/scripts/install-into-site.mjs --out /tmp/opencode/giza-static-test"
+help = "Build the Dredge browser library from ../dredge and install it into the limited build."
 
 [tool.poe.tasks.static-dredge-compile]
-cmd = "uv run --project dredge dredge compile -c dredge.config.json"
+cmd = "uv run dredge compile -c dredge.config.json"
 help = "Compile the Dredge SQLite/FTS5 index from dist/ into dist/search."
 
 [tool.poe.tasks.static-dredge-compile-local]
-cmd = "uv run --project dredge dredge compile -c dredge.config.json --brotli-quality 1"
+cmd = "uv run dredge compile -c dredge.config.json --brotli-quality 1"
 help = "Compile the Dredge index for local development with fast Brotli compression."
 
 [tool.poe.tasks.static-dredge-compile-limited]
-cmd = "uv run --project dredge dredge compile -c dredge.config.limited.json"
+cmd = "uv run dredge compile -c dredge.config.limited.json"
 help = "Compile the Dredge index for the limited build."
 
 [tool.poe.tasks.static-dredge]

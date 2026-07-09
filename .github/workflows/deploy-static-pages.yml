@@ -47,12 +47,18 @@ jobs:
         with:
           version: 9
 
+      - name: Check out Dredge (browser runtime source)
+        # The Python CLI is installed from git via uv; the JS runtime is not on
+        # npm, so clone the same repo as a sibling of the workspace. The
+        # static-dredge-assets task builds it from ../dredge.
+        run: git clone --depth 1 https://github.com/artshumrc/dredge.git ../dredge
+
       - name: Install Python tooling
         run: uv sync --group dev
 
       - name: Install Dredge runtime dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: dredge/runtime
+        working-directory: ../dredge/runtime
 
       - name: Build static site
         run: uv run poe static-build-production
