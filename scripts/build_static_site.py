@@ -768,47 +768,88 @@ def write_library_page(
     library_sources: list[dict[str, Any]],
     pubdocs: list[tuple[ItemSummary, dict[str, Any]]],
 ) -> None:
-    body = [page_header("Digital Giza Library", bg="8")]
-    body.append('<div class="row"><section class="large-9 columns">')
-    body.append(
-        '<p class="lead text-alt">A public list of downloadable Giza publications and catalog publication records.</p>'
-    )
-
     grouped: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
     for source in library_sources:
         name = plain_text(source.get("name")) or "Unknown"
         letter = (plain_text(source.get("sortname")) or name).strip()[:1].upper() or "#"
         grouped[letter].append(source)
 
-    if grouped:
-        for letter in sorted(grouped):
+    letters = sorted(grouped)
+    body = [page_header("Digital Giza Library", bg="8")]
+    body.append('<div class="row static-site-library" data-library-page>')
+    body.append('<aside class="medium-4 columns medium-push-8">')
+    body.append('<div class="feature-block secondary static-site-library-controls">')
+    body.append('<h5><span class="icon-list icon-padded"></span> Navigate</h5>')
+    body.append(
+        '<label for="library-author-filter"><strong>Filter authors</strong></label>'
+        '<input id="library-author-filter" type="search" autocomplete="off" '
+        'placeholder="Enter an author name" aria-controls="library-author-list" '
+        "data-library-filter>"
+    )
+    body.append(
+        f'<p class="static-site-library-status" aria-live="polite" data-library-filter-status>{len(library_sources):,} authors</p>'
+    )
+    if letters:
+        body.append(
+            '<nav aria-label="Browse authors by last name"><h6 class="heading-em">Jump to:</h6>'
+        )
+        body.append('<ul class="menu menu-pagination static-site-library-alphabet">')
+        for letter in letters:
+            letter_id = re.sub(r"[^a-z0-9]+", "-", letter.lower()).strip("-") or "other"
             body.append(
-                f'<h3 id="alpha-{html.escape(letter.lower())}">{html.escape(letter)}</h3>'
+                f'<li data-library-letter-link="{html.escape(letter, quote=True)}">'
+                f'<a href="#alpha-{html.escape(letter_id, quote=True)}">{html.escape(letter)}</a></li>'
             )
-            for source in sorted(
-                grouped[letter],
-                key=lambda value: plain_text(
-                    value.get("sortname") or value.get("name")
-                ).lower(),
-            ):
-                body.append(
-                    f'<h5 class="heading-alt">{escape_text(source.get("name"))}</h5>'
+        body.append("</ul></nav>")
+    body.append("</div>")
+    body.append("</aside>")
+    body.append(
+        '<section class="medium-8 columns medium-pull-4" id="library-author-list">'
+    )
+    body.append(
+        '<p class="lead text-alt">A public list of downloadable Giza publications and catalog publication records.</p>'
+    )
+    body.append(
+        '<p class="static-site-library-no-results" data-library-no-results hidden>No authors match this filter.</p>'
+    )
+
+    for letter in letters:
+        letter_id = re.sub(r"[^a-z0-9]+", "-", letter.lower()).strip("-") or "other"
+        body.append(
+            f'<section class="static-site-library-letter" data-library-letter="{html.escape(letter, quote=True)}">'
+        )
+        body.append(
+            f'<h3 id="alpha-{html.escape(letter_id, quote=True)}">{html.escape(letter)}</h3>'
+        )
+        for source in sorted(
+            grouped[letter],
+            key=lambda value: plain_text(
+                value.get("sortname") or value.get("name")
+            ).lower(),
+        ):
+            body.append(
+                '<article class="static-site-library-author" data-library-author>'
+                f'<h5 class="heading-alt" data-library-author-name>{escape_text(source.get("name"))}</h5>'
+            )
+            body.append('<ul class="static-site-list">')
+            for doc in source.get("docs") or []:
+                text = sanitize_html(plain_text(doc.get("displaytext")))
+                url = plain_text(doc.get("url"))
+                fmt = escape_text(doc.get("format"))
+                link_start = (
+                    f'<a href="{html.escape(url, quote=True)}">'
+                    if url and is_safe_url(url)
+                    else ""
                 )
-                body.append('<ul class="static-site-list">')
-                for doc in source.get("docs") or []:
-                    text = sanitize_html(plain_text(doc.get("displaytext")))
-                    url = plain_text(doc.get("url"))
-                    fmt = escape_text(doc.get("format"))
-                    link_start = (
-                        f'<a href="{html.escape(url, quote=True)}">'
-                        if url and is_safe_url(url)
-                        else ""
-                    )
-                    link_end = "</a>" if link_start else ""
-                    body.append(
-                        f'<li>{link_start}{text}{link_end}<div class="static-site-meta">{fmt}</div></li>'
-                    )
-                body.append("</ul>")
+                link_end = "</a>" if link_start else ""
+                body.append(
+                    f'<li>{link_start}{text}{link_end}<div class="static-site-meta">{fmt}</div></li>'
+                )
+            body.append("</ul></article>")
+        body.append(
+            '<p><a class="back-to-top-link" href="#content">Back to top</a></p>'
+        )
+        body.append("</section>")
 
     if pubdocs:
         body.append('<h2 class="m-t-2">Publication Records</h2>')
@@ -826,12 +867,14 @@ def write_library_page(
             )
         body.append("</ul>")
 
-    body.append(
-        '</section><aside class="large-3 columns"><div class="feature-block secondary"><h5>Library Search</h5><p>Use site search to find authors, titles, and subjects.</p><p><a class="button" href="/search/">Search</a></p></div></aside></div>'
-    )
+    body.append("</section></div>")
     write_text(
         output / "library" / "index.html",
-        render_page("Digital Giza Library", "\n".join(body)),
+        render_page(
+            "Digital Giza Library",
+            "\n".join(body),
+            extra_scripts="<script>GizaStaticSite.initLibraryFilter();</script>",
+        ),
     )
 
 
