@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.utils.text import slugify
 
 from utils.elastic_backend import es, ES_INDEX
 from utils.views_utils import CATEGORIES, FACETS_PER_CATEGORY, FIELDS_PER_CATEGORY
@@ -82,9 +83,18 @@ def library(request):
 					})
 			if len(docs) > 0:
 				hits.append(sort_docs)
+	letter_groups = []
+	for result in hits:
+		for letter, sources in result.items():
+			letter_groups.append({
+				'letter': str(letter).upper(),
+				'id': slugify(letter) or 'other',
+				'sources': sources,
+			})
 
 	return render(request, 'pages/library.html', {
 		'results' : hits,
+		'letter_groups': letter_groups,
 		'sort' : sort
 	})
 

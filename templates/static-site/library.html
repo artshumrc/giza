@@ -1,0 +1,38 @@
+<div class="row static-site-library" data-library-page>
+  <aside class="medium-4 columns medium-push-8">
+    <div class="feature-block secondary static-site-library-controls">
+      <h5><span class="icon-list icon-padded"></span> Navigate</h5>
+      <label for="library-author-filter"><strong>Filter authors</strong></label>
+      <input id="library-author-filter" type="search" autocomplete="off" placeholder="Enter an author name" aria-controls="library-author-list" data-library-filter>
+      <p class="static-site-library-status" aria-live="polite" data-library-filter-status>{{ author_count }} authors</p>
+      {% if letter_groups %}
+      <nav aria-label="Browse authors by last name">
+        <h6 class="heading-em">Jump to:</h6>
+        <ul class="menu menu-pagination static-site-library-alphabet">
+          {% for group in letter_groups %}
+          <li data-library-letter-link="{{ group.letter }}"><a href="#alpha-{{ group.id }}">{{ group.letter }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+  </aside>
+
+  <section class="medium-8 columns medium-pull-4" id="library-author-list">
+    <p class="lead text-alt">A public list of downloadable Giza publications and catalog publication records.</p>
+    <p class="static-site-library-no-results" data-library-no-results hidden>No authors match this filter.</p>
+    {% include "partials/library-author-groups.html" %}
+
+    {% if publication_records %}
+    <h2 class="m-t-2">Publication Records</h2>
+    <ul class="static-site-list">
+      {% for record in publication_records %}
+      <li>
+        <a href="{{ record.url }}">{{ record.title }}</a>{% if record.pdf %} <a href="{{ record.pdf }}">PDF</a>{% endif %}
+        <div class="static-site-meta">{{ record.format }} {{ record.yearpublished }}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </section>
+</div>

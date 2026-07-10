@@ -237,6 +237,27 @@ def render_item_allphotos_content(
     )
 
 
+def render_library_content(
+    *,
+    letter_groups: list[dict[str, Any]],
+    publication_records: list[dict[str, Any]],
+    author_count: int,
+) -> str:
+    from django.template import Context
+
+    template = _engine().get_template("static-site/library.html")
+    rendered = template.render(
+        Context(
+            {
+                "letter_groups": letter_groups,
+                "publication_records": publication_records,
+                "author_count": author_count,
+            }
+        )
+    )
+    return _post_process_fragment(rendered)
+
+
 def warm_engine() -> None:
     """Pre-compile the item templates.
 
@@ -248,3 +269,4 @@ def warm_engine() -> None:
     engine = _engine()
     engine.get_template("pages/full.html")
     engine.get_template("pages/allphotos.html")
+    engine.get_template("static-site/library.html")
