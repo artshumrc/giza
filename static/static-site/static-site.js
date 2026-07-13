@@ -94,6 +94,64 @@
       .replace(/[^a-z0-9]+/g, '');
   }
 
+  function normalizeLibraryAuthor(value) {
+    var normalized = String(value || '');
+    if (normalized.normalize) normalized = normalized.normalize('NFKD');
+    return normalized
+      .replace(/[\u0300-\u036f\u1ab0-\u1aff\u1dc0-\u1dff\u20d0-\u20ff\ufe20-\ufe2f]/g, '')
+      .toLowerCase()
+      .replace(/[\s,.;:!?\x22'()\/\\_-]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function setupLibraryFilter() {
+    var page = document.querySelector('[data-library-page]');
+    if (!page || page.dataset.libraryFilterReady === 'true') return;
+
+    var input = page.querySelector('[data-library-filter]');
+    var status = page.querySelector('[data-library-filter-status]');
+    var noResults = page.querySelector('[data-library-no-results]');
+    var authors = Array.prototype.slice.call(page.querySelectorAll('[data-library-author]'));
+    var letterGroups = Array.prototype.slice.call(page.querySelectorAll('[data-library-letter]'));
+    var letterLinks = Array.prototype.slice.call(page.querySelectorAll('[data-library-letter-link]'));
+    if (!input) return;
+
+    page.dataset.libraryFilterReady = 'true';
+    authors.forEach(function (author) {
+      var name = author.querySelector('[data-library-author-name]');
+      author.dataset.libraryAuthorSearch = normalizeLibraryAuthor(name ? name.textContent : '');
+    });
+
+    function applyFilter() {
+      var query = normalizeLibraryAuthor(input.value);
+      var terms = query ? query.split(' ') : [];
+      var matches = 0;
+
+      authors.forEach(function (author) {
+        var authorName = author.dataset.libraryAuthorSearch;
+        var matched = terms.every(function (term) { return authorName.indexOf(term) !== -1; });
+        author.hidden = !matched;
+        if (matched) matches += 1;
+      });
+
+      letterGroups.forEach(function (group) {
+        var letter = group.getAttribute('data-library-letter');
+        var hasMatch = Boolean(group.querySelector('[data-library-author]:not([hidden])'));
+        group.hidden = !hasMatch;
+        letterLinks.forEach(function (link) {
+          if (link.getAttribute('data-library-letter-link') === letter) link.hidden = !hasMatch;
+        });
+      });
+
+      if (status) status.textContent = matches + (matches === 1 ? ' author' : ' authors');
+      if (noResults) noResults.hidden = matches !== 0;
+    }
+
+    input.addEventListener('input', applyFilter);
+    applyFilter();
+  }
+
   function categoryLabelFromParam(value) {
     return CATEGORY_LOOKUP[normalizeCategoryKey(value)] || '';
   }
@@ -759,4 +817,5 @@
     defineSearchComponents();
     setupAdvancedForm();
   };
+  window.GizaStaticSite.initLibraryFilter = setupLibraryFilter;
 }());

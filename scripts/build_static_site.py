@@ -30,6 +30,7 @@ from static_site_builder.constants import (
 )
 from static_site_builder.django_templates import (
     render_item_allphotos_content,
+    render_library_content,
     warm_engine,
 )
 from static_site_builder.items import (
@@ -768,70 +769,70 @@ def write_library_page(
     library_sources: list[dict[str, Any]],
     pubdocs: list[tuple[ItemSummary, dict[str, Any]]],
 ) -> None:
-    body = [page_header("Digital Giza Library", bg="8")]
-    body.append('<div class="row"><section class="large-9 columns">')
-    body.append(
-        '<p class="lead text-alt">A public list of downloadable Giza publications and catalog publication records.</p>'
-    )
-
     grouped: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
     for source in library_sources:
         name = plain_text(source.get("name")) or "Unknown"
         letter = (plain_text(source.get("sortname")) or name).strip()[:1].upper() or "#"
         grouped[letter].append(source)
 
-    if grouped:
-        for letter in sorted(grouped):
-            body.append(
-                f'<h3 id="alpha-{html.escape(letter.lower())}">{html.escape(letter)}</h3>'
-            )
-            for source in sorted(
-                grouped[letter],
-                key=lambda value: plain_text(
-                    value.get("sortname") or value.get("name")
-                ).lower(),
-            ):
-                body.append(
-                    f'<h5 class="heading-alt">{escape_text(source.get("name"))}</h5>'
+    letter_groups = []
+    for letter in sorted(grouped):
+        letter_id = re.sub(r"[^a-z0-9]+", "-", letter.lower()).strip("-") or "other"
+        sources = []
+        for source in sorted(
+            grouped[letter],
+            key=lambda value: plain_text(
+                value.get("sortname") or value.get("name")
+            ).lower(),
+        ):
+            docs = []
+            for doc in source.get("docs") or []:
+                url = plain_text(doc.get("url"))
+                docs.append(
+                    {
+                        "displaytext": sanitize_html(plain_text(doc.get("displaytext"))),
+                        "url": url if url and is_safe_url(url) else "",
+                        "format": plain_text(doc.get("format")),
+                    }
                 )
-                body.append('<ul class="static-site-list">')
-                for doc in source.get("docs") or []:
-                    text = sanitize_html(plain_text(doc.get("displaytext")))
-                    url = plain_text(doc.get("url"))
-                    fmt = escape_text(doc.get("format"))
-                    link_start = (
-                        f'<a href="{html.escape(url, quote=True)}">'
-                        if url and is_safe_url(url)
-                        else ""
-                    )
-                    link_end = "</a>" if link_start else ""
-                    body.append(
-                        f'<li>{link_start}{text}{link_end}<div class="static-site-meta">{fmt}</div></li>'
-                    )
-                body.append("</ul>")
-
-    if pubdocs:
-        body.append('<h2 class="m-t-2">Publication Records</h2>')
-        body.append('<ul class="static-site-list">')
-        for summary, source in sorted(pubdocs, key=lambda item: item[0].title.lower()):
-            pdf = plain_text(source.get("pdf"))
-            pdf_link = (
-                f' <a href="{html.escape(pdf, quote=True)}">PDF</a>'
-                if pdf and is_safe_url(pdf)
-                else ""
+            sources.append(
+                {
+                    "name": plain_text(source.get("name")) or "Unknown",
+                    "docs": docs,
+                }
             )
-            body.append(
-                f'<li><a href="{summary.url}">{html.escape(summary.title)}</a>{pdf_link}'
-                f'<div class="static-site-meta">{escape_text(source.get("format"))} {escape_text(source.get("yearpublished"))}</div></li>'
-            )
-        body.append("</ul>")
+        letter_groups.append(
+            {"letter": letter, "id": letter_id, "sources": sources}
+        )
 
-    body.append(
-        '</section><aside class="large-3 columns"><div class="feature-block secondary"><h5>Library Search</h5><p>Use site search to find authors, titles, and subjects.</p><p><a class="button" href="/search/">Search</a></p></div></aside></div>'
-    )
+    publication_records = []
+    for summary, source in sorted(pubdocs, key=lambda item: item[0].title.lower()):
+        pdf = plain_text(source.get("pdf"))
+        publication_records.append(
+            {
+                "title": summary.title,
+                "url": summary.url,
+                "pdf": pdf if pdf and is_safe_url(pdf) else "",
+                "format": plain_text(source.get("format")),
+                "yearpublished": plain_text(source.get("yearpublished")),
+            }
+        )
+
+    body = [
+        page_header("Digital Giza Library", bg="8"),
+        render_library_content(
+            letter_groups=letter_groups,
+            publication_records=publication_records,
+            author_count=len(library_sources),
+        ),
+    ]
     write_text(
         output / "library" / "index.html",
-        render_page("Digital Giza Library", "\n".join(body)),
+        render_page(
+            "Digital Giza Library",
+            "\n".join(body),
+            extra_scripts="<script>GizaStaticSite.initLibraryFilter();</script>",
+        ),
     )
 
 

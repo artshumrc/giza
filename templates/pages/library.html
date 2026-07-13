@@ -1,10 +1,5 @@
 {% extends 'layouts/default.html' %}
 {% load static %}
-{% set
-  title: "Digital Giza Library",
-  section: "library",
-  section_library: true
-%}
 
 {% block title %}{{ "Digital Giza Library" }}{% endblock %}
 
@@ -36,10 +31,8 @@
           {% if sort == 'name' %}
           <h6 class="heading-em">Jump to:</h6>
           <ul class="menu menu-pagination">
-            {% for result in results %}
-              {% for letter in result.keys %}
-              <li><a href="#alpha-{{letter}}">{{letter|upper}}</a></li>
-              {% endfor %}
+            {% for group in letter_groups %}
+              <li><a href="#alpha-{{ group.id }}">{{ group.letter }}</a></li>
             {% endfor %}
           </ul>
           {% endif %}
@@ -61,38 +54,7 @@
         A complete list of downloadable (PDF) Giza publications.
       </p>
 
-      {% for result in results %}
-        {% for letter, sources in result.items %}
-          <h3 id="alpha-{{letter}}">{{letter|upper}}</h3>
-          {% for source in sources %}
-            <h6 class="heading-alt">{{ source.name }}</h6>
-
-            <ul class="no-bullet">
-              {% for doc in source.docs %}
-              <li>
-                <div class="library-item">
-                  <div class="row">
-                    <div class="library-item__primary medium-9 columns">
-                      {% if doc.url %}<a href="{{doc.url}}">{% endif %}
-                        {{ doc.displaytext|safe }}
-                      {% if doc.url %}</a>{% endif %}
-                    </div>
-                    <div class="library-item__secondary medium-3 columns">
-                      <span class="library-item__format">{{ doc.format }}</span>
-                      <span class="library-item__filesize"></span>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              {% endfor %}
-            </ul>
-          {% endfor %}
-          <p><a class="back-to-top-link" href="#top">Back to top</a></p>
-        {% endfor %}
-      {% endfor %}
-
-
-      <p><a class="back-to-top-link" href="#top">Back to top</a></p>
+      {% include "partials/library-author-groups.html" %}
 
     </section>
 

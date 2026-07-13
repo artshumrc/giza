@@ -1,0 +1,29 @@
+{% for group in letter_groups %}
+<section class="static-site-library-letter" data-library-letter="{{ group.letter }}">
+  <h3 id="alpha-{{ group.id }}">{{ group.letter }}</h3>
+  {% for source in group.sources %}
+  <article class="static-site-library-author" data-library-author>
+    <h6 class="heading-alt" data-library-author-name>{{ source.name }}</h6>
+    <ul class="no-bullet">
+      {% for doc in source.docs %}
+      <li>
+        <div class="library-item">
+          <div class="row">
+            <div class="library-item__primary medium-9 columns">
+              {% if doc.url %}<a href="{{ doc.url }}">{% endif %}
+                {{ doc.displaytext|safe }}
+              {% if doc.url %}</a>{% endif %}
+            </div>
+            <div class="library-item__secondary medium-3 columns">
+              <span class="library-item__format">{{ doc.format }}</span>
+            </div>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </article>
+  {% endfor %}
+  <p><a class="back-to-top-link" href="#{{ back_to_top_id|default:'top' }}">Back to top</a></p>
+</section>
+{% endfor %}

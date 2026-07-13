@@ -90,6 +90,34 @@
   color: #666;
   font-size: 0.875rem;
 }
+.static-site-library-controls input[type="search"] {
+  margin-bottom: 0.35rem;
+}
+.static-site-library-status {
+  color: var(--pf-text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+.static-site-library-alphabet {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+.static-site-library-alphabet li a {
+  min-width: 1.75rem;
+  padding: 0.35rem 0.3rem;
+  text-align: center;
+}
+.static-site-library-letter > h3 {
+  scroll-margin-top: 5rem;
+}
+.static-site-library-no-results {
+  border-left: 4px solid var(--pf-border-focus);
+  padding: 0.75rem 1rem;
+}
+.static-site-library [hidden] {
+  display: none !important;
+}
 .static-site-media-link {
   display: inline-block;
   margin-top: 0.5rem;
