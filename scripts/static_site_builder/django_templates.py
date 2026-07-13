@@ -252,6 +252,7 @@ def render_library_content(
                 "letter_groups": letter_groups,
                 "publication_records": publication_records,
                 "author_count": author_count,
+                "back_to_top_id": "content",
             }
         )
     )
@@ -269,4 +270,3 @@ def warm_engine() -> None:
     engine = _engine()
     engine.get_template("pages/full.html")
     engine.get_template("pages/allphotos.html")
-    engine.get_template("static-site/library.html")
