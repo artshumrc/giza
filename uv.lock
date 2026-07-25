@@ -46,7 +46,7 @@ wheels = [
 [[package]]
 name = "dredge"
 version = "0.1.0"
-source = { git = "https://github.com/artshumrc/dredge?branch=main#54136c7fed07939091ee117cec748841677c658d" }
+source = { git = "https://github.com/artshumrc/dredge?branch=main#a342a5fb1cbdb90b9d67948f773767735b9850a4" }
 dependencies = [
     { name = "brotli" },
     { name = "rich" },
