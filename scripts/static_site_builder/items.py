@@ -195,9 +195,8 @@ def render_pagefind_filters(summary: ItemSummary) -> str:
 
 def render_triiiceratops_assets() -> str:
     return """
-<link rel="stylesheet" href="/static/css/triiiceratops.css">
 <script src="/static/js/triiiceratops-element.iife.js"></script>
-<script src="/static/js/triiiceratops-plugin-image-download.iife.js"></script>
+<script src="/static/js/triiiceratops-plugin-image-export.iife.js"></script>
 <script src="/static/js/triiiceratops-plugin-image-manipulation.iife.js"></script>
 <script src="/static/js/triiiceratops-plugins.js"></script>
 """.strip()

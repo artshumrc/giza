@@ -30,20 +30,20 @@ cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-expo
 cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-export.tar.gz --django-content-dump static_site/giza-content-dump.json.gz --output dist --base-url http://localhost:8000"
 
 [tool.poe.tasks.static-build-limited]
-cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-export.tar.gz --django-content-dump static_site/giza-content-dump.json.gz --output /tmp/opencode/giza-static-test --base-url http://localhost:8000 --item-limit-per-type 1 --manifest-limit 5"
+cmd = "python scripts/build_static_site.py --es-archive static_site/giza-es-export.tar.gz --django-content-dump static_site/giza-content-dump.json.gz --output /tmp/giza-static-test --base-url http://localhost:8000 --item-limit-per-type 1 --manifest-limit 5"
 
 [tool.poe.tasks.static-pagefind]
 cmd = "npx -y pagefind --site dist"
 
 [tool.poe.tasks.static-pagefind-limited]
-cmd = "npx -y pagefind --site /tmp/opencode/giza-static-test"
+cmd = "npx -y pagefind --site /tmp/giza-static-test"
 
 [tool.poe.tasks.static-dredge-assets]
 cmd = "node ../dredge/runtime/scripts/install-into-site.mjs --out dist"
 help = "Build the Dredge browser library from ../dredge and install it into dist/search."
 
 [tool.poe.tasks.static-dredge-assets-limited]
-cmd = "node ../dredge/runtime/scripts/install-into-site.mjs --out /tmp/opencode/giza-static-test"
+cmd = "node ../dredge/runtime/scripts/install-into-site.mjs --out /tmp/giza-static-test"
 help = "Build the Dredge browser library from ../dredge and install it into the limited build."
 
 [tool.poe.tasks.static-dredge-compile]
@@ -88,7 +88,12 @@ default = "8000"
 positional = true
 
 [tool.poe.tasks.static-serve-limited]
-cmd = "python -m http.server --directory /tmp/opencode/giza-static-test 8000"
+cmd = "python -m http.server --directory /tmp/giza-static-test ${port}"
+
+[[tool.poe.tasks.static-serve-limited.args]]
+name = "port"
+default = "8000"
+positional = true
 
 [tool.poe.tasks.build-and-serve-limited]
 sequence = [
