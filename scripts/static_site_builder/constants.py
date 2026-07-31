@@ -9,6 +9,36 @@ IIIF_CACHE_HOST = "iiif-cache.digitalhumanities.fas.harvard.edu"
 IIIF_CACHE_MANIFEST_URL = f"https://{IIIF_CACHE_HOST}/iiif/manifest?manifest="
 IIIF_CACHE_THUMB_URL = f"https://{IIIF_CACHE_HOST}/iiif/thumb?url="
 
+# Every media URL in the site is <media base>/<path>, where <path> is the same
+# server-relative path the retired gizamedia host used and is also the S3 key in
+# the giza-media bucket. Change the base here (or with --media-base-url) and the
+# whole build follows; nothing else should name a media host.
+DEFAULT_MEDIA_BASE_URL = "https://d1g9lvwdq3dcse.cloudfront.net"
+
+# Hosts that served those same paths before the move to CloudFront. Absolute
+# URLs to them are baked into the ES export, so the build rewrites them on the
+# way out rather than reindexing the data.
+LEGACY_MEDIA_HOSTS = ("gizamedia.rc.fas.harvard.edu",)
+
+# Paths the TMS records still point at that no longer match the drive: folders
+# renamed with working notes ("_remove from TMS Collections"), a stray trailing
+# space, and a mojibake spelling of BÄM. The files themselves are all present,
+# so the build redirects the reference instead of emitting a dead link.
+# Regenerate with media_catalog.py, which derives each row by resolving the
+# reference against the real bucket listing.
+MEDIA_PATH_REPAIRS_FILE = "media_path_repairs.tsv"
+
+# The Berlin museum folder (BÄM) survives in the TMS records in several mangled
+# spellings, depending on which encoding round-trip damaged each one. These are
+# fixed before the path is read, not through the repairs file, because the
+# ``BA?M`` form contains a literal '?' that would otherwise be taken for the
+# start of a query string and truncate the path.
+MEDIA_MOJIBAKE_REPAIRS = (
+    ("BA?M", "BÄM"),
+    ("BŽM", "BÄM"),
+    ("BÃ„M", "BÄM"),
+)
+
 TYPE_LABELS = {
     "3dmodels": "3D Models",
     "ancientpeople": "Ancient People",

@@ -1,93 +1,132 @@
-# gizamedia hot-storage preservation manifest
+# giza-media preservation and the media move to CloudFront
 
-**Question answered:** which files currently on the non-IIIF media drive
-(`gizamedia.rc.fas.harvard.edu` — "a drive with a web server in front of it") are
-actually referenced by the Giza website and therefore must be preserved when that
-storage migrates to S3.
+**Question answered:** which files on the retiring media drive
+(`gizamedia.rc.fas.harvard.edu` — "a drive with a web server in front of it") does
+the Giza website actually need, so the rest can be pruned from the `giza-media`
+S3 bucket that replaced it.
+
+Everything here is produced by `media_catalog.py`. It supersedes the earlier
+`catalog.py` / `finalize.py` / `compare_s3_media.py` chain, which under-counted
+(see *What the first pass missed*).
 
 ## Result
 
-**24,176 distinct files** must be preserved.
+Of **223,093** objects in the bucket, **24,303** are needed.
 
 | | count |
 |---|---|
-| originals | 12,027 |
-| thumbnails | 12,149 |
-| **total** | **24,176** |
+| directly referenced | 21,865 |
+| referenced under a path the records get wrong | 2,201 |
+| inside a referenced application directory | 230 |
+| thumbnail twin of a kept original | 7 |
+| **keep** | **24,303** |
+| **prunable** | **198,790** |
 
-By type: `.jpg` 21,930 · `.mov` 1,226 · `.pdf` 821 · `.mp4` 166 · `.html` 28 (3D-tour viewer pages) · `.webm`/`.ogv` 1 each · directory/app refs 3.
+`keep_reasons.tsv` and `prune_reasons.tsv` give the reason for every object.
 
-By collection (top): GPH 9,025 · HUMFA 8,008 · MFA-images 3,853 · RPM 1,846 · Berlin (BÄM/BŽM/BÃ„M) 273 · documents 463 · videos 157 · GEM 135 · ASU 132 · CBE 114 · others (TUR, EMC, NMEC, UPM, 3D, website) < 100 each.
+## Files
 
-All files live under `/images/` (23,713) or `/documents/` (463).
+- **`keep.txt`** — the preservation allow-list. Do not delete anything on it.
+- **`prunable.txt`** — everything else in the bucket.
+- **`prune_reasons.tsv`** — why each object is prunable. Read this before deleting:
+  `unlinked-app` (669) are complete, working applications the site simply never
+  links to, and `master-or-tiff` (45,119) are the originals behind kept
+  derivatives. Neither is safe to delete on a script's say-so.
+- **`missing_from_s3.txt`** — 143 references with no file anywhere. Each was
+  probed against the live origin and 404s there too, so these are long-standing
+  dead links, not gaps in the migration. 24 are 3D viewer applications that were
+  never on the drive.
+- **`media_path_repairs.tsv`** — **a build input, not a report.** See below.
+- **`s3_keys.txt`** — the bucket listing the catalog resolves against.
+  Regenerate with `aws s3 ls s3://giza-media/ --recursive > s3_raw.txt`.
 
-## Files in this deliverable
+## Broken links the move fixed
 
-- **`gizamedia_files_to_preserve.txt`** — the authoritative list, one server-relative path per line (24,176 lines). This is the migration allow-list.
-- **`gizamedia_encoding_ambiguous.txt`** — 277 entries (subset of the above) from the Berlin museum collection whose byte encoding is uncertain (see caveat 1). Reconcile these against the real drive listing.
+2,275 paths in the TMS records point at files that exist under a different name.
+`media_path_repairs.tsv` maps each recorded path onto the real object, and
+`static_site_builder.media` applies it while rewriting URLs, so the site links to
+the file instead of a 404.
+
+| fault | links |
+|---|---|
+| `3D Model Textures` folder renamed `…_remove from TMS Collections` | 1,486 |
+| `Avatars` folder renamed `…_PDM broke all links_remove from TMS Collections` | 370 |
+| trailing space in the folder name `G 7530-7540 ` | 343 |
+| accents stored decomposed (NFD) where the records use NFC | 67 |
+| case mismatches (`.jpg`/`.JPG`, `GPh`/`GPH`) | 9 |
+
+Separately, the Berlin museum prefix survives in the records as `BŽM`, `BA?M`,
+and `BÃ„M`; all are normalised to `BÄM` before the path is read. That is code
+(`MEDIA_MOJIBAKE_REPAIRS`) rather than a map row, because the `BA?M` spelling
+contains a literal `?` that would otherwise be taken for a query string and
+truncate the path. Normalising it surfaced 2,197 references no earlier scan
+could see.
+
+Net effect: media links that resolve went from 21,603 to 24,064 of 24,178 —
+**89.3% to 99.5%**, across 1,620 pages. None of these worked on the old host
+either; this fixes long-broken links rather than repairing migration damage.
+
+**If `media_path_repairs.tsv` is absent the build still succeeds** and silently
+re-emits every one of those dead links. The build logs `Media path repairs
+loaded: N` on startup, and warns when the file is missing.
 
 ## Which host, and why only this one
 
-Every URL in the data and the built site was inventoried. Hosts found:
-
-| host | role | migrating? |
+| host | role | in scope? |
 |---|---|---|
-| `gizamedia.rc.fas.harvard.edu` | **non-IIIF media on a plain web server** | **YES — this manifest** |
-| `nrs.harvard.edu`, `ids.lib.harvard.edu` | Harvard DRS — IIIF-served | no (IIIF, managed) |
-| `iiif-cache.digitalhumanities.fas.harvard.edu` | project IIIF thumbnail cache | no (IIIF, regenerable — see caveat 3) |
-| `fonts.googleapis.com`, `use.fontawesome.com`, `cdn.knightlab.com`, `community.alumni.harvard.edu`, `www.neh.gov`, `stats.digitalhumanities.fas.harvard.edu`, external museum sites | fonts / CDNs / analytics / funder & partner links | no (not our media) |
+| `gizamedia.rc.fas.harvard.edu` | non-IIIF media on a plain web server | **yes — now `giza-media` behind CloudFront** |
+| `nrs.harvard.edu`, `ids.lib.harvard.edu` | Harvard DRS — IIIF-served | no (managed) |
+| `iiif-cache.digitalhumanities.fas.harvard.edu` | project IIIF thumbnail cache | no (regenerable) |
+| fonts / CDNs / analytics / funder and partner links | not our media | no |
 
-`gizamedia.rc.fas.harvard.edu` is the only host serving raw, non-IIIF media files
-directly off a drive, so it is the only one in scope.
+The IIIF cache no longer fronts these images: CloudFront is already a CDN, and
+the cache was verified to be a byte-identical pass-through rather than a resizer.
+It still fronts `ids.lib` and `nrs`, which we do not control.
 
 ## Sources scanned
 
-1. **ES export dumps** — `static_site/giza-es-export.tar.gz` → `giza.ndjson.gz`
-   (159,257 records) + `iiif.ndjson.gz` (134,580 records). JSON string values, parsed clean.
-2. **Built static site** — every text file under `dist/` (`.html/.js/.css/.json/.xml/...`).
-   Binary files (the dredge/pagefind search index) were **excluded** — matching inside
-   them produced garbage over-captures.
-3. **Django templates** — `templates/` (caught the hardcoded homepage video, which is
-   in no other source).
+1. **ES export** — `static_site/giza-es-export.tar.gz`. Confirmed that no media
+   field holds a host-less path, so anchoring on the host misses nothing.
+2. **The built site** — every text file under `dist/`. Build before cataloguing;
+   without it the run warns and the result is not safe to prune by.
+3. **Repo sources** — `templates/`, `static/`, `scripts/`, `tms/`. Catches paths
+   hardcoded outside the data.
+4. **The bucket's own files** — the parseable objects, followed transitively.
+   This is the one the first pass lacked.
 
-Overlap: 24,118 paths appear in **both** the ES dumps and the built HTML — i.e. the ES
-data and the deployed site agree almost exactly, so the ES dump is a faithful (not
-bloated) catalog. Source-exclusive additions: 3 hardcoded in HTML (`o'connor` PDF+thumb,
-`/images/3D/unity`), 3 in templates (`GizaHome_web.{mp4,webm,ogv}`), and ~54 in the ES
-data only (mostly real `MFA-images/.../Giza_Necropolis_*` library PDFs not linked in the
-current build but still referenced).
+## What the first pass missed
 
-## Normalization applied
+Worth recording, because both failures were silent:
 
-The same file appears in several encodings across sources; all were collapsed to one
-canonical server-relative path:
-- percent-decoding (`%20`→space, `%28`→`(`, …),
-- HTML-entity decoding (`&#x27;`→`'`, `&amp;`→`&`),
-- Windows→POSIX separators (`\`→`/`),
-- query strings, Django template fragments (`{{…}}`), and `#` anchors stripped,
-- 4 unambiguous truncation fragments dropped (their complete forms are present).
+- **Directory references.** `/images/3D/unity/` is an iframe `src`, not a file.
+  Reducing it to `/images/3D/unity` matched no object key, so all 89 files of the
+  live Giza 3D viewer were marked prunable.
+- **References that exist only inside the bucket.** `images/3D/unity/index.html`
+  loads `TemplateData/*.js`, `Build/WebGL.wasm`, and a directory of bare-named
+  Unity assetbundles. Nothing outside the bucket names them, and nothing had
+  parsed the media files themselves.
+- **Unresolvable references were dropped rather than reported**, so the run
+  claimed 3 missing files when the real number was 2,641.
 
-## Caveats — read before deleting anything from the drive
+`media_catalog.py` resolves a directory reference to its whole subtree, follows
+references between objects to a fixpoint, and treats any directory with an HTML
+entry point as a self-contained application whose subtree is kept — because
+assetbundles, .NET assemblies, and `.nib` resources are loaded by name at runtime
+and no static parse will find them.
 
-1. **Berlin museum (BÄM) encoding ambiguity (277 files).** These appear in three
-   mojibake forms of the same prefix — `BÄM` (Latin-1), `BŽM` (MacRoman), `BÃ„M`
-   (double-encoded UTF-8) — because the source data is character-set-corrupted. They
-   denote the *same physical files*. Which byte-form actually exists on the drive cannot
-   be determined from the repo; **reconcile `gizamedia_encoding_ambiguous.txt` against a
-   real directory listing** and keep whichever form is on disk.
-
-2. **This is a reference list, not a drive audit.** It says what the site *asks for*. It
-   does not confirm each file exists on the drive (some references may already be broken
-   404s), and it deliberately excludes files the site never references (those are the
-   "more files than we need"). Diff this list against `find`/`ls` output from the drive to
-   get the exact keep/drop sets.
-
-3. **IIIF thumbnail cache not included.** `iiif-cache.digitalhumanities.fas.harvard.edu`
-   is project-controlled but is a *cache* of IIIF derivatives and is regenerable from the
-   DRS source images, so it is treated as non-preservation. Confirm this assumption if
-   that cache is also hosted on the migrating drive.
+Where a recorded path does not resolve, it walks the path against the real tree
+and accepts a rename only when exactly one real child differs by whitespace,
+case, a `_suffix`, or a mojibake round-trip. Ambiguity fails rather than guesses.
 
 ## Reproduce
 
-`catalog.py` builds `manifest_canonical.txt`; `finalize.py` produces the two deliverable
-lists. Both are in this directory.
+```
+aws s3 ls s3://giza-media/ --recursive > s3_raw.txt   # refresh the listing
+uv run poe static-build-production                    # dist/ must exist
+python media_catalog.py --bucket-text-dir <mirror>
+```
+
+`--bucket-text-dir` is a local mirror of the bucket's parseable objects
+(`.html/.js/.css/.json/.xml`, ~144 files) used to follow references between them.
+Without it the transitive pass is skipped and **the result is not safe to prune
+by** — the run says so.

@@ -23,7 +23,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
-from .media import cache_harvard_image_url
+from .media import cache_harvard_image_url, media_url
 from .buildtemplatetags import set_static_base_url
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -37,7 +37,11 @@ _EXTRA_CSS_RE = re.compile(r"<!--EXTRA_CSS_START-->(.*)<!--EXTRA_CSS_END-->", re
 _EXTRA_JS_RE = re.compile(r"<!--EXTRA_JS_START-->(.*)<!--EXTRA_JS_END-->", re.DOTALL)
 _HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
 _APP_CSS_LINK_RE = re.compile(r'<link[^>]*?\bhref="[^"]*app\.css"[^>]*>', re.IGNORECASE)
+# Fields of an ES document that hold an absolute media URL. ``thumbnail`` and
+# ``main`` are images and may be worth caching; ``pdf`` and ``url`` are documents
+# the templates link to directly and only need the host rewrite.
 _IMAGE_FIELDS = ("thumbnail", "main")
+_LINK_FIELDS = ("pdf", "url")
 
 
 @dataclass(frozen=True)
@@ -91,17 +95,24 @@ def _engine():
     )
 
 
-def _rewrite_images(value: Any) -> None:
-    """Route Harvard image URLs through the IIIF cache, in place."""
+def _rewrite_media(value: Any) -> None:
+    """Rewrite the media URLs carried by an ES document, in place.
+
+    Both helpers move legacy gizamedia URLs onto the configured media base;
+    ``cache_harvard_image_url`` additionally routes the image servers we do not
+    control through the IIIF cache.
+    """
     if isinstance(value, dict):
         for key, child in value.items():
-            if key in _IMAGE_FIELDS and isinstance(child, str) and child:
+            if not isinstance(child, str) or not child:
+                _rewrite_media(child)
+            elif key in _IMAGE_FIELDS:
                 value[key] = cache_harvard_image_url(child)
-            else:
-                _rewrite_images(child)
+            elif key in _LINK_FIELDS:
+                value[key] = media_url(child)
     elif isinstance(value, list):
         for child in value:
-            _rewrite_images(child)
+            _rewrite_media(child)
 
 
 def _prepare_object(source: dict[str, Any], has_manifest: bool) -> dict[str, Any]:
@@ -111,7 +122,7 @@ def _prepare_object(source: dict[str, Any], has_manifest: bool) -> dict[str, Any
         primary = {}
     primary["has_manifest"] = bool(has_manifest)
     obj["primarydisplay"] = primary
-    _rewrite_images(obj)
+    _rewrite_media(obj)
     return obj
 
 

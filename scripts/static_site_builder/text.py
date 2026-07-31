@@ -57,7 +57,7 @@ class SafeHTML(HTMLParser):
         self.parts: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        from .media import cache_harvard_image_url
+        from .media import cache_harvard_image_url, media_url
         from .urls import is_safe_url
 
         tag = tag.lower()
@@ -72,6 +72,8 @@ class SafeHTML(HTMLParser):
                 continue
             if name == "src":
                 value = cache_harvard_image_url(value)
+            elif name == "href":
+                value = media_url(value)
             rendered_attrs.append(f'{name}="{html.escape(value, quote=True)}"')
         attr_text = " " + " ".join(rendered_attrs) if rendered_attrs else ""
         self.parts.append(f"<{tag}{attr_text}>")

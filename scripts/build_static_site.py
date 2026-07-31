@@ -24,8 +24,11 @@ from typing import Any, Iterable
 from urllib.parse import urlparse
 
 from static_site_builder.constants import (
+    DEFAULT_MEDIA_BASE_URL,
     EXPECTED_ITEM_COUNT,
     EXPECTED_MANIFEST_COUNT,
+    LEGACY_MEDIA_HOSTS,
+    MEDIA_PATH_REPAIRS_FILE,
     STATIC_TEMPLATE_PAGES,
 )
 from static_site_builder.django_templates import (
@@ -40,7 +43,14 @@ from static_site_builder.items import (
     render_summary_card,
 )
 from static_site_builder.layout import page_header, render_page
-from static_site_builder.media import cache_harvard_image_url, primary_display
+from static_site_builder.media import (
+    cache_harvard_image_url,
+    media_base_url,
+    media_url,
+    path_repair_count,
+    primary_display,
+    set_media_base_url,
+)
 from static_site_builder.models import ItemSummary
 from static_site_builder.templates import render_static_site_template
 from static_site_builder.text import (
@@ -67,6 +77,15 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--django-content-dump", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--base-url", required=True)
+    parser.add_argument(
+        "--media-base-url",
+        default=DEFAULT_MEDIA_BASE_URL,
+        help=(
+            "Scheme and host (optionally plus a path prefix) that every media "
+            "URL is relative to. Defaults to the CloudFront distribution in "
+            "front of the giza-media bucket."
+        ),
+    )
     parser.add_argument(
         "--item-limit",
         type=int,
@@ -103,6 +122,20 @@ def main(argv: list[str]) -> int:
     args = parse_args(argv)
     repo_root = Path(__file__).resolve().parents[1]
     base_url = args.base_url.rstrip("/")
+    # Set before anything renders, and before the fork-based render pools start,
+    # so every worker inherits the same media base.
+    set_media_base_url(args.media_base_url)
+    print(f"Media base URL: {media_base_url()}")
+    repair_count = path_repair_count()
+    if repair_count:
+        print(f"Media path repairs loaded: {repair_count:,}")
+    else:
+        print(
+            f"WARNING: no {MEDIA_PATH_REPAIRS_FILE} found at the repo root; every "
+            "media path the records get wrong will be emitted as a dead link. "
+            "Regenerate it with media_catalog.py.",
+            file=sys.stderr,
+        )
 
     validate_inputs(args.es_archive, args.django_content_dump, repo_root)
     prepare_output(args.output)
@@ -168,11 +201,43 @@ def main(argv: list[str]) -> int:
             f"WARNING: expected {EXPECTED_MANIFEST_COUNT:,} manifests, generated {manifest_count:,}",
             file=sys.stderr,
         )
+    leaked = find_legacy_media_hosts(args.output)
+    if leaked:
+        print(
+            f"ERROR: {sum(leaked.values()):,} reference(s) to a retired media host "
+            f"survived in {len(leaked)} file(s); a media URL is reaching the page "
+            "without going through media_url().",
+            file=sys.stderr,
+        )
+        for path, count in sorted(leaked.items())[:10]:
+            print(f"  {count:>6,}  {path}", file=sys.stderr)
+        return 1
+
     print(
         "Run `uv run poe static-dredge` after this build to install the Dredge "
         "search library and compile the search index."
     )
     return 0
+
+
+def find_legacy_media_hosts(output: Path) -> dict[str, int]:
+    """Count references to a retired media host left in the built site.
+
+    Media URLs arrive from several directions -- ES fields, sanitized HTML,
+    hardcoded template strings -- and each has to be routed through
+    ``media_url()``. Missing one is silent: the page renders, and the links only
+    break once the old host is switched off. So the build checks its own output.
+    """
+    text_suffixes = (".html", ".htm", ".js", ".json", ".xml", ".txt", ".css", ".svg")
+    found: dict[str, int] = {}
+    for path in output.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in text_suffixes:
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        count = sum(text.count(host) for host in LEGACY_MEDIA_HOSTS)
+        if count:
+            found[str(path.relative_to(output))] = count
+    return found
 
 
 def validate_inputs(es_archive: Path, content_dump: Path, repo_root: Path) -> None:
@@ -685,11 +750,12 @@ def render_giza3d_static_page(repo_root: Path) -> str:
         ),
         {},
     )
+    unity_url = f"{media_base_url()}/images/3D/unity/"
     body = f"""
 {page_header("Giza 3D", bg="1")}
 <div class="row">
   <div class="large-12 columns">
-    <iframe class="viewerEmbed giza3dEmbed" data-giza3d-iframe src="https://gizamedia.rc.fas.harvard.edu/images/3D/unity/?mode=FreeExplore" frameborder="0" allowfullscreen allow="vr" style="display: none;"></iframe>
+    <iframe class="viewerEmbed giza3dEmbed" data-giza3d-iframe src="{unity_url}?mode=FreeExplore" frameborder="0" allowfullscreen allow="vr" style="display: none;"></iframe>
     <div class="viewerEmbed giza3dEmbedToggle" data-giza3d-toggle>
       <div class="gizaViewer">
         <div class="viewerCover"></div>
@@ -726,7 +792,7 @@ def render_giza3d_static_page(repo_root: Path) -> str:
     return;
   }}
 
-  var unityUrl = new URL('https://gizamedia.rc.fas.harvard.edu/images/3D/unity/');
+  var unityUrl = new URL('{unity_url}');
   unityUrl.searchParams.set('mode', params.get('mode') || 'FreeExplore');
   ['guidedTourId', 'itemID'].forEach(function (key) {{
     if (params.get(key)) unityUrl.searchParams.set(key, params.get(key));
@@ -787,7 +853,7 @@ def write_library_page(
         ):
             docs = []
             for doc in source.get("docs") or []:
-                url = plain_text(doc.get("url"))
+                url = media_url(plain_text(doc.get("url")))
                 docs.append(
                     {
                         "displaytext": sanitize_html(plain_text(doc.get("displaytext"))),
@@ -807,7 +873,7 @@ def write_library_page(
 
     publication_records = []
     for summary, source in sorted(pubdocs, key=lambda item: item[0].title.lower()):
-        pdf = plain_text(source.get("pdf"))
+        pdf = media_url(plain_text(source.get("pdf")))
         publication_records.append(
             {
                 "title": summary.title,
@@ -846,7 +912,7 @@ def write_videos_page(
     )
     for summary, source in sorted(videos, key=lambda item: item[0].title.lower()):
         primary = primary_display(source)
-        main = plain_text(primary.get("main"))
+        main = media_url(plain_text(primary.get("main")))
         thumb = cache_harvard_image_url(plain_text(primary.get("thumbnail")))
         body.append('<article class="m-b-2">')
         body.append(
