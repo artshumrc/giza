@@ -97908,6 +97908,7 @@ images/MFA-images/Giza/GizaImage/full/library/hassan_giza_1.pdf
 images/MFA-images/Giza/GizaImage/full/library/hassan_giza_10.pdf
 images/MFA-images/Giza/GizaImage/full/library/hassan_giza_2.pdf
 images/MFA-images/Giza/GizaImage/full/library/hassan_giza_3.pdf
+images/MFA-images/Giza/GizaImage/full/library/hassan_giza_4.pdf
 images/MFA-images/Giza/GizaImage/full/library/hassan_giza_5.pdf
 images/MFA-images/Giza/GizaImage/full/library/hassan_giza_6_1.pdf
 images/MFA-images/Giza/GizaImage/full/library/hassan_giza_6_2plates.pdf
@@ -97927,6 +97928,7 @@ images/MFA-images/Giza/GizaImage/full/library/hawass_fs_dreyer_211-218.pdf
 images/MFA-images/Giza/GizaImage/full/library/hawass_fs_el-sawi.pdf
 images/MFA-images/Giza/GizaImage/full/library/hawass_fs_lauer.pdf
 images/MFA-images/Giza/GizaImage/full/library/hawass_fs_lesko.pdf
+images/MFA-images/Giza/GizaImage/full/library/hawass_fs_mokhtar.pdf
 images/MFA-images/Giza/GizaImage/full/library/hawass_fs_oconnor.pdf
 images/MFA-images/Giza/GizaImage/full/library/hawass_fs_radwan.pdf
 images/MFA-images/Giza/GizaImage/full/library/hawass_fs_redford.pdf
@@ -98003,6 +98005,7 @@ images/MFA-images/Giza/GizaImage/full/library/junker_giza_2.pdf
 images/MFA-images/Giza/GizaImage/full/library/junker_giza_3.pdf
 images/MFA-images/Giza/GizaImage/full/library/junker_giza_4.pdf
 images/MFA-images/Giza/GizaImage/full/library/junker_giza_5.pdf
+images/MFA-images/Giza/GizaImage/full/library/junker_giza_6.pdf
 images/MFA-images/Giza/GizaImage/full/library/junker_giza_7.pdf
 images/MFA-images/Giza/GizaImage/full/library/junker_giza_8.pdf
 images/MFA-images/Giza/GizaImage/full/library/junker_giza_9.pdf

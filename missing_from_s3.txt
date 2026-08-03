@@ -95,9 +95,6 @@ images/EMC/Special_Register/SR3LR/SR3.2LR/Thumbnails/EMC_SR3.2_Sp094LR_thumb.jpg
 images/GPH/3D Model References/Khafre Pyramid Complex/Khafre Valley Temple/maragioglio_rinaldi_v_plate_016.jpg
 images/GPH/3D Model Stills/Sphinx Complex/Sphinx Temple/GPH_3D_SPHT_2013-02-04_wip_003..jpg
 images/MFA-images/Giza/GizaImage/full/diary/ED Filename link.jpg
-images/MFA-images/Giza/GizaImage/full/library/hassan_giza_4.pdf
-images/MFA-images/Giza/GizaImage/full/library/hawass_fs_mokhtar.pdf
-images/MFA-images/Giza/GizaImage/full/library/junker_giza_6.pdf
 images/MFA-images/Giza/GizaImage/full/maps_plans/EG010007.jpg
 images/MFA-images/Giza/GizaImage/full/maps_plans/EG010008.jpg
 images/MFA-images/Giza/GizaImage/full/maps_plans/EG010009.jpg
